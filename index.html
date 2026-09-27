@@ -396,6 +396,13 @@ footer p {
     grid-template-columns: 1fr;
   }
 }
+
+.lang-switch { display:flex; gap:6px; margin-left:18px; }
+.lang-btn { border:1px solid #cbd5e1; background:white; color:#183b56; padding:7px 10px; border-radius:18px; font-weight:bold; cursor:pointer; }
+.lang-btn.active { background:#075985; color:white; border-color:#075985; }
+.bilingual { margin-top:10px; color:#627d98; }
+.bilingual .id { display:block; margin-top:4px; font-style:italic; }
+@media(max-width:800px){.lang-switch{margin:10px 0 0;}.lang-btn{padding:6px 9px;}}
 </style>
 </head>
 
@@ -410,21 +417,23 @@ footer p {
     <a href="#about">About</a>
     <a href="#contact">Contact</a>
   </nav>
+  <div class="lang-switch" aria-label="Language">
+    <button class="lang-btn active" type="button" data-lang="en">EN</button>
+    <button class="lang-btn" type="button" data-lang="id">ID</button>
+  </div>
 </header>
 
 <section class="hero">
   <div class="hero-content">
-    <small>FIND YOUR DREAM HOME</small>
+    <small data-en="FIND YOUR DREAM HOME" data-id="TEMUKAN RUMAH IMPIAN ANDA">FIND YOUR DREAM HOME</small>
 
     <h1>
       Welcome to <span>RumahNusa</span>
       Real Estate
     </h1>
 
-    <p>
-      Discover beautiful homes, apartments and properties
-      for sale and rent.
-    </p>
+    <p data-en="Discover beautiful homes, apartments and properties for sale and rent." data-id="Temukan rumah, apartemen, dan properti indah untuk dibeli atau disewa.">Discover beautiful homes, apartments and properties for sale and rent.</p>
+    <div class="bilingual"><strong data-en="RumahNusa is more than a property search." data-id="RumahNusa lebih dari sekadar pencarian properti.">RumahNusa is more than a property search.</strong><span class="id" data-en="We care about how you live, how you feel, and the comfort your home brings every day." data-id="Kami peduli pada cara Anda hidup, perasaan Anda, dan kenyamanan yang diberikan rumah Anda setiap hari.">We care about how you live, how you feel, and the comfort your home brings every day.</span></div>
 
     <div class="search-box">
       <input type="text" placeholder="Location">
@@ -444,8 +453,8 @@ footer p {
 <section id="properties">
 
   <div class="section-title">
-    <h2>Featured Properties</h2>
-    <p>Handpicked properties for your next chapter.</p>
+    <h2 data-en="Featured Properties" data-id="Properti Pilihan">Featured Properties</h2>
+    <p data-en="Beautiful spaces selected for comfort, warmth, and a life you can be proud to call home." data-id="Ruang indah yang dipilih untuk kenyamanan, kehangatan, dan kehidupan yang membuat Anda bangga menyebutnya rumah.">Beautiful spaces selected for comfort, warmth, and a life you can be proud to call home.</p>
   </div>
 
   <div class="cards">
@@ -530,6 +539,10 @@ footer p {
 
 
 <section id="client-profile" class="client-area">
+  <div class="section-title">
+    <h2 data-en="A Home Chosen With Care" data-id="Rumah yang Dipilih Dengan Kepedulian">A Home Chosen With Care</h2>
+    <p data-en="Tell us what matters to you. RumahNusa listens carefully and helps you discover a place where comfort, beauty, and everyday life belong together." data-id="Ceritakan apa yang penting bagi Anda. RumahNusa mendengarkan dengan penuh perhatian dan membantu Anda menemukan tempat di mana kenyamanan, keindahan, dan kehidupan sehari-hari menyatu.">Tell us what matters to you. RumahNusa listens carefully and helps you discover a place where comfort, beauty, and everyday life belong together.</p>
+  </div>
   <div class="client-panel">
     <div class="section-title">
       <h2>Tell RumahNusa What You Need</h2>
@@ -651,20 +664,15 @@ footer p {
 
 <section id="about" class="about">
   <div class="about-box">
-    <h2>Your Trusted Real Estate Partner</h2>
-
-    <p>
-      At RumahNusa, we connect people with beautiful properties
-      for buying, renting and investing. Our goal is to make
-      your real estate journey simple and stress-free.
-    </p>
+    <h2 data-en="Your Trusted Real Estate Partner" data-id="Mitra Properti Tepercaya Anda">Your Trusted Real Estate Partner</h2>
+    <p data-en="At RumahNusa, every home begins with people. We treat every customer with respect, patience, and genuine care. We understand that choosing a home is choosing a place for your mornings, your family, your rest, your celebrations, and your future." data-id="Di RumahNusa, setiap rumah dimulai dari manusia. Kami memperlakukan setiap pelanggan dengan hormat, kesabaran, dan kepedulian yang tulus. Kami memahami bahwa memilih rumah berarti memilih tempat untuk pagi Anda, keluarga Anda, waktu beristirahat, perayaan, dan masa depan Anda.">At RumahNusa, every home begins with people. We treat every customer with respect, patience, and genuine care. We understand that choosing a home is choosing a place for your mornings, your family, your rest, your celebrations, and your future.</p>
+    <p class="bilingual" data-en="We look beyond beautiful rooms. We look for comfort, thoughtful spaces, welcoming surroundings, and a home that feels right for the people who will live there." data-id="Kami melihat lebih dari sekadar ruangan yang indah. Kami mencari kenyamanan, ruang yang dipikirkan dengan baik, lingkungan yang menyenangkan, dan rumah yang terasa tepat bagi orang-orang yang akan tinggal di dalamnya.">We look beyond beautiful rooms. We look for comfort, thoughtful spaces, welcoming surroundings, and a home that feels right for the people who will live there.</p>
   </div>
 </section>
 
 <section class="cta" id="contact">
-  <h2>Ready to Find Your Dream Property?</h2>
-
-  <p>Contact RumahNusa today and let us help you find the right home.</p>
+  <h2 data-en="Ready to Find Your Dream Property?" data-id="Siap Menemukan Properti Impian Anda?">Ready to Find Your Dream Property?</h2>
+  <p data-en="Tell us what you need. We will listen, understand your priorities, and help you take the next step toward a comfortable home." data-id="Ceritakan kebutuhan Anda. Kami akan mendengarkan, memahami prioritas Anda, dan membantu Anda mengambil langkah berikutnya menuju rumah yang nyaman.">Tell us what you need. We will listen, understand your priorities, and help you take the next step toward a comfortable home.</p>
 
   <a class="btn" href="mailto:rumahnusarealestate@gmail.com">
     Contact Us
@@ -673,7 +681,8 @@ footer p {
 
 <footer>
   <h2> RumahNusa Real Estate</h2>
-  <p>Better Homes. Brighter Futures.</p>
+  <p data-en="Better Homes. Brighter Futures." data-id="Rumah Lebih Baik. Masa Depan Lebih Cerah.">Better Homes. Brighter Futures.</p>
+  <p data-en="Beautiful homes, caring service, and a more comfortable way to find where you belong." data-id="Rumah indah, pelayanan penuh kepedulian, dan cara yang lebih nyaman untuk menemukan tempat Anda berada.">Beautiful homes, caring service, and a more comfortable way to find where you belong.</p>
   <p>© 2026 RumahNusa All rights reserved.</p>
 </footer>
 
@@ -771,6 +780,18 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
     document.getElementById('sendProfile').disabled = true;
     document.getElementById('clientInbox').scrollIntoView({behavior:'smooth', block:'start'});
   });
+})();
+</script>
+
+<script>
+(function(){
+ const buttons=document.querySelectorAll('.lang-btn');
+ function setLang(lang){
+  document.documentElement.lang=lang==='id'?'id':'en';
+  document.querySelectorAll('[data-en][data-id]').forEach(el=>{el.textContent=lang==='id'?el.dataset.id:el.dataset.en;});
+  buttons.forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));
+ }
+ buttons.forEach(b=>b.addEventListener('click',()=>setLang(b.dataset.lang)));
 })();
 </script>
 
