@@ -315,6 +315,41 @@ section {
   margin-top: 20px;
 }
 
+
+/* RumahNusa client profile and agent inbox */
+.client-area { background: #eef7fb; }
+.client-panel { max-width: 920px; margin: auto; background: white; border-radius: 18px; padding: 28px; box-shadow: 0 5px 20px rgba(16,42,67,.08); }
+.client-steps { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
+.client-step { padding: 7px 11px; border-radius: 20px; background: #e5edf4; color: #627d98; font-size: 12px; font-weight: bold; }
+.client-step.active { background: #e0f2fe; color: #075985; }
+.client-form-step { display: none; }
+.client-form-step.active { display: block; }
+.client-form-step h3 { font-size: 24px; margin-bottom: 8px; color: #102a43; }
+.client-form-step p { color: #627d98; margin-bottom: 18px; }
+.client-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+.client-field { display: flex; flex-direction: column; gap: 6px; }
+.client-field.full { grid-column: 1 / -1; }
+.client-field label { font-weight: 700; color: #183b56; }
+.client-field input, .client-field select, .client-field textarea {
+  width: 100%; padding: 13px; border: 1px solid #cbd5e1; border-radius: 9px; font: inherit; color: #102a43; background: white;
+}
+.client-field textarea { min-height: 120px; resize: vertical; }
+.client-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.client-option { border: 1px solid #cbd5e1; background: white; border-radius: 12px; padding: 14px; text-align: left; cursor: pointer; color: #183b56; }
+.client-option strong { display: block; margin-bottom: 4px; color: #075985; }
+.client-option small { color: #627d98; }
+.client-option.selected { border: 2px solid #0ea5e9; background: #f0f9ff; }
+.client-actions { display: flex; justify-content: space-between; gap: 12px; margin-top: 22px; }
+.client-actions .btn.secondary { background: #e5edf4; color: #183b56; }
+.client-summary { background: #f5f9fc; padding: 18px; border-radius: 12px; margin-top: 16px; }
+.client-inbox { margin-top: 28px; border-top: 1px solid #d9e2ec; padding-top: 25px; }
+.inbox-thread { background: #f8fbfd; border: 1px solid #d9e2ec; border-radius: 12px; padding: 16px; margin-top: 12px; }
+.inbox-note { color: #627d98; font-size: 13px; margin-top: 8px; }
+@media (max-width: 800px) {
+  .client-panel { padding: 20px; }
+  .client-grid, .client-options { grid-template-columns: 1fr; }
+}
+
 footer {
   background: #071e33;
   color: white;
@@ -493,6 +528,127 @@ footer p {
 
 
 
+
+<section id="client-profile" class="client-area">
+  <div class="client-panel">
+    <div class="section-title">
+      <h2>Tell RumahNusa What You Need</h2>
+      <p>A simple step-by-step profile helps our agent understand the home you are looking for.</p>
+    </div>
+
+    <div class="client-steps" aria-label="Profile progress">
+      <span class="client-step active">1. Profile</span>
+      <span class="client-step">2. Home</span>
+      <span class="client-step">3. Living</span>
+      <span class="client-step">4. Contact</span>
+      <span class="client-step">5. Inbox</span>
+    </div>
+
+    <form id="clientProfileForm">
+      <div class="client-form-step active" data-step="1">
+        <h3>About you</h3>
+        <p>Start with the basic information you want RumahNusa to use for your property search.</p>
+        <div class="client-grid">
+          <div class="client-field">
+            <label for="clientName">Full name</label>
+            <input id="clientName" required placeholder="Your full name">
+          </div>
+          <div class="client-field">
+            <label for="clientGender">Gender</label>
+            <select id="clientGender" required>
+              <option value="">Choose</option>
+              <option>Female</option><option>Male</option><option>Prefer not to say</option>
+            </select>
+          </div>
+          <div class="client-field">
+            <label for="clientAge">Age</label>
+            <input id="clientAge" type="number" min="18" max="120" required placeholder="18 or older">
+          </div>
+        </div>
+        <div class="client-actions"><span></span><button class="btn client-next" type="button">Continue</button></div>
+      </div>
+
+      <div class="client-form-step" data-step="2">
+        <h3>Choose your home</h3>
+        <p>After your age is entered, choose the property style that fits your plans.</p>
+        <div class="client-options" id="propertyOptions">
+          <button type="button" class="client-option" data-value="Apartment"><strong>Apartment</strong><small>Modern city living with shared amenities.</small></button>
+          <button type="button" class="client-option" data-value="Separate House"><strong>Separate House</strong><small>Your own private home with personal space.</small></button>
+          <button type="button" class="client-option" data-value="Villa"><strong>Villa</strong><small>Relaxed living with extra comfort and outdoor space.</small></button>
+          <button type="button" class="client-option" data-value="Neighborhood Home"><strong>Neighborhood Home</strong><small>A home within a welcoming residential community.</small></button>
+          <button type="button" class="client-option" data-value="Townhouse"><strong>Townhouse</strong><small>Practical multi-level living with a community feel.</small></button>
+          <button type="button" class="client-option" data-value="Penthouse"><strong>Penthouse</strong><small>Spacious high-rise living with a premium feel.</small></button>
+          <button type="button" class="client-option" data-value="Family Residence"><strong>Family Residence</strong><small>Comfortable space designed for family life.</small></button>
+          <button type="button" class="client-option" data-value="Investment Property"><strong>Investment Property</strong><small>A property selected for rental or investment plans.</small></button>
+        </div>
+        <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button" disabled>Continue</button></div>
+      </div>
+
+      <div class="client-form-step" data-step="3">
+        <h3>Shape the home</h3>
+        <p>Choose the space you need. You can change any choice before sending your request.</p>
+        <div class="client-grid">
+          <div class="client-field">
+            <label for="rooms">Bedrooms</label>
+            <select id="rooms">
+              <option>1 bedroom</option><option>2 bedrooms</option><option>3 bedrooms</option><option>4 bedrooms</option><option>5 bedrooms</option><option>6 bedrooms</option><option>7+ bedrooms</option>
+            </select>
+          </div>
+          <div class="client-field">
+            <label for="bathrooms">Bathrooms</label>
+            <select id="bathrooms">
+              <option>1 bathroom</option><option>2 bathrooms</option><option>3 bathrooms</option><option>4 bathrooms</option><option>5 bathrooms</option><option>6 bathrooms</option><option>7+ bathrooms</option>
+            </select>
+          </div>
+          <div class="client-field full">
+            <label>Looking to</label>
+            <div class="client-options">
+              <button type="button" class="client-option selected" data-choice-group="purpose" data-value="Buy"><strong>Buy</strong><small>Find a property to purchase.</small></button>
+              <button type="button" class="client-option" data-choice-group="purpose" data-value="Rent"><strong>Rent</strong><small>Find a property for a longer-term rental.</small></button>
+            </div>
+          </div>
+        </div>
+        <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Continue</button></div>
+      </div>
+
+      <div class="client-form-step" data-step="4">
+        <h3>Contact and living plans</h3>
+        <p>Give the agent enough information to respond to your request.</p>
+        <div class="client-grid">
+          <div class="client-field"><label for="clientPhone">Phone number</label><input id="clientPhone" type="tel" placeholder="+62 ..." required></div>
+          <div class="client-field"><label for="clientEmail">Email</label><input id="clientEmail" type="email" placeholder="you@example.com" required></div>
+          <div class="client-field"><label for="clientCity">City where you live now</label><input id="clientCity" placeholder="Current city" required></div>
+          <div class="client-field"><label for="clientMarital">Family status</label><select id="clientMarital" required><option value="">Choose</option><option>Single</option><option>Married</option><option>Prefer not to say</option></select></div>
+          <div class="client-field"><label for="household">How many people will live there?</label><input id="household" type="number" min="1" max="30" value="1" required></div>
+          <div class="client-field"><label for="clientCityWant">Preferred property city</label><input id="clientCityWant" placeholder="For example, Jakarta" required></div>
+          <div class="client-field full"><label for="aboutClient">Tell us about yourself</label><textarea id="aboutClient" placeholder="Share anything useful about your lifestyle, family, work, timing, or home preferences."></textarea></div>
+        </div>
+        <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Review Request</button></div>
+      </div>
+
+      <div class="client-form-step" data-step="5">
+        <h3>Ready for your RumahNusa agent</h3>
+        <p>Review your request, then send it to the RumahNusa contact inbox.</p>
+        <div id="clientSummary" class="client-summary"></div>
+        <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn" id="sendProfile" type="button">Send Request</button></div>
+      </div>
+    </form>
+
+    <div id="clientInbox" class="client-inbox" hidden>
+      <h3>RumahNusa Inbox</h3>
+      <p>Your conversation area for messages and documents. Video sending is not available here.</p>
+      <div class="inbox-thread">
+        <strong>RumahNusa Agent</strong>
+        <p id="inboxStatus">Your request is ready for an agent reply.</p>
+        <label for="clientDocument"><strong>Send a document</strong></label>
+        <input id="clientDocument" type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+        <p class="inbox-note">For privacy, only send documents you are comfortable sharing. Do not send passwords or payment-card details.</p>
+      </div>
+      <p style="margin-top:16px;">Email the agent directly: <a href="mailto:rumahnusarealestate@gmail.com">rumahnusarealestate@gmail.com</a></p>
+    </div>
+  </div>
+</section>
+
 <section id="about" class="about">
   <div class="about-box">
     <h2>Your Trusted Real Estate Partner</h2>
@@ -547,6 +703,75 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
     setTimeout(function() { button.textContent = oldText; }, 1500);
   });
 });
+</script>
+
+<script>
+(function() {
+  const form = document.getElementById('clientProfileForm');
+  if (!form) return;
+  const steps = Array.from(form.querySelectorAll('.client-form-step'));
+  const badges = Array.from(document.querySelectorAll('.client-step'));
+  let current = 0;
+  const state = { property: '', purpose: 'Buy' };
+
+  function showStep(index) {
+    current = Math.max(0, Math.min(index, steps.length - 1));
+    steps.forEach((s, i) => s.classList.toggle('active', i === current));
+    badges.forEach((b, i) => b.classList.toggle('active', i === Math.min(current, badges.length - 1)));
+    document.querySelector('.client-panel').scrollIntoView({behavior:'smooth', block:'start'});
+  }
+
+  form.querySelectorAll('[data-back]').forEach(btn => btn.addEventListener('click', () => showStep(current - 1)));
+
+  form.querySelectorAll('.client-next').forEach(btn => btn.addEventListener('click', () => {
+    if (current === 0) {
+      const name = document.getElementById('clientName');
+      const gender = document.getElementById('clientGender');
+      const age = document.getElementById('clientAge');
+      if (!name.reportValidity() || !gender.reportValidity() || !age.reportValidity()) return;
+      if (Number(age.value) < 18) { age.setCustomValidity('Please enter an age of 18 or older.'); age.reportValidity(); age.setCustomValidity(''); return; }
+    }
+    if (current === 1 && !state.property) return;
+    if (current === 3) {
+      const required = ['clientPhone','clientEmail','clientCity','clientMarital','household','clientCityWant'];
+      for (const id of required) { const el=document.getElementById(id); if (!el.reportValidity()) return; }
+      buildSummary();
+    }
+    showStep(current + 1);
+  }));
+
+  document.querySelectorAll('#propertyOptions .client-option').forEach(btn => btn.addEventListener('click', () => {
+    document.querySelectorAll('#propertyOptions .client-option').forEach(x => x.classList.remove('selected'));
+    btn.classList.add('selected');
+    state.property = btn.dataset.value;
+    document.querySelector('[data-step="2"] .client-next').disabled = false;
+  }));
+
+  document.querySelectorAll('[data-choice-group="purpose"]').forEach(btn => btn.addEventListener('click', () => {
+    document.querySelectorAll('[data-choice-group="purpose"]').forEach(x => x.classList.remove('selected'));
+    btn.classList.add('selected');
+    state.purpose = btn.dataset.value;
+  }));
+
+  function buildSummary() {
+    const v = id => document.getElementById(id).value;
+    document.getElementById('clientSummary').innerHTML =
+      '<strong>' + v('clientName') + '</strong><br>' +
+      state.property + ' · ' + state.purpose + '<br>' +
+      v('rooms') + ' · ' + v('bathrooms') + '<br>' +
+      'Preferred city: ' + v('clientCityWant') + '<br>' +
+      'Household: ' + v('household') + ' · Current city: ' + v('clientCity') + '<br>' +
+      'Email: ' + v('clientEmail') + ' · Phone: ' + v('clientPhone');
+  }
+
+  document.getElementById('sendProfile').addEventListener('click', () => {
+    document.getElementById('clientInbox').hidden = false;
+    document.getElementById('inboxStatus').textContent = 'Your request has been prepared for the RumahNusa agent. The live agent conversation and document storage will be connected through Supabase next.';
+    document.getElementById('sendProfile').textContent = 'Request Ready';
+    document.getElementById('sendProfile').disabled = true;
+    document.getElementById('clientInbox').scrollIntoView({behavior:'smooth', block:'start'});
+  });
+})();
 </script>
 
 </body>
