@@ -150,6 +150,21 @@ section {
   transform: translateY(-5px);
 }
 
+.concept-listing .concept-visual-card {
+  min-height: 220px;
+  height: 220px;
+  padding: 18px 12px 10px;
+}
+.concept-listing .tower { width: 28px; height: 150px; }
+.concept-listing .tower:nth-child(2), .concept-listing .tower:nth-child(4), .concept-listing .tower:nth-child(6) { height: 175px; }
+.concept-listing .tower:nth-child(4) { width: 34px; }
+@media (max-width: 800px) {
+  .concept-listing .concept-visual-card { min-height: 190px; height: 190px; }
+  .concept-listing .tower { width: 24px; height: 125px; }
+  .concept-listing .tower:nth-child(2), .concept-listing .tower:nth-child(4), .concept-listing .tower:nth-child(6) { height: 145px; }
+  .concept-listing .tower:nth-child(4) { width: 28px; }
+}
+
 .concept-card {
   margin-top: 28px;
   background: white;
@@ -386,6 +401,24 @@ footer p {
   </div>
 
   <div class="cards">
+
+    <div class="card concept-listing">
+      <div class="concept-visual concept-visual-card" aria-label="Seven residential towers, each 20 stories tall">
+        <div class="tower"></div><div class="tower"></div><div class="tower"></div><div class="tower"></div>
+        <div class="tower"></div><div class="tower"></div><div class="tower"></div>
+      </div>
+      <div class="card-content">
+        <span class="tag">LUXURY CONCEPT</span>
+        <h3>RumahNusa 20 — Seven-Tower Residence</h3>
+        <p class="location">📍 Jakarta, Indonesia</p>
+        <p class="price">7 Towers · 20 Stories</p>
+        <div class="features">
+          <span>🏢 7 Towers</span>
+          <span>🏙️ 20 Floors</span>
+          <span>🏊 Pool</span>
+        </div>
+      </div>
+    </div>
 
     <div class="card">
       <img src="https://images.unsplash.com/photo-1701502909888-6b11930e419d?fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=60&w=3000>
