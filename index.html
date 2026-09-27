@@ -269,6 +269,19 @@ section {
   font-size: 13px;
 }
 
+.copy-btn {
+  margin-top: 16px;
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid #0ea5e9;
+  border-radius: 8px;
+  background: white;
+  color: #075985;
+  font-weight: bold;
+  cursor: pointer;
+}
+.copy-btn:active { transform: translateY(1px); }
+
 .about {
   background: white;
   text-align: center;
@@ -417,6 +430,7 @@ footer p {
           <span>🏙️ 20 Floors</span>
           <span>🏊 Pool</span>
         </div>
+        <button class="copy-btn" type="button" data-copy="RumahNusa 20 — Seven-Tower Residence | Jakarta, Indonesia | 7 Towers | 20 Stories | Swimming Pool">Copy Details</button>
       </div>
     </div>
 
@@ -434,6 +448,7 @@ footer p {
           <span>🛁 2 Baths</span>
           <span>📐 180 m²</span>
         </div>
+        <button class="copy-btn" type="button" data-copy="Modern Family House | Bali, Indonesia | For Sale | $350,000 | 3 Beds | 2 Baths | 180 m²">Copy Details</button>
       </div>
     </div>
 
@@ -451,6 +466,7 @@ footer p {
           <span>🛁 2 Baths</span>
           <span>📐 120 m²</span>
         </div>
+        <button class="copy-btn" type="button" data-copy="Luxury Apartment | Jakarta, Indonesia | For Rent | $1,200 / month | 2 Beds | 2 Baths | 120 m²">Copy Details</button>
       </div>
     </div>
 
@@ -468,6 +484,7 @@ footer p {
           <span>🛁 3 Baths</span>
           <span>📐 250 m²</span>
         </div>
+        <button class="copy-btn" type="button" data-copy="Villa with Private Pool | Bali, Indonesia | For Sale | $550,000 | 4 Beds | 3 Baths | 250 m²">Copy Details</button>
       </div>
     </div>
 
@@ -507,6 +524,30 @@ footer p {
 <a class="whatsapp" href="https://wa.me/6280000000000">
   WhatsApp Us
 </a>
+
+<script>
+document.querySelectorAll('.copy-btn').forEach(function(button) {
+  button.addEventListener('click', async function() {
+    const text = button.getAttribute('data-copy') || '';
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (e) {
+      const area = document.createElement('textarea');
+      area.value = text;
+      area.style.position = 'fixed';
+      area.style.opacity = '0';
+      document.body.appendChild(area);
+      area.focus();
+      area.select();
+      document.execCommand('copy');
+      area.remove();
+    }
+    const oldText = button.textContent;
+    button.textContent = 'Copied!';
+    setTimeout(function() { button.textContent = oldText; }, 1500);
+  });
+});
+</script>
 
 </body>
 </html>
