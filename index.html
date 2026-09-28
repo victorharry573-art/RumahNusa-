@@ -628,7 +628,42 @@ footer p {
         <h3>Contact and living plans</h3>
         <p>Give the agent enough information to respond to your request.</p>
         <div class="client-grid">
-          <div class="client-field"><label for="clientPhone">Phone number</label><input id="clientPhone" type="tel" placeholder="+62 ..." required></div>
+          <div class="client-field full">
+  <label for="clientCountry">Phone country</label>
+  <div style="display:grid;grid-template-columns:150px 1fr;gap:10px;">
+    <select id="clientCountry" aria-label="Phone country">
+      <option value="ID" data-flag="🇮🇩" data-code="+62">🇮🇩 Indonesia (+62)</option>
+      <option value="MY" data-flag="🇲🇾" data-code="+60">🇲🇾 Malaysia (+60)</option>
+      <option value="SG" data-flag="🇸🇬" data-code="+65">🇸🇬 Singapore (+65)</option>
+      <option value="US" data-flag="🇺🇸" data-code="+1">🇺🇸 United States (+1)</option>
+      <option value="GB" data-flag="🇬🇧" data-code="+44">🇬🇧 United Kingdom (+44)</option>
+      <option value="AU" data-flag="🇦🇺" data-code="+61">🇦🇺 Australia (+61)</option>
+      <option value="CA" data-flag="🇨🇦" data-code="+1">🇨🇦 Canada (+1)</option>
+      <option value="IN" data-flag="🇮🇳" data-code="+91">🇮🇳 India (+91)</option>
+      <option value="PH" data-flag="🇵🇭" data-code="+63">🇵🇭 Philippines (+63)</option>
+      <option value="TH" data-flag="🇹🇭" data-code="+66">🇹🇭 Thailand (+66)</option>
+      <option value="JP" data-flag="🇯🇵" data-code="+81">🇯🇵 Japan (+81)</option>
+      <option value="KR" data-flag="🇰🇷" data-code="+82">🇰🇷 South Korea (+82)</option>
+      <option value="CN" data-flag="🇨🇳" data-code="+86">🇨🇳 China (+86)</option>
+      <option value="AE" data-flag="🇦🇪" data-code="+971">🇦🇪 UAE (+971)</option>
+      <option value="SA" data-flag="🇸🇦" data-code="+966">🇸🇦 Saudi Arabia (+966)</option>
+      <option value="ZA" data-flag="🇿🇦" data-code="+27">🇿🇦 South Africa (+27)</option>
+      <option value="DE" data-flag="🇩🇪" data-code="+49">🇩🇪 Germany (+49)</option>
+      <option value="FR" data-flag="🇫🇷" data-code="+33">🇫🇷 France (+33)</option>
+      <option value="IT" data-flag="🇮🇹" data-code="+39">🇮🇹 Italy (+39)</option>
+      <option value="ES" data-flag="🇪🇸" data-code="+34">🇪🇸 Spain (+34)</option>
+      <option value="BR" data-flag="🇧🇷" data-code="+55">🇧🇷 Brazil (+55)</option>
+      <option value="NG" data-flag="🇳🇬" data-code="+234">🇳🇬 Nigeria (+234)</option>
+      <option value="GH" data-flag="🇬🇭" data-code="+233">🇬🇭 Ghana (+233)</option>
+      <option value="KE" data-flag="🇰🇪" data-code="+254">🇰🇪 Kenya (+254)</option>
+    </select>
+    <div style="display:flex;align-items:center;border:1px solid #cbd5e1;border-radius:9px;background:white;overflow:hidden;">
+      <span id="phonePrefix" style="padding:13px 10px;font-weight:bold;color:#075985;background:#f0f9ff;">🇮🇩 +62</span>
+      <input id="clientPhone" type="tel" inputmode="numeric" autocomplete="tel-national" pattern="[0-9 ]{5,15}" placeholder="81234567890" required style="border:0;border-radius:0;flex:1;" aria-label="Phone number without country code">
+    </div>
+  </div>
+  <small style="color:#627d98;">Choose your country. The flag and country code are added automatically; enter numbers only.</small>
+</div>
           <div class="client-field"><label for="clientEmail">Email</label><input id="clientEmail" type="email" placeholder="you@example.com" required></div>
           <div class="client-field"><label for="clientCity">City where you live now</label><input id="clientCity" placeholder="Current city" required></div>
           <div class="client-field"><label for="clientMarital">Family status</label><select id="clientMarital" required><option value="">Choose</option><option>Single</option><option>Married</option><option>Prefer not to say</option></select></div>
@@ -792,6 +827,22 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
   buttons.forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));
  }
  buttons.forEach(b=>b.addEventListener('click',()=>setLang(b.dataset.lang)));
+})();
+</script>
+<script>
+(function(){
+ const country=document.getElementById('clientCountry');
+ const prefix=document.getElementById('phonePrefix');
+ const phone=document.getElementById('clientPhone');
+ function updatePhone(){
+   const o=country.options[country.selectedIndex];
+   prefix.textContent=(o.dataset.flag||'')+' '+(o.dataset.code||'');
+   phone.value='';
+   phone.placeholder=o.value==='ID'?'81234567890':'Enter local number';
+ }
+ country.addEventListener('change',updatePhone);
+ phone.addEventListener('input',function(){this.value=this.value.replace(/[^0-9 ]/g,'');});
+ updatePhone();
 })();
 </script>
 
