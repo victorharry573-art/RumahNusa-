@@ -604,14 +604,11 @@ footer p {
           <div class="client-field">
             <label for="rooms">Kamar tidur</label>
             <select id="rooms">
-              <option>1 kamar tidur</option><option>2 kamar tidur</option><option>3 kamar tidur</option><option>4 kamar tidur</option><option>5 kamar tidur</option><option>6 kamar tidur</option><option>7+ kamar tidur</option>
+              <option>1 kamar tidur</option><option>2 kamar tidur</option><option>3 kamar tidur</option><option>4 kamar tidur</option><option>5 kamar tidur</option><option>6 kamar tidur</option><option>7 kamar tidur</option>
             </select>
           </div>
-          <div class="client-field">
-            <label for="bathrooms">Kamar mandi</label>
-            <select id="bathrooms">
-              <option>1 kamar mandi</option><option>2 kamar mandi</option><option>3 kamar mandi</option><option>4 kamar mandi</option><option>5 kamar mandi</option><option>6 kamar mandi</option><option>7+ kamar mandi</option>
-            </select>
+          <div class="client-field client-comfort-note">
+            <p data-en="Every home includes a beautiful kitchen, toilet, and bathroom." data-id="Setiap rumah memiliki dapur yang indah, toilet, dan kamar mandi."><strong>Setiap rumah memiliki dapur yang indah, toilet, dan kamar mandi.</strong></p>
           </div>
           <div class="client-field full">
             <label>Keperluan</label>
@@ -802,7 +799,7 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
     document.getElementById('clientSummary').innerHTML =
       '<strong>' + v('clientName') + '</strong><br>' +
       state.property + ' · ' + state.purpose + '<br>' +
-      v('rooms') + ' · ' + v('bathrooms') + '<br>' +
+      v('rooms') + '<br>' +
       'Kota pilihan: ' + v('clientCityWant') + '<br>' +
       'Rumahhold: ' + v('household') + ' · Kota saat ini: ' + v('clientCity') + '<br>' +
       'Email: ' + v('clientEmail') + ' · Telepon: ' + v('clientPhone');
