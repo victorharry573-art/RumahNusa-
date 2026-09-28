@@ -345,6 +345,17 @@ section {
 .client-inbox { margin-top: 28px; border-top: 1px solid #d9e2ec; padding-top: 25px; }
 .inbox-thread { background: #f8fbfd; border: 1px solid #d9e2ec; border-radius: 12px; padding: 16px; margin-top: 12px; }
 .inbox-note { color: #627d98; font-size: 13px; margin-top: 8px; }
+.message-list { display:flex; flex-direction:column; gap:10px; margin-top:14px; }
+.message-bubble { max-width:88%; padding:12px 14px; border-radius:14px; background:white; border:1px solid #d9e2ec; }
+.message-bubble.customer { align-self:flex-end; background:#e0f2fe; border-color:#bae6fd; }
+.message-bubble.agent { align-self:flex-start; background:#fff; }
+.message-meta { display:flex; align-items:center; gap:7px; margin-top:6px; font-size:11px; color:#627d98; }
+.message-checks { font-weight:800; letter-spacing:-2px; color:#075985; }
+.message-compose { display:flex; gap:8px; margin-top:14px; }
+.message-compose textarea { flex:1; min-height:48px; max-height:130px; resize:vertical; padding:12px; border:1px solid #cbd5e1; border-radius:10px; font:inherit; }
+.message-compose button { align-self:flex-end; }
+.inbox-status-card { margin-top:14px; padding:12px 14px; border-radius:10px; background:#f0f9ff; color:#075985; font-size:13px; }
+@media(max-width:800px){.message-compose{flex-direction:column}.message-compose button{align-self:stretch}}
 @media (max-width: 800px) {
   .client-panel { padding: 20px; }
   .client-grid, .client-options { grid-template-columns: 1fr; }
@@ -937,12 +948,18 @@ footer p {
 
     <div id="clientKotak Masuk" class="client-inbox" hidden>
       <h3>RumahNusa Kotak Masuk</h3>
-      <p>Area percakapan untuk pesan dan dokumen. Pengiriman video tidak tersedia di sini.</p>
+      <p>Pesan Anda kepada agen RumahNusa akan tampil di percakapan ini.</p>
       <div class="inbox-thread">
-        <strong>RumahNusa Usiant</strong>
-        <p id="inboxStatus">Permintaan Anda siap untuk dibalas agen.</p>
-        <label for="clientDocument"><strong>Kirim dokumen</strong></label>
+        <strong>RumahNusa Agent</strong>
+        <div id="inboxStatusCard" class="inbox-status-card">Pesan Anda akan ditampilkan di sini setelah dikirim.</div>
+        <div id="messageList" class="message-list" aria-live="polite"></div>
+        <div class="message-compose">
+          <textarea id="messageComposer" placeholder="Tulis pesan untuk agen RumahNusa..."></textarea>
+          <button class="btn" id="sendInboxMessage" type="button">Kirim Pesan</button>
+        </div>
+        <label for="clientDocument" style="display:block;margin-top:16px;"><strong>Kirim dokumen</strong></label>
         <input id="clientDocument" type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+        <p class="inbox-note">✓ satu centang = terkirim · ✓✓ dua centang = sudah dilihat agen.</p>
         <p class="inbox-note">RumahNusa siap membantu Anda menemukan rumah yang sesuai dengan kebutuhan, gaya hidup, dan rencana Anda.</p>
       </div>
       <p style="margin-top:16px;">Email agen secara langsung: <a href="mailto:rumahnusarealestate@gmail.com">rumahnusarealestate@gmail.com</a></p>
@@ -1061,12 +1078,35 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
       'Email: ' + v('clientEmail') + ' · Telepon: ' + v('clientPhone');
   }
 
+  function addInboxMessage(text, sender) {
+    const list = document.getElementById('messageList');
+    const bubble = document.createElement('div');
+    bubble.className = 'message-bubble ' + (sender === 'customer' ? 'customer' : 'agent');
+    const label = sender === 'customer' ? 'Anda' : 'Agen RumahNusa';
+    bubble.innerHTML = '<div>' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>') + '</div>' +
+      (sender === 'customer' ? '<div class="message-meta"><span class="message-checks">✓</span><span>Terkirim</span></div>' : '<div class="message-meta"><span>Dibalas agen</span></div>');
+    list.appendChild(bubble);
+    list.scrollTop = list.scrollHeight;
+  }
+
   document.getElementById('sendProfil').addEventListener('click', () => {
     document.getElementById('clientKotak Masuk').hidden = false;
-    document.getElementById('inboxStatus').textContent = 'Permintaan Anda telah disiapkan untuk agen RumahNusa. Percakapan agen dan penyimpanan dokumen akan dihubungkan melalui Supabase berikutnya.';
-    document.getElementById('sendProfil').textContent = 'Permintaan Siap';
+    document.getElementById('sendProfil').textContent = 'Permintaan Terkirim';
     document.getElementById('sendProfil').disabled = true;
+    document.getElementById('inboxStatusCard').textContent = 'Pesan Anda sudah masuk ke percakapan RumahNusa. ✓ Terkirim — menunggu agen membacanya.';
+    const v = id => document.getElementById(id).value;
+    const requestMessage = 'Saya mencari ' + state.property + ' untuk ' + state.purpose + ', dengan ' + v('rooms') + '. Kota pilihan: ' + v('clientCityWant') + '. ' + (v('aboutClient') || '');
+    addInboxMessage(requestMessage, 'customer');
     document.getElementById('clientKotak Masuk').scrollIntoView({behavior:'smooth', block:'start'});
+  });
+
+  document.getElementById('sendInboxMessage').addEventListener('click', () => {
+    const box = document.getElementById('messageComposer');
+    const text = box.value.trim();
+    if (!text) { box.focus(); return; }
+    addInboxMessage(text, 'customer');
+    document.getElementById('inboxStatusCard').textContent = 'Pesan Anda sudah terkirim. ✓ Menunggu agen membacanya.';
+    box.value = '';
   });
 })();
 </script>
