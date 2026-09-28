@@ -827,6 +827,7 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
   buttons.forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));
  }
  buttons.forEach(b=>b.addEventListener('click',()=>setLang(b.dataset.lang)));
+ setLang('id');
 })();
 </script>
 <script>
