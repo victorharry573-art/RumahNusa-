@@ -403,6 +403,43 @@ footer p {
 .bilingual { margin-top:10px; color:#627d98; }
 .bilingual .id { display:block; margin-top:4px; font-style:italic; }
 @media(max-width:800px){.lang-switch{margin:10px 0 0;}.lang-btn{padding:6px 9px;}}
+
+.agent-team-photo {
+  width: min(920px, 100%);
+  height: 300px;
+  margin: 0 auto 28px;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 14px 35px rgba(0,0,0,.28);
+  border: 3px solid rgba(255,255,255,.8);
+}
+.agent-team-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 32% center;
+  display: block;
+}
+.agent-team-caption {
+  text-align: center;
+  margin-top: -62px;
+  margin-bottom: 40px;
+  position: relative;
+  z-index: 2;
+  color: white;
+  font-weight: bold;
+  font-size: 18px;
+  text-shadow: 0 2px 8px rgba(0,0,0,.65);
+}
+.hero {
+  flex-direction: column;
+  justify-content: center;
+}
+.hero-content { width: min(920px, 100%); }
+@media (max-width:800px){
+  .agent-team-photo { height: 230px; margin-bottom: 22px; }
+  .agent-team-caption { margin-top: -50px; margin-bottom: 28px; font-size: 16px; }
+}
 </style>
 </head>
 
@@ -424,6 +461,10 @@ footer p {
 </header>
 
 <section class="hero">
+  <div class="agent-team-photo" aria-label="Three professional team members, including two women wearing hijabs and one man">
+    <img src="https://images.pexels.com/photos/7869106/pexels-photo-7869106.jpeg?cs=srgb&dl=pexels-pavel-danilyuk-7869106.jpg&fm=jpg" alt="Professional team with two women wearing hijabs and a male colleague">
+  </div>
+  <div class="agent-team-caption" data-en="Meet the people ready to help you find your home." data-id="Temui tim yang siap membantu Anda menemukan rumah.">Temui tim yang siap membantu Anda menemukan rumah.</div>
   <div class="hero-content">
     <small data-en="FIND YOUR DREAM HOME" data-id="TEMUKAN RUMAH IMPIAN ANDA">FIND YOUR DREAM HOME</small>
 
