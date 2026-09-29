@@ -1527,7 +1527,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     }).eq('id',state.user.id);
     if(profileError){status('Data pelanggan belum dapat disimpan: '+profileError.message);return;}
 
-    window.__rnPropertyName=property+' · '+purpose+' · '+rooms;
+    window.__rnPropertyName=v('clientName')+' · '+property+' · '+purpose+' · '+rooms;
     await sendCustomerMessage(requestMessage);
 
     // Attempt real file upload when the private Storage bucket is configured.
