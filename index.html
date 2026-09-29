@@ -1444,11 +1444,12 @@ window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY = 'PASTE_SB_PUBLISHABLE_KEY_HERE';
   async function submitRequest(){
     if(!state.user){inbox.hidden=false;status('Masuk atau buat akun terlebih dahulu, lalu kirim permintaan.');authPanel.scrollIntoView({behavior:'smooth',block:'center'});return;}
     const v=id=>document.getElementById(id)?.value||'';
-    const isLargeHouse=window.state?.property==='Separate Rumah'||window.state?.property==='Neighborhood Rumah';
-    const property=window.state?.property||'Properti RumahNusa';
-    const purpose=window.state?.purpose||'Beli';
+    const selectedProperty=document.querySelector('#propertyOptions .client-option.selected');
+    const property=selectedProperty?.dataset.value||'Properti RumahNusa';
+    const isLargeHouse=property==='Separate Rumah'||property==='Neighborhood Rumah';
+    const purpose=document.getElementById('purpose')?.value||'Beli';
     const rooms=v('rooms');
-    const rentalTerm=window.state?.rentalTerm||'';
+    const rentalTerm=document.getElementById('rentalTerm')?.value||'';
     const city=v('clientCityWant');
     const about=v('aboutClient');
     const text=(purpose==='Sewa'?'Saya ingin menyewa ':'Saya ingin membeli ')+property+(purpose==='Sewa'&&rentalTerm?' selama '+rentalTerm:'')+'. Pilihan: '+rooms+'. Kota pilihan: '+city+'. Tentang saya: '+about;
