@@ -355,6 +355,10 @@ section {
 .message-compose textarea { flex:1; min-height:48px; max-height:130px; resize:vertical; padding:12px; border:1px solid #cbd5e1; border-radius:10px; font:inherit; }
 .message-compose button { align-self:flex-end; }
 .inbox-status-card { margin-top:14px; padding:12px 14px; border-radius:10px; background:#f0f9ff; color:#075985; font-size:13px; }
+.apartment-layouts { display:grid; grid-template-columns:1fr; gap:12px; }
+.apartment-layout { background:#f8fbfd; border:1px solid #d9e2ec; border-radius:12px; padding:15px; }
+.apartment-layout strong { display:block; color:#075985; margin-bottom:6px; }
+.apartment-layout p { margin:0; color:#627d98; font-size:14px; }
 @media(max-width:800px){.message-compose{flex-direction:column}.message-compose button{align-self:stretch}}
 @media (max-width: 800px) {
   .client-panel { padding: 20px; }
@@ -528,7 +532,7 @@ footer p {
       Real Estate
     </h1>
 
-    <p data-en="Discover beautiful homes, apartments and properties for sale and rent." data-id="Temukan rumah, apartemen, dan properti indah untuk dibeli atau disewa.">Discover beautiful homes, apartments and properties for sale and rent.</p>
+    <p data-en="Discover beautiful homes, apartments and properties available for purchase." data-id="Temukan rumah, apartemen, dan properti indah untuk dibeli dan dimiliki.">Discover beautiful homes, apartments and properties available for purchase.</p>
     <div class="bilingual"><strong data-en="RumahNusa is more than a property search." data-id="RumahNusa lebih dari sekadar pencarian properti.">RumahNusa is more than a property search.</strong><span class="id" data-en="We care about how you live, how you feel, and the comfort your home brings every day." data-id="Kami peduli pada cara Anda hidup, perasaan Anda, dan kenyamanan yang diberikan rumah Anda setiap hari.">We care about how you live, how you feel, and the comfort your home brings every day.</span></div>
 
     <div class="search-box">
@@ -596,17 +600,17 @@ footer p {
       <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=900&q=80">
 
       <div class="card-content">
-        <span class="tag">DISEWAKAN</span>
-        <h3>Luxury Apartemen</h3>
+        <span class="tag">DIJUAL</span>
+        <h3>Luxury Apartemen — 2 Kamar</h3>
         <p class="location">📍 Jakarta, Indonesia</p>
-        <p class="price">$1,200 / month</p>
-
+        <p class="price">Untuk Pembelian</p>
+        <p class="location">Apartemen 2 kamar dengan 1 kamar mandi sangat besar dan toilet di dalamnya. Dapur menyatu dengan parlor yang sangat besar, indah, lengkap dengan furnitur dan AC. Kedua kamar tidur juga memiliki AC dan furnitur.</p>
         <div class="features">
-          <span>🛏 2 Beds</span>
-          <span>🛁 2 Baths</span>
-          <span>📐 120 m²</span>
+          <span>🛏 2 Kamar</span>
+          <span>🛁 1 Kamar Mandi Besar</span>
+          <span>❄️ AC</span>
         </div>
-        <button class="copy-btn" type="button" data-copy="Luxury Apartemen | Jakarta, Indonesia | For Sewa | $1,200 / month | 2 Beds | 2 Baths | 120 m²">Salin Detail</button>
+        <button class="copy-btn" type="button" data-copy="Luxury Apartemen 2 Kamar | Jakarta, Indonesia | DIJUAL | 2 Kamar Tidur | 1 Kamar Mandi Sangat Besar dengan Toilet di Dalam | Dapur di Parlor Besar | Furnitur Lengkap | AC di Parlor dan Kedua Kamar">Salin Detail</button>
       </div>
     </div>
 
@@ -688,7 +692,7 @@ footer p {
           <button type="button" class="client-option" data-value="Townhouse"><strong>Townhouse</strong><small>Hunian bertingkat yang praktis dengan suasana komunitas.</small></button>
           <button type="button" class="client-option" data-value="Penthouse"><strong>Penthouse</strong><small>Hunian luas di gedung tinggi dengan suasana premium.</small></button>
           <button type="button" class="client-option" data-value="Family Residence"><strong>Family Residence</strong><small>Ruang nyaman yang dirancang untuk kehidupan keluarga.</small></button>
-          <button type="button" class="client-option" data-value="Investment Property"><strong>Investment Property</strong><small>Properti untuk rencana sewa atau investasi.</small></button>
+          <button type="button" class="client-option" data-value="Investment Property"><strong>Investment Property</strong><small>Properti untuk investasi jangka panjang atau kepemilikan.</small></button>
         </div>
         <div class="client-actions"><button class="btn secondary" type="button" data-back>Kembali</button><button class="btn client-next" type="button" disabled>Lanjutkan</button></div>
       </div>
@@ -697,21 +701,31 @@ footer p {
         <h3>Tentukan kebutuhan rumah</h3>
         <p>Pilih the space you need. You can change any choice before sending your request.</p>
         <div class="client-grid">
-          <div class="client-field">
-            <label for="rooms">Kamar tidur</label>
+          <div class="client-field full">
+            <label for="rooms">Pilihan kamar apartemen</label>
             <select id="rooms">
-              <option>1 kamar tidur</option><option>2 kamar tidur</option><option>3 kamar tidur</option><option>4 kamar tidur</option><option>5 kamar tidur</option><option>6 kamar tidur</option><option>7 kamar tidur</option>
+              <option>2 kamar tidur</option><option>3 kamar tidur</option><option>4 kamar tidur</option>
             </select>
           </div>
-          <div class="client-field client-comfort-note">
-            <p data-en="Every home includes a beautiful kitchen, toilet, and bathroom." data-id="Setiap rumah memiliki dapur yang indah, toilet, dan kamar mandi."><strong>Setiap rumah memiliki dapur yang indah, toilet, dan kamar mandi.</strong></p>
+          <div class="client-field full">
+            <label>Standar pilihan apartemen</label>
+            <div class="apartment-layouts">
+              <div class="apartment-layout">
+                <strong>2 Kamar Tidur</strong>
+                <p>1 kamar mandi sangat besar dengan toilet di dalam. Dapur menyatu dengan parlor yang sangat besar, indah, lengkap dengan furnitur dan AC. Kedua kamar tidur memiliki AC dan furnitur.</p>
+              </div>
+              <div class="apartment-layout">
+                <strong>3 Kamar Tidur</strong>
+                <p>2 kamar mandi sangat besar dengan toilet di dalam. 1 parlor sangat besar dengan furnitur lengkap, dapur menyatu di dalam parlor, AC, dan perlengkapan lengkap untuk hunian yang indah dan nyaman.</p>
+              </div>
+              <div class="apartment-layout">
+                <strong>4 Kamar Tidur</strong>
+                <p>3 kamar mandi dengan toilet di dalam. 2 parlor sangat besar dengan furnitur indah, dapur terintegrasi, AC, dan perlengkapan lengkap untuk kehidupan yang nyaman.</p>
+              </div>
+            </div>
           </div>
           <div class="client-field full">
-            <label>Keperluan</label>
-            <div class="client-options">
-              <button type="button" class="client-option selected" data-choice-group="purpose" data-value="Beli"><strong>Beli</strong><small>Cari properti untuk dibeli.</small></button>
-              <button type="button" class="client-option" data-choice-group="purpose" data-value="Sewa"><strong>Sewa</strong><small>Cari properti untuk disewa dalam jangka panjang.</small></button>
-            </div>
+            <div class="inbox-status-card"><strong>Semua apartemen RumahNusa hanya untuk dibeli.</strong> Semua unit tersedia untuk pembelian dan kepemilikan.</div>
           </div>
         </div>
         <div class="client-actions"><button class="btn secondary" type="button" data-back>Kembali</button><button class="btn client-next" type="button">Lanjutkan</button></div>
@@ -1061,12 +1075,6 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
     document.querySelector('[data-step="2"] .client-next').disabled = false;
   }));
 
-  document.querySelectorAll('[data-choice-group="purpose"]').forEach(btn => btn.addEventListener('click', () => {
-    document.querySelectorAll('[data-choice-group="purpose"]').forEach(x => x.classList.remove('selected'));
-    btn.classList.add('selected');
-    state.purpose = btn.dataset.value;
-  }));
-
   function buildSummary() {
     const v = id => document.getElementById(id).value;
     document.getElementById('clientSummary').innerHTML =
@@ -1095,7 +1103,12 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
     document.getElementById('sendProfil').disabled = true;
     document.getElementById('inboxStatusCard').textContent = 'Pesan Anda sudah masuk ke percakapan RumahNusa. ✓ Terkirim — menunggu agen membacanya.';
     const v = id => document.getElementById(id).value;
-    const requestMessage = 'Saya mencari ' + state.property + ' untuk ' + state.purpose + ', dengan ' + v('rooms') + '. Kota pilihan: ' + v('clientCityWant') + '. ' + (v('aboutClient') || '');
+    const apartmentSpecs = {
+      '2 kamar tidur': '1 kamar mandi sangat besar dengan toilet di dalam; dapur menyatu dengan parlor sangat besar; parlor dan kedua kamar memiliki AC serta furnitur lengkap.',
+      '3 kamar tidur': '2 kamar mandi sangat besar dengan toilet di dalam; 1 parlor sangat besar dengan dapur terintegrasi, AC, dan furnitur lengkap.',
+      '4 kamar tidur': '3 kamar mandi dengan toilet di dalam; 2 parlor sangat besar dengan dapur terintegrasi, AC, dan furnitur lengkap.'
+    };
+    const requestMessage = 'Saya ingin membeli ' + state.property + '. Pilihan: ' + v('rooms') + '. Kota pilihan: ' + v('clientCityWant') + '. Spesifikasi: ' + (apartmentSpecs[v('rooms')] || 'Hunian dengan ruang yang indah, nyaman, furnitur lengkap, dan AC.') + ' Tentang saya: ' + (v('aboutClient') || '');
     addInboxMessage(requestMessage, 'customer');
     document.getElementById('clientKotak Masuk').scrollIntoView({behavior:'smooth', block:'start'});
   });
