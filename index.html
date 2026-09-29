@@ -1285,5 +1285,254 @@ window.RUMAHNUSA_SUPABASE_URL = 'https://vuhrkijzjmnbsaqnpdmg.supabase.co';
 window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY = 'PASTE_SB_PUBLISHABLE_KEY_HERE';
 </script>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+  const inbox = document.getElementById('clientKotak Masuk');
+  if (!inbox || !window.RUMAHNUSA_SUPABASE_URL || !window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY) return;
+
+  const oldSendRequest = document.getElementById('sendProfil');
+  const oldSendMessage = document.getElementById('sendInboxMessage');
+  if (oldSendRequest) {
+    const fresh = oldSendRequest.cloneNode(true);
+    oldSendRequest.replaceWith(fresh);
+  }
+  if (oldSendMessage) {
+    const fresh = oldSendMessage.cloneNode(true);
+    oldSendMessage.replaceWith(fresh);
+  }
+
+  const style = document.createElement('style');
+  style.textContent = `
+    .rn-auth-panel,.rn-agent-panel{background:#fff;border:1px solid #d9e2ec;border-radius:12px;padding:16px;margin:12px 0}
+    .rn-auth-grid{display:grid;gap:10px}
+    .rn-auth-grid input,.rn-agent-panel textarea{width:100%;box-sizing:border-box;border:1px solid #bcccdc;border-radius:8px;padding:11px;font:inherit}
+    .rn-auth-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .rn-auth-message{margin-top:10px;font-size:14px;color:#486581}
+    .rn-agent-list{display:grid;gap:8px;margin:12px 0}
+    .rn-agent-conv{width:100%;text-align:left;border:1px solid #d9e2ec;background:#f8fbfd;border-radius:8px;padding:10px;cursor:pointer}
+    .rn-agent-conv.active{border-color:#2680eb;background:#eef6ff}
+    .rn-agent-toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}
+    .rn-agent-thread{max-height:360px;overflow:auto;border:1px solid #d9e2ec;border-radius:8px;padding:10px;background:#f8fbfd}
+    .rn-live-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#20a464;margin-right:6px}
+  `;
+  document.head.appendChild(style);
+
+  const authPanel=document.createElement('div');
+  authPanel.className='rn-auth-panel';
+  authPanel.innerHTML=`
+    <strong>Akun RumahNusa</strong>
+    <p id="rnAuthState" class="rn-auth-message">Masuk atau buat akun untuk menggunakan kotak masuk.</p>
+    <div class="rn-auth-grid">
+      <input id="rnAuthEmail" type="email" placeholder="Email">
+      <input id="rnAuthPassword" type="password" placeholder="Password (minimal 6 karakter)">
+    </div>
+    <div class="rn-auth-actions">
+      <button class="btn" id="rnSignIn" type="button">Masuk</button>
+      <button class="btn secondary" id="rnSignUp" type="button">Buat Akun</button>
+      <button class="btn secondary" id="rnSignOut" type="button" hidden>Keluar</button>
+    </div>
+  `;
+  inbox.insertBefore(authPanel,inbox.firstChild);
+
+  const agentPanel=document.createElement('div');
+  agentPanel.className='rn-agent-panel';
+  agentPanel.hidden=true;
+  agentPanel.innerHTML=`
+    <strong>Agent RumahNusa</strong>
+    <p class="rn-auth-message"><span class="rn-live-dot"></span>Kotak masuk agen live</p>
+    <div id="rnAgentList" class="rn-agent-list"></div>
+    <div class="rn-agent-toolbar">
+      <button class="btn secondary" id="rnRefreshAgent" type="button">Muat ulang</button>
+      <button class="btn secondary" id="rnClaimAgent" type="button" hidden>Ambil percakapan</button>
+    </div>
+    <div id="rnAgentThread" class="rn-agent-thread" aria-live="polite">Pilih percakapan.</div>
+    <div class="message-compose" style="margin-top:10px">
+      <textarea id="rnAgentComposer" placeholder="Balas kepada pelanggan..."></textarea>
+      <button class="btn" id="rnAgentSend" type="button">Kirim Balasan</button>
+    </div>
+  `;
+  inbox.insertBefore(agentPanel, inbox.querySelector('.inbox-thread'));
+
+  const state={user:null,profile:null,conversation:null,channel:null,agentSelected:null,agentConversations:[]};
+  let client;
+  try {
+    client=window.supabase.createClient(window.RUMAHNUSA_SUPABASE_URL,window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY);
+  } catch(e) {
+    document.getElementById('rnAuthState').textContent='Konfigurasi Supabase belum aktif.';
+    return;
+  }
+
+  const authState=document.getElementById('rnAuthState');
+  const emailInput=document.getElementById('rnAuthEmail');
+  const passwordInput=document.getElementById('rnAuthPassword');
+  const signIn=document.getElementById('rnSignIn');
+  const signUp=document.getElementById('rnSignUp');
+  const signOut=document.getElementById('rnSignOut');
+  const agentList=document.getElementById('rnAgentList');
+  const agentThread=document.getElementById('rnAgentThread');
+  const agentComposer=document.getElementById('rnAgentComposer');
+  const agentSend=document.getElementById('rnAgentSend');
+  const claimBtn=document.getElementById('rnClaimAgent');
+
+  function esc(s){return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/\n/g,'<br>');}
+  function status(t){authState.textContent=t;}
+  function renderMessages(rows,target){
+    target.innerHTML='';
+    if(!rows.length){target.innerHTML='<div class="inbox-note">Belum ada pesan.</div>';return;}
+    rows.forEach(m=>{
+      const b=document.createElement('div');
+      b.className='message-bubble '+(m.sender_role==='customer'?'customer':'agent');
+      b.innerHTML='<div>'+esc(m.body)+'</div><div class="message-meta">'+(m.sender_role==='customer'?'Pelanggan':'Agen RumahNusa')+' · '+new Date(m.created_at).toLocaleString('id-ID')+(m.read_at?' · ✓✓':' · ✓')+'</div>';
+      target.appendChild(b);
+    });
+    target.scrollTop=target.scrollHeight;
+  }
+  async function getProfile(user){
+    const {data,error}=await client.from('profiles').select('*').eq('id',user.id).maybeSingle();
+    if(error) throw error;
+    if(data) return data;
+    const {data:created,error:createError}=await client.from('profiles').insert({
+      id:user.id,email:user.email||'',full_name:user.user_metadata?.full_name||'',phone:user.user_metadata?.phone||'',role:'customer'
+    }).select('*').single();
+    if(createError) throw createError;
+    return created;
+  }
+  async function stopChannel(){
+    if(state.channel){await client.removeChannel(state.channel);state.channel=null;}
+  }
+  function subscribeConversation(id,target,afterInsert){
+    stopChannel().then(()=>{
+      state.channel=client.channel('rn-messages-'+id+'-'+Date.now())
+        .on('postgres_changes',{event:'*',schema:'public',table:'messages',filter:'conversation_id=eq.'+id},payload=>{
+          if(afterInsert) afterInsert(payload);
+          loadConversationMessages(id,target);
+        }).subscribe();
+    });
+  }
+  async function loadConversationMessages(id,target){
+    const {data,error}=await client.from('messages').select('*').eq('conversation_id',id).order('created_at',{ascending:true});
+    if(error){target.innerHTML='<div class="inbox-note">Pesan belum dapat dimuat.</div>';return;}
+    renderMessages(data||[],target);
+  }
+  async function ensureCustomerConversation(){
+    if(!state.user) return null;
+    if(state.conversation) return state.conversation;
+    const {data,error}=await client.from('conversations').select('*').eq('customer_id',state.user.id).order('created_at',{ascending:false}).limit(1).maybeSingle();
+    if(error) throw error;
+    state.conversation=data||null;
+    return state.conversation;
+  }
+  async function sendCustomerMessage(body){
+    if(!state.user){status('Silakan masuk atau buat akun terlebih dahulu.');return;}
+    let conv=await ensureCustomerConversation();
+    if(!conv){
+      const v=id=>document.getElementById(id)?.value||'';
+      const {data,error}=await client.from('conversations').insert({
+        customer_id:state.user.id,
+        property_name:window.__rnPropertyName||v('clientCityWant')||'Permintaan RumahNusa'
+      }).select('*').single();
+      if(error){status('Percakapan belum dapat dibuat: '+error.message);return;}
+      conv=data; state.conversation=conv;
+    }
+    const {error}=await client.from('messages').insert({conversation_id:conv.id,sender_id:state.user.id,sender_role:'customer',body});
+    if(error){status('Pesan belum terkirim: '+error.message);return;}
+    await client.from('conversations').update({updated_at:new Date().toISOString()}).eq('id',conv.id);
+    await loadConversationMessages(conv.id,document.getElementById('messageList'));
+    document.getElementById('inboxStatusCard').textContent='Pesan terkirim. ✓ Agen akan melihatnya setelah percakapan tersedia.';
+  }
+  async function submitRequest(){
+    if(!state.user){inbox.hidden=false;status('Masuk atau buat akun terlebih dahulu, lalu kirim permintaan.');authPanel.scrollIntoView({behavior:'smooth',block:'center'});return;}
+    const v=id=>document.getElementById(id)?.value||'';
+    const isLargeHouse=window.state?.property==='Separate Rumah'||window.state?.property==='Neighborhood Rumah';
+    const property=window.state?.property||'Properti RumahNusa';
+    const purpose=window.state?.purpose||'Beli';
+    const rooms=v('rooms');
+    const rentalTerm=window.state?.rentalTerm||'';
+    const city=v('clientCityWant');
+    const about=v('aboutClient');
+    const text=(purpose==='Sewa'?'Saya ingin menyewa ':'Saya ingin membeli ')+property+(purpose==='Sewa'&&rentalTerm?' selama '+rentalTerm:'')+'. Pilihan: '+rooms+'. Kota pilihan: '+city+'. Tentang saya: '+about;
+    window.__rnPropertyName=property;
+    await sendCustomerMessage(text);
+    inbox.hidden=false;
+    document.getElementById('sendProfil').textContent='Permintaan Terkirim';
+    document.getElementById('sendProfil').disabled=true;
+    inbox.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  async function signInNow(){
+    const email=emailInput.value.trim(),password=passwordInput.value;
+    if(!email||!password){status('Masukkan email dan password.');return;}
+    const {data,error}=await client.auth.signInWithPassword({email,password});
+    if(error){status('Gagal masuk: '+error.message);return;}
+    await applyUser(data.user);
+  }
+  async function signUpNow(){
+    const email=emailInput.value.trim(),password=passwordInput.value;
+    if(!email||password.length<6){status('Masukkan email dan password minimal 6 karakter.');return;}
+    const {data,error}=await client.auth.signUp({email,password});
+    if(error){status('Gagal membuat akun: '+error.message);return;}
+    if(data.user && !data.session){status('Akun dibuat. Periksa email untuk konfirmasi, lalu masuk.');return;}
+    if(data.user) await applyUser(data.user);
+  }
+  async function applyUser(user){
+    state.user=user;
+    try{state.profile=await getProfile(user);}
+    catch(e){status('Profil belum dapat dibuat: '+e.message);return;}
+    signIn.hidden=true;signUp.hidden=true;signOut.hidden=false;
+    emailInput.value=user.email||'';passwordInput.value='';
+    status('Masuk sebagai '+(state.profile.role==='agent'?'agen':'pelanggan')+'.');
+    if(state.profile.role==='agent'){agentPanel.hidden=false;inbox.querySelector('.inbox-thread').hidden=true;await loadAgentConversations();}
+    else{agentPanel.hidden=true;inbox.querySelector('.inbox-thread').hidden=false;const conv=await ensureCustomerConversation();if(conv){await loadConversationMessages(conv.id,document.getElementById('messageList'));subscribeConversation(conv.id,document.getElementById('messageList'));}}
+  }
+  async function loadAgentConversations(){
+    if(!state.user||state.profile?.role!=='agent')return;
+    const {data,error}=await client.from('conversations').select('*').or('agent_id.eq.'+state.user.id+',agent_id.is.null').order('updated_at',{ascending:false});
+    if(error){agentList.innerHTML='<div class="inbox-note">Agen belum dapat membaca percakapan. Pastikan kebijakan agen Supabase sudah dibuat.</div>';return;}
+    state.agentConversations=data||[];
+    agentList.innerHTML='';
+    if(!state.agentConversations.length){agentList.innerHTML='<div class="inbox-note">Belum ada percakapan pelanggan.</div>';return;}
+    state.agentConversations.forEach(conv=>{
+      const b=document.createElement('button');b.type='button';b.className='rn-agent-conv'+(state.agentSelected?.id===conv.id?' active':'');
+      b.textContent=(conv.property_name||'Permintaan RumahNusa')+' · '+conv.id.slice(0,8);
+      b.addEventListener('click',()=>selectAgentConversation(conv));
+      agentList.appendChild(b);
+    });
+  }
+  async function selectAgentConversation(conv){
+    state.agentSelected=conv;
+    claimBtn.hidden=!!conv.agent_id;
+    await loadAgentConversations();
+    if(!conv.agent_id){agentThread.innerHTML='<div class="inbox-note">Percakapan belum diambil oleh agen. Tekan “Ambil percakapan”.</div>';return;}
+    await loadConversationMessages(conv.id,agentThread);
+    subscribeConversation(conv.id,agentThread);
+    await client.from('messages').update({read_at:new Date().toISOString()}).eq('conversation_id',conv.id).eq('sender_role','customer').is('read_at',null);
+  }
+  signIn.addEventListener('click',signInNow);
+  signUp.addEventListener('click',signUpNow);
+  signOut.addEventListener('click',async()=>{await stopChannel();await client.auth.signOut();state.user=null;state.profile=null;state.conversation=null;state.agentSelected=null;signIn.hidden=false;signUp.hidden=false;signOut.hidden=true;agentPanel.hidden=true;status('Anda sudah keluar.');});
+  document.getElementById('sendProfil')?.addEventListener('click',submitRequest);
+  document.getElementById('sendInboxMessage')?.addEventListener('click',async()=>{
+    const box=document.getElementById('messageComposer'),body=box.value.trim();if(!body)return;
+    await sendCustomerMessage(body);box.value='';
+  });
+  claimBtn.addEventListener('click',async()=>{
+    if(!state.agentSelected||!state.user)return;
+    const {data,error}=await client.from('conversations').update({agent_id:state.user.id,updated_at:new Date().toISOString()}).eq('id',state.agentSelected.id).is('agent_id',null).select('*').single();
+    if(error){status('Percakapan belum dapat diambil: '+error.message);return;}
+    state.agentSelected=data;claimBtn.hidden=true;await selectAgentConversation(data);
+  });
+  document.getElementById('rnRefreshAgent').addEventListener('click',loadAgentConversations);
+  agentSend.addEventListener('click',async()=>{
+    const body=agentComposer.value.trim();if(!body||!state.agentSelected||!state.user)return;
+    const {error}=await client.from('messages').insert({conversation_id:state.agentSelected.id,sender_id:state.user.id,sender_role:'agent',body});
+    if(error){status('Balasan belum terkirim: '+error.message);return;}
+    await client.from('conversations').update({updated_at:new Date().toISOString()}).eq('id',state.agentSelected.id);
+    agentComposer.value='';
+    await loadConversationMessages(state.agentSelected.id,agentThread);
+  });
+  client.auth.getSession().then(({data})=>{if(data.session)applyUser(data.session.user);});
+  client.auth.onAuthStateChange((_event,session)=>{if(session&&!state.user)applyUser(session.user);});
+})();
+</script>
 </body>
 </html>
