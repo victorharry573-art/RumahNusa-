@@ -729,6 +729,11 @@ footer p {
               <option>2 kamar tidur</option><option>3 kamar tidur</option><option>4 kamar tidur</option>
             </select>
           </div>
+          <div class="client-field full">
+            <label for="clientBudget">Harga / anggaran yang dipilih (USD)</label>
+            <input id="clientBudget" type="number" min="0" step="1" placeholder="Contoh: 350000" required>
+            <small style="color:#627d98;">Harga atau anggaran ini akan dikirim langsung ke inbox agen.</small>
+          </div>
           <div class="client-field full" id="floorOptions" hidden>
             <label for="floorCount">Pilihan lantai atas</label>
             <select id="floorCount">
@@ -966,6 +971,11 @@ footer p {
           <div class="client-field"><label for="clientMarital">Status keluarga</label><select id="clientMarital" required><option value="">Pilih</option><option>Lajang</option><option>Menikah</option><option>Tidak ingin menyebutkan</option></select></div>
           <div class="client-field"><label for="household">Berapa orang yang akan tinggal di sana?</label><input id="household" type="number" min="1" max="30" value="1" required></div>
           <div class="client-field"><label for="clientCityWant">Kota properti pilihan</label><input id="clientCityWant" placeholder="Contoh: Jakarta" required></div>
+          <div class="client-field full">
+            <label for="requestDocuments">Dokumen / foto untuk agen</label>
+            <input id="requestDocuments" type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" multiple>
+            <small style="color:#627d98;">Pilih semua file yang ingin ikut dengan permintaan Anda.</small>
+          </div>
           <div class="client-field full"><label for="aboutClient">Ceritakan tentang diri Anda</label><textarea id="aboutClient" placeholder="Bagikan informasi tentang gaya hidup, keluarga, pekerjaan, waktu pindah, atau preferensi rumah Anda."></textarea></div>
         </div>
         <div class="client-actions"><button class="btn secondary" type="button" data-back>Kembali</button><button class="btn client-next" type="button">Tinjau Permintaan</button></div>
@@ -1442,22 +1452,105 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     document.getElementById('inboxStatusCard').textContent='Pesan terkirim. ✓ Agen akan melihatnya setelah percakapan tersedia.';
   }
   async function submitRequest(){
-    if(!state.user){inbox.hidden=false;status('Masuk atau buat akun terlebih dahulu, lalu kirim permintaan.');authPanel.scrollIntoView({behavior:'smooth',block:'center'});return;}
+    if(!state.user){
+      inbox.hidden=false;
+      status('Masuk atau buat akun terlebih dahulu, lalu kirim permintaan.');
+      authPanel.scrollIntoView({behavior:'smooth',block:'center'});
+      return;
+    }
     const v=id=>document.getElementById(id)?.value||'';
     const selectedProperty=document.querySelector('#propertyOptions .client-option.selected');
     const property=selectedProperty?.dataset.value||'Properti RumahNusa';
     const isLargeHouse=property==='Separate Rumah'||property==='Neighborhood Rumah';
-    const purpose=document.getElementById('purpose')?.value||'Beli';
+    const purpose=v('purpose')||'Beli';
     const rooms=v('rooms');
-    const rentalTerm=document.getElementById('rentalTerm')?.value||'';
-    const city=v('clientCityWant');
-    const about=v('aboutClient');
-    const text=(purpose==='Sewa'?'Saya ingin menyewa ':'Saya ingin membeli ')+property+(purpose==='Sewa'&&rentalTerm?' selama '+rentalTerm:'')+'. Pilihan: '+rooms+'. Kota pilihan: '+city+'. Tentang saya: '+about;
-    window.__rnPropertyName=property;
-    await sendCustomerMessage(text);
+    const rentalTerm=purpose==='Sewa'?v('rentalTerm'):'Tidak berlaku';
+    const floorCountEl=document.getElementById('floorCount');
+    const floorText=isLargeHouse?(floorCountEl?.options[floorCountEl.selectedIndex]?.text||'Tidak dipilih'):'Tidak berlaku';
+    const country=document.getElementById('clientCountry');
+    const countryName=country?.options[country.selectedIndex]?.text||'';
+    const countryCode=country?.options[country.selectedIndex]?.dataset.code||'';
+    const phone=countryCode+' '+v('clientPhone');
+    const budget=v('clientBudget');
+    const files=Array.from(document.getElementById('requestDocuments')?.files||[]);
+    const specText=isLargeHouse?houseSpecs[rooms]:apartmentSpecs[rooms];
+
+    const lines=[
+      '━━━━━━━━━━━━━━━━━━━━',
+      'RUMAHNUSA — DETAIL PELANGGAN',
+      '━━━━━━━━━━━━━━━━━━━━',
+      '',
+      'NAMA: '+v('clientName'),
+      'JENIS KELAMIN: '+v('clientJenis kelamin'),
+      'USIA: '+v('clientUsia'),
+      'EMAIL: '+v('clientEmail'),
+      'TELEPON: '+phone,
+      'NEGARA NOMOR TELEPON: '+countryName,
+      'KOTA TEMPAT TINGGAL SAAT INI: '+v('clientCity'),
+      'STATUS KELUARGA: '+v('clientMarital'),
+      'JUMLAH ORANG YANG AKAN TINGGAL: '+v('household'),
+      '',
+      '━━━━━━━━━━━━━━━━━━━━',
+      'PILIHAN PROPERTI',
+      '━━━━━━━━━━━━━━━━━━━━',
+      'JENIS PROPERTI: '+property,
+      'TRANSAKSI: '+purpose,
+      'HARGA / ANGGARAN (USD): '+budget,
+      'KAMAR TIDUR: '+rooms,
+      'LAMA SEWA: '+rentalTerm,
+      'LANTAI ATAS: '+floorText,
+      'KOTA PROPERTI YANG DIINGINKAN: '+v('clientCityWant'),
+      '',
+      '━━━━━━━━━━━━━━━━━━━━',
+      'SPESIFIKASI RUMAH',
+      '━━━━━━━━━━━━━━━━━━━━',
+      specText||'Tidak ada spesifikasi.',
+      '',
+      '━━━━━━━━━━━━━━━━━━━━',
+      'TENTANG PELANGGAN',
+      '━━━━━━━━━━━━━━━━━━━━',
+      v('aboutClient')||'Tidak diisi.',
+      '',
+      '━━━━━━━━━━━━━━━━━━━━',
+      'FILE YANG DIPILIH',
+      '━━━━━━━━━━━━━━━━━━━━',
+      files.length?files.map((file,i)=>(i+1)+'. '+file.name+' — '+Math.max(1,Math.round(file.size/1024))+' KB').join('\n'):'Tidak ada file.'
+    ];
+
+    const requestMessage=lines.join('\n');
+
+    // Keep the customer's latest identity details in their Supabase profile.
+    const {error:profileError}=await client.from('profiles').update({
+      full_name:v('clientName'),
+      email:v('clientEmail'),
+      phone:phone
+    }).eq('id',state.user.id);
+    if(profileError){status('Data pelanggan belum dapat disimpan: '+profileError.message);return;}
+
+    window.__rnPropertyName=property+' · '+purpose+' · '+rooms;
+    await sendCustomerMessage(requestMessage);
+
+    // Attempt real file upload when the private Storage bucket is configured.
+    // If it is not configured yet, the selected filenames still remain in the inbox record.
+    const conv=state.conversation;
+    if(conv && files.length){
+      const uploadResults=[];
+      for(const file of files){
+        const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,'_');
+        const path=state.user.id+'/'+conv.id+'/'+Date.now()+'_'+safeName;
+        const {error}=await client.storage.from('customer-documents').upload(path,file,{upsert:false});
+        uploadResults.push(error?'UPLOAD_FAILED: '+file.name+' — '+error.message:'UPLOADED: '+file.name+' — '+path);
+      }
+      const attachmentNote='\n\nFILE UPLOAD STATUS:\n'+uploadResults.join('\n');
+      await client.from('messages').insert({conversation_id:conv.id,sender_id:state.user.id,sender_role:'customer',body:attachmentNote});
+      await client.from('conversations').update({updated_at:new Date().toISOString()}).eq('id',conv.id);
+      await loadConversationMessages(conv.id,document.getElementById('messageList'));
+    }
+
     inbox.hidden=false;
     document.getElementById('sendProfil').textContent='Permintaan Terkirim';
     document.getElementById('sendProfil').disabled=true;
+    document.getElementById('inboxStatusCard').textContent='Semua pilihan Anda sudah dikirim ke inbox agen, baris demi baris. ✓';
     inbox.scrollIntoView({behavior:'smooth',block:'start'});
   }
   async function signInNow(){
