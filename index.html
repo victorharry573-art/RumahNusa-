@@ -703,8 +703,26 @@ footer p {
 
       <div class="client-form-step" data-step="3">
         <h3>Tentukan kebutuhan rumah</h3>
-        <p>Pilih the space you need. You can change any choice before sending your request.</p>
+        <p>Pilih beli atau sewa untuk apartemen, lalu pilih jumlah kamar. Semua properti selain apartemen hanya dijual.</p>
         <div class="client-grid">
+          <div class="client-field full">
+            <label for="purpose">Pilihan kepemilikan</label>
+            <select id="purpose">
+              <option value="Beli">Beli</option>
+              <option value="Sewa">Sewa</option>
+            </select>
+            <small id="purposeNote" style="color:#627d98;">Apartemen dapat dibeli atau disewa. Rumah lainnya hanya untuk dibeli.</small>
+          </div>
+          <div class="client-field full" id="rentalTermOptions" hidden>
+            <label for="rentalTerm">Lama sewa</label>
+            <select id="rentalTerm">
+              <option value="1 tahun">1 tahun</option>
+              <option value="2 tahun">2 tahun</option>
+              <option value="3 tahun">3 tahun</option>
+              <option value="4 tahun">4 tahun</option>
+              <option value="5 tahun">5 tahun</option>
+            </select>
+          </div>
           <div class="client-field full">
             <label for="rooms">Jumlah kamar tidur</label>
             <select id="rooms">
@@ -726,7 +744,7 @@ footer p {
             <div id="layoutDetails" class="apartment-layouts"></div>
           </div>
           <div class="client-field full">
-            <div class="inbox-status-card"><strong>Semua properti RumahNusa hanya untuk dibeli.</strong> Apartemen memiliki 2–4 kamar. Rumah Separate dan Neighborhood memiliki 4–11 kamar.</div>
+            <div class="inbox-status-card"><strong>Apartemen dapat dibeli atau disewa.</strong> Sewa apartemen tersedia untuk 1–5 tahun dan apartemen memiliki 2–4 kamar. Separate Rumah, Neighborhood Rumah, Vila, Townhouse, Penthouse, Family Residence, dan Investment Property hanya untuk dibeli.</div>
           </div>
         </div>
         <div class="client-actions"><button class="btn secondary" type="button" data-back>Kembali</button><button class="btn client-next" type="button">Lanjutkan</button></div>
@@ -1041,7 +1059,7 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
   const steps = Array.from(form.querySelectorAll('.client-form-step'));
   const badges = Array.from(document.querySelectorAll('.client-step'));
   let current = 0;
-  const state = { property: '', purpose: 'Beli' };
+  const state = { property: '', purpose: 'Beli', rentalTerm: '' };
 
   function showStep(index) {
     current = Math.max(0, Math.min(index, steps.length - 1));
@@ -1061,6 +1079,18 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
       if (Number(age.value) < 18) { age.setCustomValidity('Please enter an age of 18 tahun atau lebih.'); age.reportValidity(); age.setCustomValidity(''); return; }
     }
     if (current === 1 && !state.property) return;
+    if (current === 2) {
+      if (state.property !== 'Apartemen' && purpose.value !== 'Beli') {
+        purpose.value = 'Beli';
+        state.purpose = 'Beli';
+      }
+      if (state.property === 'Apartemen' && purpose.value === 'Sewa' && !rentalTerm.value) {
+        rentalTerm.focus();
+        return;
+      }
+      state.purpose = purpose.value;
+      state.rentalTerm = purpose.value === 'Sewa' ? rentalTerm.value : '';
+    }
     if (current === 3) {
       const required = ['clientPhone','clientEmail','clientCity','clientMarital','household','clientCityWant'];
       for (const id of required) { const el=document.getElementById(id); if (!el.reportValidity()) return; }
@@ -1069,6 +1099,10 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
     showStep(current + 1);
   }));
 
+  const purpose = document.getElementById('purpose');
+  const purposeNote = document.getElementById('purposeNote');
+  const rentalTermOptions = document.getElementById('rentalTermOptions');
+  const rentalTerm = document.getElementById('rentalTerm');
   const rooms = document.getElementById('rooms');
   const floorOptions = document.getElementById('floorOptions');
   const floorCount = document.getElementById('floorCount');
@@ -1091,6 +1125,44 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
     '10 kamar tidur': '5 kamar mandi dengan toilet di dalam; 4 area dapur; parlor-parlor sangat besar, furnitur lengkap, AC, kolam renang besar, dan area parkir.',
     '11 kamar tidur': '5 kamar mandi dengan toilet di dalam; 4 area dapur; parlor-parlor sangat besar, furnitur lengkap, AC, kolam renang besar, dan area parkir.'
   };
+
+  function updatePurposeChoices() {
+    const apartment = state.property === 'Apartemen';
+    Array.from(purpose.options).forEach(option => {
+      option.hidden = option.value === 'Sewa' && !apartment;
+    });
+    if (!apartment) {
+      purpose.value = 'Beli';
+      state.purpose = 'Beli';
+      rentalTermOptions.hidden = true;
+      rentalTerm.value = '';
+      state.rentalTerm = '';
+      purposeNote.textContent = 'Properti ini hanya tersedia untuk dibeli. Hanya apartemen yang dapat disewa.';
+    } else {
+      purposeNote.textContent = 'Apartemen dapat dibeli atau disewa. Jika disewa, pilih lama sewa 1–5 tahun.';
+      rentalTermOptions.hidden = purpose.value !== 'Sewa';
+      if (purpose.value !== 'Sewa') {
+        rentalTerm.value = '';
+        state.rentalTerm = '';
+      }
+    }
+  }
+
+  purpose.addEventListener('change', () => {
+    state.purpose = purpose.value;
+    if (purpose.value === 'Sewa' && state.property === 'Apartemen') {
+      rentalTermOptions.hidden = false;
+      state.rentalTerm = rentalTerm.value;
+    } else {
+      rentalTermOptions.hidden = true;
+      state.rentalTerm = '';
+    }
+    updateLayoutDetails();
+  });
+
+  rentalTerm.addEventListener('change', () => {
+    state.rentalTerm = rentalTerm.value;
+  });
 
   function updateRoomChoices() {
     const isLargeHouse = state.property === 'Separate Rumah' || state.property === 'Neighborhood Rumah';
@@ -1124,6 +1196,7 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
     document.querySelectorAll('#propertyOptions .client-option').forEach(x => x.classList.remove('selected'));
     btn.classList.add('selected');
     state.property = btn.dataset.value;
+    updatePurposeChoices();
     updateRoomChoices();
     document.querySelector('[data-step="2"] .client-next').disabled = false;
   }));
@@ -1134,6 +1207,7 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
       '<strong>' + v('clientName') + '</strong><br>' +
       state.property + ' · ' + state.purpose + '<br>' +
       v('rooms') + '<br>' +
+      (state.purpose === 'Sewa' ? 'Sewa: ' + state.rentalTerm + '<br>' : '') +
       'Kota pilihan: ' + v('clientCityWant') + '<br>' +
       'Rumahhold: ' + v('household') + ' · Kota saat ini: ' + v('clientCity') + '<br>' +
       'Email: ' + v('clientEmail') + ' · Telepon: ' + v('clientPhone');
@@ -1159,7 +1233,8 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
     const isLargeHouse = state.property === 'Separate Rumah' || state.property === 'Neighborhood Rumah';
     const floorText = isLargeHouse ? ' Lantai atas: ' + floorCount.options[floorCount.selectedIndex].text + '.' : '';
     const specText = isLargeHouse ? houseSpecs[v('rooms')] : apartmentSpecs[v('rooms')];
-    const requestMessage = 'Saya ingin membeli ' + state.property + '. Pilihan: ' + v('rooms') + '.' + floorText + ' Kota pilihan: ' + v('clientCityWant') + '. Spesifikasi: ' + specText + (isLargeHouse ? ' Setiap rumah memiliki kolam renang besar dan area parkir mobil.' : '') + ' Tentang saya: ' + (v('aboutClient') || '');
+    const transactionText = state.purpose === 'Sewa' ? 'Saya ingin menyewa ' + state.property + ' selama ' + state.rentalTerm : 'Saya ingin membeli ' + state.property;
+    const requestMessage = transactionText + '. Pilihan: ' + v('rooms') + '.' + floorText + ' Kota pilihan: ' + v('clientCityWant') + '. Spesifikasi: ' + specText + (isLargeHouse ? ' Setiap rumah memiliki kolam renang besar dan area parkir mobil.' : '') + ' Tentang saya: ' + (v('aboutClient') || '');
     addInboxMessage(requestMessage, 'customer');
     document.getElementById('clientKotak Masuk').scrollIntoView({behavior:'smooth', block:'start'});
   });
