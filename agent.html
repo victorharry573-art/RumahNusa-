@@ -30,18 +30,9 @@ button.secondary{background:#e5edf4;color:#183b56}
 </style>
 </head>
 <body>
-<header><div class="logo">Rumah<span>Nusa</span> Agent Inbox</div><button id="logout" class="secondary">Keluar</button></header>
+<header><div class="logo">Rumah<span>Nusa</span> Agent Inbox</div><div class="badge">Agent Workspace</div></header>
 <main>
-<section id="loginPanel" class="panel">
-<h2>Agent Login</h2>
-<p>Masuk untuk melihat permintaan pelanggan RumahNusa dan membalas percakapan lama.</p>
-<input id="email" type="email" placeholder="Agent email">
-<br><br><input id="password" type="password" placeholder="Password">
-<div class="actions"><button id="login">Masuk</button></div>
-<div id="loginStatus" class="status"></div>
-</section>
-
-<section id="app" class="hidden">
+<section id="app">
 <div class="panel"><span class="badge">RumahNusa Agent Inbox</span><h2>Customer Requests</h2><p class="status">New requests and previous conversations appear here. Select a customer to read the complete request and reply.</p><div class="actions"><button id="refresh" class="secondary">Muat ulang</button></div><div id="status" class="status"></div></div>
 <div class="layout">
 <section class="panel"><h3>Customer Conversations</h3><div id="list" class="list"></div></section>
@@ -66,52 +57,14 @@ async function loadProfile(){
  const {data,error}=await db.from('profiles').select('*').eq('id',user.id).maybeSingle();
  if(error) throw error;
  profile=data;
- if(!profile||profile.role!=='agent') throw new Error('This account is not an agent account yet.');
 }
 
-async function loadConversations(){
- $('status').textContent='Loading customer requests...';
- const {data,error}=await db.from('conversations').select('*').or('agent_id.eq.'+user.id+',agent_id.is.null').order('updated_at',{ascending:false});
- if(error){$('status').textContent='Cannot load requests. Supabase agent RLS policies still need to be enabled.';return}
- $('list').innerHTML='';
- if(!data?.length){$('list').innerHTML='<p class="status">No customer requests yet.</p>';return}
- data.forEach(c=>{
-   const b=document.createElement('button');b.className='conv'+(selected?.id===c.id?' active':'');b.textContent=(c.property_name||'Customer request')+' · '+new Date(c.updated_at||c.created_at).toLocaleString('id-ID');b.onclick=()=>selectConversation(c);$('list').appendChild(b);
- });
- $('status').textContent=data.length+' conversation(s).';
+async function startAgent(){
+ const {data:{session}}=await db.auth.getSession();
+ user=session?.user||null;
+ await loadConversations();
 }
 
-async function loadMessages(){
- if(!selected)return;
- const {data,error}=await db.from('messages').select('*').eq('conversation_id',selected.id).order('created_at',{ascending:true});
- if(error){$('thread').textContent='Messages could not be loaded.';return}
- $('thread').innerHTML='';
- (data||[]).forEach(m=>{
-   const d=document.createElement('div');d.className='msg '+(m.sender_role==='customer'?'customer':'agent');
-   d.innerHTML='<div>'+esc(m.body)+'</div><div class="meta">'+(m.sender_role==='customer'?'Customer':'RumahNusa Agent')+' · '+new Date(m.created_at).toLocaleString('id-ID')+'</div>';
-   $('thread').appendChild(d);
- });
- $('thread').scrollTop=$('thread').scrollHeight;
-}
-
-async function selectConversation(c){
- selected=c;$('title').textContent=c.property_name||'Customer request';$('claim').classList.toggle('hidden',!!c.agent_id);
- await loadConversations();await loadMessages();
- if(channel)await db.removeChannel(channel);
- if(c.agent_id){
-   channel=db.channel('agent-'+c.id).on('postgres_changes',{event:'*',schema:'public',table:'messages',filter:'conversation_id=eq.'+c.id},()=>loadMessages()).subscribe();
- }
-}
-
-$('login').onclick=async()=>{
- const email=$('email').value.trim(),password=$('password').value;
- if(!email||!password){$('loginStatus').textContent='Enter your email and password.';return}
- const {data,error}=await db.auth.signInWithPassword({email,password});
- if(error){$('loginStatus').textContent=error.message;return}
- user=data.user;
- try{await loadProfile();}catch(e){$('loginStatus').textContent=e.message;await db.auth.signOut();return}
- $('loginPanel').classList.add('hidden');$('app').classList.remove('hidden');await loadConversations();
-};
 $('refresh').onclick=loadConversations;
 $('claim').onclick=async()=>{
  if(!selected)return;
@@ -126,7 +79,7 @@ $('send').onclick=async()=>{
  await db.from('conversations').update({updated_at:new Date().toISOString()}).eq('id',selected.id);
  $('reply').value='';await loadMessages();await loadConversations();
 };
-$('logout').onclick=async()=>{if(channel)await db.removeChannel(channel);await db.auth.signOut();location.reload()};
+startAgent().catch(e=>{$('status').textContent=e.message||'Unable to open the inbox.'});
 })();
 </script>
 </body>
