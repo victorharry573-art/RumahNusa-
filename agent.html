@@ -6,25 +6,24 @@
 <title>RumahNusa Agent Inbox</title>
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f9fc;color:#102a43}
-header{background:#075985;color:white;padding:20px 7%;display:flex;justify-content:space-between;align-items:center;gap:12px}
+header{background:#075985;color:white;padding:20px 5%;display:flex;justify-content:space-between;align-items:center;gap:12px}
 .logo{font-size:25px;font-weight:700}.logo span{color:#7dd3fc}
-main{max-width:1100px;margin:28px auto;padding:0 18px}
-.panel{background:white;border:1px solid #d9e2ec;border-radius:16px;padding:20px;box-shadow:0 5px 20px rgba(16,42,67,.08);margin-bottom:18px}
+main{max-width:1250px;margin:22px auto;padding:0 14px}
+.panel{background:white;border:1px solid #d9e2ec;border-radius:16px;padding:16px;box-shadow:0 5px 20px rgba(16,42,67,.08)}
+.layout{display:grid;grid-template-columns:360px minmax(0,1fr);gap:16px}
+.list{display:grid;gap:8px;max-height:72vh;overflow:auto}
+.conv{width:100%;text-align:left;background:#f8fbfd;color:#183b56;border:1px solid #d9e2ec;border-radius:10px;padding:13px;cursor:pointer}
+.conv.active{border-color:#0ea5e9;background:#eef8ff}
+.email{font-weight:700;word-break:break-word}.meta{font-size:11px;color:#627d98;margin-top:5px}
+.thread{height:58vh;min-height:320px;overflow:auto;border:1px solid #d9e2ec;border-radius:10px;padding:12px;background:#f8fbfd}
+.msg{padding:12px 14px;border-radius:13px;margin:8px 0;max-width:90%;white-space:normal}.customer{background:#e0f2fe;margin-left:auto}.agent{background:white;border:1px solid #d9e2ec}
 textarea{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:9px;font:inherit;min-height:90px;resize:vertical}
 button{border:0;border-radius:9px;padding:12px 16px;font-weight:700;cursor:pointer;background:#0879bd;color:white}
-button.secondary{background:#e5edf4;color:#183b56}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.status{margin-top:10px;color:#627d98}
-.layout{display:grid;grid-template-columns:330px 1fr;gap:18px}
-.list{display:grid;gap:8px;max-height:600px;overflow:auto}
-.conv{width:100%;text-align:left;background:#f8fbfd;color:#183b56;border:1px solid #d9e2ec}
-.conv.active{border-color:#0ea5e9;background:#eef8ff}
-.thread{min-height:300px;max-height:520px;overflow:auto;border:1px solid #d9e2ec;border-radius:10px;padding:12px;background:#f8fbfd}
-.msg{padding:12px 14px;border-radius:13px;margin:8px 0;max-width:90%;white-space:normal}.customer{background:#e0f2fe;margin-left:auto}.agent{background:white;border:1px solid #d9e2ec}
-.meta{font-size:11px;color:#627d98;margin-top:6px}.hidden{display:none!important}
+button.secondary{background:#e5edf4;color:#183b56}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.status{margin-top:8px;color:#627d98}.live{color:#15803d;font-weight:700}.error{color:#b91c1c;font-weight:700}
 .badge{display:inline-block;padding:5px 9px;border-radius:20px;background:#e0f2fe;color:#075985;font-size:12px;font-weight:700}
-.live{color:#15803d;font-weight:700}.error{color:#b91c1c;font-weight:700}
-@media(max-width:800px){.layout{grid-template-columns:1fr}.list{max-height:260px}}
+.hidden{display:none!important}
+@media(max-width:800px){.layout{grid-template-columns:1fr}.list{max-height:300px}.thread{height:48vh}}
 </style>
 </head>
 <body>
@@ -39,12 +38,19 @@ button.secondary{background:#e5edf4;color:#183b56}
 <div id="status" class="status">Connecting to live messages...</div>
 </div>
 <div class="layout">
-<section class="panel"><h3>Customer Conversations</h3><div id="list" class="list"></div></section>
 <section class="panel">
-<h3 id="title">Select a conversation</h3>
-<div id="thread" class="thread">No conversation selected.</div>
+<h3>Customers</h3>
+<p class="status">Click an email to open that customer's conversation.</p>
+<div id="list" class="list"></div>
+</section>
+<section class="panel">
+<h3 id="title">Select a customer email</h3>
+<div id="customerEmail" class="status"></div>
+<div id="thread" class="thread">No customer selected.</div>
 <div class="actions"><button id="claim" class="secondary hidden">Claim conversation</button></div>
 <div style="margin-top:12px"><textarea id="reply" placeholder="Write a reply to the customer..."></textarea><div class="actions"><button id="send">Send Reply</button></div></div>
+</section>
+</div>
 </section>
 </div>
 </section>
@@ -73,7 +79,7 @@ async function loadConversations(){
    .or('agent_id.eq.'+user.id+',agent_id.is.null')
    .order('updated_at',{ascending:false});
  if(error){setStatus('Unable to load conversations: '+error.message,false,true);return}
- renderConversations(data||[]);
+ await renderConversations(data||[]);
  if(selected){
    const fresh=(data||[]).find(x=>x.id===selected.id);
    if(fresh){selected=fresh;await loadMessages()}
@@ -81,22 +87,38 @@ async function loadConversations(){
  lastConversationRefresh=Date.now();
 }
 
-function renderConversations(rows){
+function customerEmail(c){
+ return c.customer_email || c.email || c.customerEmail || '';
+}
+
+async function getProfileEmails(rows){
+ const ids=[...new Set(rows.map(c=>c.customer_id).filter(Boolean))];
+ if(!ids.length)return {};
+ const {data}=await db.from('profiles').select('id,email,full_name').in('id',ids);
+ const map={};(data||[]).forEach(p=>map[p.id]=p);return map;
+}
+
+async function renderConversations(rows){
  const list=$('list');
  if(!rows.length){list.innerHTML='<div class="status">No customer conversations yet.</div>';return}
+ const profiles=await getProfileEmails(rows);
  list.innerHTML=rows.map(c=>{
-   const label=esc(c.property_name||'Customer request');
+   const p=profiles[c.customer_id]||{};
+   const email=customerEmail(c)||p.email||'Customer email unavailable';
+   const name=p.full_name||'Customer';
    const time=c.updated_at?new Date(c.updated_at).toLocaleString():'';
-   return '<button class="conv '+(selected&&selected.id===c.id?'active':'')+'" data-id="'+esc(c.id)+'"><strong>'+label+'</strong><div class="meta">'+esc(time)+(c.agent_id?' · Assigned':' · New')+'</div></button>';
+   return '<button class="conv '+(selected&&selected.id===c.id?'active':'')+'" data-id="'+esc(c.id)+'"><div class="email">'+esc(email)+'</div><div><strong>'+esc(name)+'</strong></div><div class="meta">'+esc(time)+(c.agent_id?' · Assigned':' · New')+'</div></button>';
  }).join('');
- list.querySelectorAll('.conv').forEach(btn=>btn.onclick=()=>selectConversation(rows.find(x=>x.id===btn.dataset.id)));
+ list.querySelectorAll('.conv').forEach(btn=>btn.onclick=async()=>selectConversation(rows.find(x=>x.id===btn.dataset.id)));
 }
 
 async function selectConversation(conv){
  if(!conv)return;
  selected=conv;
- renderConversations([...(await getCurrentConversations())]);
+ await renderConversations([...(await getCurrentConversations())]);
  $('title').textContent=conv.property_name||'Customer conversation';
+ const profiles=await getProfileEmails([conv]);
+ $('customerEmail').textContent='Email: '+(customerEmail(conv)||profiles[conv.customer_id]?.email||'Email unavailable');
  $('claim').classList.toggle('hidden',!!conv.agent_id);
  await loadMessages();
  subscribeToMessages();
