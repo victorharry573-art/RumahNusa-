@@ -339,6 +339,14 @@ body.rn-site-unlocked footer { display:none !important; }
 }
 .rn-customer-gate h2 { color:#102a43; margin-bottom:8px; }
 .rn-customer-gate p { color:#627d98; }
+.rn-password-wrap{position:relative;display:flex;align-items:center}
+.rn-password-wrap input{width:100%;padding-right:48px}
+.rn-password-toggle{position:absolute;right:7px;top:50%;transform:translateY(-50%);width:38px;height:38px;border:0;border-radius:8px;background:#eef6ff;color:#075985;cursor:pointer;font-size:18px}
+.rn-password-toggle:focus{outline:2px solid #0ea5e9;outline-offset:2px}
+body.rn-site-locked > :not(header):not(#rnCustomerGate){display:none!important}
+body.rn-site-locked header nav,body.rn-site-locked header .lang-switch{display:none!important}
+body.rn-site-locked #rnCustomerGate{display:block!important}
+body.rn-site-unlocked .rn-customer-gate{display:none!important}
 .rn-gate-grid { display:grid; gap:12px; margin-top:18px; }
 .rn-gate-grid input, .rn-gate-grid select {
   width:100%; box-sizing:border-box; padding:13px; border:1px solid #cbd5e1;
@@ -578,6 +586,12 @@ footer p {
 .rn-collection-note{margin-top:12px;color:#627d98;font-size:13px}
 @media(max-width:800px){.rn-listing-grid{grid-template-columns:1fr}.rn-listing img{height:200px}}
 
+body.rn-site-unlocked:not(.rn-category-selected) > .hero,
+body.rn-site-unlocked:not(.rn-category-selected) > #properties,
+body.rn-site-unlocked:not(.rn-category-selected) > #about,
+body.rn-site-unlocked:not(.rn-category-selected) > #contact{display:none!important}
+body.rn-site-unlocked.rn-category-selected > .hero,
+body.rn-site-unlocked.rn-category-selected > #properties{display:none!important}
 </style>
 </head>
 
@@ -600,23 +614,25 @@ footer p {
 
 <section id="rnCustomerGate" class="rn-customer-gate" aria-label="RumahNusa customer access">
   <h2>Welcome to RumahNusa Real Estate</h2>
-  <p>Welcome to RumahNusa, where finding a home is about more than beautiful rooms. We want you to discover a place that feels comfortable, peaceful, welcoming, and right for the life you want to build. Take your time, explore with confidence, and let RumahNusa help you find a home where you can feel at ease. Please log in or create your account to begin your personal home search.</p>
+  <p>Welcome to RumahNusa — a place where finding a home begins with comfort, beauty, peace of mind, and the feeling that you have found somewhere truly right for you. We carefully present homes with beautiful rooms, welcoming living spaces, thoughtful details, and places where everyday life can feel calm and meaningful. Take your time, explore with confidence, and let RumahNusa help you discover a home where you can live comfortably and enjoy the life you want to build. <strong>Log in to begin your personal RumahNusa home search.</strong></p>
 
   <div id="rnGateLogin">
     <div class="rn-gate-grid">
       <input id="rnGateEmail" type="email" autocomplete="email" placeholder="Email" required>
-      <input id="rnGatePassword" type="password" autocomplete="current-password" placeholder="Password (minimum 6 characters)" required>
+      <div class="rn-password-wrap">
+        <input id="rnGatePassword" type="password" autocomplete="current-password" placeholder="Password" required>
+        <button id="rnGatePasswordToggle" class="rn-password-toggle" type="button" aria-label="Show password" aria-pressed="false">◉</button>
+      </div>
     </div>
     <div class="rn-gate-actions">
       <button class="btn" id="rnGateSignIn" type="button">Log in</button>
-      <button class="btn secondary" id="rnGateSignUp" type="button">Create account</button>
     </div>
-    <div id="rnGateStatus" class="rn-gate-status" aria-live="polite">Log in or create your RumahNusa account to continue.</div>
+    <div id="rnGateStatus" class="rn-gate-status" aria-live="polite">Log in to continue to your RumahNusa home choices.</div>
   </div>
 
   <div id="rnGateProfile" class="rn-gate-profile" hidden>
-    <h3>Tell us a little about you</h3>
-    <p>Your name, gender, and age help RumahNusa understand who we are welcoming and keep your home search personal.</p>
+    <h3>Welcome. Tell us about you.</h3>
+    <p>Before you begin, please tell RumahNusa your name, whether you are a man or woman, and your age so your home search can be personal and connected to your customer details.</p>
     <div class="rn-gate-grid">
       <input id="rnGateName" type="text" placeholder="Your full name" autocomplete="name" required>
       <select id="rnGateGender" required>
@@ -633,15 +649,15 @@ footer p {
   </div>
 
   <div id="rnGateCategory" class="rn-gate-category">
-    <h3>Choose the kind of home you want to explore</h3>
-    <p class="rn-gate-category-note">Tap one category and its homes will open immediately. You will only see that category until you choose a different one.</p>
+    <h3>Choose your beautiful home</h3>
+    <p class="rn-gate-category-note">Tap a home type and that category will open immediately. You will see only that type of home until you choose another category.</p>
     <div id="rnGateCategoryOptions" class="client-options">
-      <button type="button" class="client-option" data-gate-property="Apartemen"><strong>Apartment</strong><small>Open apartment homes and room choices.</small></button>
-      <button type="button" class="client-option" data-gate-property="Separate Rumah"><strong>Separate Rumah</strong><small>Open separate houses and their room choices.</small></button>
-      <button type="button" class="client-option" data-gate-property="Vila"><strong>Villa</strong><small>Open villa homes and their room choices.</small></button>
+      <button type="button" class="client-option" data-gate-property="Apartemen"><strong>Apartment</strong><small>Open apartments and their rooms.</small></button>
+      <button type="button" class="client-option" data-gate-property="Separate Rumah"><strong>Separate Rumah</strong><small>Open separate houses and their rooms.</small></button>
+      <button type="button" class="client-option" data-gate-property="Vila"><strong>Villa</strong><small>Open villas and their rooms.</small></button>
       <button type="button" class="client-option" data-gate-property="Neighborhood Rumah"><strong>Neighborhood</strong><small>Open neighborhood homes only.</small></button>
       <button type="button" class="client-option" data-gate-property="Townhouse"><strong>Townhouse</strong><small>Open townhouse homes only.</small></button>
-      <button type="button" class="client-option" data-gate-property="Penthouse"><strong>Penthouse</strong><small>Open penthouse homes only.</small></button>
+      <button type="button" class="client-option" data-gate-property="Penthouse"><strong>Penthouse</strong><small>Open penthouses and their rooms.</small></button>
       <button type="button" class="client-option" data-gate-property="Family Residence"><strong>Family Residence</strong><small>Open family residences only.</small></button>
       <button type="button" class="client-option" data-gate-property="Investment Property"><strong>Investment Property</strong><small>Open investment properties only.</small></button>
     </div>
@@ -2039,7 +2055,6 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   const gender=document.getElementById('rnGateGender');
   const age=document.getElementById('rnGateAge');
   const signIn=document.getElementById('rnGateSignIn');
-  const signUp=document.getElementById('rnGateSignUp');
   const continueBtn=document.getElementById('rnGateContinue');
   if(!gate||!window.supabase||!window.RUMAHNUSA_SUPABASE_URL||!window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY){
     if(status) status.textContent='RumahNusa account service is not ready yet. Please refresh the page.';
@@ -2064,11 +2079,11 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     const profileSection=document.getElementById('client-profile');
     const hero=document.querySelector('.hero');
     if(profileSection && hero && profileSection.parentNode){
-      profileSection.parentNode.insertBefore(profileSection,hero);
-    }
+      }
     categoryBox.classList.add('active');
     gate.hidden=true;
     profileSection.hidden=false;
+    document.body.classList.add('rn-category-ready');
     profileSection.scrollIntoView({behavior:'smooth',block:'start'});
     categoryStatus.textContent='Choose one home type. Its matching homes will open immediately.';
   }
@@ -2092,7 +2107,14 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   }
 
   signIn.addEventListener('click',function(){login('signin');});
-  signUp.addEventListener('click',function(){login('signup');});
+  const passwordToggle=document.getElementById('rnGatePasswordToggle');
+  if(passwordToggle) passwordToggle.addEventListener('click',function(){
+    const showing=password.type==='text';
+    password.type=showing?'password':'text';
+    passwordToggle.textContent=showing?'◉':'◌';
+    passwordToggle.setAttribute('aria-label',showing?'Show password':'Hide password');
+    passwordToggle.setAttribute('aria-pressed',String(!showing));
+  });
 
   continueBtn.addEventListener('click',async function(){
     if(!currentUser){profileStatus.textContent='Please log in first.';return;}
@@ -2122,6 +2144,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       document.querySelectorAll('#propertyOptions .client-option').forEach(function(x){x.classList.remove('selected');});
       real.click();
       categoryStatus.textContent='Opening '+button.querySelector('strong').textContent+' homes now.';
+      document.body.classList.add('rn-category-selected');
       const collection=document.getElementById('rnCategoryCollection');
       if(collection){
         setTimeout(function(){collection.scrollIntoView({behavior:'smooth',block:'start'});},80);
