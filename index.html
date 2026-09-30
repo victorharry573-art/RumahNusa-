@@ -381,17 +381,31 @@ footer p {
   margin-top: 8px;
 }
 
-.whatsapp {
+.property-continue-float {
   position: fixed;
   right: 20px;
   bottom: 20px;
-  background: #25D366;
+  z-index: 1000;
+  background: #0879bd;
   color: white;
-  padding: 15px 20px;
+  border: none;
+  padding: 15px 22px;
   border-radius: 30px;
-  text-decoration: none;
   font-weight: bold;
+  cursor: pointer;
   box-shadow: 0 5px 15px rgba(0,0,0,.2);
+}
+.property-continue-float[hidden] { display: none !important; }
+.property-continue-float:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+@media (max-width:800px){
+  .property-continue-float {
+    left: 20px;
+    right: 20px;
+    width: calc(100% - 40px);
+  }
 }
 
 @media (max-width: 800px) {
@@ -699,7 +713,9 @@ footer p {
           <button type="button" class="client-option" data-value="Family Residence"><strong>Family Residence</strong><small>Ruang nyaman yang dirancang untuk kehidupan keluarga.</small></button>
           <button type="button" class="client-option" data-value="Investment Property"><strong>Investment Property</strong><small>Properti untuk investasi jangka panjang atau kepemilikan.</small></button>
         </div>
-        <div class="client-actions"><button class="btn secondary" type="button" data-back>Kembali</button><button class="btn client-next" type="button" disabled>Lanjutkan</button></div>
+        <div class="client-actions">
+  <button class="btn secondary" type="button" data-back>Kembali</button>
+</div>
         <div id="rnCategoryCollection" class="rn-category-collection" hidden aria-live="polite">
           <div class="rn-category-head">
             <div>
@@ -1064,9 +1080,9 @@ footer p {
   <p>© 2024 RumahNusa All rights reserved.</p>
 </footer>
 
-<a class="whatsapp" href="https://wa.me/6280000000000">
-  Hubungi via WhatsApp
-</a>
+<button id="propertyContinueFloat" class="property-continue-float" type="button" hidden disabled>
+  Choose &amp; Continue
+</button>
 
 <script>
 document.querySelectorAll('.copy-btn').forEach(function(button) {
@@ -1105,8 +1121,10 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
     current = Math.max(0, Math.min(index, steps.length - 1));
     steps.forEach((s, i) => s.classList.toggle('active', i === current));
     badges.forEach((b, i) => b.classList.toggle('active', i === Math.min(current, badges.length - 1)));
+    window.__rumahnusaCustomerStep = current;
     document.querySelector('.client-panel').scrollIntoView({behavior:'smooth', block:'start'});
   }
+  window.__rumahnusaShowCustomerStep = showStep;
 
   form.querySelectorAll('[data-back]').forEach(btn => btn.addEventListener('click', () => showStep(current - 1)));
 
@@ -1247,7 +1265,7 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
     state.property = btn.dataset.value;
     updatePurposeChoices();
     updateRoomChoices();
-    document.querySelector('[data-step="2"] .client-next').disabled = false;
+    // The floating Choose & Continue button is enabled by the dedicated navigation safeguard below.
   }));
 
   function buildSummary() {
@@ -1847,68 +1865,64 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 
 
 <script>
-/* RumahNusa permanent customer Step 1 navigation safeguard.
-   This is intentionally independent from the main form script so a later
-   JavaScript error cannot make the first Continue button stop working. */
+/* RumahNusa property-selection navigation:
+   the old WhatsApp button area is now the floating Choose & Continue control.
+   It stays hidden until a property category is selected and remains available
+   while the customer scrolls through the selected category listings. */
 (function(){
   const form=document.getElementById('clientProfilForm');
+  const floatButton=document.getElementById('propertyContinueFloat');
+  const options=Array.from(document.querySelectorAll('#propertyOptions .client-option'));
   const steps=form ? Array.from(form.querySelectorAll('.client-form-step')) : [];
   const badges=Array.from(document.querySelectorAll('.client-step'));
-  if(!form || !steps.length) return;
+  if(!form || !floatButton || !steps.length) return;
 
-  function openStep(index){
-    const safe=Math.max(0,Math.min(index,steps.length-1));
-    steps.forEach((step,i)=>step.classList.toggle('active',i===safe));
-    badges.forEach((badge,i)=>badge.classList.toggle('active',i===Math.min(safe,badges.length-1)));
-    const panel=document.querySelector('.client-panel');
-    if(panel) panel.scrollIntoView({behavior:'smooth',block:'start'});
-    window.__rumahnusaCustomerStep=safe;
+  function syncButton(){
+    const selected=!!document.querySelector('#propertyOptions .client-option.selected');
+    const current=Number.isInteger(window.__rumahnusaCustomerStep) ? window.__rumahnusaCustomerStep : 0;
+    const show=current===0 && selected;
+    floatButton.hidden=!show;
+    floatButton.disabled=!selected;
   }
 
-  const firstContinue=form.querySelector('.client-form-step[data-step="1"] .client-next');
-  if(!firstContinue) return;
-
-  firstContinue.addEventListener('click',function(event){
-    event.preventDefault();
-    event.stopImmediatePropagation();
-
-    const name=document.getElementById('clientName');
-    const gender=document.getElementById('clientJenis kelamin');
-    const age=document.getElementById('clientUsia');
-
-    if(!name || !gender || !age){
-      alert('The customer form could not load correctly. Please refresh the RumahNusa page.');
-      return;
-    }
-
-    if(!name.value.trim()){
-      name.focus();
-      name.reportValidity();
-      return;
-    }
-    if(!gender.value){
-      gender.focus();
-      gender.reportValidity();
-      return;
-    }
-
-    const ageNumber=Number(age.value);
-    if(!Number.isFinite(ageNumber) || ageNumber<18 || ageNumber>120){
-      age.setCustomValidity('Please enter an age from 18 to 120.');
-      age.focus();
-      age.reportValidity();
-      age.setCustomValidity('');
-      return;
-    }
-
-    openStep(1);
-  },true);
-
-  [document.getElementById('clientName'),document.getElementById('clientJenis kelamin'),document.getElementById('clientUsia')].forEach(function(el){
-    if(!el) return;
-    el.addEventListener('input',function(){el.setCustomValidity('');});
-    el.addEventListener('change',function(){el.setCustomValidity('');});
+  options.forEach(function(option){
+    option.addEventListener('click',function(){
+      options.forEach(function(item){ item.classList.remove('selected'); });
+      option.classList.add('selected');
+      syncButton();
+    });
   });
+
+  floatButton.addEventListener('click',function(event){
+    event.preventDefault();
+    const selected=document.querySelector('#propertyOptions .client-option.selected');
+    if(!selected) return;
+    if(typeof window.__rumahnusaShowCustomerStep==='function'){
+      window.__rumahnusaShowCustomerStep(1);
+    } else {
+      steps.forEach(function(step,index){ step.classList.toggle('active',index===1); });
+      badges.forEach(function(badge,index){ badge.classList.toggle('active',index===1); });
+      window.__rumahnusaCustomerStep=1;
+    }
+    syncButton();
+  });
+
+  form.querySelectorAll('[data-back]').forEach(function(button){
+    button.addEventListener('click',function(){
+      setTimeout(syncButton,0);
+    });
+  });
+
+  const originalShow=window.__rumahnusaShowCustomerStep;
+  if(originalShow){
+    window.__rumahnusaShowCustomerStep=function(index){
+      originalShow(index);
+      syncButton();
+    };
+  }
+
+  window.__rumahnusaCustomerStep=0;
+  syncButton();
 })();
 </script>
 
