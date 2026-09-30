@@ -2041,11 +2041,14 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   async function selectAgentConversation(conv){
     state.agentSelected=conv;
     claimBtn.hidden=!!conv.agent_id;
-    await loadAgentConversations();
-    if(!conv.agent_id){agentThread.innerHTML='<div class="inbox-note">Percakapan belum diambil oleh agen. Tekan “Ambil percakapan”.</div>';return;}
     await loadConversationMessages(conv.id,agentThread);
     subscribeConversation(conv.id,agentThread);
-    await client.from('messages').update({read_at:new Date().toISOString()}).eq('conversation_id',conv.id).eq('sender_role','customer').is('read_at',null);
+    if(!conv.agent_id){
+      status('Pesan pelanggan terlihat. Ambil percakapan untuk membalas.');
+    } else {
+      await client.from('messages').update({read_at:new Date().toISOString()}).eq('conversation_id',conv.id).eq('sender_role','customer').is('read_at',null);
+    }
+    await loadAgentConversations();
   }
   signIn.addEventListener('click',signInNow);
   // Password eye toggle: one listener only, so one tap changes the field exactly once.
@@ -2078,6 +2081,14 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     state.agentSelected=data;claimBtn.hidden=true;await selectAgentConversation(data);
   });
   document.getElementById('rnRefreshAgent').addEventListener('click',loadAgentConversations);
+  // Keep the agent inbox fresh so new customer requests appear without manual navigation.
+  const agentInboxTimer=setInterval(async()=>{
+    if(state.user && state.profile?.role==='agent'){
+      await loadAgentConversations();
+      if(state.agentSelected) await loadConversationMessages(state.agentSelected.id,agentThread);
+    }
+  },3000);
+  window.addEventListener('beforeunload',()=>clearInterval(agentInboxTimer));
   agentSend.addEventListener('click',async()=>{
     const body=agentComposer.value.trim();if(!body||!state.agentSelected||!state.user)return;
     const {error}=await client.from('messages').insert({conversation_id:state.agentSelected.id,sender_id:state.user.id,sender_role:'agent',body});
