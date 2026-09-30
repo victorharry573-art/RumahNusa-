@@ -1625,7 +1625,6 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       if(!e) email.focus(); else password.focus();
       return;
     }
-    signIn.disabled=true;
     signIn.textContent='Logging in...';
     try{
       await login('signin');
@@ -1633,11 +1632,18 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       status.textContent='Login could not be completed. Please try again.';
     }finally{
       signIn.disabled=false;
+      signIn.removeAttribute('aria-disabled');
       signIn.textContent='Log in';
     }
   }
   window.rnGateLogin=handleGateLogin;
-  signIn.addEventListener('click',handleGateLogin);
+
+  // Use the button's direct click handler so mobile taps cannot be lost
+  // because of another listener or a stale disabled state.
+  signIn.onclick=handleGateLogin;
+  signIn.disabled=false;
+  signIn.removeAttribute('aria-disabled');
+
   [email,password].forEach(function(field){
     field.addEventListener('keydown',function(event){
       if(event.key==='Enter') handleGateLogin(event);
