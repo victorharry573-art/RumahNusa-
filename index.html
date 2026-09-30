@@ -644,7 +644,7 @@ body.rn-site-unlocked.rn-category-selected > #properties{display:none!important}
       </div>
     </div>
     <div class="rn-gate-actions">
-      <button class="btn" id="rnGateSignIn" type="button" onclick="if(window.rnGateLogin){window.rnGateLogin(event);}">Log in</button>
+      <button class="btn" id="rnGateSignIn" type="button">Log in</button>
     </div>
     <div id="rnGateStatus" class="rn-gate-status" aria-live="polite">Log in to continue to your RumahNusa home choices.</div>
   </div>
@@ -1583,7 +1583,10 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
         new Promise((_,reject)=>setTimeout(()=>reject(new Error('The login request took too long. Please check your connection and try again.')),15000))
       ]);
       if(result.error){
-        status.textContent='Login failed: '+result.error.message;
+        const msg=result.error?.message||'Unable to log in.';
+        status.textContent=msg.toLowerCase().includes('email not confirmed')
+          ? 'Your email has not been confirmed yet. Please confirm it, then try Log in again.'
+          : 'Login failed. Please check your email and password and try again.';
         return false;
       }
       if(mode==='signup' && !result.data.session){
@@ -1626,7 +1629,6 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   }
   window.rnGateLogin=handleGateLogin;
   signIn.addEventListener('click',handleGateLogin);
-  signIn.addEventListener('pointerup',function(event){ handleGateLogin(event); });
   [email,password].forEach(function(field){
     field.addEventListener('keydown',function(event){
       if(event.key==='Enter') handleGateLogin(event);
