@@ -624,9 +624,27 @@ body.rn-site-unlocked #rnPhoneGate{display:none!important}
 #rnPhoneCode{letter-spacing:.28em;text-align:center;font-size:20px}
 .rn-verify-options{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}.rn-verify-option{border:1px solid #cbd5e1;background:#fff;border-radius:12px;padding:16px;text-align:left;cursor:pointer;min-height:72px}.rn-verify-option strong{display:block;color:#075985;margin-bottom:5px}.rn-verify-option small{color:#627d98}.rn-verify-option.selected{border:2px solid #0ea5e9;background:#f0f9ff}#rnGateStagePhone[hidden],#rnGateStageChannel[hidden],#rnGateStageCode[hidden],#rnGateStageIdentity[hidden]{display:none!important}@media(max-width:520px){.rn-verify-options{grid-template-columns:1fr}}
 @media(max-width:520px){.rn-phone-row{grid-template-columns:1fr}.rn-phone-row select{min-height:50px}}
+</style><style id="rn-private-browsing-style">
+body.rn-private-browsing #properties,
+body.rn-private-browsing #properties + section,
+body.rn-private-browsing #propertySearchSection { display:none !important; }
+#rnCustomerGate[hidden], #clientProfilForm[hidden] { display:none !important; }
+.rn-customer-gate{background:#fff;border:1px solid #d9e2ec;border-radius:18px;padding:22px;box-shadow:0 8px 30px rgba(16,42,67,.08);margin-top:18px}
+.rn-customer-gate h3{margin:0 0 8px;color:#102a43}
+.rn-customer-gate p{color:#486581;line-height:1.65}
+.rn-gate-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.rn-gate-grid .full{grid-column:1/-1}
+.rn-gate-grid input,.rn-gate-grid select{width:100%;box-sizing:border-box;border:1px solid #bcccdc;border-radius:9px;padding:13px;font:inherit;background:#fff}
+.rn-password-wrap{position:relative}
+.rn-password-wrap input{padding-right:52px}
+.rn-password-eye{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:40px;height:40px;border:0;background:transparent;border-radius:50%;cursor:pointer;color:#486581;font-size:20px;display:grid;place-items:center}
+.rn-password-eye:active{background:#eaf2f8}
+.rn-gate-status{margin-top:10px;font-size:14px;color:#486581}
+.rn-gate-actions{margin-top:16px}
+@media(max-width:700px){.rn-gate-grid{grid-template-columns:1fr}.rn-gate-grid .full{grid-column:auto}}
 </style></head>
 
-<body><section id="rnPhoneGate" aria-label="RumahNusa customer welcome and verification"><div class="rn-gate-card">
+<body class="rn-private-browsing"><section id="rnPhoneGate" aria-label="RumahNusa customer welcome and verification"><div class="rn-gate-card">
 <div id="rnGateStagePhone"><h1>Welcome to RumahNusa Real Estate</h1><p class="rn-welcome">Welcome to RumahNusa — where comfort, beauty, privacy, and peace of mind come together.</p><p class="rn-welcome">A beautiful home is more than rooms and walls. It is a place to rest, enjoy your family, build your future, and feel comfortable every day.</p><h2>Login with your phone number</h2><label for="rnPhoneCountry" style="display:block;margin-top:8px;font-weight:700;">Choose your country</label><div class="rn-phone-row"><select id="rnPhoneCountry" aria-label="Choose your country" title="Choose your country">
       <option value="ID" data-flag="🇮🇩" data-code="+62">🇮🇩 Indonesia (+62)</option>
       <option value="MY" data-flag="🇲🇾" data-code="+60">🇲🇾 Malaysia (+60)</option>
@@ -866,20 +884,7 @@ body.rn-site-unlocked #rnPhoneGate{display:none!important}
     <p data-en="Discover beautiful homes, apartments and properties available for purchase." data-id="Temukan rumah, apartemen, dan properti indah untuk dibeli dan dimiliki.">Discover beautiful homes, apartments and properties available for purchase.</p>
     <div class="bilingual"><strong data-en="RumahNusa is more than a property search." data-id="RumahNusa lebih dari sekadar pencarian properti.">RumahNusa is more than a property search.</strong><span class="id" data-en="We care about how you live, how you feel, and the comfort your home brings every day." data-id="Kami peduli pada cara Anda hidup, perasaan Anda, dan kenyamanan yang diberikan rumah Anda setiap hari.">We care about how you live, how you feel, and the comfort your home brings every day.</span></div>
 
-    <div class="search-box">
-      <input type="text" placeholder="Lokasi">
-
-      <select>
-        <option>Jenis Properti</option>
-        <option>Rumah</option>
-        <option>Apartemen</option>
-        <option>Vila</option>
-      </select>
-
-      <button class="btn">Cari</button>
-    </div>
-  </div>
-</section>
+    </div></div></section>
 
 <section id="properties" hidden>
 
@@ -991,6 +996,49 @@ body.rn-site-unlocked #rnPhoneGate{display:none!important}
       <p>RumahNusa hadir untuk membantu Anda menemukan hunian yang indah, nyaman, dan sesuai dengan kehidupan yang Anda bayangkan. Jelajahi pilihan rumah dengan tenang, lihat ruang-ruangnya, bayangkan kehidupan di dalamnya, dan pilih tempat yang membuat Anda merasa nyaman serta memiliki ketenangan pikiran.</p>
     </div>
 
+    <div id="rnCustomerGate" class="rn-customer-gate">
+      <h3>Continue to your private RumahNusa home collection</h3>
+      <p>To protect your private property choices and connect you with the RumahNusa agent, please log in first and complete your name, gender, age, and phone number.</p>
+      <div class="rn-gate-grid">
+        <div>
+          <label for="rnGateEmail">Email</label>
+          <input id="rnGateEmail" type="email" autocomplete="email" placeholder="Your email" required>
+        </div>
+        <div>
+          <label for="rnGatePassword">Password</label>
+          <div class="rn-password-wrap">
+            <input id="rnGatePassword" type="password" autocomplete="current-password" placeholder="Your password" required>
+            <button id="rnGatePasswordEye" class="rn-password-eye" type="button" aria-label="Show password" aria-pressed="false">◉</button>
+          </div>
+        </div>
+        <div>
+          <label for="rnGateName">Full name</label>
+          <input id="rnGateName" type="text" autocomplete="name" placeholder="Your full name" required>
+        </div>
+        <div>
+          <label for="rnGateGender">Gender</label>
+          <select id="rnGateGender" required>
+            <option value="">Choose</option>
+            <option>Female</option>
+            <option>Male</option>
+            <option>Prefer not to say</option>
+          </select>
+        </div>
+        <div>
+          <label for="rnGateAge">Age</label>
+          <input id="rnGateAge" type="number" min="18" max="120" placeholder="18 or older" required>
+        </div>
+        <div>
+          <label for="rnGatePhone">Phone number</label>
+          <input id="rnGatePhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+62 81234567890" required>
+        </div>
+      </div>
+      <div class="rn-gate-actions">
+        <button id="rnGateLogin" class="btn" type="button">Login &amp; Continue</button>
+      </div>
+      <div id="rnGateStatus" class="rn-gate-status" aria-live="polite">Your property categories will appear only after you are logged in and your details are completed.</div>
+    </div>
+
     <div class="client-steps" aria-label="Profil progress">
       <span class="client-step active">1. Profil</span>
       <span class="client-step">2. Rumah</span>
@@ -999,7 +1047,7 @@ body.rn-site-unlocked #rnPhoneGate{display:none!important}
       <span class="client-step">5. Kotak Masuk</span>
     </div>
 
-    <form id="clientProfilForm">
+    <form id="clientProfilForm" hidden>
       <div class="client-form-step active" data-step="1">
         <h3>Pilih jenis rumah Anda</h3>
         <p>Ketuk satu jenis rumah dan koleksi rumah dari jenis tersebut akan langsung terbuka untuk Anda.</p>
@@ -2209,5 +2257,79 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 
 
 
-</body>
+<script>
+/* RumahNusa private customer gate: no property browsing before login + identity details. */
+(function(){
+  const gate=document.getElementById('rnCustomerGate');
+  const form=document.getElementById('clientProfilForm');
+  const login=document.getElementById('rnGateLogin');
+  const status=document.getElementById('rnGateStatus');
+  const eye=document.getElementById('rnGatePasswordEye');
+  const pass=document.getElementById('rnGatePassword');
+  if(!gate||!form||!login||!status||!eye||!pass) return;
+
+  eye.addEventListener('click',function(){
+    const visible=pass.type==='text';
+    pass.type=visible?'password':'text';
+    eye.setAttribute('aria-pressed',String(!visible));
+    eye.setAttribute('aria-label',visible?'Show password':'Hide password');
+    eye.textContent=visible?'◉':'◉';
+    eye.style.color=visible?'#486581':'#0879bd';
+  });
+
+  function unlock(){
+    gate.hidden=true;
+    form.hidden=false;
+    document.body.classList.remove('rn-private-browsing');
+    form.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  async function run(){
+    const email=document.getElementById('rnGateEmail').value.trim();
+    const password=pass.value;
+    const name=document.getElementById('rnGateName').value.trim();
+    const gender=document.getElementById('rnGateGender').value;
+    const age=Number(document.getElementById('rnGateAge').value);
+    const phone=document.getElementById('rnGatePhone').value.trim();
+
+    if(!email||!password||!name||!gender||!phone||!Number.isFinite(age)||age<18){
+      status.textContent='Please complete your email, password, name, gender, age, and phone number.';
+      return;
+    }
+    if(!window.supabase||!window.RUMAHNUSA_SUPABASE_URL||!window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY){
+      status.textContent='Secure login is still loading. Please try again in a moment.';
+      return;
+    }
+
+    login.disabled=true;
+    status.textContent='Signing you in securely...';
+    try{
+      const client=window.supabase.createClient(window.RUMAHNUSA_SUPABASE_URL,window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY);
+      const {data,error}=await client.auth.signInWithPassword({email,password});
+      if(error) throw error;
+      if(!data.user) throw new Error('Login did not create a secure session.');
+
+      const {error:profileError}=await client.from('profiles').update({
+        full_name:name,
+        email:email,
+        phone:phone
+      }).eq('id',data.user.id);
+      if(profileError) throw profileError;
+
+      const {error:metaError}=await client.auth.updateUser({
+        data:{full_name:name,gender:gender,age:age,phone:phone}
+      });
+      if(metaError) throw metaError;
+
+      status.textContent='Login complete. Your private RumahNusa home categories are now open.';
+      unlock();
+    }catch(err){
+      status.textContent='Login could not be completed: '+(err?.message||'Please check your details and try again.');
+      login.disabled=false;
+    }
+  }
+
+  login.addEventListener('click',run);
+})();
+</script></body>
 </html>
