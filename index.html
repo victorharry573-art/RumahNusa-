@@ -1578,16 +1578,6 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   const authState=document.getElementById('rnAuthState');
   const emailInput=document.getElementById('rnAuthEmail');
   const passwordInput=document.getElementById('rnAuthPassword');
-  const passwordToggle=document.getElementById('rnPasswordToggle');
-  if(passwordToggle){
-    passwordToggle.addEventListener('click',function(){
-      const visible=passwordInput.type==='text';
-      passwordInput.type=visible?'password':'text';
-      passwordToggle.classList.toggle('is-visible',!visible);
-      passwordToggle.setAttribute('aria-pressed',String(!visible));
-      passwordToggle.setAttribute('aria-label',visible?'Tampilkan password':'Sembunyikan password');
-    });
-  }
   const signIn=document.getElementById('rnSignIn');
   const signOut=document.getElementById('rnSignOut');
   const agentList=document.getElementById('rnAgentList');
@@ -1810,6 +1800,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     await client.from('messages').update({read_at:new Date().toISOString()}).eq('conversation_id',conv.id).eq('sender_role','customer').is('read_at',null);
   }
   signIn.addEventListener('click',signInNow);
+  // Password eye toggle: one listener only, so one tap changes the field exactly once.
   const passwordToggle=document.getElementById('rnPasswordToggle');
   const passwordEye=document.getElementById('rnPasswordEye');
   if(passwordToggle && passwordInput){
