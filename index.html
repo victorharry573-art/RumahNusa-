@@ -1569,20 +1569,39 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 
   async function login(mode){
     const e=email.value.trim(), p=password.value;
-    if(!e||!p){status=''; return;}
-    status.textContent='Connecting to your RumahNusa account...';
-    const result=mode==='signup'
-      ? await client.auth.signUp({email:e,password:p})
-      : await client.auth.signInWithPassword({email:e,password:p});
-    if(result.error){
-      document.getElementById('rnGateStatus').textContent='Account message: '+result.error.message;
-      return;
+    if(!e||!p){
+      status.textContent='Please enter your email and password.';
+      return false;
     }
-    if(mode==='signup' && !result.data.session){
-      document.getElementById('rnGateStatus').textContent='Account created. Check your email for confirmation, then log in.';
-      return;
+    status.textContent='Logging in...';
+    try{
+      const authPromise=mode==='signup'
+        ? client.auth.signUp({email:e,password:p})
+        : client.auth.signInWithPassword({email:e,password:p});
+      const result=await Promise.race([
+        authPromise,
+        new Promise((_,reject)=>setTimeout(()=>reject(new Error('The login request took too long. Please check your connection and try again.')),15000))
+      ]);
+      if(result.error){
+        status.textContent='Login failed: '+result.error.message;
+        return false;
+      }
+      if(mode==='signup' && !result.data.session){
+        status.textContent='Account created. Check your email for confirmation, then log in.';
+        return false;
+      }
+      if(result.data.user){
+        showProfile(result.data.user);
+        profileStatus.textContent='Login successful. Please complete your name, gender and age.';
+        setTimeout(()=>name.focus(),50);
+        return true;
+      }
+      status.textContent='Login completed, but no user session was returned. Please try again.';
+      return false;
+    }catch(error){
+      status.textContent=error.message||'Login could not be completed. Please try again.';
+      return false;
     }
-    showProfile(result.data.user);
   }
 
   async function handleGateLogin(event){
@@ -1606,9 +1625,6 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     }
   }
   signIn.addEventListener('click',handleGateLogin);
-  signIn.addEventListener('pointerup',function(event){
-    if(event.pointerType==='touch') handleGateLogin(event);
-  });
   [email,password].forEach(function(field){
     field.addEventListener('keydown',function(event){
       if(event.key==='Enter') handleGateLogin(event);
