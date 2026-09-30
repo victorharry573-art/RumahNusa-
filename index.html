@@ -2322,5 +2322,29 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 
 
 
+<script>
+/* RumahNusa password eye: reliable mobile tap-to-show / tap-to-hide control. */
+(function(){
+  function initPasswordEye(){
+    const button=document.getElementById('rnGatePasswordToggle');
+    const input=document.getElementById('rnGatePassword');
+    if(!button || !input || button.dataset.eyeReady==='1') return;
+    button.dataset.eyeReady='1';
+    button.addEventListener('click',function(event){
+      event.preventDefault();
+      event.stopPropagation();
+      const showing=input.type==='text';
+      input.type=showing?'password':'text';
+      button.setAttribute('aria-pressed',String(!showing));
+      button.setAttribute('aria-label',showing?'Show password':'Hide password');
+      button.title=showing?'Show password':'Hide password';
+    });
+  }
+  initPasswordEye();
+  document.addEventListener('click',function(event){
+    if(event.target.closest && event.target.closest('#rnGatePasswordToggle')) initPasswordEye();
+  },true);
+})();
+</script>
 </body>
 </html>
