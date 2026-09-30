@@ -625,7 +625,7 @@ body.rn-site-unlocked #rnPhoneGate{display:none!important}
 .rn-verify-options{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}.rn-verify-option{border:1px solid #cbd5e1;background:#fff;border-radius:12px;padding:16px;text-align:left;cursor:pointer;min-height:72px}.rn-verify-option strong{display:block;color:#075985;margin-bottom:5px}.rn-verify-option small{color:#627d98}.rn-verify-option.selected{border:2px solid #0ea5e9;background:#f0f9ff}#rnGateStagePhone[hidden],#rnGateStageChannel[hidden],#rnGateStageCode[hidden],#rnGateStageIdentity[hidden]{display:none!important}@media(max-width:520px){.rn-verify-options{grid-template-columns:1fr}}
 @media(max-width:520px){.rn-phone-row{grid-template-columns:1fr}.rn-phone-row select{min-height:50px}}
 </style><style id="rn-private-browsing-style">
-body.rn-private-browsing #properties,
+body.rn-site-locked #properties,
 body.rn-private-browsing #properties + section,
 body.rn-private-browsing #propertySearchSection { display:none !important; }
 #rnCustomerGate[hidden], #clientProfilForm[hidden] { display:none !important; }
@@ -644,208 +644,41 @@ body.rn-private-browsing #propertySearchSection { display:none !important; }
 @media(max-width:700px){.rn-gate-grid{grid-template-columns:1fr}.rn-gate-grid .full{grid-column:auto}}
 </style></head>
 
-<body class="rn-private-browsing"><section id="rnPhoneGate" aria-label="RumahNusa customer welcome and verification"><div class="rn-gate-card">
-<div id="rnGateStagePhone"><h1>Welcome to RumahNusa Real Estate</h1><p class="rn-welcome">Welcome to RumahNusa — where comfort, beauty, privacy, and peace of mind come together.</p><p class="rn-welcome">A beautiful home is more than rooms and walls. It is a place to rest, enjoy your family, build your future, and feel comfortable every day.</p><h2>Login with your phone number</h2><label for="rnPhoneCountry" style="display:block;margin-top:8px;font-weight:700;">Choose your country</label><div class="rn-phone-row"><select id="rnPhoneCountry" aria-label="Choose your country" title="Choose your country">
-      <option value="ID" data-flag="🇮🇩" data-code="+62">🇮🇩 Indonesia (+62)</option>
-      <option value="MY" data-flag="🇲🇾" data-code="+60">🇲🇾 Malaysia (+60)</option>
-      <option value="SG" data-flag="🇸🇬" data-code="+65">🇸🇬 Singapura (+65)</option>
-      <option value="US" data-flag="🇺🇸" data-code="+1">🇺🇸 Amerika Serikat (+1)</option>
-      <option value="CA" data-flag="🇨🇦" data-code="+1">🇨🇦 Kanada (+1)</option>
-      <option value="GB" data-flag="🇬🇧" data-code="+44">🇬🇧 Britania Raya (+44)</option>
-      <option value="AU" data-flag="🇦🇺" data-code="+61">🇦🇺 Australia (+61)</option>
-      <option value="NZ" data-flag="🇳🇿" data-code="+64">🇳🇿 Selandia Baru (+64)</option>
-      <option value="AF" data-flag="🇦🇫" data-code="+93">🇦🇫 Afghanistan (+93)</option>
-      <option value="AL" data-flag="🇦🇱" data-code="+355">🇦🇱 Albania (+355)</option>
-      <option value="DZ" data-flag="🇩🇿" data-code="+213">🇩🇿 Aljazair (+213)</option>
-      <option value="AD" data-flag="🇦🇩" data-code="+376">🇦🇩 Andorra (+376)</option>
-      <option value="AO" data-flag="🇦🇴" data-code="+244">🇦🇴 Angola (+244)</option>
-      <option value="AG" data-flag="🇦🇬" data-code="+1">🇦🇬 Antigua dan Barbuda (+1)</option>
-      <option value="AR" data-flag="🇦🇷" data-code="+54">🇦🇷 Argentina (+54)</option>
-      <option value="AM" data-flag="🇦🇲" data-code="+374">🇦🇲 Armenia (+374)</option>
-      <option value="AT" data-flag="🇦🇹" data-code="+43">🇦🇹 Austria (+43)</option>
-      <option value="AZ" data-flag="🇦🇿" data-code="+994">🇦🇿 Azerbaijan (+994)</option>
-      <option value="BS" data-flag="🇧🇸" data-code="+1">🇧🇸 Bahama (+1)</option>
-      <option value="BH" data-flag="🇧🇭" data-code="+973">🇧🇭 Bahrain (+973)</option>
-      <option value="BD" data-flag="🇧🇩" data-code="+880">🇧🇩 Bangladesh (+880)</option>
-      <option value="BB" data-flag="🇧🇧" data-code="+1">🇧🇧 Barbados (+1)</option>
-      <option value="BY" data-flag="🇧🇾" data-code="+375">🇧🇾 Belarus (+375)</option>
-      <option value="BE" data-flag="🇧🇪" data-code="+32">🇧🇪 Belgia (+32)</option>
-      <option value="BZ" data-flag="🇧🇿" data-code="+501">🇧🇿 Belize (+501)</option>
-      <option value="BJ" data-flag="🇧🇯" data-code="+229">🇧🇯 Benin (+229)</option>
-      <option value="BT" data-flag="🇧🇹" data-code="+975">🇧🇹 Bhutan (+975)</option>
-      <option value="BO" data-flag="🇧🇴" data-code="+591">🇧🇴 Bolivia (+591)</option>
-      <option value="BA" data-flag="🇧🇦" data-code="+387">🇧🇦 Bosnia dan Herzegovina (+387)</option>
-      <option value="BW" data-flag="🇧🇼" data-code="+267">🇧🇼 Botswana (+267)</option>
-      <option value="BR" data-flag="🇧🇷" data-code="+55">🇧🇷 Brasil (+55)</option>
-      <option value="BN" data-flag="🇧🇳" data-code="+673">🇧🇳 Brunei (+673)</option>
-      <option value="BG" data-flag="🇧🇬" data-code="+359">🇧🇬 Bulgaria (+359)</option>
-      <option value="BF" data-flag="🇧🇫" data-code="+226">🇧🇫 Burkina Faso (+226)</option>
-      <option value="BI" data-flag="🇧🇮" data-code="+257">🇧🇮 Burundi (+257)</option>
-      <option value="CV" data-flag="🇨🇻" data-code="+238">🇨🇻 Cabo Verde (+238)</option>
-      <option value="KH" data-flag="🇰🇭" data-code="+855">🇰🇭 Kamboja (+855)</option>
-      <option value="CM" data-flag="🇨🇲" data-code="+237">🇨🇲 Kamerun (+237)</option>
-      <option value="CF" data-flag="🇨🇫" data-code="+236">🇨🇫 Republik Afrika Tengah (+236)</option>
-      <option value="TD" data-flag="🇹🇩" data-code="+235">🇹🇩 Chad (+235)</option>
-      <option value="CL" data-flag="🇨🇱" data-code="+56">🇨🇱 Chili (+56)</option>
-      <option value="CN" data-flag="🇨🇳" data-code="+86">🇨🇳 Tiongkok (+86)</option>
-      <option value="CO" data-flag="🇨🇴" data-code="+57">🇨🇴 Kolombia (+57)</option>
-      <option value="KM" data-flag="🇰🇲" data-code="+269">🇰🇲 Komoro (+269)</option>
-      <option value="CG" data-flag="🇨🇬" data-code="+242">🇨🇬 Kongo (+242)</option>
-      <option value="CD" data-flag="🇨🇩" data-code="+243">🇨🇩 Republik Demokratik Kongo (+243)</option>
-      <option value="CR" data-flag="🇨🇷" data-code="+506">🇨🇷 Kosta Rika (+506)</option>
-      <option value="CI" data-flag="🇨🇮" data-code="+225">🇨🇮 Pantai Gading (+225)</option>
-      <option value="HR" data-flag="🇭🇷" data-code="+385">🇭🇷 Kroasia (+385)</option>
-      <option value="CU" data-flag="🇨🇺" data-code="+53">🇨🇺 Kuba (+53)</option>
-      <option value="CY" data-flag="🇨🇾" data-code="+357">🇨🇾 Siprus (+357)</option>
-      <option value="CZ" data-flag="🇨🇿" data-code="+420">🇨🇿 Ceko (+420)</option>
-      <option value="DK" data-flag="🇩🇰" data-code="+45">🇩🇰 Denmark (+45)</option>
-      <option value="DJ" data-flag="🇩🇯" data-code="+253">🇩🇯 Djibouti (+253)</option>
-      <option value="DM" data-flag="🇩🇲" data-code="+1">🇩🇲 Dominika (+1)</option>
-      <option value="DO" data-flag="🇩🇴" data-code="+1">🇩🇴 Republik Dominika (+1)</option>
-      <option value="EC" data-flag="🇪🇨" data-code="+593">🇪🇨 Ekuador (+593)</option>
-      <option value="EG" data-flag="🇪🇬" data-code="+20">🇪🇬 Mesir (+20)</option>
-      <option value="SV" data-flag="🇸🇻" data-code="+503">🇸🇻 El Salvador (+503)</option>
-      <option value="GQ" data-flag="🇬🇶" data-code="+240">🇬🇶 Guinea Khatulistiwa (+240)</option>
-      <option value="ER" data-flag="🇪🇷" data-code="+291">🇪🇷 Eritrea (+291)</option>
-      <option value="EE" data-flag="🇪🇪" data-code="+372">🇪🇪 Estonia (+372)</option>
-      <option value="SZ" data-flag="🇸🇿" data-code="+268">🇸🇿 Eswatini (+268)</option>
-      <option value="ET" data-flag="🇪🇹" data-code="+251">🇪🇹 Etiopia (+251)</option>
-      <option value="FJ" data-flag="🇫🇯" data-code="+679">🇫🇯 Fiji (+679)</option>
-      <option value="FI" data-flag="🇫🇮" data-code="+358">🇫🇮 Finlandia (+358)</option>
-      <option value="FR" data-flag="🇫🇷" data-code="+33">🇫🇷 Prancis (+33)</option>
-      <option value="GA" data-flag="🇬🇦" data-code="+241">🇬🇦 Gabon (+241)</option>
-      <option value="GM" data-flag="🇬🇲" data-code="+220">🇬🇲 Gambia (+220)</option>
-      <option value="GE" data-flag="🇬🇪" data-code="+995">🇬🇪 Georgia (+995)</option>
-      <option value="DE" data-flag="🇩🇪" data-code="+49">🇩🇪 Jerman (+49)</option>
-      <option value="GH" data-flag="🇬🇭" data-code="+233">🇬🇭 Ghana (+233)</option>
-      <option value="GR" data-flag="🇬🇷" data-code="+30">🇬🇷 Yunani (+30)</option>
-      <option value="GD" data-flag="🇬🇩" data-code="+1">🇬🇩 Grenada (+1)</option>
-      <option value="GT" data-flag="🇬🇹" data-code="+502">🇬🇹 Guatemala (+502)</option>
-      <option value="GN" data-flag="🇬🇳" data-code="+224">🇬🇳 Guinea (+224)</option>
-      <option value="GW" data-flag="🇬🇼" data-code="+245">🇬🇼 Guinea-Bissau (+245)</option>
-      <option value="GY" data-flag="🇬🇾" data-code="+592">🇬🇾 Guyana (+592)</option>
-      <option value="HT" data-flag="🇭🇹" data-code="+509">🇭🇹 Haiti (+509)</option>
-      <option value="HN" data-flag="🇭🇳" data-code="+504">🇭🇳 Honduras (+504)</option>
-      <option value="HU" data-flag="🇭🇺" data-code="+36">🇭🇺 Hungaria (+36)</option>
-      <option value="IS" data-flag="🇮🇸" data-code="+354">🇮🇸 Islandia (+354)</option>
-      <option value="IN" data-flag="🇮🇳" data-code="+91">🇮🇳 India (+91)</option>
-      <option value="IR" data-flag="🇮🇷" data-code="+98">🇮🇷 Iran (+98)</option>
-      <option value="IQ" data-flag="🇮🇶" data-code="+964">🇮🇶 Irak (+964)</option>
-      <option value="IE" data-flag="🇮🇪" data-code="+353">🇮🇪 Irlandia (+353)</option>
-      <option value="IL" data-flag="🇮🇱" data-code="+972">🇮🇱 Israel (+972)</option>
-      <option value="IT" data-flag="🇮🇹" data-code="+39">🇮🇹 Italia (+39)</option>
-      <option value="JM" data-flag="🇯🇲" data-code="+1">🇯🇲 Jamaika (+1)</option>
-      <option value="JP" data-flag="🇯🇵" data-code="+81">🇯🇵 Jepang (+81)</option>
-      <option value="JO" data-flag="🇯🇴" data-code="+962">🇯🇴 Yordania (+962)</option>
-      <option value="KZ" data-flag="🇰🇿" data-code="+7">🇰🇿 Kazakhstan (+7)</option>
-      <option value="KE" data-flag="🇰🇪" data-code="+254">🇰🇪 Kenya (+254)</option>
-      <option value="KI" data-flag="🇰🇮" data-code="+686">🇰🇮 Kiribati (+686)</option>
-      <option value="KP" data-flag="🇰🇵" data-code="+850">🇰🇵 Korea Utara (+850)</option>
-      <option value="KR" data-flag="🇰🇷" data-code="+82">🇰🇷 Korea Selatan (+82)</option>
-      <option value="KW" data-flag="🇰🇼" data-code="+965">🇰🇼 Kuwait (+965)</option>
-      <option value="KG" data-flag="🇰🇬" data-code="+996">🇰🇬 Kirgizstan (+996)</option>
-      <option value="LA" data-flag="🇱🇦" data-code="+856">🇱🇦 Laos (+856)</option>
-      <option value="LV" data-flag="🇱🇻" data-code="+371">🇱🇻 Latvia (+371)</option>
-      <option value="LB" data-flag="🇱🇧" data-code="+961">🇱🇧 Lebanon (+961)</option>
-      <option value="LS" data-flag="🇱🇸" data-code="+266">🇱🇸 Lesotho (+266)</option>
-      <option value="LR" data-flag="🇱🇷" data-code="+231">🇱🇷 Liberia (+231)</option>
-      <option value="LY" data-flag="🇱🇾" data-code="+218">🇱🇾 Libya (+218)</option>
-      <option value="LI" data-flag="🇱🇮" data-code="+423">🇱🇮 Liechtenstein (+423)</option>
-      <option value="LT" data-flag="🇱🇹" data-code="+370">🇱🇹 Lituania (+370)</option>
-      <option value="LU" data-flag="🇱🇺" data-code="+352">🇱🇺 Luksemburg (+352)</option>
-      <option value="MG" data-flag="🇲🇬" data-code="+261">🇲🇬 Madagaskar (+261)</option>
-      <option value="MW" data-flag="🇲🇼" data-code="+265">🇲🇼 Malawi (+265)</option>
-      <option value="MV" data-flag="🇲🇻" data-code="+960">🇲🇻 Maladewa (+960)</option>
-      <option value="ML" data-flag="🇲🇱" data-code="+223">🇲🇱 Mali (+223)</option>
-      <option value="MT" data-flag="🇲🇹" data-code="+356">🇲🇹 Malta (+356)</option>
-      <option value="MH" data-flag="🇲🇭" data-code="+692">🇲🇭 Kepulauan Marshall (+692)</option>
-      <option value="MR" data-flag="🇲🇷" data-code="+222">🇲🇷 Mauritania (+222)</option>
-      <option value="MU" data-flag="🇲🇺" data-code="+230">🇲🇺 Mauritius (+230)</option>
-      <option value="MX" data-flag="🇲🇽" data-code="+52">🇲🇽 Meksiko (+52)</option>
-      <option value="FM" data-flag="🇫🇲" data-code="+691">🇫🇲 Mikronesia (+691)</option>
-      <option value="MD" data-flag="🇲🇩" data-code="+373">🇲🇩 Moldova (+373)</option>
-      <option value="MC" data-flag="🇲🇨" data-code="+377">🇲🇨 Monako (+377)</option>
-      <option value="MN" data-flag="🇲🇳" data-code="+976">🇲🇳 Mongolia (+976)</option>
-      <option value="ME" data-flag="🇲🇪" data-code="+382">🇲🇪 Montenegro (+382)</option>
-      <option value="MA" data-flag="🇲🇦" data-code="+212">🇲🇦 Maroko (+212)</option>
-      <option value="MZ" data-flag="🇲🇿" data-code="+258">🇲🇿 Mozambik (+258)</option>
-      <option value="MM" data-flag="🇲🇲" data-code="+95">🇲🇲 Myanmar (+95)</option>
-      <option value="NA" data-flag="🇳🇦" data-code="+264">🇳🇦 Namibia (+264)</option>
-      <option value="NR" data-flag="🇳🇷" data-code="+674">🇳🇷 Nauru (+674)</option>
-      <option value="NP" data-flag="🇳🇵" data-code="+977">🇳🇵 Nepal (+977)</option>
-      <option value="NL" data-flag="🇳🇱" data-code="+31">🇳🇱 Belanda (+31)</option>
-      <option value="NI" data-flag="🇳🇮" data-code="+505">🇳🇮 Nikaragua (+505)</option>
-      <option value="NE" data-flag="🇳🇪" data-code="+227">🇳🇪 Niger (+227)</option>
-      <option value="NG" data-flag="🇳🇬" data-code="+234">🇳🇬 Nigeria (+234)</option>
-      <option value="MK" data-flag="🇲🇰" data-code="+389">🇲🇰 Makedonia Utara (+389)</option>
-      <option value="NO" data-flag="🇳🇴" data-code="+47">🇳🇴 Norwegia (+47)</option>
-      <option value="OM" data-flag="🇴🇲" data-code="+968">🇴🇲 Oman (+968)</option>
-      <option value="PK" data-flag="🇵🇰" data-code="+92">🇵🇰 Pakistan (+92)</option>
-      <option value="PW" data-flag="🇵🇼" data-code="+680">🇵🇼 Palau (+680)</option>
-      <option value="PS" data-flag="🇵🇸" data-code="+970">🇵🇸 Palestina (+970)</option>
-      <option value="PA" data-flag="🇵🇦" data-code="+507">🇵🇦 Panama (+507)</option>
-      <option value="PG" data-flag="🇵🇬" data-code="+675">🇵🇬 Papua Nugini (+675)</option>
-      <option value="PY" data-flag="🇵🇾" data-code="+595">🇵🇾 Paraguay (+595)</option>
-      <option value="PE" data-flag="🇵🇪" data-code="+51">🇵🇪 Peru (+51)</option>
-      <option value="PH" data-flag="🇵🇭" data-code="+63">🇵🇭 Filipina (+63)</option>
-      <option value="PL" data-flag="🇵🇱" data-code="+48">🇵🇱 Polandia (+48)</option>
-      <option value="PT" data-flag="🇵🇹" data-code="+351">🇵🇹 Portugal (+351)</option>
-      <option value="QA" data-flag="🇶🇦" data-code="+974">🇶🇦 Qatar (+974)</option>
-      <option value="RO" data-flag="🇷🇴" data-code="+40">🇷🇴 Rumania (+40)</option>
-      <option value="RU" data-flag="🇷🇺" data-code="+7">🇷🇺 Rusia (+7)</option>
-      <option value="RW" data-flag="🇷🇼" data-code="+250">🇷🇼 Rwanda (+250)</option>
-      <option value="KN" data-flag="🇰🇳" data-code="+1">🇰🇳 Saint Kitts dan Nevis (+1)</option>
-      <option value="LC" data-flag="🇱🇨" data-code="+1">🇱🇨 Saint Lucia (+1)</option>
-      <option value="VC" data-flag="🇻🇨" data-code="+1">🇻🇨 Saint Vincent dan Grenadines (+1)</option>
-      <option value="WS" data-flag="🇼🇸" data-code="+685">🇼🇸 Samoa (+685)</option>
-      <option value="SM" data-flag="🇸🇲" data-code="+378">🇸🇲 San Marino (+378)</option>
-      <option value="ST" data-flag="🇸🇹" data-code="+239">🇸🇹 Sao Tome dan Principe (+239)</option>
-      <option value="SA" data-flag="🇸🇦" data-code="+966">🇸🇦 Arab Saudi (+966)</option>
-      <option value="SN" data-flag="🇸🇳" data-code="+221">🇸🇳 Senegal (+221)</option>
-      <option value="RS" data-flag="🇷🇸" data-code="+381">🇷🇸 Serbia (+381)</option>
-      <option value="SC" data-flag="🇸🇨" data-code="+248">🇸🇨 Seychelles (+248)</option>
-      <option value="SL" data-flag="🇸🇱" data-code="+232">🇸🇱 Sierra Leone (+232)</option>
-      <option value="SK" data-flag="🇸🇰" data-code="+421">🇸🇰 Slovakia (+421)</option>
-      <option value="SI" data-flag="🇸🇮" data-code="+386">🇸🇮 Slovenia (+386)</option>
-      <option value="SB" data-flag="🇸🇧" data-code="+677">🇸🇧 Kepulauan Solomon (+677)</option>
-      <option value="SO" data-flag="🇸🇴" data-code="+252">🇸🇴 Somalia (+252)</option>
-      <option value="ZA" data-flag="🇿🇦" data-code="+27">🇿🇦 Afrika Selatan (+27)</option>
-      <option value="SS" data-flag="🇸🇸" data-code="+211">🇸🇸 Sudan Selatan (+211)</option>
-      <option value="ES" data-flag="🇪🇸" data-code="+34">🇪🇸 Spanyol (+34)</option>
-      <option value="LK" data-flag="🇱🇰" data-code="+94">🇱🇰 Sri Lanka (+94)</option>
-      <option value="SD" data-flag="🇸🇩" data-code="+249">🇸🇩 Sudan (+249)</option>
-      <option value="SR" data-flag="🇸🇷" data-code="+597">🇸🇷 Suriname (+597)</option>
-      <option value="SE" data-flag="🇸🇪" data-code="+46">🇸🇪 Swedia (+46)</option>
-      <option value="CH" data-flag="🇨🇭" data-code="+41">🇨🇭 Swiss (+41)</option>
-      <option value="SY" data-flag="🇸🇾" data-code="+963">🇸🇾 Suriah (+963)</option>
-      <option value="TJ" data-flag="🇹🇯" data-code="+992">🇹🇯 Tajikistan (+992)</option>
-      <option value="TZ" data-flag="🇹🇿" data-code="+255">🇹🇿 Tanzania (+255)</option>
-      <option value="TH" data-flag="🇹🇭" data-code="+66">🇹🇭 Thailand (+66)</option>
-      <option value="TL" data-flag="🇹🇱" data-code="+670">🇹🇱 Timor-Leste (+670)</option>
-      <option value="TG" data-flag="🇹🇬" data-code="+228">🇹🇬 Togo (+228)</option>
-      <option value="TO" data-flag="🇹🇴" data-code="+676">🇹🇴 Tonga (+676)</option>
-      <option value="TT" data-flag="🇹🇹" data-code="+1">🇹🇹 Trinidad dan Tobago (+1)</option>
-      <option value="TN" data-flag="🇹🇳" data-code="+216">🇹🇳 Tunisia (+216)</option>
-      <option value="TR" data-flag="🇹🇷" data-code="+90">🇹🇷 Turki (+90)</option>
-      <option value="TM" data-flag="🇹🇲" data-code="+993">🇹🇲 Turkmenistan (+993)</option>
-      <option value="TV" data-flag="🇹🇻" data-code="+688">🇹🇻 Tuvalu (+688)</option>
-      <option value="UG" data-flag="🇺🇬" data-code="+256">🇺🇬 Uganda (+256)</option>
-      <option value="UA" data-flag="🇺🇦" data-code="+380">🇺🇦 Ukraina (+380)</option>
-      <option value="AE" data-flag="🇦🇪" data-code="+971">🇦🇪 Uni Emirat Arab (+971)</option>
-      <option value="UY" data-flag="🇺🇾" data-code="+598">🇺🇾 Uruguay (+598)</option>
-      <option value="UZ" data-flag="🇺🇿" data-code="+998">🇺🇿 Uzbekistan (+998)</option>
-      <option value="VU" data-flag="🇻🇺" data-code="+678">🇻🇺 Vanuatu (+678)</option>
-      <option value="VA" data-flag="🇻🇦" data-code="+39">🇻🇦 Vatikan (+39)</option>
-      <option value="VE" data-flag="🇻🇪" data-code="+58">🇻🇪 Venezuela (+58)</option>
-      <option value="VN" data-flag="🇻🇳" data-code="+84">🇻🇳 Vietnam (+84)</option>
-      <option value="YE" data-flag="🇾🇪" data-code="+967">🇾🇪 Yaman (+967)</option>
-      <option value="ZM" data-flag="🇿🇲" data-code="+260">🇿🇲 Zambia (+260)</option>
-      <option value="ZW" data-flag="🇿🇼" data-code="+263">🇿🇼 Zimbabwe (+263)</option>
-    </select><input id="rnPhoneNumber" type="tel" inputmode="numeric" autocomplete="tel" placeholder="Phone number" aria-label="Phone number"></div><div class="rn-phone-actions"><button class="btn" id="rnPhoneContinue" type="button">Continue</button></div></div>
-<div id="rnGateStageChannel" hidden><h1>Choose how to verify</h1><p class="rn-welcome">Choose where you want RumahNusa to send your confirmation code.</p><div class="rn-verify-options" role="group" aria-label="Choose verification method"><button type="button" class="rn-verify-option selected" data-channel="sms"><strong>SMS</strong><small>Send the code by text message.</small></button><button type="button" class="rn-verify-option" data-channel="whatsapp"><strong>WhatsApp</strong><small>Send the code to WhatsApp.</small></button></div><div class="rn-phone-actions"><button class="btn" id="rnSendPhoneCode" type="button">Continue</button></div></div>
-<div id="rnGateStageCode" hidden><h1>Confirm your phone number</h1><p id="rnPhoneCodeIntro" class="rn-welcome">Enter the confirmation code sent to your phone.</p><input id="rnPhoneCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="Enter 6-digit code" aria-label="Confirmation code"><div class="rn-phone-actions"><button class="btn" id="rnVerifyPhoneCode" type="button">Confirm &amp; Continue</button><button class="btn secondary" id="rnResendPhoneCode" type="button">Send code again</button></div></div>
-<div id="rnGateStageIdentity" hidden><h1>Tell us about you</h1><p class="rn-welcome">Your phone is verified. Before we open the RumahNusa home categories, please add your basic details.</p><div class="rn-gate-grid"><div><label for="rnGateName" style="display:block;font-weight:700;margin-bottom:6px;">Full name</label><input id="rnGateName" type="text" autocomplete="name" placeholder="Your full name"></div><div><label for="rnGateAge" style="display:block;font-weight:700;margin-bottom:6px;">Age</label><input id="rnGateAge" type="number" min="18" max="120" inputmode="numeric" placeholder="18 or older"></div><div><label for="rnGateGender" style="display:block;font-weight:700;margin-bottom:6px;">Gender</label><select id="rnGateGender"><option value="">Choose</option><option value="Perempuan">Woman</option><option value="Laki-laki">Man</option><option value="Tidak ingin menyebutkan">Prefer not to say</option></select></div></div><div class="rn-phone-actions"><button class="btn" id="rnIdentityContinue" type="button">Continue</button></div></div>
-<p id="rnPhoneGateMessage" class="rn-gate-message" aria-live="polite"></p></div></section><script id="rn-phone-gate-js">(function(){const gate=document.getElementById('rnPhoneGate');if(!gate)return;const children=Array.from(document.body.children);children.forEach(el=>{if(el!==gate&&el.tagName!=='SCRIPT')el.dataset.rnLockedDisplay=el.style.display||'';});const lock=()=>children.forEach(el=>{if(el!==gate&&el.tagName!=='SCRIPT')el.style.display='none';});const unlock=()=>children.forEach(el=>{if(el!==gate&&el.tagName!=='SCRIPT')el.style.display=el.dataset.rnLockedDisplay||'';});lock();window.__rnPhoneGateUnlock=unlock;})();</script>
+<body class="rn-site-locked"><section id="rnPhoneGate" aria-label="RumahNusa customer login">
+  <div class="rn-gate-card">
+    <h1>Welcome to RumahNusa Real Estate</h1>
+    <p class="rn-welcome">Welcome to RumahNusa — where comfort, beauty, privacy, and peace of mind come together.</p>
+    <p class="rn-welcome">A beautiful home is more than rooms and walls. It is a place to rest, enjoy your family, build your future, and feel comfortable every day.</p>
+    <p class="rn-welcome">Login to enter RumahNusa and choose the beautiful home that feels right for your life. After you choose a home category, you will see only that type of property until you choose another category.</p>
+
+    <h2>Login to RumahNusa</h2>
+    <label for="rnPhoneNumber" style="display:block;margin-top:8px;font-weight:700;">Phone number</label>
+    <input id="rnPhoneNumber" type="tel" inputmode="tel" autocomplete="tel" placeholder="+6281234567890" aria-label="Phone number" style="width:100%;box-sizing:border-box;padding:14px 12px;border:1px solid #8aa4bc;border-radius:10px;font:inherit;min-height:56px;">
+    <small style="display:block;margin-top:7px;color:#627d98;">Enter your full phone number with country code, for example +62 81234567890.</small>
+
+    <label for="rnGatePassword" style="display:block;margin-top:16px;font-weight:700;">Password</label>
+    <div class="rn-password-wrap">
+      <input id="rnGatePassword" type="password" autocomplete="current-password" placeholder="Enter your password" aria-label="Password">
+      <button id="rnGatePasswordEye" class="rn-password-eye" type="button" aria-label="Show password" aria-pressed="false" title="Show password">
+        <svg class="rn-eye-icon rn-eye-closed" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" fill="none" stroke="currentColor" stroke-width="2"/>
+          <circle cx="12" cy="12" r="2.5" fill="currentColor"/>
+          <path d="M4 4l16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <svg class="rn-eye-icon rn-eye-open" viewBox="0 0 24 24" aria-hidden="true" hidden>
+          <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" fill="none" stroke="currentColor" stroke-width="2"/>
+          <circle cx="12" cy="12" r="2.5" fill="currentColor"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="rn-gate-actions">
+      <button class="btn" id="rnGateLogin" type="button">Login</button>
+      <button class="btn secondary" id="rnGateCreate" type="button">Create account</button>
+    </div>
+    <p id="rnGateStatus" class="rn-gate-status" aria-live="polite"></p>
+  </div>
+</section><script id="rn-phone-gate-js">(function(){const gate=document.getElementById('rnPhoneGate');if(!gate)return;const children=Array.from(document.body.children);children.forEach(el=>{if(el!==gate&&el.tagName!=='SCRIPT')el.dataset.rnLockedDisplay=el.style.display||'';});const lock=()=>children.forEach(el=>{if(el!==gate&&el.tagName!=='SCRIPT')el.style.display='none';});const unlock=()=>children.forEach(el=>{if(el!==gate&&el.tagName!=='SCRIPT')el.style.display=el.dataset.rnLockedDisplay||'';});lock();window.__rnPhoneGateUnlock=unlock;})();</script>
 
 <header>
   <div class="logo">Rumah<span>Nusa</span></div>
@@ -1070,7 +903,7 @@ body.rn-private-browsing #propertySearchSection { display:none !important; }
         <div id="rnCategoryCollection" class="rn-category-collection" hidden aria-live="polite">
           <div class="rn-category-head">
             <div>
-              <h4 id="rnCategoryTitle">Your selected home</h4>
+              <h4 id="rnCategoryTitle">Available homes in your selected category</h4>
               <p id="rnCategoryIntro"></p>
             </div>
             <span id="rnCategoryBadge" class="rn-category-badge"></span>
@@ -1792,7 +1625,103 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     return;
   }
 
-  const phoneCountry=document.getElementById('rnPhoneCountry');const phoneNumber=document.getElementById('rnPhoneNumber');const phoneCode=document.getElementById('rnPhoneCode');const phoneChannelButtons=Array.from(document.querySelectorAll('.rn-verify-option'));const phoneMessage=document.getElementById('rnPhoneGateMessage');const phoneContinue=document.getElementById('rnPhoneContinue');const sendPhoneCode=document.getElementById('rnSendPhoneCode');const verifyPhoneCode=document.getElementById('rnVerifyPhoneCode');const resendPhoneCode=document.getElementById('rnResendPhoneCode');const identityContinue=document.getElementById('rnIdentityContinue');const stagePhone=document.getElementById('rnGateStagePhone');const stageChannel=document.getElementById('rnGateStageChannel');const stageCode=document.getElementById('rnGateStageCode');const stageIdentity=document.getElementById('rnGateStageIdentity');const phoneCodeIntro=document.getElementById('rnPhoneCodeIntro');let pendingPhone='',selectedChannel='sms';function stage(show){[stagePhone,stageChannel,stageCode,stageIdentity].forEach(x=>x.hidden=true);show.hidden=false;phoneMessage.textContent='';window.scrollTo({top:0,behavior:'smooth'});}function fullPhone(){const code=phoneCountry.value;let n=(phoneNumber.value||'').replace(/\D/g,'');if(n.startsWith('0'))n=n.slice(1);return code+n;}phoneChannelButtons.forEach(btn=>btn.addEventListener('click',()=>{phoneChannelButtons.forEach(x=>x.classList.remove('selected'));btn.classList.add('selected');selectedChannel=btn.dataset.channel==='whatsapp'?'whatsapp':'sms';}));phoneContinue.addEventListener('click',()=>{const phone=fullPhone();if(phone.length<8){phoneMessage.textContent='Please enter a valid phone number.';return;}pendingPhone=phone;stage(stageChannel);});async function sendCode(){phoneMessage.textContent='Sending your confirmation code…';const {error}=await client.auth.signInWithOtp({phone:pendingPhone,options:selectedChannel==='whatsapp'?{channel:'whatsapp'}:undefined});if(error){phoneMessage.textContent='The confirmation code could not be sent: '+error.message;return;}phoneCodeIntro.textContent='A confirmation code was sent by '+(selectedChannel==='whatsapp'?'WhatsApp':'SMS')+'. Enter it below.';stage(stageCode);phoneCode.focus();}async function verifyCode(){const token=phoneCode.value.trim();if(!pendingPhone||!/^[0-9]{6}$/.test(token)){phoneMessage.textContent='Enter the 6-digit confirmation code.';return;}const {error}=await client.auth.verifyOtp({phone:pendingPhone,token,type:selectedChannel==='whatsapp'?'whatsapp':'sms'});if(error){phoneMessage.textContent='That code could not be confirmed: '+error.message;return;}phoneNumber.disabled=true;phoneCountry.disabled=true;stage(stageIdentity);}function continueIdentity(){const name=document.getElementById('rnGateName').value.trim();const age=Number(document.getElementById('rnGateAge').value);const gender=document.getElementById('rnGateGender').value;if(!name||!gender||!Number.isFinite(age)||age<18||age>120){phoneMessage.textContent='Please enter your name, age 18 or older, and gender.';return;}document.getElementById('clientName').value=name;document.getElementById('clientUsia').value=String(age);document.getElementById('clientJenis kelamin').value=gender;window.__rnIdentityComplete=true;if(typeof window.__rnPhoneGateUnlock==='function')window.__rnPhoneGateUnlock();document.body.classList.remove('rn-site-locked');document.body.classList.add('rn-site-unlocked');const profile=document.getElementById('client-profile');if(profile){profile.classList.remove('rn-login-locked');profile.hidden=false;profile.querySelectorAll('.client-form-step').forEach(x=>x.classList.remove('active'));const first=profile.querySelector('.client-form-step[data-step="1"]');if(first)first.classList.add('active');profile.scrollIntoView({behavior:'smooth',block:'start');}gate.style.display='none';}sendPhoneCode?.addEventListener('click',sendCode);verifyPhoneCode?.addEventListener('click',verifyCode);resendPhoneCode?.addEventListener('click',sendCode);identityContinue?.addEventListener('click',continueIdentity);client.auth.getSession().then(({data})=>{if(data.session){pendingPhone=data.session.user.phone||'';stage(stageIdentity);}});  const countries=[
+  const phoneNumber=document.getElementById('rnPhoneNumber');
+  const passwordInput=document.getElementById('rnGatePassword');
+  const phoneLogin=document.getElementById('rnGateLogin');
+  const phoneCreate=document.getElementById('rnGateCreate');
+  const phoneEye=document.getElementById('rnGatePasswordEye');
+  const phoneGate=document.getElementById('rnPhoneGate');
+  const phoneStatus=document.getElementById('rnGateStatus');
+
+  function normalizePhone(value){
+    let p=String(value||'').trim().replace(/[()\-\.]/g,'').replace(/\s+/g,'');
+    if(/^0\d{7,14}$/.test(p)) p='+62'+p.slice(1);
+    if(!p.startsWith('+')) p='+'+p;
+    return p;
+  }
+
+  phoneEye.addEventListener('click',function(){
+    const show=passwordInput.type==='password';
+    passwordInput.type=show?'text':'password';
+    phoneEye.setAttribute('aria-pressed',String(show));
+    phoneEye.setAttribute('aria-label',show?'Hide password':'Show password');
+    phoneEye.setAttribute('title',show?'Hide password':'Show password');
+    phoneEye.querySelector('.rn-eye-closed').hidden=show;
+    phoneEye.querySelector('.rn-eye-open').hidden=!show;
+  });
+
+  async function phoneLoginNow(){
+    const phone=normalizePhone(phoneNumber.value);
+    const password=passwordInput.value;
+    if(!/^\+[1-9]\d{7,14}$/.test(phone)){phoneStatus.textContent='Enter a valid phone number with country code.';return;}
+    if(!password){phoneStatus.textContent='Enter your password.';return;}
+    phoneLogin.disabled=true;phoneCreate.disabled=true;phoneStatus.textContent='Logging you in securely…';
+    try{
+      const {data,error}=await client.auth.signInWithPassword({phone,password});
+      if(error) throw error;
+      if(!data.user) throw new Error('Login did not create a secure session.');
+      await finishPhoneLogin(data.user);
+    }catch(error){
+      phoneStatus.textContent='Login failed: '+error.message;
+    }finally{phoneLogin.disabled=false;phoneCreate.disabled=false;}
+  }
+
+  async function phoneCreateNow(){
+    const phone=normalizePhone(phoneNumber.value);
+    const password=passwordInput.value;
+    if(!/^\+[1-9]\d{7,14}$/.test(phone)){phoneStatus.textContent='Enter a valid phone number with country code.';return;}
+    if(password.length<6){phoneStatus.textContent='Password must be at least 6 characters.';return;}
+    phoneLogin.disabled=true;phoneCreate.disabled=true;phoneStatus.textContent='Creating your secure RumahNusa account…';
+    try{
+      const {data,error}=await client.auth.signUp({phone,password});
+      if(error) throw error;
+      if(data.user && !data.session){
+        phoneStatus.textContent='Account created. If phone confirmation is required, complete it in Supabase before logging in.';
+        return;
+      }
+      if(data.user) await finishPhoneLogin(data.user);
+    }catch(error){
+      phoneStatus.textContent='Account could not be created: '+error.message;
+    }finally{phoneLogin.disabled=false;phoneCreate.disabled=false;}
+  }
+
+  async function finishPhoneLogin(user){
+    state.user=user;
+    let profile=await getProfile(user);
+    state.profile=profile;
+    phoneGate.style.display='none';
+    document.body.classList.remove('rn-site-locked');
+    document.body.classList.add('rn-site-unlocked');
+    phoneStatus.textContent='';
+    const profileForm=document.getElementById('client-profile');
+    if(profileForm){
+      profileForm.hidden=false;
+      profileForm.classList.remove('rn-login-locked');
+      profileForm.querySelectorAll('.client-form-step').forEach((step,i)=>step.classList.toggle('active',i===0));
+      profileForm.scrollIntoView({behavior:'smooth',block:'start'});
+    }
+    if(profile.role==='agent'){
+      agentPanel.hidden=false;
+      inbox.querySelector('.inbox-thread').hidden=true;
+      await loadAgentConversations();
+    }else{
+      agentPanel.hidden=true;
+      inbox.querySelector('.inbox-thread').hidden=false;
+    }
+    status('Masuk sebagai '+(profile.role==='agent'?'agen':'pelanggan')+'.');
+  }
+
+  phoneLogin.addEventListener('click',phoneLoginNow);
+  phoneCreate.addEventListener('click',phoneCreateNow);
+  passwordInput.addEventListener('keydown',e=>{if(e.key==='Enter')phoneLoginNow();});
+  client.auth.getSession().then(({data})=>{
+    if(data.session) finishPhoneLogin(data.session.user);
+  });
+  client.auth.onAuthStateChange((_event,session)=>{
+    if(session&&!state.user) finishPhoneLogin(session.user);
+  });
+
+  const countries=[
     ['Afghanistan','+93','🇦🇫'],['Albania','+355','🇦🇱'],['Algeria','+213','🇩🇿'],['Andorra','+376','🇦🇩'],['Angola','+244','🇦🇴'],['Antigua and Barbuda','+1','🇦🇬'],['Argentina','+54','🇦🇷'],['Armenia','+374','🇦🇲'],['Australia','+61','🇦🇺'],['Austria','+43','🇦🇹'],['Azerbaijan','+994','🇦🇿'],['Bahamas','+1','🇧🇸'],['Bahrain','+973','🇧🇭'],['Bangladesh','+880','🇧🇩'],['Barbados','+1','🇧🇧'],['Belarus','+375','🇧🇾'],['Belgium','+32','🇧🇪'],['Belize','+501','🇧🇿'],['Benin','+229','🇧🇯'],['Bhutan','+975','🇧🇹'],['Bolivia','+591','🇧🇴'],['Bosnia and Herzegovina','+387','🇧🇦'],['Botswana','+267','🇧🇼'],['Brazil','+55','🇧🇷'],['Brunei','+673','🇧🇳'],['Bulgaria','+359','🇧🇬'],['Burkina Faso','+226','🇧🇫'],['Burundi','+257','🇧🇮'],['Cambodia','+855','🇰🇭'],['Cameroon','+237','🇨🇲'],['Canada','+1','🇨🇦'],['Cape Verde','+238','🇨🇻'],['Central African Republic','+236','🇨🇫'],['Chad','+235','🇹🇩'],['Chile','+56','🇨🇱'],['China','+86','🇨🇳'],['Colombia','+57','🇨🇴'],['Comoros','+269','🇰🇲'],['Congo','+242','🇨🇬'],['Costa Rica','+506','🇨🇷'],['Croatia','+385','🇭🇷'],['Cuba','+53','🇨🇺'],['Cyprus','+357','🇨🇾'],['Czech Republic','+420','🇨🇿'],['Denmark','+45','🇩🇰'],['Djibouti','+253','🇩🇯'],['Dominica','+1','🇩🇲'],['Dominican Republic','+1','🇩🇴'],['Ecuador','+593','🇪🇨'],['Egypt','+20','🇪🇬'],['El Salvador','+503','🇸🇻'],['Estonia','+372','🇪🇪'],['Eswatini','+268','🇸🇿'],['Ethiopia','+251','🇪🇹'],['Fiji','+679','🇫🇯'],['Finland','+358','🇫🇮'],['France','+33','🇫🇷'],['Gabon','+241','🇬🇦'],['Gambia','+220','🇬🇲'],['Georgia','+995','🇬🇪'],['Germany','+49','🇩🇪'],['Ghana','+233','🇬🇭'],['Greece','+30','🇬🇷'],['Grenada','+1','🇬🇩'],['Guatemala','+502','🇬🇹'],['Guinea','+224','🇬🇳'],['Guyana','+592','🇬🇾'],['Haiti','+509','🇭🇹'],['Honduras','+504','🇭🇳'],['Hungary','+36','🇭🇺'],['Iceland','+354','🇮🇸'],['India','+91','🇮🇳'],['Indonesia','+62','🇮🇩'],['Iran','+98','🇮🇷'],['Iraq','+964','🇮🇶'],['Ireland','+353','🇮🇪'],['Israel','+972','🇮🇱'],['Italy','+39','🇮🇹'],['Jamaica','+1','🇯🇲'],['Japan','+81','🇯🇵'],['Jordan','+962','🇯🇴'],['Kazakhstan','+7','🇰🇿'],['Kenya','+254','🇰🇪'],['Kiribati','+686','🇰🇮'],['Kuwait','+965','🇰🇼'],['Kyrgyzstan','+996','🇰🇬'],['Laos','+856','🇱🇦'],['Latvia','+371','🇱🇻'],['Lebanon','+961','🇱🇧'],['Lesotho','+266','🇱🇸'],['Liberia','+231','🇱🇷'],['Libya','+218','🇱🇾'],['Liechtenstein','+423','🇱🇮'],['Lithuania','+370','🇱🇹'],['Luxembourg','+352','🇱🇺'],['Madagascar','+261','🇲🇬'],['Malawi','+265','🇲🇼'],['Malaysia','+60','🇲🇾'],['Maldives','+960','🇲🇻'],['Mali','+223','🇲🇱'],['Malta','+356','🇲🇹'],['Marshall Islands','+692','🇲🇭'],['Mauritania','+222','🇲🇷'],['Mauritius','+230','🇲🇺'],['Mexico','+52','🇲🇽'],['Micronesia','+691','🇫🇲'],['Moldova','+373','🇲🇩'],['Monaco','+377','🇲🇨'],['Mongolia','+976','🇲🇳'],['Montenegro','+382','🇲🇪'],['Morocco','+212','🇲🇦'],['Mozambique','+258','🇲🇿'],['Myanmar','+95','🇲🇲'],['Namibia','+264','🇳🇦'],['Nauru','+674','🇳🇷'],['Nepal','+977','🇳🇵'],['Netherlands','+31','🇳🇱'],['New Zealand','+64','🇳🇿'],['Nicaragua','+505','🇳🇮'],['Niger','+227','🇳🇪'],['Nigeria','+234','🇳🇬'],['North Korea','+850','🇰🇵'],['North Macedonia','+389','🇲🇰'],['Norway','+47','🇳🇴'],['Oman','+968','🇴🇲'],['Pakistan','+92','🇵🇰'],['Palau','+680','🇵🇼'],['Palestine','+970','🇵🇸'],['Panama','+507','🇵🇦'],['Papua New Guinea','+675','🇵🇬'],['Paraguay','+595','🇵🇾'],['Peru','+51','🇵🇪'],['Philippines','+63','🇵🇭'],['Poland','+48','🇵🇱'],['Portugal','+351','🇵🇹'],['Qatar','+974','🇶🇦'],['Romania','+40','🇷🇴'],['Russia','+7','🇷🇺'],['Rwanda','+250','🇷🇼'],['Saint Kitts and Nevis','+1','🇰🇳'],['Saint Lucia','+1','🇱🇨'],['Saint Vincent and the Grenadines','+1','🇻🇨'],['Samoa','+685','🇼🇸'],['San Marino','+378','🇸🇲'],['Sao Tome and Principe','+239','🇸🇹'],['Saudi Arabia','+966','🇸🇦'],['Senegal','+221','🇸🇳'],['Serbia','+381','🇷🇸'],['Seychelles','+248','🇸🇨'],['Sierra Leone','+232','🇸🇱'],['Singapore','+65','🇸🇬'],['Slovakia','+421','🇸🇰'],['Slovenia','+386','🇸🇮'],['Solomon Islands','+677','🇸🇧'],['Somalia','+252','🇸🇴'],['South Africa','+27','🇿🇦'],['South Korea','+82','🇰🇷'],['South Sudan','+211','🇸🇸'],['Spain','+34','🇪🇸'],['Sri Lanka','+94','🇱🇰'],['Sudan','+249','🇸🇩'],['Suriname','+597','🇸🇷'],['Sweden','+46','🇸🇪'],['Switzerland','+41','🇨🇭'],['Syria','+963','🇸🇾'],['Taiwan','+886','🇹🇼'],['Tajikistan','+992','🇹🇯'],['Tanzania','+255','🇹🇿'],['Thailand','+66','🇹🇭'],['Timor-Leste','+670','🇹🇱'],['Togo','+228','🇹🇬'],['Tonga','+676','🇹🇴'],['Trinidad and Tobago','+1','🇹🇹'],['Tunisia','+216','🇹🇳'],['Turkey','+90','🇹🇷'],['Turkmenistan','+993','🇹🇲'],['Tuvalu','+688','🇹🇻'],['Uganda','+256','🇺🇬'],['Ukraine','+380','🇺🇦'],['United Arab Emirates','+971','🇦🇪'],['United Kingdom','+44','🇬🇧'],['United States','+1','🇺🇸'],['Uruguay','+598','🇺🇾'],['Uzbekistan','+998','🇺🇿'],['Vanuatu','+678','🇻🇺'],['Vatican City','+39','🇻🇦'],['Venezuela','+58','🇻🇪'],['Vietnam','+84','🇻🇳'],['Yemen','+967','🇾🇪'],['Zambia','+260','🇿🇲'],['Zimbabwe','+263','🇿🇼']
   ];
   phoneCountry.innerHTML='';
@@ -2231,7 +2160,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     rentalWrap.hidden=!(name==='Apartemen' && purpose.value==='Sewa');
     layoutTitle.textContent=d.title+' details';
     layoutDetails.innerHTML=d.listings.map(x=>'<div class="house-layout"><strong>'+x[0]+'</strong><p>'+x[3]+'</p></div>').join('');
-    selectionInfo.innerHTML='<strong>'+d.title+'</strong> — '+d.buy+' Choose your rooms and purchase plan here. Your payment amount will be entered in the Amount section before you send the request to the RumahNusa agent.';
+    selectionInfo.innerHTML='<strong>'+d.title+'</strong> — '+d.buy+' Choose from the homes, rooms and plans available in your selected category. Only this category is shown until you choose another one.';
     const apartment=name==='Apartemen';
     const note=layoutDetails.parentElement.querySelector('.apartment-layouts');
     if(note) note.className=apartment?'apartment-layouts':'apartment-layouts';
