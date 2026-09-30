@@ -626,17 +626,19 @@ body.rn-site-unlocked.rn-category-selected > #properties{display:none!important}
 <body><section id="rnPhoneGate" aria-label="RumahNusa phone sign in">
   <div class="rn-gate-card">
     <h1>Welcome to RumahNusa Real Estate</h1>
-    <p class="rn-welcome">
-      Welcome to RumahNusa — a place created around comfort, beauty, peace of mind, and the feeling of coming home.
-      We believe a beautiful home should give you space to rest, live comfortably, enjoy your family, and look forward to tomorrow.
-      Take your time, choose the home that fits your life, and let RumahNusa help you find a place where you can feel truly at home.
-    </p>
+    <p class="rn-welcome">Welcome to RumahNusa — a place created around comfort, beauty, peace of mind, privacy, and the feeling of coming home.</p>
+    <p class="rn-welcome">We believe a beautiful home should give you more than beautiful rooms. It should give you space to rest, live comfortably, enjoy your family, and feel confident about where you belong.</p>
+    <p class="rn-welcome">Log in with your phone number, choose where you want your confirmation code sent, and then choose the home type that feels right for your life.</p>
     <h2>Login with your phone number</h2>
-    <p class="rn-welcome" style="font-size:15px;margin-bottom:14px;">Choose your country first. Then enter your phone number without the country code.</p>
     <div class="rn-phone-row">
       <select id="rnPhoneCountry" aria-label="Country and phone code"></select>
       <input id="rnPhoneNumber" type="tel" inputmode="numeric" autocomplete="tel" placeholder="Phone number" aria-label="Phone number">
     </div>
+    <label for="rnPhoneChannel" style="display:block;margin-top:12px;font-weight:700;">Send confirmation code by</label>
+    <select id="rnPhoneChannel" aria-label="Confirmation channel" style="width:100%;box-sizing:border-box;padding:13px;border:1px solid #cbd5e1;border-radius:9px;font:inherit;color:#102a43;background:white;margin-top:6px;">
+      <option value="sms">SMS</option>
+      <option value="whatsapp">WhatsApp</option>
+    </select>
     <div class="rn-phone-actions">
       <button class="btn" id="rnSendPhoneCode" type="button">Send confirmation code</button>
     </div>
@@ -648,13 +650,28 @@ body.rn-site-unlocked.rn-category-selected > #properties{display:none!important}
       </div>
     </div>
     <p id="rnPhoneGateMessage" class="rn-gate-message" aria-live="polite"></p>
+
+    <div id="rnHomeChoice" hidden style="margin-top:24px;padding-top:22px;border-top:1px solid #d9e2ec;">
+      <h2>Choose your beautiful home</h2>
+      <p class="rn-welcome">Your account is verified. Tap a home type and its matching collection will open immediately.</p>
+      <div class="client-options rn-gate-category-options">
+        <button type="button" class="client-option" data-gate-category="Apartemen"><strong>Apartment</strong><small>Modern apartment homes and rooms.</small></button>
+        <button type="button" class="client-option" data-gate-category="Separate Rumah"><strong>Separate Rumah</strong><small>Private separate houses.</small></button>
+        <button type="button" class="client-option" data-gate-category="Vila"><strong>Villa</strong><small>Beautiful villa homes and outdoor spaces.</small></button>
+        <button type="button" class="client-option" data-gate-category="Neighborhood Rumah"><strong>Neighborhood</strong><small>Homes in welcoming residential communities.</small></button>
+        <button type="button" class="client-option" data-gate-category="Townhouse"><strong>Townhouse</strong><small>Connected multi-level homes.</small></button>
+        <button type="button" class="client-option" data-gate-category="Penthouse"><strong>Penthouse</strong><small>Spacious premium homes above the city.</small></button>
+        <button type="button" class="client-option" data-gate-category="Family Residence"><strong>Family Residence</strong><small>Comfortable homes designed around family life.</small></button>
+        <button type="button" class="client-option" data-gate-category="Investment Property"><strong>Investment Property</strong><small>Properties for long-term ownership and investment.</small></button>
+      </div>
+    </div>
   </div>
 </section><script id="rn-phone-gate-js">
 (function(){
   const gate=document.getElementById('rnPhoneGate');
   if(!gate) return;
   const children=Array.from(document.body.children);
-  children.forEach(el=>{ if(el!==gate && el.tagName!=='SCRIPT') el.dataset.rnLockedDisplay=el.style.display||''; });
+  children.forEach(el=>{if(el!==gate&&el.tagName!=='SCRIPT')el.dataset.rnLockedDisplay=el.style.display||'';});
   const lock=()=>children.forEach(el=>{if(el!==gate&&el.tagName!=='SCRIPT')el.style.display='none';});
   const unlock=()=>children.forEach(el=>{if(el!==gate&&el.tagName!=='SCRIPT')el.style.display=el.dataset.rnLockedDisplay||'';});
   lock();
@@ -677,49 +694,7 @@ body.rn-site-unlocked.rn-category-selected > #properties{display:none!important}
   </div>
 </header>
 
-<section id="rnCustomerGate" class="rn-customer-gate" aria-label="RumahNusa customer access">
-  <div id="rnGateLogin">
-    <div class="rn-welcome-copy">
-      <h2>Welcome to RumahNusa Real Estate</h2>
-      <p>Welcome to RumahNusa Real Estate — a place created around comfort, beauty, peace of mind, privacy, and the feeling of coming home.</p>
-      <p>We believe a home should give you more than beautiful rooms. It should give you space to rest, live, grow, enjoy your family, and feel confident about where you belong.</p>
-      <p>Log in with your phone number, verify the code we send you, and then choose the home type that feels right for your life.</p>
-    </div>
-    <div class="rn-gate-grid">
-      <label for="rnGatePhone">Phone number</label>
-      <input id="rnGatePhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+62 812 3456 7890" required>
-      <label for="rnGateChannel">Where should we send your confirmation code?</label>
-      <select id="rnGateChannel">
-        <option value="sms">SMS</option>
-        <option value="whatsapp">WhatsApp</option>
-      </select>
-      <button class="btn" id="rnGateSendCode" type="button">Send Confirmation Code</button>
-      <div id="rnGateCodeBox" hidden>
-        <label for="rnGateCode">Confirmation code</label>
-        <input id="rnGateCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="Enter 6-digit code">
-        <button class="btn" id="rnGateVerifyCode" type="button">Verify &amp; Continue</button>
-      </div>
-    </div>
-    <div id="rnGateStatus" class="rn-gate-status" aria-live="polite">Log in with your phone number to begin.</div>
-  </div>
 
-  <div id="rnGateCategory" class="rn-gate-category" hidden>
-    <div class="rn-welcome-copy">
-      <h2>Choose your beautiful home</h2>
-      <p id="rnGateCategoryStatus">Select a home type. The matching collection will open immediately.</p>
-    </div>
-    <div class="client-options rn-gate-category-options" id="rnGateCategoryOptions">
-      <button type="button" class="client-option" data-category="Apartemen"><strong>Apartment</strong><small>Modern apartment homes and rooms.</small></button>
-      <button type="button" class="client-option" data-category="Separate Rumah"><strong>Separate Rumah</strong><small>Private separate houses.</small></button>
-      <button type="button" class="client-option" data-category="Vila"><strong>Villa</strong><small>Beautiful villa homes and outdoor spaces.</small></button>
-      <button type="button" class="client-option" data-category="Neighborhood Rumah"><strong>Neighborhood</strong><small>Homes in welcoming residential communities.</small></button>
-      <button type="button" class="client-option" data-category="Townhouse"><strong>Townhouse</strong><small>Connected multi-level homes.</small></button>
-      <button type="button" class="client-option" data-category="Penthouse"><strong>Penthouse</strong><small>Spacious premium homes above the city.</small></button>
-      <button type="button" class="client-option" data-category="Family Residence"><strong>Family Residence</strong><small>Comfortable homes designed around family life.</small></button>
-      <button type="button" class="client-option" data-category="Investment Property"><strong>Investment Property</strong><small>Properties for long-term ownership and investment.</small></button>
-    </div>
-  </div>
-</section>
 
 
 <section class="hero">
@@ -1537,116 +1512,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-/* RumahNusa passwordless first-visit flow: phone + SMS/WhatsApp OTP, then home category. */
-(function(){
-  const gate=document.getElementById('rnCustomerGate');
-  const login=document.getElementById('rnGateLogin');
-  const category=document.getElementById('rnGateCategory');
-  const phone=document.getElementById('rnGatePhone');
-  const channel=document.getElementById('rnGateChannel');
-  const send=document.getElementById('rnGateSendCode');
-  const codeBox=document.getElementById('rnGateCodeBox');
-  const code=document.getElementById('rnGateCode');
-  const verify=document.getElementById('rnGateVerifyCode');
-  const status=document.getElementById('rnGateStatus');
-  const categoryStatus=document.getElementById('rnGateCategoryStatus');
-  const options=Array.from(document.querySelectorAll('#rnGateCategoryOptions [data-category]'));
-  if(!gate) return;
 
-  document.body.classList.add('rn-site-locked');
-  let client=null;
-  let pendingPhone='';
-
-  function normalizePhone(value){
-    let p=String(value||'').trim().replace(/[^+0-9]/g,'');
-    if(p.startsWith('08')) p='+62'+p.slice(1);
-    else if(p.startsWith('62')) p='+'+p;
-    return p;
-  }
-  function message(t){status.textContent=t||'';}
-
-  async function unlock(user){
-    window.__rnCustomerUser=user||null;
-    try{
-      if(user){
-        await client.from('profiles').upsert({
-          id:user.id, phone:user.phone||pendingPhone, email:user.email||'', role:'customer'
-        },{onConflict:'id'});
-      }
-    }catch(e){}
-    document.body.classList.remove('rn-site-locked');
-    document.body.classList.add('rn-site-unlocked');
-    login.hidden=true;
-    category.hidden=false;
-    category.classList.add('active');
-    const featured=document.getElementById('properties');
-    if(featured) featured.hidden=true;
-    categoryStatus.textContent='Your account is verified. Choose a home type and its collection will open immediately.';
-    gate.scrollIntoView({behavior:'smooth',block:'start'});
-  }
-
-  send.addEventListener('click',async function(){
-    const p=normalizePhone(phone.value);
-    if(p.length<8){message('Please enter a complete phone number with country code, for example +62.');return;}
-    if(!window.supabase||!window.RUMAHNUSA_SUPABASE_URL||!window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY){
-      message('The login system is still loading. Please try again in a moment.');return;
-    }
-    client=client||window.supabase.createClient(window.RUMAHNUSA_SUPABASE_URL,window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY);
-    pendingPhone=p;
-    const selectedChannel=channel.value==='whatsapp'?'whatsapp':'sms';
-    send.disabled=true;
-    message('Sending your '+(selectedChannel==='whatsapp'?'WhatsApp':'SMS')+' confirmation code...');
-    const result=await client.auth.signInWithOtp({
-      phone:p,
-      options:selectedChannel==='whatsapp'?{channel:'whatsapp'}:undefined
-    });
-    send.disabled=false;
-    if(result.error){message('The code could not be sent: '+result.error.message);return;}
-    codeBox.hidden=false;
-    code.focus();
-    message('Code sent. Enter the 6-digit confirmation code to continue.');
-  });
-
-  verify.addEventListener('click',async function(){
-    const token=String(code.value||'').replace(/\D/g,'').slice(0,6);
-    if(token.length!==6){message('Please enter the 6-digit confirmation code.');return;}
-    client=client||window.supabase.createClient(window.RUMAHNUSA_SUPABASE_URL,window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY);
-    verify.disabled=true;
-    const result=await client.auth.verifyOtp({phone:pendingPhone,token,type:'sms'});
-    verify.disabled=false;
-    if(result.error){message('The code is incorrect or expired: '+result.error.message);return;}
-    message('Verification successful.');
-    await unlock(result.data?.user);
-  });
-
-  options.forEach(function(button){
-    button.addEventListener('click',function(){
-      const value=button.dataset.category;
-      options.forEach(x=>x.classList.toggle('selected',x===button));
-      const source=document.querySelector('#propertyOptions .client-option[data-value="'+CSS.escape(value)+'"]');
-      if(source) source.click();
-      const featured=document.getElementById('properties');
-      if(featured) featured.hidden=true;
-      const profile=document.getElementById('client-profile');
-      if(profile){
-        profile.classList.remove('rn-login-locked');
-        profile.scrollIntoView({behavior:'smooth',block:'start'});
-      }
-      const collection=document.getElementById('rnCategoryCollection');
-      if(collection) collection.hidden=false;
-      categoryStatus.textContent='Showing only '+button.querySelector('strong').textContent+' homes. Choose another home type above if you want to change your collection.';
-    });
-  });
-
-  (async function restoreSession(){
-    if(!window.supabase||!window.RUMAHNUSA_SUPABASE_URL||!window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY) return;
-    client=window.supabase.createClient(window.RUMAHNUSA_SUPABASE_URL,window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY);
-    const result=await client.auth.getSession();
-    if(result.data?.session?.user) await unlock(result.data.session.user);
-  })();
-})();
-</script>
 
 <script>
 (function(){
@@ -1730,6 +1596,8 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   const phoneNumber=document.getElementById('rnPhoneNumber');
   const phoneCode=document.getElementById('rnPhoneCode');
   const phoneCodeWrap=document.getElementById('rnPhoneCodeWrap');
+  const phoneChannel=document.getElementById('rnPhoneChannel');
+  const homeChoice=document.getElementById('rnHomeChoice');
   const phoneMessage=document.getElementById('rnPhoneGateMessage');
   const sendPhoneCode=document.getElementById('rnSendPhoneCode');
   const verifyPhoneCode=document.getElementById('rnVerifyPhoneCode');
@@ -1744,9 +1612,14 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   async function sendCode(){
     const phone=fullPhone(); if(phone.length<8){phoneMessage.textContent='Please enter a valid phone number.';return;}
     pendingPhone=phone; phoneMessage.textContent='Sending your confirmation code…';
-    const {error}=await client.auth.signInWithOtp({phone,options:{channel:'sms'}});
+    const selectedChannel=phoneChannel?.value==='whatsapp'?'whatsapp':'sms';
+    const {error}=await client.auth.signInWithOtp({
+      phone,
+      options:selectedChannel==='whatsapp'?{channel:'whatsapp'}:undefined
+    });
     if(error){phoneMessage.textContent='The confirmation code could not be sent: '+error.message;return;}
-    phoneCodeWrap.hidden=false; phoneMessage.textContent='A confirmation code was sent to your phone. Enter it below.';
+    phoneCodeWrap.hidden=false;
+    phoneMessage.textContent='A confirmation code was sent by '+(selectedChannel==='whatsapp'?'WhatsApp':'SMS')+'. Enter it below.';
     phoneCode.focus();
   }
   async function verifyCode(){
@@ -1754,17 +1627,41 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     phoneMessage.textContent='Confirming…';
     const {data,error}=await client.auth.verifyOtp({phone:pendingPhone,token,type:'sms'});
     if(error){phoneMessage.textContent='That code could not be confirmed: '+error.message;return;}
-    phoneMessage.textContent='Welcome to RumahNusa. Your account is now open.';
-    if(window.__rnPhoneGateUnlock) window.__rnPhoneGateUnlock();
-    gate.hidden=true;
-    if(typeof window.__rumahnusaShowCustomerStep==='function') window.__rumahnusaShowCustomerStep(0);
-    document.getElementById('client-profile')?.scrollIntoView({behavior:'smooth',block:'start'});
+    phoneMessage.textContent='Verification successful. Now choose the home type you want to see.';
+    if(homeChoice) homeChoice.hidden=false;
+    phoneCodeWrap.hidden=true;
+    phoneNumber.disabled=true;
+    phoneCountry.disabled=true;
+    phoneChannel.disabled=true;
   }
   sendPhoneCode?.addEventListener('click',sendCode);
   verifyPhoneCode?.addEventListener('click',verifyCode);
   resendPhoneCode?.addEventListener('click',sendCode);
   client.auth.getSession().then(({data})=>{
-    if(data.session){if(window.__rnPhoneGateUnlock)window.__rnPhoneGateUnlock();gate.hidden=true;}
+    if(data.session){
+      phoneMessage.textContent='You are already verified. Choose the home type you want to see.';
+      if(homeChoice) homeChoice.hidden=false;
+    }
+  });
+
+  document.querySelectorAll('#rnHomeChoice [data-gate-category]').forEach(function(button){
+    button.addEventListener('click',function(){
+      const value=button.dataset.gateCategory;
+      document.querySelectorAll('#rnHomeChoice [data-gate-category]').forEach(x=>x.classList.toggle('selected',x===button));
+      const source=document.querySelector('#propertyOptions .client-option[data-value="'+CSS.escape(value)+'"]');
+      if(source) source.click();
+      if(window.__rnPhoneGateUnlock) window.__rnPhoneGateUnlock();
+      gate.hidden=true;
+      const featured=document.getElementById('properties');
+      if(featured) featured.hidden=true;
+      const profile=document.getElementById('client-profile');
+      if(profile){
+        profile.classList.remove('rn-login-locked');
+        profile.scrollIntoView({behavior:'smooth',block:'start'});
+      }
+      const collection=document.getElementById('rnCategoryCollection');
+      if(collection) collection.hidden=false;
+    });
   });
   const authState=document.getElementById('rnAuthState');
 
