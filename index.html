@@ -337,6 +337,16 @@ body.rn-site-unlocked footer { display:none !important; }
   border-radius: 18px;
   box-shadow: 0 5px 20px rgba(16,42,67,.08);
 }
+/* Login controls must remain directly tappable on mobile. */
+.rn-gate-actions .btn,
+#rnGateSignIn,
+#rnGatePasswordToggle {
+  position: relative;
+  z-index: 20;
+  pointer-events: auto !important;
+  touch-action: manipulation;
+}
+
 .rn-customer-gate h2 { color:#102a43; margin-bottom:8px; }
 .rn-customer-gate p { color:#627d98; }
 .rn-password-wrap{position:relative;display:flex;align-items:center;width:100%}
@@ -1575,7 +1585,35 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     showProfile(result.data.user);
   }
 
-  signIn.addEventListener('click',function(){login('signin');});
+  async function handleGateLogin(event){
+    if(event){event.preventDefault();event.stopPropagation();}
+    if(!email || !password) return;
+    const e=email.value.trim(), p=password.value;
+    if(!e || !p){
+      status.textContent='Please enter your email and password.';
+      if(!e) email.focus(); else password.focus();
+      return;
+    }
+    signIn.disabled=true;
+    signIn.textContent='Logging in...';
+    try{
+      await login('signin');
+    }catch(error){
+      status.textContent='Login could not be completed. Please try again.';
+    }finally{
+      signIn.disabled=false;
+      signIn.textContent='Log in';
+    }
+  }
+  signIn.addEventListener('click',handleGateLogin);
+  signIn.addEventListener('pointerup',function(event){
+    if(event.pointerType==='touch') handleGateLogin(event);
+  });
+  [email,password].forEach(function(field){
+    field.addEventListener('keydown',function(event){
+      if(event.key==='Enter') handleGateLogin(event);
+    });
+  });
 
   continueBtn.addEventListener('click',async function(){
     if(!currentUser){profileStatus.textContent='Please log in first.';return;}
