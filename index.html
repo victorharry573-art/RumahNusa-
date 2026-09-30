@@ -349,298 +349,7 @@ body.rn-site-unlocked footer { display:none !important; }
 
 .rn-customer-gate h2 { color:#102a43; margin-bottom:8px; }
 .rn-customer-gate p { color:#627d98; }
-.rn-password-wrap{position:relative;display:flex;align-items:center;width:100%}
-.rn-password-wrap input{width:100%;padding-right:58px!important;box-sizing:border-box}
-.rn-password-toggle{position:absolute;right:4px;top:50%;transform:translateY(-50%);z-index:999;width:56px;height:56px;border:0;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#17324d;border-radius:12px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;pointer-events:auto;user-select:none}
-.rn-password-toggle svg{width:25px;height:25px;pointer-events:none;display:block}
-.rn-password-toggle:hover{background:#eef6ff}
-.rn-password-toggle:active{background:#dbeafe}
-.rn-password-toggle:focus{outline:2px solid #0ea5e9;outline-offset:2px}
-body.rn-site-locked > :not(header):not(#rnCustomerGate){display:none!important}
-body.rn-site-locked header nav,body.rn-site-locked header .lang-switch{display:none!important}
-body.rn-site-locked #rnCustomerGate{display:block!important}
-body.rn-site-unlocked .rn-customer-gate{display:none!important}
-.rn-gate-grid { display:grid; gap:12px; margin-top:18px; }
-.rn-gate-grid input, .rn-gate-grid select {
-  width:100%; box-sizing:border-box; padding:13px; border:1px solid #cbd5e1;
-  border-radius:9px; font:inherit; color:#102a43; background:white;
-}
-.rn-gate-actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
-.rn-gate-status { margin-top:12px; color:#486581; font-size:14px; }
-.rn-gate-profile { margin-top:20px; padding-top:20px; border-top:1px solid #d9e2ec; }
-#rnGateLogin[hidden], #rnGateCategory[hidden], #rnGateProfile[hidden] { display:none !important; }
-.rn-gate-category.active { display:block; }
-.rn-gate-category-note { margin-top:12px; font-weight:600; color:#075985; }
-.rn-customer-gate .client-options { margin-top:16px; }
-.rn-gate-category { display:none; }
-.rn-gate-category.active { display:block; }
-.rn-customer-gate .rn-gate-category .client-option { min-height:76px; }
-.rn-site-unlocked .rn-customer-gate { display:none !important; }
-
-@media(max-width:800px){
-  .rn-customer-gate { margin:16px 12px; padding:20px; }
-}
-
-/* RumahNusa client profile and agent inbox */
-.client-area { background: #eef7fb; }
-.client-panel { max-width: 920px; margin: auto; background: white; border-radius: 18px; padding: 28px; box-shadow: 0 5px 20px rgba(16,42,67,.08); }
-.client-steps { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px; }
-.client-step { padding: 7px 11px; border-radius: 20px; background: #e5edf4; color: #627d98; font-size: 12px; font-weight: bold; }
-.client-step.active { background: #e0f2fe; color: #075985; }
-.client-form-step { display: none; }
-.client-form-step.active { display: block; }
-.client-form-step h3 { font-size: 24px; margin-bottom: 8px; color: #102a43; }
-.client-form-step p { color: #627d98; margin-bottom: 18px; }
-.client-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
-.client-field { display: flex; flex-direction: column; gap: 6px; }
-.client-field.full { grid-column: 1 / -1; }
-.client-field label { font-weight: 700; color: #183b56; }
-.client-field input, .client-field select, .client-field textarea {
-  width: 100%; padding: 13px; border: 1px solid #cbd5e1; border-radius: 9px; font: inherit; color: #102a43; background: white;
-}
-.client-field textarea { min-height: 120px; resize: vertical; }
-.client-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-.client-option { border: 1px solid #cbd5e1; background: white; border-radius: 12px; padding: 14px; text-align: left; cursor: pointer; color: #183b56; }
-.client-option strong { display: block; margin-bottom: 4px; color: #075985; }
-.client-option small { color: #627d98; }
-.client-option.selected { border: 2px solid #0ea5e9; background: #f0f9ff; }
-.client-actions { display: flex; justify-content: space-between; gap: 12px; margin-top: 22px; }
-.client-actions .btn.secondary { background: #e5edf4; color: #183b56; }
-.client-summary { background: #f5f9fc; padding: 18px; border-radius: 12px; margin-top: 16px; }
-.client-inbox { margin-top: 28px; border-top: 1px solid #d9e2ec; padding-top: 25px; }
-.inbox-thread { background: #f8fbfd; border: 1px solid #d9e2ec; border-radius: 12px; padding: 16px; margin-top: 12px; }
-.inbox-note { color: #627d98; font-size: 13px; margin-top: 8px; }
-.message-list { display:flex; flex-direction:column; gap:10px; margin-top:14px; }
-.message-bubble { max-width:88%; padding:12px 14px; border-radius:14px; background:white; border:1px solid #d9e2ec; }
-.message-bubble.customer { align-self:flex-end; background:#e0f2fe; border-color:#bae6fd; }
-.message-bubble.agent { align-self:flex-start; background:#fff; }
-.message-meta { display:flex; align-items:center; gap:7px; margin-top:6px; font-size:11px; color:#627d98; }
-.message-checks { font-weight:800; letter-spacing:-2px; color:#075985; }
-.message-compose { display:flex; gap:8px; margin-top:14px; }
-.message-compose textarea { flex:1; min-height:48px; max-height:130px; resize:vertical; padding:12px; border:1px solid #cbd5e1; border-radius:10px; font:inherit; }
-.message-compose button { align-self:flex-end; }
-.inbox-status-card { margin-top:14px; padding:12px 14px; border-radius:10px; background:#f0f9ff; color:#075985; font-size:13px; }
-.apartment-layouts { display:grid; grid-template-columns:1fr; gap:12px; }
-.apartment-layout { background:#f8fbfd; border:1px solid #d9e2ec; border-radius:12px; padding:15px; }
-.apartment-layout strong { display:block; color:#075985; margin-bottom:6px; }
-.apartment-layout p { margin:0; color:#627d98; font-size:14px; }
-.house-layout { background:#f8fbfd; border:1px solid #d9e2ec; border-radius:12px; padding:15px; }
-.house-layout strong { display:block; color:#075985; margin-bottom:6px; }
-.house-layout p { margin:0; color:#627d98; font-size:14px; }
-.house-feature-note { margin-top:10px; }
-@media(max-width:800px){.message-compose{flex-direction:column}.message-compose button{align-self:stretch}}
-@media (max-width: 800px) {
-  .client-panel { padding: 20px; }
-  .client-grid, .client-options { grid-template-columns: 1fr; }
-}
-
-footer {
-  background: #071e33;
-  color: white;
-  padding: 40px 7%;
-  text-align: center;
-}
-
-footer p {
-  color: #b8c7d9;
-  margin-top: 8px;
-}
-
-.property-continue-float {
-  position: fixed;
-  right: 20px;
-  bottom: 20px;
-  z-index: 1000;
-  background: #0879bd;
-  color: white;
-  border: none;
-  padding: 15px 22px;
-  border-radius: 30px;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 5px 15px rgba(0,0,0,.2);
-}
-.property-continue-float[hidden] { display: none !important; }
-.property-continue-float:disabled {
-  opacity: .55;
-  cursor: not-allowed;
-}
-@media (max-width:800px){
-  .property-continue-float {
-    left: 20px;
-    right: 20px;
-    width: calc(100% - 40px);
-  }
-}
-
-@media (max-width: 800px) {
-  nav {
-    display: none;
-  }
-
-  .hero {
-    padding: 70px 6%;
-  }
-
-  .hero h1 {
-    font-size: 38px;
-  }
-
-  .search-box {
-    flex-direction: column;
-  }
-
-  .cards {
-    grid-template-columns: 1fr;
-  }
-}
-
-.lang-switch { display:flex; gap:6px; margin-left:18px; }
-.lang-btn { border:1px solid #cbd5e1; background:white; color:#183b56; padding:7px 10px; border-radius:18px; font-weight:bold; cursor:pointer; }
-.lang-btn.active { background:#075985; color:white; border-color:#075985; }
-.bilingual { margin-top:10px; color:#627d98; }
-.bilingual .id { display:block; margin-top:4px; font-style:italic; }
-@media(max-width:800px){.lang-switch{margin:10px 0 0;}.lang-btn{padding:6px 9px;}}
-
-.agent-team-photo {
-  width: min(920px, 100%);
-  height: 300px;
-  margin: 0 auto 28px;
-  border-radius: 22px;
-  overflow: hidden;
-  box-shadow: 0 14px 35px rgba(0,0,0,.28);
-  border: 3px solid rgba(255,255,255,.8);
-}
-.agent-team-photo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center center;
-  display: block;
-  position: relative;
-  z-index: 2;
-}
-.agent-team-photo {
-  position: relative;
-  background: linear-gradient(180deg,#dff4ff 0%,#f8fcff 62%,#cde8c2 62%,#9ccf8a 100%);
-}
-.promo-house {
-  position: absolute;
-  bottom: 12px;
-  width: 92px;
-  height: 72px;
-  background: rgba(255,255,255,.78);
-  border: 2px solid rgba(7,89,133,.35);
-  border-radius: 8px 8px 4px 4px;
-  z-index: 1;
-  box-shadow: 0 5px 12px rgba(3,30,52,.18);
-}
-.promo-house::before {
-  content: "";
-  position: absolute;
-  left: -10px;
-  top: -34px;
-  width: 0;
-  height: 0;
-  border-left: 56px solid transparent;
-  border-right: 56px solid transparent;
-  border-bottom: 38px solid rgba(7,89,133,.72);
-}
-.promo-house::after {
-  content: "";
-  position: absolute;
-  left: 36px;
-  bottom: 0;
-  width: 20px;
-  height: 36px;
-  background: rgba(7,89,133,.28);
-  border-radius: 4px 4px 0 0;
-}
-.promo-house-one { left: 3%; }
-.promo-house-two { right: 3%; transform: scale(.82); }
-.promo-house-three { left: 50%; bottom: 5px; transform: translateX(-50%) scale(.62); opacity: .8; }
-.agent-team-caption {
-  text-align: center;
-  margin-top: -62px;
-  margin-bottom: 40px;
-  position: relative;
-  z-index: 2;
-  color: white;
-  font-weight: bold;
-  font-size: 18px;
-  text-shadow: 0 2px 8px rgba(0,0,0,.65);
-}
-.hero {
-  flex-direction: column;
-  justify-content: center;
-}
-.hero-content { width: min(920px, 100%); }
-@media (max-width:800px){
-  .agent-team-photo { height: 230px; margin-bottom: 22px; }
-  .agent-team-caption { margin-top: -50px; margin-bottom: 28px; font-size: 16px; }
-}
-
-/* Category-specific RumahNusa collections */
-.rn-category-collection{margin-top:18px;padding:18px;background:#f8fbfd;border:1px solid #d9e2ec;border-radius:16px}
-.rn-category-collection[hidden]{display:none}
-#rentalTermOptions[hidden]{display:none !important}
-.rn-category-head{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap}
-.rn-category-head h4{font-size:22px;color:#075985;margin:0}
-.rn-category-head p{margin:5px 0 0;color:#627d98}
-.rn-category-badge{background:#e0f2fe;color:#075985;padding:7px 11px;border-radius:999px;font-size:12px;font-weight:800}
-.rn-listing-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:16px}
-.rn-listing{background:white;border:1px solid #d9e2ec;border-radius:14px;overflow:hidden}
-.rn-listing img{width:100%;height:180px;object-fit:cover;display:block}
-.rn-listing-body{padding:14px}
-.rn-listing h5{font-size:18px;margin:0 0 5px;color:#102a43}
-.rn-listing p{color:#627d98;font-size:13px;margin:5px 0}
-.rn-listing-price{font-size:18px!important;font-weight:800;color:#075985!important;margin-top:9px!important}
-.rn-listing-specs{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
-.rn-listing-specs span{background:#f0f9ff;border-radius:999px;padding:5px 8px;font-size:11px;color:#075985;font-weight:700}
-.rn-confidence{margin-top:12px;padding:12px;border-left:4px solid #0ea5e9;background:#eef8fd;color:#183b56;border-radius:8px}
-.rn-collection-note{margin-top:12px;color:#627d98;font-size:13px}
-@media(max-width:800px){.rn-listing-grid{grid-template-columns:1fr}.rn-listing img{height:200px}}
-
-body.rn-site-unlocked:not(.rn-category-selected) > .hero,
-body.rn-site-unlocked:not(.rn-category-selected) > #properties,
-body.rn-site-unlocked:not(.rn-category-selected) > #about,
-body.rn-site-unlocked:not(.rn-category-selected) > #contact{display:none!important}
-body.rn-site-unlocked.rn-category-selected > .hero,
-body.rn-site-unlocked.rn-category-selected > #properties{display:none!important}
-</style>
-<style id="rn-phone-gate-css">
-#rnPhoneGate{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px 18px;box-sizing:border-box;background:linear-gradient(135deg,#f7fbff,#ffffff);font-family:inherit}
-body.rn-site-unlocked #rnPhoneGate{display:none!important}
-#rnPhoneGate .rn-gate-card{width:min(560px,100%);background:#fff;border:1px solid #d9e2ec;border-radius:22px;padding:28px;box-shadow:0 12px 40px rgba(16,42,67,.10)}
-#rnPhoneGate h1{margin:0 0 10px;font-size:clamp(28px,6vw,44px);color:#163a5f}
-#rnPhoneGate .rn-welcome{font-size:17px;line-height:1.65;color:#486581;margin:0 0 20px}
-#rnPhoneGate h2{margin:22px 0 8px;color:#163a5f}
-.rn-phone-row{display:grid;grid-template-columns:minmax(150px,42%) 1fr;gap:10px}
-.rn-phone-row select,.rn-phone-row input,#rnPhoneCode{width:100%;box-sizing:border-box;padding:14px 12px;border:1px solid #8aa4bc;border-radius:10px;font:inherit;background:#fff;min-height:56px;pointer-events:auto;touch-action:manipulation;position:relative;z-index:5;cursor:pointer}
-.rn-phone-row select{appearance:auto;-webkit-appearance:auto;display:block;opacity:1;visibility:visible}
-.rn-phone-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
-#rnPhoneGate .rn-gate-message{min-height:24px;margin:12px 0 0;color:#486581}
-#rnPhoneGate .rn-code-wrap{margin-top:14px}
-#rnPhoneCode{letter-spacing:.28em;text-align:center;font-size:20px}
-.rn-verify-options{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}.rn-verify-option{border:1px solid #cbd5e1;background:#fff;border-radius:12px;padding:16px;text-align:left;cursor:pointer;min-height:72px}.rn-verify-option strong{display:block;color:#075985;margin-bottom:5px}.rn-verify-option small{color:#627d98}.rn-verify-option.selected{border:2px solid #0ea5e9;background:#f0f9ff}#rnGateStagePhone[hidden],#rnGateStageChannel[hidden],#rnGateStageCode[hidden],#rnGateStageIdentity[hidden]{display:none!important}@media(max-width:520px){.rn-verify-options{grid-template-columns:1fr}}
-@media(max-width:520px){.rn-phone-row{grid-template-columns:1fr}.rn-phone-row select{min-height:50px}}
-</style><style id="rn-private-browsing-style">
-body.rn-site-locked #properties,
-body.rn-private-browsing #properties + section,
-body.rn-private-browsing #propertySearchSection { display:none !important; }
-#rnCustomerGate[hidden], #clientProfilForm[hidden] { display:none !important; }
-.rn-customer-gate{background:#fff;border:1px solid #d9e2ec;border-radius:18px;padding:22px;box-shadow:0 8px 30px rgba(16,42,67,.08);margin-top:18px}
-.rn-customer-gate h3{margin:0 0 8px;color:#102a43}
-.rn-customer-gate p{color:#486581;line-height:1.65}
-.rn-gate-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.rn-gate-grid .full{grid-column:1/-1}
-.rn-gate-grid input,.rn-gate-grid select{width:100%;box-sizing:border-box;border:1px solid #bcccdc;border-radius:9px;padding:13px;font:inherit;background:#fff}
-.rn-password-wrap{position:relative}
-.rn-password-wrap input{padding-right:52px}
-.rn-password-eye{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:40px;height:40px;border:0;background:transparent;border-radius:50%;cursor:pointer;color:#486581;font-size:20px;display:grid;place-items:center}
-.rn-password-eye:active,.rn-password-eye:focus-visible{background:#eaf2f8}.rn-eye-icon{width:22px;height:22px;pointer-events:none}
-.rn-gate-status{margin-top:10px;font-size:14px;color:#486581}
-.rn-gate-actions{margin-top:16px}
+.rn-gate-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
 @media(max-width:700px){.rn-gate-grid{grid-template-columns:1fr}.rn-gate-grid .full{grid-column:auto}}
 </style></head>
 
@@ -649,36 +358,25 @@ body.rn-private-browsing #propertySearchSection { display:none !important; }
     <h1>Welcome to RumahNusa Real Estate</h1>
     <p class="rn-welcome">Welcome to RumahNusa — where comfort, beauty, privacy, and peace of mind come together.</p>
     <p class="rn-welcome">A beautiful home is more than rooms and walls. It is a place to rest, enjoy your family, build your future, and feel comfortable every day.</p>
-    <p class="rn-welcome">Login to enter RumahNusa and choose the beautiful home that feels right for your life. After you choose a home category, you will see only that type of property until you choose another category.</p>
+    <p class="rn-welcome">Login securely with your phone number and a confirmation code, then enter RumahNusa and choose the beautiful home that feels right for your life.</p>
 
     <h2>Login to RumahNusa</h2>
     <label for="rnPhoneNumber" style="display:block;margin-top:8px;font-weight:700;">Phone number</label>
     <input id="rnPhoneNumber" type="tel" inputmode="tel" autocomplete="tel" placeholder="+6281234567890" aria-label="Phone number" style="width:100%;box-sizing:border-box;padding:14px 12px;border:1px solid #8aa4bc;border-radius:10px;font:inherit;min-height:56px;">
     <small style="display:block;margin-top:7px;color:#627d98;">Enter your full phone number with country code, for example +62 81234567890.</small>
 
-    <label for="rnGatePassword" style="display:block;margin-top:16px;font-weight:700;">Password</label>
-    <div class="rn-password-wrap">
-      <input id="rnGatePassword" type="password" autocomplete="current-password" placeholder="Enter your password" aria-label="Password">
-      <button id="rnGatePasswordEye" class="rn-password-eye" type="button" aria-label="Show password" aria-pressed="false" title="Show password">
-        <svg class="rn-eye-icon rn-eye-closed" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" fill="none" stroke="currentColor" stroke-width="2"/>
-          <circle cx="12" cy="12" r="2.5" fill="currentColor"/>
-          <path d="M4 4l16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-        <svg class="rn-eye-icon rn-eye-open" viewBox="0 0 24 24" aria-hidden="true" hidden>
-          <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" fill="none" stroke="currentColor" stroke-width="2"/>
-          <circle cx="12" cy="12" r="2.5" fill="currentColor"/>
-        </svg>
-      </button>
+    <div id="rnGateCodeWrap" class="rn-code-wrap" hidden>
+      <label for="rnPhoneCode" style="display:block;margin-bottom:7px;font-weight:700;">Confirmation code</label>
+      <input id="rnPhoneCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="Enter code" aria-label="Confirmation code">
     </div>
 
     <div class="rn-gate-actions">
-      <button class="btn" id="rnGateLogin" type="button">Login</button>
-      <button class="btn secondary" id="rnGateCreate" type="button">Create account</button>
+      <button class="btn" id="rnGateSendCode" type="button">Send confirmation code</button>
+      <button class="btn secondary" id="rnGateVerifyCode" type="button" hidden>Confirm and Enter</button>
     </div>
     <p id="rnGateStatus" class="rn-gate-status" aria-live="polite"></p>
   </div>
-</section><script id="rn-phone-gate-js">(function(){const gate=document.getElementById('rnPhoneGate');if(!gate)return;const children=Array.from(document.body.children);children.forEach(el=>{if(el!==gate&&el.tagName!=='SCRIPT')el.dataset.rnLockedDisplay=el.style.display||'';});const lock=()=>children.forEach(el=>{if(el!==gate&&el.tagName!=='SCRIPT')el.style.display='none';});const unlock=()=>children.forEach(el=>{if(el!==gate&&el.tagName!=='SCRIPT')el.style.display=el.dataset.rnLockedDisplay||'';});lock();window.__rnPhoneGateUnlock=unlock;})();</script>
+</section></section><script id="rn-phone-gate-js">(function(){const gate=document.getElementById('rnPhoneGate');if(!gate)return;const children=Array.from(document.body.children);children.forEach(el=>{if(el!==gate&&el.tagName!=='SCRIPT')el.dataset.rnLockedDisplay=el.style.display||'';});const lock=()=>children.forEach(el=>{if(el!==gate&&el.tagName!=='SCRIPT')el.style.display='none';});const unlock=()=>children.forEach(el=>{if(el!==gate&&el.tagName!=='SCRIPT')el.style.display=el.dataset.rnLockedDisplay||'';});lock();window.__rnPhoneGateUnlock=unlock;})();</script>
 
 <header>
   <div class="logo">Rumah<span>Nusa</span></div>
@@ -1572,10 +1270,10 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   }
 
   const phoneNumber=document.getElementById('rnPhoneNumber');
-  const passwordInput=document.getElementById('rnGatePassword');
-  const phoneLogin=document.getElementById('rnGateLogin');
-  const phoneCreate=document.getElementById('rnGateCreate');
-  const phoneEye=document.getElementById('rnGatePasswordEye');
+  const phoneCode=document.getElementById('rnPhoneCode');
+  const codeWrap=document.getElementById('rnGateCodeWrap');
+  const phoneSendCode=document.getElementById('rnGateSendCode');
+  const phoneVerifyCode=document.getElementById('rnGateVerifyCode');
   const phoneGate=document.getElementById('rnPhoneGate');
   const phoneStatus=document.getElementById('rnGateStatus');
 
@@ -1586,49 +1284,46 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     return p;
   }
 
-  phoneEye.addEventListener('click',function(){
-    const show=passwordInput.type==='password';
-    passwordInput.type=show?'text':'password';
-    phoneEye.setAttribute('aria-pressed',String(show));
-    phoneEye.setAttribute('aria-label',show?'Hide password':'Show password');
-    phoneEye.setAttribute('title',show?'Hide password':'Show password');
-    phoneEye.querySelector('.rn-eye-closed').hidden=show;
-    phoneEye.querySelector('.rn-eye-open').hidden=!show;
-  });
-
-  async function phoneLoginNow(){
+  async function sendPhoneCode(){
     const phone=normalizePhone(phoneNumber.value);
-    const password=passwordInput.value;
-    if(!/^\+[1-9]\d{7,14}$/.test(phone)){phoneStatus.textContent='Enter a valid phone number with country code.';return;}
-    if(!password){phoneStatus.textContent='Enter your password.';return;}
-    phoneLogin.disabled=true;phoneCreate.disabled=true;phoneStatus.textContent='Logging you in securely…';
+    if(!/^\+[1-9]\d{7,14}$/.test(phone)){
+      phoneStatus.textContent='Enter a valid phone number with country code.';
+      return;
+    }
+    phoneSendCode.disabled=true;
+    phoneStatus.textContent='Sending your confirmation code…';
     try{
-      const {data,error}=await client.auth.signInWithPassword({phone,password});
+      const {error}=await client.auth.signInWithOtp({phone,options:{shouldCreateUser:true}});
       if(error) throw error;
-      if(!data.user) throw new Error('Login did not create a secure session.');
-      await finishPhoneLogin(data.user);
+      codeWrap.hidden=false;
+      phoneVerifyCode.hidden=false;
+      phoneSendCode.hidden=true;
+      phoneCode.focus();
+      phoneStatus.textContent='Your confirmation code has been sent. Enter it to enter RumahNusa.';
     }catch(error){
-      phoneStatus.textContent='Login failed: '+error.message;
-    }finally{phoneLogin.disabled=false;phoneCreate.disabled=false;}
+      phoneStatus.textContent='The confirmation code could not be sent: '+error.message;
+    }finally{
+      phoneSendCode.disabled=false;
+    }
   }
 
-  async function phoneCreateNow(){
+  async function verifyPhoneCode(){
     const phone=normalizePhone(phoneNumber.value);
-    const password=passwordInput.value;
+    const token=phoneCode.value.trim();
     if(!/^\+[1-9]\d{7,14}$/.test(phone)){phoneStatus.textContent='Enter a valid phone number with country code.';return;}
-    if(password.length<6){phoneStatus.textContent='Password must be at least 6 characters.';return;}
-    phoneLogin.disabled=true;phoneCreate.disabled=true;phoneStatus.textContent='Creating your secure RumahNusa account…';
+    if(!/^\d{6}$/.test(token)){phoneStatus.textContent='Enter the 6-digit confirmation code.';return;}
+    phoneVerifyCode.disabled=true;
+    phoneStatus.textContent='Confirming your phone…';
     try{
-      const {data,error}=await client.auth.signUp({phone,password});
+      const {data,error}=await client.auth.verifyOtp({phone,token,type:'sms'});
       if(error) throw error;
-      if(data.user && !data.session){
-        phoneStatus.textContent='Account created. If phone confirmation is required, complete it in Supabase before logging in.';
-        return;
-      }
-      if(data.user) await finishPhoneLogin(data.user);
+      if(!data.user) throw new Error('Secure login session was not created.');
+      await finishPhoneLogin(data.user);
     }catch(error){
-      phoneStatus.textContent='Account could not be created: '+error.message;
-    }finally{phoneLogin.disabled=false;phoneCreate.disabled=false;}
+      phoneStatus.textContent='The confirmation code could not be verified: '+error.message;
+    }finally{
+      phoneVerifyCode.disabled=false;
+    }
   }
 
   async function finishPhoneLogin(user){
@@ -1657,9 +1352,9 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     status('Masuk sebagai '+(profile.role==='agent'?'agen':'pelanggan')+'.');
   }
 
-  phoneLogin.addEventListener('click',phoneLoginNow);
-  phoneCreate.addEventListener('click',phoneCreateNow);
-  passwordInput.addEventListener('keydown',e=>{if(e.key==='Enter')phoneLoginNow();});
+  phoneSendCode.addEventListener('click',sendPhoneCode);
+  phoneVerifyCode.addEventListener('click',verifyPhoneCode);
+  phoneCode.addEventListener('keydown',e=>{if(e.key==='Enter')verifyPhoneCode();});
   client.auth.getSession().then(({data})=>{
     if(data.session) finishPhoneLogin(data.session.user);
   });
