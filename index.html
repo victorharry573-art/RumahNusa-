@@ -847,6 +847,7 @@ body.rn-site-unlocked.rn-category-selected > #properties{display:none!important}
         <p>Ketuk satu jenis rumah dan koleksi rumah dari jenis tersebut akan langsung terbuka untuk Anda.</p>
         <div class="client-options" id="propertyOptions">
           <button type="button" class="client-option" data-value="Apartemen"><strong>Apartemen</strong><small>Hunian kota modern dengan fasilitas bersama.</small></button>
+          <button type="button" class="client-option" data-value="Hotel"><strong>Hotel</strong><small>Hotel untuk dimiliki, bukan untuk disewa.</small></button>
           <button type="button" class="client-option" data-value="Separate Rumah"><strong>Separate Rumah</strong><small>Rumah pribadi dengan pilihan 4–11 kamar tidur.</small></button>
           <button type="button" class="client-option" data-value="Vila"><strong>Vila</strong><small>Hunian nyaman dengan ruang luar yang menyenangkan.</small></button>
           <button type="button" class="client-option" data-value="Neighborhood Rumah"><strong>Neighborhood Rumah</strong><small>Rumah dalam lingkungan hunian dengan pilihan 4–11 kamar tidur.</small></button>
@@ -2116,6 +2117,19 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
         ['Luxury Apartment — 2 Bedrooms','Jakarta, Indonesia','$200,000+ to buy · Rent from $5,000/year','2 bedrooms · 1 very large bathroom/toilet · large parlor + kitchen · furnished · AC','https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85'],
         ['Luxury Apartment — 3 Bedrooms','Jakarta, Indonesia','Contact RumahNusa for the selected apartment','3 bedrooms · 2 very large bathrooms/toilets · large parlor + kitchen · furnished · AC','https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1200&q=85'],
         ['Luxury Apartment — 4 Bedrooms','Jakarta, Indonesia','Contact RumahNusa for the selected apartment','4 bedrooms · 3 bathrooms/toilets · 2 large parlors · integrated kitchen · furnished · AC','https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=85']
+      ]
+    },
+    'Hotel':{
+      title:'Hotels for Ownership',
+      badge:'HOTEL',
+      intro:'A hotel-only collection. Every listing here is a hotel property for purchase, with its guest rooms, suites, lobby, restaurants or kitchens, bathrooms, facilities, parking and surrounding spaces presented together.',
+      confidence:'Imagine owning a beautiful hotel property where guests can enjoy comfortable rooms, welcoming spaces and thoughtful facilities, while you have a complete property designed for long-term ownership.',
+      buy:'Hotels are sale-only. Hotel rentals are not available.',
+      rooms:['10 kamar tidur','20 kamar tidur','30 kamar tidur','40 kamar tidur','50 kamar tidur'],
+      listings:[
+        ['RumahNusa City Hotel — 10 Rooms','Jakarta, Indonesia','Contact RumahNusa for the selected hotel','10 guest rooms · reception/lobby · bathrooms/toilets · dining area · kitchen · furnished · parking','https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=85'],
+        ['RumahNusa Grand Hotel — 20 Rooms','Jakarta, Indonesia','Contact RumahNusa for the selected hotel','20 guest rooms · spacious lobby · guest bathrooms · dining area · kitchen · furnished spaces · parking','https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=85'],
+        ['RumahNusa Signature Hotel — 30 Rooms','Jakarta, Indonesia','Contact RumahNusa for the selected hotel','30 guest rooms · grand lobby · suites · bathrooms/toilets · dining and kitchen areas · furnished · parking','https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=85']
       ]
     },
     'Separate Rumah':{
