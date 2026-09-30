@@ -818,15 +818,15 @@ body.rn-site-unlocked.rn-category-selected > #properties{display:none!important}
   </div>
 </section>
 
-<section id="client-profile" class="client-area rn-login-locked">
+<section id="client-profile" class="client-area">
   <div class="section-title">
     <h2 data-en="Welcome to RumahNusa Real Estate" data-id="Selamat Datang di RumahNusa Real Estate">Selamat Datang di RumahNusa Real Estate</h2>
-    <p data-en="Welcome to RumahNusa Real Estate. We are here to help you find a beautiful, comfortable home where you can live with peace of mind." data-id="Selamat datang di RumahNusa Real Estate. Kami hadir untuk membantu Anda menemukan rumah yang indah dan nyaman, tempat Anda dapat hidup dengan tenang.">Welcome to RumahNusa Real Estate. We are here to help you find a beautiful, comfortable home where you can live with peace of mind.</p>
+    <p data-en="Welcome to RumahNusa Real Estate. Discover beautiful, comfortable homes designed for peaceful everyday living, thoughtful spaces, and a place you can truly feel at home." data-id="Selamat datang di RumahNusa Real Estate. Temukan hunian yang indah dan nyaman untuk kehidupan yang tenang, ruang yang bermakna, dan tempat yang benar-benar terasa seperti rumah.">Welcome to RumahNusa Real Estate. Discover beautiful, comfortable homes designed for peaceful everyday living, thoughtful spaces, and a place you can truly feel at home.</p>
   </div>
   <div class="client-panel">
     <div class="section-title">
-      <h2>Temukan Rumah yang Terasa Seperti Rumah</h2>
-      <p>RumahNusa menawarkan pengalaman mencari hunian yang nyaman, indah, dan menenangkan. Masuk atau buat akun terlebih dahulu. Setelah Anda masuk, pilih jenis rumah yang Anda inginkan dan koleksi rumah dari jenis tersebut akan langsung terbuka untuk Anda.</p>
+      <h2>Temukan Rumah yang Membawa Ketenangan</h2>
+      <p>RumahNusa hadir untuk membantu Anda menemukan hunian yang indah, nyaman, dan sesuai dengan kehidupan yang Anda bayangkan. Jelajahi pilihan rumah dengan tenang, lihat ruang-ruangnya, bayangkan kehidupan di dalamnya, dan pilih tempat yang membuat Anda merasa nyaman serta memiliki ketenangan pikiran.</p>
     </div>
 
     <div class="client-steps" aria-label="Profil progress">
@@ -840,8 +840,8 @@ body.rn-site-unlocked.rn-category-selected > #properties{display:none!important}
     <form id="clientProfilForm">
       <div class="client-form-step active" data-step="1">
         <h3>Pilih jenis rumah Anda</h3>
-        <p>Setelah Anda masuk ke RumahNusa, ketuk satu jenis rumah dan koleksi rumah dari jenis tersebut akan langsung terbuka.</p>
-        <div class="client-options" id="propertyOptions" class="rn-login-locked">
+        <p>Ketuk satu jenis rumah dan koleksi rumah dari jenis tersebut akan langsung terbuka untuk Anda.</p>
+        <div class="client-options" id="propertyOptions">
           <button type="button" class="client-option" data-value="Apartemen"><strong>Apartemen</strong><small>Hunian kota modern dengan fasilitas bersama.</small></button>
           <button type="button" class="client-option" data-value="Separate Rumah"><strong>Separate Rumah</strong><small>Rumah pribadi dengan pilihan 4–11 kamar tidur.</small></button>
           <button type="button" class="client-option" data-value="Vila"><strong>Vila</strong><small>Hunian nyaman dengan ruang luar yang menyenangkan.</small></button>
@@ -1736,31 +1736,6 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   `;
   document.head.appendChild(style);
 
-  const authPanel=document.createElement('div');
-  authPanel.className='rn-auth-panel';
-  authPanel.innerHTML=`
-    <strong>Akun RumahNusa</strong>
-    <p id="rnAuthState" class="rn-auth-message">Login untuk memilih rumah Anda dan melanjutkan ke RumahNusa.</p>
-    <div class="rn-auth-grid">
-      <input id="rnAuthEmail" type="email" placeholder="Email">
-      <div class="rn-password-wrap">
-        <input id="rnAuthPassword" type="password" placeholder="Password" autocomplete="current-password">
-        <button class="rn-password-toggle" id="rnPasswordToggle" type="button" aria-label="Tampilkan password" aria-pressed="false" title="Tampilkan password">
-          <svg id="rnPasswordEye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path>
-            <circle cx="12" cy="12" r="3"></circle>
-          </svg>
-        </button>
-      </div>
-      <div id="rnPasswordError" class="rn-password-error" role="alert" aria-live="polite">Incorrect password. Please enter your correct password and continue.</div>
-    </div>
-    <div class="rn-auth-actions">
-      <button class="btn" id="rnSignIn" type="button">Login</button>
-      <button class="btn secondary" id="rnSignOut" type="button" hidden>Logout</button>
-    </div>
-  `;
-  inbox.insertBefore(authPanel,inbox.firstChild);
-
   const agentPanel=document.createElement('div');
   agentPanel.className='rn-agent-panel';
   agentPanel.hidden=true;
@@ -1882,7 +1857,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     return state.conversation;
   }
   async function sendCustomerMessage(body){
-    if(!state.user){status('Silakan masuk atau buat akun terlebih dahulu.');return;}
+    if(!state.user){status('Permintaan Anda akan dikirim setelah Anda complete the property details.');return;}
     let conv=await ensureCustomerConversation();
     if(!conv){
       const v=id=>document.getElementById(id)?.value||'';
