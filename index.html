@@ -610,12 +610,13 @@ body.rn-site-unlocked.rn-category-selected > #properties{display:none!important}
 </style>
 <style id="rn-phone-gate-css">
 #rnPhoneGate{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px 18px;box-sizing:border-box;background:linear-gradient(135deg,#f7fbff,#ffffff);font-family:inherit}
+body.rn-site-unlocked #rnPhoneGate{display:none!important}
 #rnPhoneGate .rn-gate-card{width:min(560px,100%);background:#fff;border:1px solid #d9e2ec;border-radius:22px;padding:28px;box-shadow:0 12px 40px rgba(16,42,67,.10)}
 #rnPhoneGate h1{margin:0 0 10px;font-size:clamp(28px,6vw,44px);color:#163a5f}
 #rnPhoneGate .rn-welcome{font-size:17px;line-height:1.65;color:#486581;margin:0 0 20px}
 #rnPhoneGate h2{margin:22px 0 8px;color:#163a5f}
 .rn-phone-row{display:grid;grid-template-columns:minmax(150px,42%) 1fr;gap:10px}
-.rn-phone-row select,.rn-phone-row input,#rnPhoneCode{width:100%;box-sizing:border-box;padding:14px 12px;border:1px solid #bcccdc;border-radius:10px;font:inherit;background:#fff}
+.rn-phone-row select,.rn-phone-row input,#rnPhoneCode{width:100%;box-sizing:border-box;padding:14px 12px;border:1px solid #bcccdc;border-radius:10px;font:inherit;background:#fff;min-height:52px;pointer-events:auto;touch-action:manipulation}
 .rn-phone-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
 #rnPhoneGate .rn-gate-message{min-height:24px;margin:12px 0 0;color:#486581}
 #rnPhoneGate .rn-code-wrap{margin-top:14px}
@@ -630,8 +631,9 @@ body.rn-site-unlocked.rn-category-selected > #properties{display:none!important}
     <p class="rn-welcome">We believe a beautiful home should give you more than beautiful rooms. It should give you space to rest, live comfortably, enjoy your family, and feel confident about where you belong.</p>
     <p class="rn-welcome">Log in with your phone number, choose where you want your confirmation code sent, and then choose the home type that feels right for your life.</p>
     <h2>Login with your phone number</h2>
+    <label for="rnPhoneCountry" style="display:block;margin-top:8px;font-weight:700;">Choose your country and phone number code</label>
     <div class="rn-phone-row">
-      <select id="rnPhoneCountry" aria-label="Country and phone code"></select>
+      <select id="rnPhoneCountry" aria-label="Choose your country and phone number code"></select>
       <input id="rnPhoneNumber" type="tel" inputmode="numeric" autocomplete="tel" placeholder="Phone number" aria-label="Phone number">
     </div>
     <label for="rnPhoneChannel" style="display:block;margin-top:12px;font-weight:700;">Send confirmation code by</label>
@@ -1616,9 +1618,16 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     phoneNumber.disabled=true;
     phoneCountry.disabled=true;
     phoneChannel.disabled=true;
+
+    // Unlock the complete customer area only after successful phone verification.
+    if(typeof window.__rnPhoneGateUnlock==='function') window.__rnPhoneGateUnlock();
+    document.body.classList.remove('rn-site-locked');
+    document.body.classList.add('rn-site-unlocked');
+
     const profile=document.getElementById('client-profile');
     if(profile){
       profile.classList.remove('rn-login-locked');
+      profile.hidden=false;
       profile.scrollIntoView({behavior:'smooth',block:'start'});
     }
   }
@@ -1632,8 +1641,14 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       phoneNumber.disabled=true;
       phoneCountry.disabled=true;
       phoneChannel.disabled=true;
+      if(typeof window.__rnPhoneGateUnlock==='function') window.__rnPhoneGateUnlock();
+      document.body.classList.remove('rn-site-locked');
+      document.body.classList.add('rn-site-unlocked');
       const profile=document.getElementById('client-profile');
-      if(profile) profile.classList.remove('rn-login-locked');
+      if(profile){
+        profile.classList.remove('rn-login-locked');
+        profile.hidden=false;
+      }
     }
   });
 
