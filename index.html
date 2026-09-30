@@ -765,11 +765,6 @@ footer p {
               <option>2 kamar tidur</option><option>3 kamar tidur</option><option>4 kamar tidur</option>
             </select>
           </div>
-          <div class="client-field full">
-            <label for="clientBudget">Harga / anggaran yang dipilih (USD)</label>
-            <input id="clientBudget" type="number" min="0" step="1" placeholder="Contoh: 350000" required>
-            <small style="color:#627d98;">Harga atau anggaran ini akan dikirim langsung ke inbox agen.</small>
-          </div>
           <div class="client-field full" id="floorOptions" hidden>
             <label for="floorCount">Pilihan lantai atas</label>
             <select id="floorCount">
@@ -1021,6 +1016,11 @@ footer p {
         <h3>Siap untuk Agen RumahNusa</h3>
         <p>Tinjau permintaan Anda, lalu kirim ke kotak masuk kontak RumahNusa.</p>
         <div id="clientSummary" class="client-summary"></div>
+        <div class="client-field full" style="margin-top:16px;">
+          <label for="clientBudget">Amount you want to pay (USD)</label>
+          <input id="clientBudget" type="number" min="0" step="1" placeholder="Example: 350000" required>
+          <small style="color:#627d98;">Enter the amount you want to pay. This amount, together with your selected property, rooms and purchase plan, will appear in the RumahNusa agent inbox.</small>
+        </div>
         <div class="client-actions"><button class="btn secondary" type="button" data-back>Kembali</button><button class="btn" id="sendProfil" type="button">Kirim Permintaan</button></div>
       </div>
     </form>
@@ -1126,8 +1126,6 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
     }
     if (current === 1 && !state.property) return;
     if (current === 2) {
-      const budgetEl = document.getElementById('clientBudget');
-      if (!budgetEl.reportValidity()) return;
       if (state.property !== 'Apartemen' && purpose.value !== 'Beli') {
         purpose.value = 'Beli';
         state.purpose = 'Beli';
@@ -1245,14 +1243,10 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
 
   const clientBudget = document.getElementById('clientBudget');
   function updateBudgetPreview() {
-    if (!clientBudget) return;
-    const amount = Number(clientBudget.value);
-    const priceText = amount > 0 ? '$' + amount.toLocaleString('en-US') : 'Not selected yet';
     const category = state.property || 'your selected property';
     const transaction = purpose.value || 'Beli';
-    selectionInfo.innerHTML = '<strong>' + category + '</strong> — ' + rooms.value + ' · ' + transaction + ' · <strong>Price / budget: ' + priceText + '</strong>. This price will be sent to the RumahNusa agent inbox before you continue.';
+    selectionInfo.innerHTML = '<strong>' + category + '</strong> — ' + rooms.value + ' · ' + transaction + '. Your amount will be entered in the Amount section and sent to the RumahNusa agent inbox.';
   }
-  clientBudget.addEventListener('input', updateBudgetPreview);
 
   document.querySelectorAll('#propertyOptions .client-option').forEach(btn => btn.addEventListener('click', () => {
     document.querySelectorAll('#propertyOptions .client-option').forEach(x => x.classList.remove('selected'));
@@ -1287,6 +1281,11 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
   }
 
   document.getElementById('sendProfil').addEventListener('click', () => {
+    const budgetEl = document.getElementById('clientBudget');
+    if (!budgetEl.reportValidity()) {
+      budgetEl.focus();
+      return;
+    }
     document.getElementById('clientKotak Masuk').hidden = false;
     document.getElementById('sendProfil').textContent = 'Permintaan Terkirim';
     document.getElementById('sendProfil').disabled = true;
@@ -1833,7 +1832,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     floorWrap.hidden=!(name==='Separate Rumah'||name==='Neighborhood Rumah');
     layoutTitle.textContent=d.title+' details';
     layoutDetails.innerHTML=d.listings.map(x=>'<div class="house-layout"><strong>'+x[0]+'</strong><p>'+x[3]+'</p></div>').join('');
-    selectionInfo.innerHTML='<strong>'+d.title+'</strong> — '+d.buy+' Enter your price / budget below. The exact amount you enter will appear here and will be sent to the RumahNusa agent inbox.';
+    selectionInfo.innerHTML='<strong>'+d.title+'</strong> — '+d.buy+' Choose your rooms and purchase plan here. Your payment amount will be entered in the Amount section before you send the request to the RumahNusa agent.';
     const apartment=name==='Apartemen';
     const note=layoutDetails.parentElement.querySelector('.apartment-layouts');
     if(note) note.className=apartment?'apartment-layouts':'apartment-layouts';
