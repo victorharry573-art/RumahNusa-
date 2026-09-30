@@ -1837,6 +1837,73 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 })();
 </script>
 
+
+<script>
+/* RumahNusa permanent customer Step 1 navigation safeguard.
+   This is intentionally independent from the main form script so a later
+   JavaScript error cannot make the first Continue button stop working. */
+(function(){
+  const form=document.getElementById('clientProfilForm');
+  const steps=form ? Array.from(form.querySelectorAll('.client-form-step')) : [];
+  const badges=Array.from(document.querySelectorAll('.client-step'));
+  if(!form || !steps.length) return;
+
+  function openStep(index){
+    const safe=Math.max(0,Math.min(index,steps.length-1));
+    steps.forEach((step,i)=>step.classList.toggle('active',i===safe));
+    badges.forEach((badge,i)=>badge.classList.toggle('active',i===Math.min(safe,badges.length-1)));
+    const panel=document.querySelector('.client-panel');
+    if(panel) panel.scrollIntoView({behavior:'smooth',block:'start'});
+    window.__rumahnusaCustomerStep=safe;
+  }
+
+  const firstContinue=form.querySelector('.client-form-step[data-step="1"] .client-next');
+  if(!firstContinue) return;
+
+  firstContinue.addEventListener('click',function(event){
+    event.preventDefault();
+    event.stopImmediatePropagation();
+
+    const name=document.getElementById('clientName');
+    const gender=document.getElementById('clientJenis kelamin');
+    const age=document.getElementById('clientUsia');
+
+    if(!name || !gender || !age){
+      alert('The customer form could not load correctly. Please refresh the RumahNusa page.');
+      return;
+    }
+
+    if(!name.value.trim()){
+      name.focus();
+      name.reportValidity();
+      return;
+    }
+    if(!gender.value){
+      gender.focus();
+      gender.reportValidity();
+      return;
+    }
+
+    const ageNumber=Number(age.value);
+    if(!Number.isFinite(ageNumber) || ageNumber<18 || ageNumber>120){
+      age.setCustomValidity('Please enter an age from 18 to 120.');
+      age.focus();
+      age.reportValidity();
+      age.setCustomValidity('');
+      return;
+    }
+
+    openStep(1);
+  },true);
+
+  [document.getElementById('clientName'),document.getElementById('clientJenis kelamin'),document.getElementById('clientUsia')].forEach(function(el){
+    if(!el) return;
+    el.addEventListener('input',function(){el.setCustomValidity('');});
+    el.addEventListener('change',function(){el.setCustomValidity('');});
+  });
+})();
+</script>
+
 </body>
 </html> + Number(v('clientBudget') || 0).toLocaleString('en-US') + '<br>' +
       'Kota pilihan: ' + v('clientCityWant') + '<br>' +
