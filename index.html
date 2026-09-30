@@ -638,7 +638,7 @@ body.rn-private-browsing #propertySearchSection { display:none !important; }
 .rn-password-wrap{position:relative}
 .rn-password-wrap input{padding-right:52px}
 .rn-password-eye{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:40px;height:40px;border:0;background:transparent;border-radius:50%;cursor:pointer;color:#486581;font-size:20px;display:grid;place-items:center}
-.rn-password-eye:active{background:#eaf2f8}
+.rn-password-eye:active,.rn-password-eye:focus-visible{background:#eaf2f8}.rn-eye-icon{width:22px;height:22px;pointer-events:none}
 .rn-gate-status{margin-top:10px;font-size:14px;color:#486581}
 .rn-gate-actions{margin-top:16px}
 @media(max-width:700px){.rn-gate-grid{grid-template-columns:1fr}.rn-gate-grid .full{grid-column:auto}}
@@ -1008,7 +1008,10 @@ body.rn-private-browsing #propertySearchSection { display:none !important; }
           <label for="rnGatePassword">Password</label>
           <div class="rn-password-wrap">
             <input id="rnGatePassword" type="password" autocomplete="current-password" placeholder="Your password" required>
-            <button id="rnGatePasswordEye" class="rn-password-eye" type="button" aria-label="Show password" aria-pressed="false">◉</button>
+            <button id="rnGatePasswordEye" class="rn-password-eye" type="button" aria-label="Show password" aria-pressed="false">
+  <svg class="rn-eye-icon rn-eye-closed" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="2.5" fill="currentColor"/><path d="M4 4l16 16" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+  <svg class="rn-eye-icon rn-eye-open" viewBox="0 0 24 24" aria-hidden="true" hidden><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="2.5" fill="currentColor"/></svg>
+</button>
           </div>
         </div>
         <div>
@@ -2273,7 +2276,8 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     pass.type=visible?'password':'text';
     eye.setAttribute('aria-pressed',String(!visible));
     eye.setAttribute('aria-label',visible?'Show password':'Hide password');
-    eye.textContent=visible?'◉':'◉';
+    eye.querySelector('.rn-eye-closed').hidden=!visible;
+    eye.querySelector('.rn-eye-open').hidden=visible;
     eye.style.color=visible?'#486581':'#0879bd';
   });
 
