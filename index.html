@@ -1600,6 +1600,14 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       }
       if(result.data.user){
         currentUser=result.data.user;
+        const identityUpdate = await client.from('profiles').update({
+          full_name:name.value.trim(),
+          phone:'',
+          email:e
+        }).eq('id',currentUser.id);
+        if(identityUpdate.error){
+          status.textContent='Login succeeded, but your basic details could not be saved yet. You can continue.';
+        }
         showCategory(currentUser);
         return true;
       }
@@ -1660,7 +1668,11 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       document.querySelectorAll('#propertyOptions .client-option').forEach(function(x){x.classList.remove('selected');});
       real.click();
       categoryStatus.textContent='Opening '+button.querySelector('strong').textContent+' homes now.';
-      document.body.classList.add('rn-category-selected');
+      document.body.classList.remove('rn-site-locked');
+      document.body.classList.add('rn-site-unlocked','rn-category-selected');
+      const profileSection=document.getElementById('client-profile');
+      if(profileSection) profileSection.hidden=false;
+      gate.hidden=true;
       const collection=document.getElementById('rnCategoryCollection');
       if(collection){
         setTimeout(function(){collection.scrollIntoView({behavior:'smooth',block:'start'});},80);
