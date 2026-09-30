@@ -608,9 +608,59 @@ body.rn-site-unlocked:not(.rn-category-selected) > #contact{display:none!importa
 body.rn-site-unlocked.rn-category-selected > .hero,
 body.rn-site-unlocked.rn-category-selected > #properties{display:none!important}
 </style>
-</head>
+<style id="rn-phone-gate-css">
+#rnPhoneGate{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px 18px;box-sizing:border-box;background:linear-gradient(135deg,#f7fbff,#ffffff);font-family:inherit}
+#rnPhoneGate .rn-gate-card{width:min(560px,100%);background:#fff;border:1px solid #d9e2ec;border-radius:22px;padding:28px;box-shadow:0 12px 40px rgba(16,42,67,.10)}
+#rnPhoneGate h1{margin:0 0 10px;font-size:clamp(28px,6vw,44px);color:#163a5f}
+#rnPhoneGate .rn-welcome{font-size:17px;line-height:1.65;color:#486581;margin:0 0 20px}
+#rnPhoneGate h2{margin:22px 0 8px;color:#163a5f}
+.rn-phone-row{display:grid;grid-template-columns:minmax(150px,42%) 1fr;gap:10px}
+.rn-phone-row select,.rn-phone-row input,#rnPhoneCode{width:100%;box-sizing:border-box;padding:14px 12px;border:1px solid #bcccdc;border-radius:10px;font:inherit;background:#fff}
+.rn-phone-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+#rnPhoneGate .rn-gate-message{min-height:24px;margin:12px 0 0;color:#486581}
+#rnPhoneGate .rn-code-wrap{margin-top:14px}
+#rnPhoneCode{letter-spacing:.28em;text-align:center;font-size:20px}
+@media(max-width:520px){.rn-phone-row{grid-template-columns:1fr}.rn-phone-row select{min-height:50px}}
+</style></head>
 
-<body>
+<body><section id="rnPhoneGate" aria-label="RumahNusa phone sign in">
+  <div class="rn-gate-card">
+    <h1>Welcome to RumahNusa Real Estate</h1>
+    <p class="rn-welcome">
+      Welcome to RumahNusa — a place created around comfort, beauty, peace of mind, and the feeling of coming home.
+      We believe a beautiful home should give you space to rest, live comfortably, enjoy your family, and look forward to tomorrow.
+      Take your time, choose the home that fits your life, and let RumahNusa help you find a place where you can feel truly at home.
+    </p>
+    <h2>Login with your phone number</h2>
+    <p class="rn-welcome" style="font-size:15px;margin-bottom:14px;">Choose your country first. Then enter your phone number without the country code.</p>
+    <div class="rn-phone-row">
+      <select id="rnPhoneCountry" aria-label="Country and phone code"></select>
+      <input id="rnPhoneNumber" type="tel" inputmode="numeric" autocomplete="tel" placeholder="Phone number" aria-label="Phone number">
+    </div>
+    <div class="rn-phone-actions">
+      <button class="btn" id="rnSendPhoneCode" type="button">Send confirmation code</button>
+    </div>
+    <div id="rnPhoneCodeWrap" class="rn-code-wrap" hidden>
+      <input id="rnPhoneCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="Enter 6-digit code" aria-label="Confirmation code">
+      <div class="rn-phone-actions">
+        <button class="btn" id="rnVerifyPhoneCode" type="button">Confirm &amp; Continue</button>
+        <button class="btn secondary" id="rnResendPhoneCode" type="button">Send code again</button>
+      </div>
+    </div>
+    <p id="rnPhoneGateMessage" class="rn-gate-message" aria-live="polite"></p>
+  </div>
+</section><script id="rn-phone-gate-js">
+(function(){
+  const gate=document.getElementById('rnPhoneGate');
+  if(!gate) return;
+  const children=Array.from(document.body.children);
+  children.forEach(el=>{ if(el!==gate && el.tagName!=='SCRIPT') el.dataset.rnLockedDisplay=el.style.display||''; });
+  const lock=()=>children.forEach(el=>{if(el!==gate&&el.tagName!=='SCRIPT')el.style.display='none';});
+  const unlock=()=>children.forEach(el=>{if(el!==gate&&el.tagName!=='SCRIPT')el.style.display=el.dataset.rnLockedDisplay||'';});
+  lock();
+  window.__rnPhoneGateUnlock=unlock;
+})();
+</script>
 
 <header>
   <div class="logo">Rumah<span>Nusa</span></div>
@@ -1249,9 +1299,7 @@ body.rn-site-unlocked.rn-category-selected > #properties{display:none!important}
   <p>© 2024 RumahNusa All rights reserved.</p>
 </footer>
 
-<button id="propertyContinueFloat" class="property-continue-float" type="button" hidden disabled>
-  Choose &amp; Continue
-</button>
+
 
 <script>
 document.querySelectorAll('.copy-btn').forEach(function(button) {
@@ -1968,43 +2016,48 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     return;
   }
 
-  const authState=document.getElementById('rnAuthState');
-  const emailInput=document.getElementById('rnAuthEmail');
-  const passwordInput=document.getElementById('rnAuthPassword');
-  const passwordWrap=document.querySelector('.rn-password-wrap');
-  const passwordToggle=document.getElementById('rnPasswordToggle');
-  const passwordEye=document.getElementById('rnPasswordEye');
-  const passwordError=document.getElementById('rnPasswordError');
-  const signIn=document.getElementById('rnSignIn');
+  const phoneCountry=document.getElementById('rnPhoneCountry');
+  const phoneNumber=document.getElementById('rnPhoneNumber');
+  const phoneCode=document.getElementById('rnPhoneCode');
+  const phoneCodeWrap=document.getElementById('rnPhoneCodeWrap');
+  const phoneMessage=document.getElementById('rnPhoneGateMessage');
+  const sendPhoneCode=document.getElementById('rnSendPhoneCode');
+  const verifyPhoneCode=document.getElementById('rnVerifyPhoneCode');
+  const resendPhoneCode=document.getElementById('rnResendPhoneCode');
+  let pendingPhone='';
 
-  function clearPasswordError(){
-    if(passwordError) passwordError.classList.remove('show');
-    if(passwordWrap) passwordWrap.classList.remove('invalid');
+  const countries=[
+    ['Afghanistan','+93','🇦🇫'],['Albania','+355','🇦🇱'],['Algeria','+213','🇩🇿'],['Andorra','+376','🇦🇩'],['Angola','+244','🇦🇴'],['Antigua and Barbuda','+1','🇦🇬'],['Argentina','+54','🇦🇷'],['Armenia','+374','🇦🇲'],['Australia','+61','🇦🇺'],['Austria','+43','🇦🇹'],['Azerbaijan','+994','🇦🇿'],['Bahamas','+1','🇧🇸'],['Bahrain','+973','🇧🇭'],['Bangladesh','+880','🇧🇩'],['Barbados','+1','🇧🇧'],['Belarus','+375','🇧🇾'],['Belgium','+32','🇧🇪'],['Belize','+501','🇧🇿'],['Benin','+229','🇧🇯'],['Bhutan','+975','🇧🇹'],['Bolivia','+591','🇧🇴'],['Bosnia and Herzegovina','+387','🇧🇦'],['Botswana','+267','🇧🇼'],['Brazil','+55','🇧🇷'],['Brunei','+673','🇧🇳'],['Bulgaria','+359','🇧🇬'],['Burkina Faso','+226','🇧🇫'],['Burundi','+257','🇧🇮'],['Cambodia','+855','🇰🇭'],['Cameroon','+237','🇨🇲'],['Canada','+1','🇨🇦'],['Cape Verde','+238','🇨🇻'],['Central African Republic','+236','🇨🇫'],['Chad','+235','🇹🇩'],['Chile','+56','🇨🇱'],['China','+86','🇨🇳'],['Colombia','+57','🇨🇴'],['Comoros','+269','🇰🇲'],['Congo','+242','🇨🇬'],['Costa Rica','+506','🇨🇷'],['Croatia','+385','🇭🇷'],['Cuba','+53','🇨🇺'],['Cyprus','+357','🇨🇾'],['Czech Republic','+420','🇨🇿'],['Denmark','+45','🇩🇰'],['Djibouti','+253','🇩🇯'],['Dominica','+1','🇩🇲'],['Dominican Republic','+1','🇩🇴'],['Ecuador','+593','🇪🇨'],['Egypt','+20','🇪🇬'],['El Salvador','+503','🇸🇻'],['Estonia','+372','🇪🇪'],['Eswatini','+268','🇸🇿'],['Ethiopia','+251','🇪🇹'],['Fiji','+679','🇫🇯'],['Finland','+358','🇫🇮'],['France','+33','🇫🇷'],['Gabon','+241','🇬🇦'],['Gambia','+220','🇬🇲'],['Georgia','+995','🇬🇪'],['Germany','+49','🇩🇪'],['Ghana','+233','🇬🇭'],['Greece','+30','🇬🇷'],['Grenada','+1','🇬🇩'],['Guatemala','+502','🇬🇹'],['Guinea','+224','🇬🇳'],['Guyana','+592','🇬🇾'],['Haiti','+509','🇭🇹'],['Honduras','+504','🇭🇳'],['Hungary','+36','🇭🇺'],['Iceland','+354','🇮🇸'],['India','+91','🇮🇳'],['Indonesia','+62','🇮🇩'],['Iran','+98','🇮🇷'],['Iraq','+964','🇮🇶'],['Ireland','+353','🇮🇪'],['Israel','+972','🇮🇱'],['Italy','+39','🇮🇹'],['Jamaica','+1','🇯🇲'],['Japan','+81','🇯🇵'],['Jordan','+962','🇯🇴'],['Kazakhstan','+7','🇰🇿'],['Kenya','+254','🇰🇪'],['Kiribati','+686','🇰🇮'],['Kuwait','+965','🇰🇼'],['Kyrgyzstan','+996','🇰🇬'],['Laos','+856','🇱🇦'],['Latvia','+371','🇱🇻'],['Lebanon','+961','🇱🇧'],['Lesotho','+266','🇱🇸'],['Liberia','+231','🇱🇷'],['Libya','+218','🇱🇾'],['Liechtenstein','+423','🇱🇮'],['Lithuania','+370','🇱🇹'],['Luxembourg','+352','🇱🇺'],['Madagascar','+261','🇲🇬'],['Malawi','+265','🇲🇼'],['Malaysia','+60','🇲🇾'],['Maldives','+960','🇲🇻'],['Mali','+223','🇲🇱'],['Malta','+356','🇲🇹'],['Marshall Islands','+692','🇲🇭'],['Mauritania','+222','🇲🇷'],['Mauritius','+230','🇲🇺'],['Mexico','+52','🇲🇽'],['Micronesia','+691','🇫🇲'],['Moldova','+373','🇲🇩'],['Monaco','+377','🇲🇨'],['Mongolia','+976','🇲🇳'],['Montenegro','+382','🇲🇪'],['Morocco','+212','🇲🇦'],['Mozambique','+258','🇲🇿'],['Myanmar','+95','🇲🇲'],['Namibia','+264','🇳🇦'],['Nauru','+674','🇳🇷'],['Nepal','+977','🇳🇵'],['Netherlands','+31','🇳🇱'],['New Zealand','+64','🇳🇿'],['Nicaragua','+505','🇳🇮'],['Niger','+227','🇳🇪'],['Nigeria','+234','🇳🇬'],['North Korea','+850','🇰🇵'],['North Macedonia','+389','🇲🇰'],['Norway','+47','🇳🇴'],['Oman','+968','🇴🇲'],['Pakistan','+92','🇵🇰'],['Palau','+680','🇵🇼'],['Palestine','+970','🇵🇸'],['Panama','+507','🇵🇦'],['Papua New Guinea','+675','🇵🇬'],['Paraguay','+595','🇵🇾'],['Peru','+51','🇵🇪'],['Philippines','+63','🇵🇭'],['Poland','+48','🇵🇱'],['Portugal','+351','🇵🇹'],['Qatar','+974','🇶🇦'],['Romania','+40','🇷🇴'],['Russia','+7','🇷🇺'],['Rwanda','+250','🇷🇼'],['Saint Kitts and Nevis','+1','🇰🇳'],['Saint Lucia','+1','🇱🇨'],['Saint Vincent and the Grenadines','+1','🇻🇨'],['Samoa','+685','🇼🇸'],['San Marino','+378','🇸🇲'],['Sao Tome and Principe','+239','🇸🇹'],['Saudi Arabia','+966','🇸🇦'],['Senegal','+221','🇸🇳'],['Serbia','+381','🇷🇸'],['Seychelles','+248','🇸🇨'],['Sierra Leone','+232','🇸🇱'],['Singapore','+65','🇸🇬'],['Slovakia','+421','🇸🇰'],['Slovenia','+386','🇸🇮'],['Solomon Islands','+677','🇸🇧'],['Somalia','+252','🇸🇴'],['South Africa','+27','🇿🇦'],['South Korea','+82','🇰🇷'],['South Sudan','+211','🇸🇸'],['Spain','+34','🇪🇸'],['Sri Lanka','+94','🇱🇰'],['Sudan','+249','🇸🇩'],['Suriname','+597','🇸🇷'],['Sweden','+46','🇸🇪'],['Switzerland','+41','🇨🇭'],['Syria','+963','🇸🇾'],['Taiwan','+886','🇹🇼'],['Tajikistan','+992','🇹🇯'],['Tanzania','+255','🇹🇿'],['Thailand','+66','🇹🇭'],['Timor-Leste','+670','🇹🇱'],['Togo','+228','🇹🇬'],['Tonga','+676','🇹🇴'],['Trinidad and Tobago','+1','🇹🇹'],['Tunisia','+216','🇹🇳'],['Turkey','+90','🇹🇷'],['Turkmenistan','+993','🇹🇲'],['Tuvalu','+688','🇹🇻'],['Uganda','+256','🇺🇬'],['Ukraine','+380','🇺🇦'],['United Arab Emirates','+971','🇦🇪'],['United Kingdom','+44','🇬🇧'],['United States','+1','🇺🇸'],['Uruguay','+598','🇺🇾'],['Uzbekistan','+998','🇺🇿'],['Vanuatu','+678','🇻🇺'],['Vatican City','+39','🇻🇦'],['Venezuela','+58','🇻🇪'],['Vietnam','+84','🇻🇳'],['Yemen','+967','🇾🇪'],['Zambia','+260','🇿🇲'],['Zimbabwe','+263','🇿🇼']
+  ];
+  countries.forEach((x,i)=>{const o=document.createElement('option');o.value=x[1];o.textContent=x[2]+' '+x[0]+' ('+x[1]+')';if(x[0]==='Indonesia')o.selected=true;phoneCountry.appendChild(o);});
+  function fullPhone(){const code=phoneCountry.value;let n=(phoneNumber.value||'').replace(/\D/g,'');if(n.startsWith('0'))n=n.slice(1);return code+n;}
+  async function sendCode(){
+    const phone=fullPhone(); if(phone.length<8){phoneMessage.textContent='Please enter a valid phone number.';return;}
+    pendingPhone=phone; phoneMessage.textContent='Sending your confirmation code…';
+    const {error}=await client.auth.signInWithOtp({phone,options:{channel:'sms'}});
+    if(error){phoneMessage.textContent='The confirmation code could not be sent: '+error.message;return;}
+    phoneCodeWrap.hidden=false; phoneMessage.textContent='A confirmation code was sent to your phone. Enter it below.';
+    phoneCode.focus();
   }
-  function showPasswordError(message){
-    if(passwordError){
-      passwordError.textContent=message||'Incorrect password. Please enter your correct password and continue.';
-      passwordError.classList.add('show');
-    }
-    if(passwordWrap) passwordWrap.classList.add('invalid');
-    passwordInput.focus();
+  async function verifyCode(){
+    const token=phoneCode.value.trim(); if(!pendingPhone||!/^\d{6}$/.test(token)){phoneMessage.textContent='Enter the 6-digit confirmation code.';return;}
+    phoneMessage.textContent='Confirming…';
+    const {data,error}=await client.auth.verifyOtp({phone:pendingPhone,token,type:'sms'});
+    if(error){phoneMessage.textContent='That code could not be confirmed: '+error.message;return;}
+    phoneMessage.textContent='Welcome to RumahNusa. Your account is now open.';
+    if(window.__rnPhoneGateUnlock) window.__rnPhoneGateUnlock();
+    gate.hidden=true;
+    if(typeof window.__rumahnusaShowCustomerStep==='function') window.__rumahnusaShowCustomerStep(0);
+    document.getElementById('client-profile')?.scrollIntoView({behavior:'smooth',block:'start'});
   }
-  if(passwordToggle){
-    passwordToggle.addEventListener('click',function(event){
-      event.preventDefault();
-      const shouldShow=passwordInput.type==='password';
-      passwordInput.type=shouldShow?'text':'password';
-      passwordToggle.setAttribute('aria-pressed',String(shouldShow));
-      passwordToggle.setAttribute('aria-label',shouldShow?'Sembunyikan password':'Tampilkan password');
-      passwordToggle.title=shouldShow?'Sembunyikan password':'Tampilkan password';
-      passwordEye.innerHTML=shouldShow
-        ? '<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle>'
-        : '<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle><path d="M4 4l16 16"></path>';
-      passwordInput.focus();
-    });
-  }
-  passwordInput.addEventListener('input',clearPasswordError);
-  passwordInput.addEventListener('focus',function(){ if(passwordWrap) passwordWrap.classList.remove('validating'); });
+  sendPhoneCode?.addEventListener('click',sendCode);
+  verifyPhoneCode?.addEventListener('click',verifyCode);
+  resendPhoneCode?.addEventListener('click',sendCode);
+  client.auth.getSession().then(({data})=>{
+    if(data.session){if(window.__rnPhoneGateUnlock)window.__rnPhoneGateUnlock();gate.hidden=true;}
+  });
+  const authState=document.getElementById('rnAuthState');
+
   const signOut=document.getElementById('rnSignOut');
   const agentList=document.getElementById('rnAgentList');
   const agentThread=document.getElementById('rnAgentThread');
@@ -2030,7 +2083,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     if(error) throw error;
     if(data) return data;
     const {data:created,error:createError}=await client.from('profiles').insert({
-      id:user.id,email:user.email||'',full_name:user.user_metadata?.full_name||'',phone:user.user_metadata?.phone||'',role:'customer'
+      id:user.id,email:'',full_name:user.user_metadata?.full_name||'',phone:user.phone||user.user_metadata?.phone||'',role:'customer'
     }).select('*').single();
     if(createError) throw createError;
     return created;
@@ -2086,7 +2139,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   async function submitRequest(){
     if(!state.user){
       inbox.hidden=false;
-      status('Masuk atau buat akun terlebih dahulu, lalu kirim permintaan.');
+      status('Complete phone verification first, then send your request.');
       authPanel.scrollIntoView({behavior:'smooth',block:'center'});
       return;
     }
