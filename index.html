@@ -1479,6 +1479,143 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
+/* RumahNusa first-visit flow:
+   account -> name/gender/age -> home category -> category-only homes. */
+(function(){
+  document.body.classList.add('rn-site-locked');
+  const gate=document.getElementById('rnCustomerGate');
+  const loginBox=document.getElementById('rnGateLogin');
+  const profileBox=document.getElementById('rnGateProfile');
+  const categoryBox=document.getElementById('rnGateCategory');
+  const status=document.getElementById('rnGateStatus');
+  const profileStatus=document.getElementById('rnGateProfileStatus');
+  const categoryStatus=document.getElementById('rnGateCategoryStatus');
+  const email=document.getElementById('rnGateEmail');
+  const password=document.getElementById('rnGatePassword');
+  const passwordToggle=document.getElementById('rnGatePasswordToggle');
+  const passwordEye=document.getElementById('rnGatePasswordEye');
+  const name=document.getElementById('rnGateName');
+  const gender=document.getElementById('rnGateGender');
+  const age=document.getElementById('rnGateAge');
+  const signIn=document.getElementById('rnGateSignIn');
+  const continueBtn=document.getElementById('rnGateContinue');
+
+  // The password eye must work independently of Supabase loading.
+  function setGatePasswordEye(visible){
+    if(passwordEye){
+      passwordEye.innerHTML=visible
+        ? '<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle>'
+        : '<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle><path d="M3 3l18 18"></path>';
+    }
+    if(passwordToggle){
+      passwordToggle.setAttribute('aria-label',visible?'Hide password':'Show password');
+      passwordToggle.title=visible?'Hide password':'Show password';
+      passwordToggle.setAttribute('aria-pressed',String(visible));
+    }
+  }
+
+  if(passwordToggle && password){
+    passwordToggle.addEventListener('click',function(event){
+      event.preventDefault();
+      event.stopPropagation();
+      const showing=password.type==='text';
+      password.type=showing?'password':'text';
+      setGatePasswordEye(!showing);
+    });
+    setGatePasswordEye(false);
+  }
+
+  if(!gate||!window.supabase||!window.RUMAHNUSA_SUPABASE_URL||!window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY){
+    if(status) status.textContent='RumahNusa account service is not ready yet. Please refresh the page.';
+    return;
+  }
+
+  const client=window.supabase.createClient(window.RUMAHNUSA_SUPABASE_URL,window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY);
+  let currentUser=null;
+
+  function showProfile(user){
+    currentUser=user;
+    loginBox.hidden=true;
+    profileBox.hidden=false;
+    categoryBox.classList.remove('active');
+    status.textContent='Logged in. Complete your name, gender and age before viewing homes.';
+    if(user && user.email) email.value=user.email;
+  }
+
+  function unlockChoices(){
+    document.body.classList.remove('rn-site-locked');
+    document.body.classList.add('rn-site-unlocked');
+    const profileSection=document.getElementById('client-profile');
+    const hero=document.querySelector('.hero');
+    if(profileSection && hero && profileSection.parentNode){
+      }
+    categoryBox.classList.add('active');
+    gate.hidden=true;
+    profileSection.hidden=false;
+    document.body.classList.add('rn-category-ready');
+    profileSection.scrollIntoView({behavior:'smooth',block:'start'});
+    categoryStatus.textContent='Choose one home type. Its matching homes will open immediately.';
+  }
+
+  async function login(mode){
+    const e=email.value.trim(), p=password.value;
+    if(!e||!p){status=''; return;}
+    status.textContent='Connecting to your RumahNusa account...';
+    const result=mode==='signup'
+      ? await client.auth.signUp({email:e,password:p})
+      : await client.auth.signInWithPassword({email:e,password:p});
+    if(result.error){
+      document.getElementById('rnGateStatus').textContent='Account message: '+result.error.message;
+      return;
+    }
+    if(mode==='signup' && !result.data.session){
+      document.getElementById('rnGateStatus').textContent='Account created. Check your email for confirmation, then log in.';
+      return;
+    }
+    showProfile(result.data.user);
+  }
+
+  signIn.addEventListener('click',function(){login('signin');});
+
+  continueBtn.addEventListener('click',async function(){
+    if(!currentUser){profileStatus.textContent='Please log in first.';return;}
+    if(!name.value.trim()){name.focus();name.reportValidity();return;}
+    if(!gender.value){gender.focus();gender.reportValidity();return;}
+    const n=Number(age.value);
+    if(!Number.isFinite(n)||n<18||n>120){age.setCustomValidity('Please enter an age from 18 to 120.');age.focus();age.reportValidity();age.setCustomValidity('');return;}
+    profileStatus.textContent='Details saved for this RumahNusa visit. Choose your home type below.';
+    document.getElementById('clientName').value=name.value.trim();
+    document.getElementById('clientJenis kelamin').value=gender.value;
+    document.getElementById('clientUsia').value=String(n);
+    unlockChoices();
+  });
+
+  client.auth.getSession().then(function(result){
+    if(result.data && result.data.session) showProfile(result.data.session.user);
+  });
+  client.auth.onAuthStateChange(function(_event,session){
+    if(session) showProfile(session.user);
+  });
+
+  document.querySelectorAll('#rnGateCategoryOptions .client-option').forEach(function(button){
+    button.addEventListener('click',function(){
+      const wanted=button.getAttribute('data-gate-property');
+      const real=document.querySelector('#propertyOptions .client-option[data-value="'+wanted+'"]');
+      if(!real){categoryStatus.textContent='That home category is not available yet.';return;}
+      document.querySelectorAll('#propertyOptions .client-option').forEach(function(x){x.classList.remove('selected');});
+      real.click();
+      categoryStatus.textContent='Opening '+button.querySelector('strong').textContent+' homes now.';
+      document.body.classList.add('rn-category-selected');
+      const collection=document.getElementById('rnCategoryCollection');
+      if(collection){
+        setTimeout(function(){collection.scrollIntoView({behavior:'smooth',block:'start'});},80);
+      }
+    });
+  });
+})();
+</script>
+
+<script>
 (function(){
   const inbox = document.getElementById('clientKotak Masuk');
   if (!inbox || !window.RUMAHNUSA_SUPABASE_URL || !window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY) return;
@@ -2130,141 +2267,6 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 
 
 
-<script>
-/* RumahNusa first-visit flow:
-   account -> name/gender/age -> home category -> category-only homes. */
-(function(){
-  document.body.classList.add('rn-site-locked');
-  const gate=document.getElementById('rnCustomerGate');
-  const loginBox=document.getElementById('rnGateLogin');
-  const profileBox=document.getElementById('rnGateProfile');
-  const categoryBox=document.getElementById('rnGateCategory');
-  const status=document.getElementById('rnGateStatus');
-  const profileStatus=document.getElementById('rnGateProfileStatus');
-  const categoryStatus=document.getElementById('rnGateCategoryStatus');
-  const email=document.getElementById('rnGateEmail');
-  const password=document.getElementById('rnGatePassword');
-  const passwordToggle=document.getElementById('rnGatePasswordToggle');
-  const passwordEye=document.getElementById('rnGatePasswordEye');
-  const name=document.getElementById('rnGateName');
-  const gender=document.getElementById('rnGateGender');
-  const age=document.getElementById('rnGateAge');
-  const signIn=document.getElementById('rnGateSignIn');
-  const continueBtn=document.getElementById('rnGateContinue');
 
-  // The password eye must work independently of Supabase loading.
-  function setGatePasswordEye(visible){
-    if(passwordEye){
-      passwordEye.innerHTML=visible
-        ? '<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle>'
-        : '<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle><path d="M3 3l18 18"></path>';
-    }
-    if(passwordToggle){
-      passwordToggle.setAttribute('aria-label',visible?'Hide password':'Show password');
-      passwordToggle.title=visible?'Hide password':'Show password';
-      passwordToggle.setAttribute('aria-pressed',String(visible));
-    }
-  }
-
-  if(passwordToggle && password){
-    passwordToggle.addEventListener('click',function(event){
-      event.preventDefault();
-      event.stopPropagation();
-      const showing=password.type==='text';
-      password.type=showing?'password':'text';
-      setGatePasswordEye(!showing);
-    });
-    setGatePasswordEye(false);
-  }
-
-  if(!gate||!window.supabase||!window.RUMAHNUSA_SUPABASE_URL||!window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY){
-    if(status) status.textContent='RumahNusa account service is not ready yet. Please refresh the page.';
-    return;
-  }
-
-  const client=window.supabase.createClient(window.RUMAHNUSA_SUPABASE_URL,window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY);
-  let currentUser=null;
-
-  function showProfile(user){
-    currentUser=user;
-    loginBox.hidden=true;
-    profileBox.hidden=false;
-    categoryBox.classList.remove('active');
-    status.textContent='Logged in. Complete your name, gender and age before viewing homes.';
-    if(user && user.email) email.value=user.email;
-  }
-
-  function unlockChoices(){
-    document.body.classList.remove('rn-site-locked');
-    document.body.classList.add('rn-site-unlocked');
-    const profileSection=document.getElementById('client-profile');
-    const hero=document.querySelector('.hero');
-    if(profileSection && hero && profileSection.parentNode){
-      }
-    categoryBox.classList.add('active');
-    gate.hidden=true;
-    profileSection.hidden=false;
-    document.body.classList.add('rn-category-ready');
-    profileSection.scrollIntoView({behavior:'smooth',block:'start'});
-    categoryStatus.textContent='Choose one home type. Its matching homes will open immediately.';
-  }
-
-  async function login(mode){
-    const e=email.value.trim(), p=password.value;
-    if(!e||!p){status=''; return;}
-    status.textContent='Connecting to your RumahNusa account...';
-    const result=mode==='signup'
-      ? await client.auth.signUp({email:e,password:p})
-      : await client.auth.signInWithPassword({email:e,password:p});
-    if(result.error){
-      document.getElementById('rnGateStatus').textContent='Account message: '+result.error.message;
-      return;
-    }
-    if(mode==='signup' && !result.data.session){
-      document.getElementById('rnGateStatus').textContent='Account created. Check your email for confirmation, then log in.';
-      return;
-    }
-    showProfile(result.data.user);
-  }
-
-  signIn.addEventListener('click',function(){login('signin');});
-
-  continueBtn.addEventListener('click',async function(){
-    if(!currentUser){profileStatus.textContent='Please log in first.';return;}
-    if(!name.value.trim()){name.focus();name.reportValidity();return;}
-    if(!gender.value){gender.focus();gender.reportValidity();return;}
-    const n=Number(age.value);
-    if(!Number.isFinite(n)||n<18||n>120){age.setCustomValidity('Please enter an age from 18 to 120.');age.focus();age.reportValidity();age.setCustomValidity('');return;}
-    profileStatus.textContent='Details saved for this RumahNusa visit. Choose your home type below.';
-    document.getElementById('clientName').value=name.value.trim();
-    document.getElementById('clientJenis kelamin').value=gender.value;
-    document.getElementById('clientUsia').value=String(n);
-    unlockChoices();
-  });
-
-  client.auth.getSession().then(function(result){
-    if(result.data && result.data.session) showProfile(result.data.session.user);
-  });
-  client.auth.onAuthStateChange(function(_event,session){
-    if(session) showProfile(session.user);
-  });
-
-  document.querySelectorAll('#rnGateCategoryOptions .client-option').forEach(function(button){
-    button.addEventListener('click',function(){
-      const wanted=button.getAttribute('data-gate-property');
-      const real=document.querySelector('#propertyOptions .client-option[data-value="'+wanted+'"]');
-      if(!real){categoryStatus.textContent='That home category is not available yet.';return;}
-      document.querySelectorAll('#propertyOptions .client-option').forEach(function(x){x.classList.remove('selected');});
-      real.click();
-      categoryStatus.textContent='Opening '+button.querySelector('strong').textContent+' homes now.';
-      document.body.classList.add('rn-category-selected');
-      const collection=document.getElementById('rnCategoryCollection');
-      if(collection){
-        setTimeout(function(){collection.scrollIntoView({behavior:'smooth',block:'start'});},80);
-      }
-    });
-  });
-})();
-</script>
 </body>
 </html>
