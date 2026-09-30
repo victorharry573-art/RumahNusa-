@@ -1590,11 +1590,11 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   const age=document.getElementById('rnGateAge');
   const signIn=document.getElementById('rnGateSignIn');
   const showSignUp=document.getElementById('rnGateShowSignUp');
-  const resend=document.getElementById('rnGateResend');
+  const resendDisabled=document.getElementById('rnGateResend');
   const signupBox=document.getElementById('rnGateSignup');
   const signUp=document.getElementById('rnGateSignUp');
   const backToLogin=document.getElementById('rnGateBackToLogin');
-  const signupEmail=document.getElementById('rnGateSignupEmail');
+  const signupPhone=document.getElementById('rnGateSignupEmail');
   const signupPassword=document.getElementById('rnGateSignupPassword');
   const signupConfirm=document.getElementById('rnGateSignupConfirm');
   const signupPasswordToggle=document.getElementById('rnGateSignupPasswordToggle');
@@ -1672,7 +1672,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     categoryBox.classList.remove('active');
     categoryBox.hidden=true;
     profileStatus.textContent='Your details are ready. Please log in to continue.';
-    setTimeout(()=>email.focus(),50);
+    setTimeout(()=>phone.focus(),50);
   }
 
   function showSignup(){
@@ -1680,9 +1680,9 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     signupBox.hidden=false;
     categoryBox.classList.remove('active');
     categoryBox.hidden=true;
-    signupEmail.value=email.value.trim();
-    signupStatus.textContent='Create your account, then check your email if confirmation is requested.';
-    setTimeout(()=>signupEmail.focus(),50);
+    signupPhone.value=email.value.trim();
+    signupStatus.textContent='Create your account, then verify your phone number if confirmation is requested.';
+    setTimeout(()=>signupPhone.focus(),50);
   }
 
   function showProfile(){
@@ -1706,36 +1706,35 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   }
 
   async function login(){
-    const e=email.value.trim(), p=password.value;
+    const e=phone.value.trim(), p=password.value;
     if(!e||!p){
-      status.textContent='Please enter your email and password.';
+      status.textContent='Please enter your phone number and password.';
       if(!e) email.focus(); else password.focus();
       return false;
     }
     status.textContent='Logging in...';
     try{
       const result=await Promise.race([
-        client.auth.signInWithPassword({email:e,password:p}),
+        client.auth.signInWithPassword({phone:e,password:p}),
         new Promise((_,reject)=>setTimeout(()=>reject(new Error('The login request took too long. Please check your connection and try again.')),15000))
       ]);
       if(result.error){
         const msg=result.error?.message||'Unable to log in.';
-        if(msg.toLowerCase().includes('email not confirmed')){
-          status.textContent='Your email has not been confirmed yet. Check your email, or tap “Resend confirmation email” below.';
-          if(resend) resend.hidden=false;
+        if(msg.toLowerCase().includes('phone not confirmed')){
+          status.textContent='Your phone number is not confirmed yet. Please verify it and try again.';
         }else{
-          status.textContent='Login failed. Please check your email and password and try again.';
-          if(resend) resend.hidden=true;
+          status.textContent='Login failed. Please verify your phone number and password and try again.';
+          
         }
         return false;
       }
-      if(resend) resend.hidden=true;
+      
       if(result.data.user){
         currentUser=result.data.user;
         const identityUpdate = await client.from('profiles').update({
           full_name:name.value.trim(),
-          phone:'',
-          email:e
+          phone:e,
+          phone:e
         }).eq('id',currentUser.id);
         if(identityUpdate.error){
           status.textContent='Login succeeded, but your basic details could not be saved yet. You can continue.';
@@ -1753,10 +1752,10 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 
   async function handleGateSignup(event){
     if(event){event.preventDefault();event.stopPropagation();}
-    const e=signupEmail.value.trim();
+    const e=signupPhone.value.trim();
     const p=signupPassword.value;
     const cp=signupConfirm.value;
-    if(!e){signupStatus.textContent='Please enter your email address.';signupEmail.focus();return;}
+    if(!e){signupStatus.textContent='Please enter your email address.';signupPhone.focus();return;}
     if(p.length<6){signupStatus.textContent='Password must be at least 6 characters.';signupPassword.focus();return;}
     if(p!==cp){signupStatus.textContent='The passwords do not match.';signupConfirm.focus();return;}
     signUp.textContent='Creating account...';
@@ -1765,7 +1764,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     try{
       const result=await Promise.race([
         client.auth.signUp({
-          email:e,
+          email:'',
           password:p,
           options:{data:{
             full_name:name.value.trim(),
@@ -1837,19 +1836,18 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   },{passive:false});
   signIn.disabled=false;
 
-  if(resend) resend.onclick=async function(){
-    const e=email.value.trim();
+  
     if(!e){status.textContent='Enter your email first, then tap Resend confirmation email.';email.focus();return;}
-    resend.disabled=true;
+    resendDisabled.disabled=true;
     status.textContent='Sending a new confirmation email...';
     try{
-      const result=await client.auth.resend({type:'signup',email:e});
+      const result=await client.auth.resendDisabled({type:'signup',email:e});
       if(result.error) throw result.error;
       status.textContent='A new confirmation email has been sent. Open it, confirm your account, then return and tap Log in.';
     }catch(error){
       status.textContent=error.message||'The confirmation email could not be resent. Please try again.';
     }finally{
-      resend.disabled=false;
+      resendDisabled.disabled=false;
     }
   };
   if(showSignUp) showSignUp.onclick=function(){showSignup();};
@@ -1893,7 +1891,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       if(event.key==='Enter') handleGateLogin(event);
     });
   });
-  [signupEmail,signupPassword,signupConfirm].forEach(function(field){
+  [signupPhone,signupPassword,signupConfirm].forEach(function(field){
     if(field) field.addEventListener('keydown',function(event){
       if(event.key==='Enter') handleGateSignup(event);
     });
