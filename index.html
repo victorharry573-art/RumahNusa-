@@ -316,6 +316,48 @@ section {
 }
 
 
+/* RumahNusa customer access gate: no property listings are shown before sign-in and identity details. */
+body.rn-site-locked #properties,
+body.rn-site-locked .hero,
+body.rn-site-locked #about,
+body.rn-site-locked #contact,
+body.rn-site-locked footer,
+body.rn-site-locked #client-profile { display:none !important; }
+body.rn-site-unlocked #properties,
+body.rn-site-unlocked .hero,
+body.rn-site-unlocked #about,
+body.rn-site-unlocked #contact,
+body.rn-site-unlocked footer { display:none !important; }
+
+.rn-customer-gate {
+  max-width: 920px;
+  margin: 30px auto;
+  padding: 28px;
+  background: white;
+  border-radius: 18px;
+  box-shadow: 0 5px 20px rgba(16,42,67,.08);
+}
+.rn-customer-gate h2 { color:#102a43; margin-bottom:8px; }
+.rn-customer-gate p { color:#627d98; }
+.rn-gate-grid { display:grid; gap:12px; margin-top:18px; }
+.rn-gate-grid input, .rn-gate-grid select {
+  width:100%; box-sizing:border-box; padding:13px; border:1px solid #cbd5e1;
+  border-radius:9px; font:inherit; color:#102a43; background:white;
+}
+.rn-gate-actions { display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+.rn-gate-status { margin-top:12px; color:#486581; font-size:14px; }
+.rn-gate-profile { margin-top:20px; padding-top:20px; border-top:1px solid #d9e2ec; }
+.rn-gate-category-note { margin-top:12px; font-weight:600; color:#075985; }
+.rn-customer-gate .client-options { margin-top:16px; }
+.rn-gate-category { display:none; }
+.rn-gate-category.active { display:block; }
+.rn-customer-gate .rn-gate-category .client-option { min-height:76px; }
+.rn-site-unlocked .rn-customer-gate { display:none !important; }
+
+@media(max-width:800px){
+  .rn-customer-gate { margin:16px 12px; padding:20px; }
+}
+
 /* RumahNusa client profile and agent inbox */
 .client-area { background: #eef7fb; }
 .client-panel { max-width: 920px; margin: auto; background: white; border-radius: 18px; padding: 28px; box-shadow: 0 5px 20px rgba(16,42,67,.08); }
@@ -555,6 +597,58 @@ footer p {
     <button class="lang-btn" type="button" data-lang="id">ID</button>
   </div>
 </header>
+
+<section id="rnCustomerGate" class="rn-customer-gate" aria-label="RumahNusa customer access">
+  <h2>Welcome to RumahNusa</h2>
+  <p>Sign in first, then tell us your name, age and gender. After that, choose exactly the type of home you want to see.</p>
+
+  <div id="rnGateLogin">
+    <div class="rn-gate-grid">
+      <input id="rnGateEmail" type="email" autocomplete="email" placeholder="Email" required>
+      <input id="rnGatePassword" type="password" autocomplete="current-password" placeholder="Password (minimum 6 characters)" required>
+    </div>
+    <div class="rn-gate-actions">
+      <button class="btn" id="rnGateSignIn" type="button">Log in</button>
+      <button class="btn secondary" id="rnGateSignUp" type="button">Create account</button>
+    </div>
+    <div id="rnGateStatus" class="rn-gate-status" aria-live="polite">Log in or create your RumahNusa account to continue.</div>
+  </div>
+
+  <div id="rnGateProfile" class="rn-gate-profile" hidden>
+    <h3>Before you choose a home</h3>
+    <p>Complete these details first. Your choices will stay with your RumahNusa request.</p>
+    <div class="rn-gate-grid">
+      <input id="rnGateName" type="text" placeholder="Your full name" autocomplete="name" required>
+      <select id="rnGateGender" required>
+        <option value="">Man or woman</option>
+        <option value="Man">Man</option>
+        <option value="Woman">Woman</option>
+      </select>
+      <input id="rnGateAge" type="number" min="18" max="120" placeholder="Age" required>
+    </div>
+    <div class="rn-gate-actions">
+      <button class="btn" id="rnGateContinue" type="button">Continue to home choices</button>
+    </div>
+    <div id="rnGateProfileStatus" class="rn-gate-status" aria-live="polite"></div>
+  </div>
+
+  <div id="rnGateCategory" class="rn-gate-category">
+    <h3>Choose the type of home you want</h3>
+    <p class="rn-gate-category-note">Tap one category. Its homes will open immediately. You will not see other home types unless you choose another category.</p>
+    <div id="rnGateCategoryOptions" class="client-options">
+      <button type="button" class="client-option" data-gate-property="Apartemen"><strong>Apartment</strong><small>Open apartment homes and room choices.</small></button>
+      <button type="button" class="client-option" data-gate-property="Separate Rumah"><strong>Separate Rumah</strong><small>Open separate houses and their room choices.</small></button>
+      <button type="button" class="client-option" data-gate-property="Vila"><strong>Villa</strong><small>Open villa homes and their room choices.</small></button>
+      <button type="button" class="client-option" data-gate-property="Neighborhood Rumah"><strong>Neighborhood</strong><small>Open neighborhood homes only.</small></button>
+      <button type="button" class="client-option" data-gate-property="Townhouse"><strong>Townhouse</strong><small>Open townhouse homes only.</small></button>
+      <button type="button" class="client-option" data-gate-property="Penthouse"><strong>Penthouse</strong><small>Open penthouse homes only.</small></button>
+      <button type="button" class="client-option" data-gate-property="Family Residence"><strong>Family Residence</strong><small>Open family residences only.</small></button>
+      <button type="button" class="client-option" data-gate-property="Investment Property"><strong>Investment Property</strong><small>Open investment properties only.</small></button>
+    </div>
+    <div id="rnGateCategoryStatus" class="rn-gate-status" aria-live="polite"></div>
+  </div>
+</section>
+
 
 <section class="hero">
   <div class="agent-team-photo" aria-label="Three professional property agents promoting RumahNusa, two women wearing hijabs and one man">
@@ -1926,5 +2020,114 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 })();
 </script>
 
+<script>
+/* RumahNusa first-visit flow:
+   account -> name/gender/age -> home category -> category-only homes. */
+(function(){
+  document.body.classList.add('rn-site-locked');
+  const gate=document.getElementById('rnCustomerGate');
+  const loginBox=document.getElementById('rnGateLogin');
+  const profileBox=document.getElementById('rnGateProfile');
+  const categoryBox=document.getElementById('rnGateCategory');
+  const status=document.getElementById('rnGateStatus');
+  const profileStatus=document.getElementById('rnGateProfileStatus');
+  const categoryStatus=document.getElementById('rnGateCategoryStatus');
+  const email=document.getElementById('rnGateEmail');
+  const password=document.getElementById('rnGatePassword');
+  const name=document.getElementById('rnGateName');
+  const gender=document.getElementById('rnGateGender');
+  const age=document.getElementById('rnGateAge');
+  const signIn=document.getElementById('rnGateSignIn');
+  const signUp=document.getElementById('rnGateSignUp');
+  const continueBtn=document.getElementById('rnGateContinue');
+  if(!gate||!window.supabase||!window.RUMAHNUSA_SUPABASE_URL||!window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY){
+    if(status) status.textContent='RumahNusa account service is not ready yet. Please refresh the page.';
+    return;
+  }
+
+  const client=window.supabase.createClient(window.RUMAHNUSA_SUPABASE_URL,window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY);
+  let currentUser=null;
+
+  function showProfile(user){
+    currentUser=user;
+    loginBox.hidden=true;
+    profileBox.hidden=false;
+    categoryBox.classList.remove('active');
+    status.textContent='Logged in. Complete your name, gender and age before viewing homes.';
+    if(user && user.email) email.value=user.email;
+  }
+
+  function unlockChoices(){
+    document.body.classList.remove('rn-site-locked');
+    document.body.classList.add('rn-site-unlocked');
+    const profileSection=document.getElementById('client-profile');
+    const hero=document.querySelector('.hero');
+    if(profileSection && hero && profileSection.parentNode){
+      profileSection.parentNode.insertBefore(profileSection,hero);
+    }
+    categoryBox.classList.add('active');
+    gate.hidden=true;
+    profileSection.hidden=false;
+    profileSection.scrollIntoView({behavior:'smooth',block:'start'});
+    categoryStatus.textContent='Choose one home type. Its matching homes will open immediately.';
+  }
+
+  async function login(mode){
+    const e=email.value.trim(), p=password.value;
+    if(!e||!p){status=''; return;}
+    status.textContent='Connecting to your RumahNusa account...';
+    const result=mode==='signup'
+      ? await client.auth.signUp({email:e,password:p})
+      : await client.auth.signInWithPassword({email:e,password:p});
+    if(result.error){
+      document.getElementById('rnGateStatus').textContent='Account message: '+result.error.message;
+      return;
+    }
+    if(mode==='signup' && !result.data.session){
+      document.getElementById('rnGateStatus').textContent='Account created. Check your email for confirmation, then log in.';
+      return;
+    }
+    showProfile(result.data.user);
+  }
+
+  signIn.addEventListener('click',function(){login('signin');});
+  signUp.addEventListener('click',function(){login('signup');});
+
+  continueBtn.addEventListener('click',async function(){
+    if(!currentUser){profileStatus.textContent='Please log in first.';return;}
+    if(!name.value.trim()){name.focus();name.reportValidity();return;}
+    if(!gender.value){gender.focus();gender.reportValidity();return;}
+    const n=Number(age.value);
+    if(!Number.isFinite(n)||n<18||n>120){age.setCustomValidity('Please enter an age from 18 to 120.');age.focus();age.reportValidity();age.setCustomValidity('');return;}
+    profileStatus.textContent='Details saved for this RumahNusa visit. Choose your home type below.';
+    document.getElementById('clientName').value=name.value.trim();
+    document.getElementById('clientJenis kelamin').value=gender.value;
+    document.getElementById('clientUsia').value=String(n);
+    unlockChoices();
+  });
+
+  client.auth.getSession().then(function(result){
+    if(result.data && result.data.session) showProfile(result.data.session.user);
+  });
+  client.auth.onAuthStateChange(function(_event,session){
+    if(session) showProfile(session.user);
+  });
+
+  document.querySelectorAll('#rnGateCategoryOptions .client-option').forEach(function(button){
+    button.addEventListener('click',function(){
+      const wanted=button.getAttribute('data-gate-property');
+      const real=document.querySelector('#propertyOptions .client-option[data-value="'+wanted+'"]');
+      if(!real){categoryStatus.textContent='That home category is not available yet.';return;}
+      document.querySelectorAll('#propertyOptions .client-option').forEach(function(x){x.classList.remove('selected');});
+      real.click();
+      categoryStatus.textContent='Opening '+button.querySelector('strong').textContent+' homes now.';
+      const collection=document.getElementById('rnCategoryCollection');
+      if(collection){
+        setTimeout(function(){collection.scrollIntoView({behavior:'smooth',block:'start'});},80);
+      }
+    });
+  });
+})();
+</script>
 </body>
 </html>
