@@ -2276,9 +2276,10 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     pass.type=visible?'password':'text';
     eye.setAttribute('aria-pressed',String(!visible));
     eye.setAttribute('aria-label',visible?'Show password':'Hide password');
-    eye.querySelector('.rn-eye-closed').hidden=!visible;
-    eye.querySelector('.rn-eye-open').hidden=visible;
-    eye.style.color=visible?'#486581':'#0879bd';
+    // Hidden password = crossed-out eye. Visible password = normal eye.
+    eye.querySelector('.rn-eye-closed').hidden=visible;
+    eye.querySelector('.rn-eye-open').hidden=!visible;
+    eye.style.color=visible?'#0879bd':'#486581';
   });
 
   function unlock(){
