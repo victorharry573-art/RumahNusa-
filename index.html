@@ -1772,13 +1772,28 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 
   async function handleGateLogin(event){
     if(event){event.preventDefault();event.stopPropagation();}
+    if(signIn.dataset.busy==='1') return;
+    signIn.dataset.busy='1';
     signIn.textContent='Logging in...';
     signIn.disabled=true;
-    try{ await login(); }
-    finally{ signIn.disabled=false; signIn.textContent='Log in'; }
+    try{
+      await login();
+    }catch(error){
+      status.textContent=error?.message||'Login could not be completed. Please try again.';
+    }finally{
+      signIn.dataset.busy='0';
+      signIn.disabled=false;
+      signIn.textContent='Log in';
+    }
   }
   window.rnGateLogin=handleGateLogin;
   signIn.onclick=handleGateLogin;
+  signIn.addEventListener('pointerup',function(event){
+    if(event.pointerType==='touch'){
+      event.preventDefault();
+      handleGateLogin(event);
+    }
+  },{passive:false});
   signIn.disabled=false;
 
   if(resend) resend.onclick=async function(){
