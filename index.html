@@ -1549,14 +1549,19 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     setGatePasswordEye(false);
   }
 
-  if(!gate||!window.supabase||!window.RUMAHNUSA_SUPABASE_URL||!window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY){
-    if(status) status.textContent='RumahNusa account service is not ready yet. Please refresh the page.';
+  if(!gate){
+    return;
+  }
+  if(!window.RUMAHNUSA_SUPABASE_URL || !window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY){
+    if(status) status.textContent='Supabase configuration is not available on this page yet. Please refresh once after the site finishes loading.';
+    return;
+  }
+  if(!window.supabase){
+    if(status) status.textContent='Supabase is still loading. Please refresh the page once.';
     return;
   }
 
   const client=window.supabase.createClient(window.RUMAHNUSA_SUPABASE_URL,window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY);
-  let currentUser=null;
-
   let currentUser=null;
   let identityReady=false;
 
