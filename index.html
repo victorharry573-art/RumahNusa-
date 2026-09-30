@@ -1811,7 +1811,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       ? '<option value="Beli">Beli</option><option value="Sewa">Sewa</option>'
       : '<option value="Beli">Beli</option>';
     purpose.value='Beli';
-    purposeNote.textContent=d.buy;
+    purposeNote.textContent = name==='Apartemen' ? 'Apartments can be bought or rented for 1–5 years.' : 'SALE ONLY — This property category is permanently for sale. Rental is not available.';
     rentalWrap.hidden=name!=='Apartemen';
     floorWrap.hidden=!(name==='Separate Rumah'||name==='Neighborhood Rumah');
     layoutTitle.textContent=d.title+' details';
