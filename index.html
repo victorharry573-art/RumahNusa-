@@ -645,6 +645,7 @@ body.rn-site-unlocked.rn-category-selected > #properties{display:none!important}
     <div class="rn-gate-actions">
       <button class="btn" id="rnGateSignIn" type="button">Log in</button>
       <button class="btn secondary" id="rnGateShowSignUp" type="button">Sign up</button>
+      <button class="btn secondary" id="rnGateResend" type="button" hidden>Resend confirmation email</button>
     </div>
     <div id="rnGateStatus" class="rn-gate-status" aria-live="polite">Log in or sign up to continue.</div>
   </div>
@@ -1548,6 +1549,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   const age=document.getElementById('rnGateAge');
   const signIn=document.getElementById('rnGateSignIn');
   const showSignUp=document.getElementById('rnGateShowSignUp');
+  const resend=document.getElementById('rnGateResend');
   const signupBox=document.getElementById('rnGateSignup');
   const signUp=document.getElementById('rnGateSignUp');
   const backToLogin=document.getElementById('rnGateBackToLogin');
@@ -1677,11 +1679,16 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       ]);
       if(result.error){
         const msg=result.error?.message||'Unable to log in.';
-        status.textContent=msg.toLowerCase().includes('email not confirmed')
-          ? 'Your email has not been confirmed yet. Please confirm it, then try Log in again.'
-          : 'Login failed. Please check your email and password and try again.';
+        if(msg.toLowerCase().includes('email not confirmed')){
+          status.textContent='Your email has not been confirmed yet. Check your email, or tap “Resend confirmation email” below.';
+          if(resend) resend.hidden=false;
+        }else{
+          status.textContent='Login failed. Please check your email and password and try again.';
+          if(resend) resend.hidden=true;
+        }
         return false;
       }
+      if(resend) resend.hidden=true;
       if(result.data.user){
         currentUser=result.data.user;
         const identityUpdate = await client.from('profiles').update({
@@ -1773,6 +1780,22 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   window.rnGateLogin=handleGateLogin;
   signIn.onclick=handleGateLogin;
   signIn.disabled=false;
+
+  if(resend) resend.onclick=async function(){
+    const e=email.value.trim();
+    if(!e){status.textContent='Enter your email first, then tap Resend confirmation email.';email.focus();return;}
+    resend.disabled=true;
+    status.textContent='Sending a new confirmation email...';
+    try{
+      const result=await client.auth.resend({type:'signup',email:e});
+      if(result.error) throw result.error;
+      status.textContent='A new confirmation email has been sent. Open it, confirm your account, then return and tap Log in.';
+    }catch(error){
+      status.textContent=error.message||'The confirmation email could not be resent. Please try again.';
+    }finally{
+      resend.disabled=false;
+    }
+  };
   if(showSignUp) showSignUp.onclick=function(){showSignup();};
   if(backToLogin) backToLogin.onclick=function(){showLogin();};
   if(signUp) signUp.onclick=handleGateSignup;
