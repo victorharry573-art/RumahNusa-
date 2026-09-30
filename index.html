@@ -680,46 +680,35 @@ body.rn-site-unlocked.rn-category-selected > #properties{display:none!important}
 <section id="rnCustomerGate" class="rn-customer-gate" aria-label="RumahNusa customer access">
   <div id="rnGateLogin">
     <h2>Welcome to RumahNusa Real Estate</h2>
-    <p>Welcome to RumahNusa — a place to begin your search for a beautiful home, comfortable rooms, peaceful surroundings, privacy, and a life you can enjoy with confidence. We believe a home should feel welcoming when you arrive, comfortable when you stay, and peaceful when you return each day. Our carefully presented properties are created to help you find a home that matches the way you want to live. <strong>Log in or create your RumahNusa account to begin your personal home search.</strong></p>
+    <p>Welcome to RumahNusa — a place created around comfort, beauty, peace of mind, privacy, and the feeling of coming home. Log in with your phone number to begin your personal search for a beautiful home.</p>
     <div class="rn-gate-grid">
-      <input id="rnGateEmail" type="email" autocomplete="email" placeholder="Email" required>
+      <input id="rnGatePhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="Phone number" required>
       <div class="rn-password-wrap">
         <input id="rnGatePassword" type="password" autocomplete="current-password" placeholder="Password" required>
         <button id="rnGatePasswordToggle" class="rn-password-toggle" type="button" aria-label="Show password" aria-pressed="false" title="Show password">
-          <svg id="rnGatePasswordEye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle><path d="M3 3l18 18"></path>
-          </svg>
+          <svg id="rnGatePasswordEye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle><path d="M3 3l18 18"></path></svg>
         </button>
       </div>
     </div>
     <div class="rn-gate-actions">
       <button class="btn" id="rnGateSignIn" type="button">Log in</button>
       <button class="btn secondary" id="rnGateShowSignUp" type="button">Sign up</button>
-      <button class="btn secondary" id="rnGateResend" type="button" hidden>Resend confirmation email</button>
     </div>
-    <div id="rnGateStatus" class="rn-gate-status" aria-live="polite">Log in or sign up to continue.</div>
+    <div id="rnGateStatus" class="rn-gate-status" aria-live="polite">Log in or sign up with your phone number to continue.</div>
   </div>
 
   <div id="rnGateSignup" hidden>
     <h2>Create your RumahNusa account</h2>
-    <p>Choose an email and password to create your private RumahNusa account. After your account is ready, we will ask for your name, age, and gender.</p>
+    <p>Create your private account with your phone number and password. After your account is ready, we will ask for your name, age, and gender.</p>
     <div class="rn-gate-grid">
-      <input id="rnGateSignupEmail" type="email" autocomplete="email" placeholder="Email address" required>
+      <input id="rnGateSignupPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="Phone number" required>
       <div class="rn-password-wrap">
         <input id="rnGateSignupPassword" type="password" autocomplete="new-password" placeholder="Create password (6+ characters)" required>
-        <button id="rnGateSignupPasswordToggle" class="rn-password-toggle" type="button" aria-label="Show password" aria-pressed="false" title="Show password">
-          <svg id="rnGateSignupPasswordEye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle><path d="M3 3l18 18"></path>
-          </svg>
-        </button>
+        <button id="rnGateSignupPasswordToggle" class="rn-password-toggle" type="button" aria-label="Show password" aria-pressed="false" title="Show password"><svg id="rnGateSignupPasswordEye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle><path d="M3 3l18 18"></path></svg></button>
       </div>
       <div class="rn-password-wrap">
         <input id="rnGateSignupConfirm" type="password" autocomplete="new-password" placeholder="Confirm password" required>
-        <button id="rnGateSignupConfirmToggle" class="rn-password-toggle" type="button" aria-label="Show password" aria-pressed="false" title="Show password">
-          <svg id="rnGateSignupConfirmEye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle><path d="M3 3l18 18"></path>
-          </svg>
-        </button>
+        <button id="rnGateSignupConfirmToggle" class="rn-password-toggle" type="button" aria-label="Show password" aria-pressed="false" title="Show password"><svg id="rnGateSignupConfirmEye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5-6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle><path d="M3 3l18 18"></path></svg></button>
       </div>
     </div>
     <div class="rn-gate-actions">
