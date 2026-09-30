@@ -1841,43 +1841,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     document.getElementById('inboxStatusCard').textContent='Semua pilihan Anda sudah dikirim ke inbox agen, baris demi baris. ✓';
     inbox.scrollIntoView({behavior:'smooth',block:'start'});
   }
-  async function signInNow(){
-    const email=emailInput.value.trim().toLowerCase(),password=passwordInput.value;
-    clearPasswordError();
-    if(!email){
-      status('Masukkan email Anda.');
-      emailInput.focus();
-      return;
-    }
-    if(!password){
-      showPasswordError('Please enter your password.');
-      return;
-    }
-    if(passwordWrap) passwordWrap.classList.add('validating');
-    const {data,error}=await client.auth.signInWithPassword({email,password});
-    if(passwordWrap) passwordWrap.classList.remove('validating');
-    if(error){
-      // Keep the password visible so the customer can verify it with the eye control.
-      const msg=String(error.message||'').toLowerCase();
-      let friendly='Login failed. Please check your email and password and try again.';
-      if(msg.includes('email not confirmed')){
-        friendly='Your email has not been confirmed yet. Please confirm it, then log in again.';
-      }else if(msg.includes('invalid login credentials')){
-        friendly='The email or password does not match a RumahNusa account.';
-      }else if(msg.includes('too many requests')){
-        friendly='Too many login attempts. Please wait a moment and try again.';
-      }
-      showPasswordError(friendly);
-      status(friendly);
-      return;
-    }
-    if(!data?.user){
-      showPasswordError('Login did not return an account. Please try again.');
-      return;
-    }
-    clearPasswordError();
-    await applyUser(data.user);
-  }
+  async function signInNow(){ return false; }
   async function applyUser(user){
     state.user=user;
     try{state.profile=await getProfile(user);}
