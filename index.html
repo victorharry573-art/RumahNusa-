@@ -1519,6 +1519,10 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     .rn-password-toggle{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:40px;height:40px;border:0;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#486581}
     .rn-password-toggle svg{width:22px;height:22px;pointer-events:none}
     .rn-password-toggle:focus-visible{outline:2px solid #2680eb;border-radius:8px}
+    .rn-password-error{display:none;color:#c53030;font-size:13px;margin-top:6px;font-weight:600}
+    .rn-password-error.show{display:block}
+    .rn-password-wrap.invalid input{border:2px solid #e53e3e !important;box-shadow:0 0 0 1px rgba(229,62,62,.12)}
+    .rn-password-wrap.validating input{border-color:#2680eb}
 
   `;
   document.head.appendChild(style);
@@ -1539,6 +1543,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
           </svg>
         </button>
       </div>
+      <div id="rnPasswordError" class="rn-password-error" role="alert" aria-live="polite">Incorrect password. Please enter your correct password.</div>
     </div>
     <div class="rn-auth-actions">
       <button class="btn" id="rnSignIn" type="button">Login</button>
@@ -1578,7 +1583,38 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   const authState=document.getElementById('rnAuthState');
   const emailInput=document.getElementById('rnAuthEmail');
   const passwordInput=document.getElementById('rnAuthPassword');
+  const passwordWrap=document.querySelector('.rn-password-wrap');
+  const passwordToggle=document.getElementById('rnPasswordToggle');
+  const passwordEye=document.getElementById('rnPasswordEye');
+  const passwordError=document.getElementById('rnPasswordError');
   const signIn=document.getElementById('rnSignIn');
+
+  function clearPasswordError(){
+    if(passwordError) passwordError.classList.remove('show');
+    if(passwordWrap) passwordWrap.classList.remove('invalid');
+  }
+  function showPasswordError(message){
+    if(passwordError){
+      passwordError.textContent=message||'Incorrect password. Please enter your correct password.';
+      passwordError.classList.add('show');
+    }
+    if(passwordWrap) passwordWrap.classList.add('invalid');
+    passwordInput.focus();
+  }
+  if(passwordToggle){
+    passwordToggle.addEventListener('click',function(){
+      const visible=passwordInput.type==='text';
+      passwordInput.type=visible?'password':'text';
+      passwordToggle.setAttribute('aria-pressed',String(!visible));
+      passwordToggle.setAttribute('aria-label',visible?'Tampilkan password':'Sembunyikan password');
+      passwordToggle.title=visible?'Tampilkan password':'Sembunyikan password';
+      passwordEye.innerHTML=visible
+        ? '<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle>'
+        : '<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle><path d="M4 4l16 16"></path>';
+    });
+  }
+  passwordInput.addEventListener('input',clearPasswordError);
+  passwordInput.addEventListener('focus',function(){ if(passwordWrap) passwordWrap.classList.remove('validating'); });
   const signOut=document.getElementById('rnSignOut');
   const agentList=document.getElementById('rnAgentList');
   const agentThread=document.getElementById('rnAgentThread');
@@ -1753,9 +1789,25 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   }
   async function signInNow(){
     const email=emailInput.value.trim(),password=passwordInput.value;
-    if(!email||!password){status('Masukkan email dan password.');return;}
+    clearPasswordError();
+    if(!email){
+      status('Masukkan email Anda.');
+      emailInput.focus();
+      return;
+    }
+    if(!password){
+      showPasswordError('Please enter your password.');
+      return;
+    }
+    if(passwordWrap) passwordWrap.classList.add('validating');
     const {data,error}=await client.auth.signInWithPassword({email,password});
-    if(error){status('Gagal masuk: '+error.message);return;}
+    if(passwordWrap) passwordWrap.classList.remove('validating');
+    if(error){
+      showPasswordError('Incorrect password. Please enter your correct password.');
+      status('Login belum berhasil.');
+      return;
+    }
+    clearPasswordError();
     await applyUser(data.user);
   }
   async function signUpNow(){
@@ -1770,7 +1822,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     state.user=user;
     try{state.profile=await getProfile(user);}
     catch(e){status('Profil belum dapat dibuat: '+e.message);return;}
-    signIn.hidden=true;signUp.hidden=true;signOut.hidden=false;
+    signIn.hidden=true;signOut.hidden=false;
     emailInput.value=user.email||'';passwordInput.value='';
     status('Masuk sebagai '+(state.profile.role==='agent'?'agen':'pelanggan')+'.');
     if(state.profile.role==='agent'){agentPanel.hidden=false;inbox.querySelector('.inbox-thread').hidden=true;await loadAgentConversations();}
