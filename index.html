@@ -687,29 +687,6 @@ footer p {
 
     <form id="clientProfilForm">
       <div class="client-form-step active" data-step="1">
-        <h3>Tentang Kami you</h3>
-        <p>Mulai dengan informasi dasar yang ingin Anda gunakan untuk pencarian properti RumahNusa.</p>
-        <div class="client-grid">
-          <div class="client-field">
-            <label for="clientName">Nama lengkap</label>
-            <input id="clientName" required placeholder="Nama lengkap Anda">
-          </div>
-          <div class="client-field">
-            <label for="clientJenis kelamin">Jenis kelamin</label>
-            <select id="clientJenis kelamin" required>
-              <option value="">Pilih</option>
-              <option>Perempuan</option><option>Laki-laki</option><option>Tidak ingin menyebutkan</option>
-            </select>
-          </div>
-          <div class="client-field">
-            <label for="clientUsia">Usia</label>
-            <input id="clientUsia" type="number" min="18" max="120" required placeholder="18 tahun atau lebih">
-          </div>
-        </div>
-        <div class="client-actions"><span></span><button class="btn client-next" type="button">Lanjutkan</button></div>
-      </div>
-
-      <div class="client-form-step" data-step="2">
         <h3>Pilih your home</h3>
         <p>Setelah usia diisi, pilih jenis properti yang sesuai dengan rencana Anda.</p>
         <div class="client-options" id="propertyOptions">
@@ -738,7 +715,8 @@ footer p {
 
       </div>
 
-      <div class="client-form-step" data-step="3">
+
+<div class="client-form-step" data-step="2">
         <h3 id="rnChoiceTitle">Tentukan kebutuhan rumah</h3>
         <p id="rnChoiceIntro">Pilih kategori Anda untuk melihat hanya rumah yang sesuai dengan pilihan tersebut.</p>
         <div class="client-grid">
@@ -770,6 +748,11 @@ footer p {
             <label id="layoutTitle">Standar apartemen RumahNusa</label>
             <div id="layoutDetails" class="apartment-layouts"></div>
           </div>
+          <div class="client-field full" id="purchaseAmountSection">
+            <label for="clientBudget">Amount you want to pay (USD)</label>
+            <input id="clientBudget" type="number" min="0" step="1" placeholder="Example: 350000" required>
+            <small style="color:#627d98;">Enter the amount you want to pay for the property you selected. This amount will be sent to the RumahNusa agent.</small>
+          </div>
           <div class="client-field full">
             <div id="rnSelectionInfo" class="inbox-status-card">Pilihan kategori, jumlah kamar, transaksi, dan harga Anda akan dikirim ke inbox agen RumahNusa.</div>
           </div>
@@ -777,7 +760,32 @@ footer p {
         <div class="client-actions"><button class="btn secondary" type="button" data-back>Kembali</button><button class="btn client-next" type="button">Lanjutkan</button></div>
       </div>
 
-      <div class="client-form-step" data-step="4">
+
+<div class="client-form-step" data-step="3">
+        <h3>Tentang Kami you</h3>
+        <p>Mulai dengan informasi dasar yang ingin Anda gunakan untuk pencarian properti RumahNusa.</p>
+        <div class="client-grid">
+          <div class="client-field">
+            <label for="clientName">Nama lengkap</label>
+            <input id="clientName" required placeholder="Nama lengkap Anda">
+          </div>
+          <div class="client-field">
+            <label for="clientJenis kelamin">Jenis kelamin</label>
+            <select id="clientJenis kelamin" required>
+              <option value="">Pilih</option>
+              <option>Perempuan</option><option>Laki-laki</option><option>Tidak ingin menyebutkan</option>
+            </select>
+          </div>
+          <div class="client-field">
+            <label for="clientUsia">Usia</label>
+            <input id="clientUsia" type="number" min="18" max="120" required placeholder="18 tahun atau lebih">
+          </div>
+        </div>
+        <div class="client-actions"><span></span><button class="btn client-next" type="button">Lanjutkan</button></div>
+      </div>
+
+
+<div class="client-form-step" data-step="4">
         <h3>Kontak and living plans</h3>
         <p>Berikan informasi yang cukup agar agen dapat menanggapi permintaan Anda.</p>
         <div class="client-grid">
@@ -1007,12 +1015,7 @@ footer p {
         <h3>Siap untuk Agen RumahNusa</h3>
         <p>Tinjau permintaan Anda, lalu kirim ke kotak masuk kontak RumahNusa.</p>
         <div id="clientSummary" class="client-summary"></div>
-        <div class="client-field full" style="margin-top:16px;">
-          <label for="clientBudget">Amount (USD)</label>
-          <input id="clientBudget" type="number" min="0" step="1" placeholder="Example: 350000" required>
-          <small style="color:#627d98;">Enter the amount you want to pay. Your selected property, rooms, purchase plan and amount will appear together in the RumahNusa agent inbox.</small>
-        </div>
-        <div class="client-actions"><button class="btn secondary" type="button" data-back>Kembali</button><button class="btn" id="sendProfil" type="button">Kirim Permintaan</button></div>
+<div class="client-actions"><button class="btn secondary" type="button" data-back>Kembali</button><button class="btn" id="sendProfil" type="button">Kirim Permintaan</button></div>
       </div>
     </form>
 
@@ -1109,14 +1112,9 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
 
   form.querySelectorAll('.client-next').forEach(btn => btn.addEventListener('click', () => {
     if (current === 0) {
-      const name = document.getElementById('clientName');
-      const gender = document.getElementById('clientJenis kelamin');
-      const age = document.getElementById('clientUsia');
-      if (!name.reportValidity() || !gender.reportValidity() || !age.reportValidity()) return;
-      if (Number(age.value) < 18) { age.setCustomValidity('Please enter an age of 18 tahun atau lebih.'); age.reportValidity(); age.setCustomValidity(''); return; }
+      if (!state.property) return;
     }
-    if (current === 1 && !state.property) return;
-    if (current === 2) {
+    if (current === 1) {
       if (state.property !== 'Apartemen' && purpose.value !== 'Beli') {
         purpose.value = 'Beli';
         state.purpose = 'Beli';
@@ -1125,8 +1123,17 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
         rentalTerm.focus();
         return;
       }
+      const budgetEl = document.getElementById('clientBudget');
+      if (!budgetEl || !budgetEl.reportValidity()) return;
       state.purpose = purpose.value;
       state.rentalTerm = purpose.value === 'Sewa' ? rentalTerm.value : '';
+    }
+    if (current === 2) {
+      const name = document.getElementById('clientName');
+      const gender = document.getElementById('clientJenis kelamin');
+      const age = document.getElementById('clientUsia');
+      if (!name.reportValidity() || !gender.reportValidity() || !age.reportValidity()) return;
+      if (Number(age.value) < 18) { age.setCustomValidity('Please enter an age of 18 or older.'); age.reportValidity(); age.setCustomValidity(''); return; }
     }
     if (current === 3) {
       const required = ['clientPhone','clientEmail','clientCity','clientMarital','household','clientCityWant'];
@@ -1245,11 +1252,12 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
 
   function buildSummary() {
     const v = id => document.getElementById(id).value;
+    const amount = Number(v('clientBudget') || 0).toLocaleString('en-US');
     document.getElementById('clientSummary').innerHTML =
       '<strong>' + v('clientName') + '</strong><br>' +
       state.property + ' · ' + state.purpose + '<br>' +
       v('rooms') + '<br>' +
-      'Amount: 
+      'Amount: $' + amount + '<br>' +
       'Kota pilihan: ' + v('clientCityWant') + '<br>' +
       'Rumahhold: ' + v('household') + ' · Kota saat ini: ' + v('clientCity') + '<br>' +
       'Email: ' + v('clientEmail') + ' · Telepon: ' + v('clientPhone');
