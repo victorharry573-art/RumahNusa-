@@ -1709,7 +1709,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     const e=phone.value.trim(), p=password.value;
     if(!e||!p){
       status.textContent='Please enter your phone number and password.';
-      if(!e) email.focus(); else password.focus();
+      if(!e) phone.focus(); else password.focus();
       return false;
     }
     status.textContent='Logging in...';
@@ -1733,7 +1733,6 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
         currentUser=result.data.user;
         const identityUpdate = await client.from('profiles').update({
           full_name:name.value.trim(),
-          phone:e,
           phone:e
         }).eq('id',currentUser.id);
         if(identityUpdate.error){
@@ -1755,7 +1754,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     const e=signupPhone.value.trim();
     const p=signupPassword.value;
     const cp=signupConfirm.value;
-    if(!e){signupStatus.textContent='Please enter your email address.';signupPhone.focus();return;}
+    if(!e){signupStatus.textContent='Please enter your phone number.';signupPhone.focus();return;}
     if(p.length<6){signupStatus.textContent='Password must be at least 6 characters.';signupPassword.focus();return;}
     if(p!==cp){signupStatus.textContent='The passwords do not match.';signupConfirm.focus();return;}
     signUp.textContent='Creating account...';
@@ -1764,7 +1763,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     try{
       const result=await Promise.race([
         client.auth.signUp({
-          email:'',
+          phone:e,
           password:p,
           options:{data:{
             full_name:name.value.trim(),
