@@ -644,7 +644,7 @@ body.rn-site-unlocked.rn-category-selected > #properties{display:none!important}
       </div>
     </div>
     <div class="rn-gate-actions">
-      <button class="btn" id="rnGateSignIn" type="button">Log in</button>
+      <button class="btn" id="rnGateSignIn" type="button" onclick="if(window.rnGateLogin){window.rnGateLogin(event);}">Log in</button>
     </div>
     <div id="rnGateStatus" class="rn-gate-status" aria-live="polite">Log in to continue to your RumahNusa home choices.</div>
   </div>
@@ -1624,7 +1624,9 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       signIn.textContent='Log in';
     }
   }
+  window.rnGateLogin=handleGateLogin;
   signIn.addEventListener('click',handleGateLogin);
+  signIn.addEventListener('pointerup',function(event){ handleGateLogin(event); });
   [email,password].forEach(function(field){
     field.addEventListener('keydown',function(event){
       if(event.key==='Enter') handleGateLogin(event);
