@@ -651,21 +651,7 @@ body.rn-site-unlocked.rn-category-selected > #properties{display:none!important}
     </div>
     <p id="rnPhoneGateMessage" class="rn-gate-message" aria-live="polite"></p>
 
-    <div id="rnHomeChoice" hidden style="margin-top:24px;padding-top:22px;border-top:1px solid #d9e2ec;">
-      <h2>Choose your beautiful home</h2>
-      <p class="rn-welcome">Your account is verified. Tap a home type and its matching collection will open immediately.</p>
-      <div class="client-options rn-gate-category-options">
-        <button type="button" class="client-option" data-gate-category="Apartemen"><strong>Apartment</strong><small>Modern apartment homes and rooms.</small></button>
-        <button type="button" class="client-option" data-gate-category="Separate Rumah"><strong>Separate Rumah</strong><small>Private separate houses.</small></button>
-        <button type="button" class="client-option" data-gate-category="Vila"><strong>Villa</strong><small>Beautiful villa homes and outdoor spaces.</small></button>
-        <button type="button" class="client-option" data-gate-category="Neighborhood Rumah"><strong>Neighborhood</strong><small>Homes in welcoming residential communities.</small></button>
-        <button type="button" class="client-option" data-gate-category="Townhouse"><strong>Townhouse</strong><small>Connected multi-level homes.</small></button>
-        <button type="button" class="client-option" data-gate-category="Penthouse"><strong>Penthouse</strong><small>Spacious premium homes above the city.</small></button>
-        <button type="button" class="client-option" data-gate-category="Family Residence"><strong>Family Residence</strong><small>Comfortable homes designed around family life.</small></button>
-        <button type="button" class="client-option" data-gate-category="Investment Property"><strong>Investment Property</strong><small>Properties for long-term ownership and investment.</small></button>
-      </div>
-    </div>
-  </div>
+</div>
 </section><script id="rn-phone-gate-js">
 (function(){
   const gate=document.getElementById('rnPhoneGate');
@@ -731,7 +717,7 @@ body.rn-site-unlocked.rn-category-selected > #properties{display:none!important}
   </div>
 </section>
 
-<section id="properties">
+<section id="properties" hidden>
 
   <div class="section-title">
     <h2 data-en="Featured Properti" data-id="Properti Pilihan">Featured Properti</h2>
@@ -1597,7 +1583,6 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   const phoneCode=document.getElementById('rnPhoneCode');
   const phoneCodeWrap=document.getElementById('rnPhoneCodeWrap');
   const phoneChannel=document.getElementById('rnPhoneChannel');
-  const homeChoice=document.getElementById('rnHomeChoice');
   const phoneMessage=document.getElementById('rnPhoneGateMessage');
   const sendPhoneCode=document.getElementById('rnSendPhoneCode');
   const verifyPhoneCode=document.getElementById('rnVerifyPhoneCode');
@@ -1625,44 +1610,34 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   async function verifyCode(){
     const token=phoneCode.value.trim(); if(!pendingPhone||!/^\d{6}$/.test(token)){phoneMessage.textContent='Enter the 6-digit confirmation code.';return;}
     phoneMessage.textContent='Confirming…';
-    const {data,error}=await client.auth.verifyOtp({phone:pendingPhone,token,type:'sms'});
+    const {data,error}=await client.auth.verifyOtp({phone:pendingPhone,token,type:phoneChannel?.value==='whatsapp'?'whatsapp':'sms'});
     if(error){phoneMessage.textContent='That code could not be confirmed: '+error.message;return;}
-    phoneMessage.textContent='Verification successful. Now choose the home type you want to see.';
-    if(homeChoice) homeChoice.hidden=false;
+    phoneMessage.textContent='Your number is verified. Welcome to RumahNusa. Now choose the type of home you want.';
     phoneCodeWrap.hidden=true;
     phoneNumber.disabled=true;
     phoneCountry.disabled=true;
     phoneChannel.disabled=true;
+    const profile=document.getElementById('client-profile');
+    if(profile){
+      profile.classList.remove('rn-login-locked');
+      profile.scrollIntoView({behavior:'smooth',block:'start'});
+    }
   }
   sendPhoneCode?.addEventListener('click',sendCode);
   verifyPhoneCode?.addEventListener('click',verifyCode);
   resendPhoneCode?.addEventListener('click',sendCode);
   client.auth.getSession().then(({data})=>{
     if(data.session){
-      phoneMessage.textContent='You are already verified. Choose the home type you want to see.';
-      if(homeChoice) homeChoice.hidden=false;
+      phoneMessage.textContent='You are already verified. Welcome back to RumahNusa.';
+      phoneCodeWrap.hidden=true;
+      phoneNumber.disabled=true;
+      phoneCountry.disabled=true;
+      phoneChannel.disabled=true;
+      const profile=document.getElementById('client-profile');
+      if(profile) profile.classList.remove('rn-login-locked');
     }
   });
 
-  document.querySelectorAll('#rnHomeChoice [data-gate-category]').forEach(function(button){
-    button.addEventListener('click',function(){
-      const value=button.dataset.gateCategory;
-      document.querySelectorAll('#rnHomeChoice [data-gate-category]').forEach(x=>x.classList.toggle('selected',x===button));
-      const source=document.querySelector('#propertyOptions .client-option[data-value="'+CSS.escape(value)+'"]');
-      if(source) source.click();
-      if(window.__rnPhoneGateUnlock) window.__rnPhoneGateUnlock();
-      gate.hidden=true;
-      const featured=document.getElementById('properties');
-      if(featured) featured.hidden=true;
-      const profile=document.getElementById('client-profile');
-      if(profile){
-        profile.classList.remove('rn-login-locked');
-        profile.scrollIntoView({behavior:'smooth',block:'start'});
-      }
-      const collection=document.getElementById('rnCategoryCollection');
-      if(collection) collection.hidden=false;
-    });
-  });
   const authState=document.getElementById('rnPhoneGateMessage') || document.body;
   const signOut=null;
   const agentList=document.getElementById('rnAgentList');
