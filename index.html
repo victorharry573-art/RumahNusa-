@@ -1856,9 +1856,14 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     let conv=await ensureCustomerConversation();
     if(!conv){
       const v=id=>document.getElementById(id)?.value||'';
+      const customerEmail=(v('clientEmail')||state.user.email||'').trim();
+      const requestLabel=window.__rnPropertyName||v('clientCityWant')||'Permintaan RumahNusa';
+      // Keep the customer's email with the conversation itself so the agent inbox
+      // can show the email even when profile-email visibility is restricted by RLS.
+      const propertyLabel=customerEmail ? customerEmail+' | '+requestLabel : requestLabel;
       const {data,error}=await client.from('conversations').insert({
         customer_id:state.user.id,
-        property_name:window.__rnPropertyName||v('clientCityWant')||'Permintaan RumahNusa'
+        property_name:propertyLabel
       }).select('*').single();
       if(error){status('Percakapan belum dapat dibuat: '+error.message);return;}
       conv=data; state.conversation=conv;
@@ -1942,7 +1947,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     }).eq('id',state.user.id);
     if(profileError){status('Data pelanggan belum dapat disimpan: '+profileError.message);return;}
 
-    window.__rnPropertyName=v('clientName')+' · '+property+' · '+purpose+' · '+rooms;
+    window.__rnPropertyName=(v('clientEmail')||state.user.email||'').trim()+' | '+v('clientName')+' · '+property+' · '+purpose+' · '+rooms;
     await sendCustomerMessage(requestMessage);
 
     // Attempt real file upload when the private Storage bucket is configured.
