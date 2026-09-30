@@ -91,7 +91,7 @@ async function loadConversations(){
    // Automatically open the newest customer conversation so a new message
    // is visible without requiring the agent to tap another control first.
    selected=rows[0];
-   $('title').textContent=selected.property_name||'Customer conversation';
+   $('title').textContent=customerDisplayProperty(selected)||'Customer conversation';
    const profiles=await getProfileEmails([selected]);
    $('customerEmail').textContent='Email: '+(customerEmail(selected)||profiles[selected.customer_id]?.email||'Email unavailable');
    $('claim').classList.toggle('hidden',!!selected.agent_id);
@@ -102,7 +102,20 @@ async function loadConversations(){
 }
 
 function customerEmail(c){
- return c.customer_email || c.email || c.customerEmail || '';
+ const direct=c.customer_email || c.email || c.customerEmail || '';
+ if(direct) return direct;
+ const label=String(c.property_name||'');
+ const separator=label.indexOf(' | ');
+ if(separator>0){
+   const candidate=label.slice(0,separator).trim();
+   if(candidate.includes('@')) return candidate;
+ }
+ return '';
+}
+function customerDisplayProperty(c){
+ const label=String(c.property_name||'');
+ const separator=label.indexOf(' | ');
+ return separator>0 ? label.slice(separator+3).trim() : label;
 }
 
 async function getProfileEmails(rows){
@@ -131,7 +144,7 @@ async function selectConversation(conv){
  selected=conv;
  const rows=await getCurrentConversations();
  await renderConversations(rows);
- $('title').textContent=conv.property_name||'Customer conversation';
+ $('title').textContent=customerDisplayProperty(conv)||'Customer conversation';
  const profiles=await getProfileEmails([conv]);
  $('customerEmail').textContent='Email: '+(customerEmail(conv)||profiles[conv.customer_id]?.email||'Email unavailable');
  $('claim').classList.toggle('hidden',!!conv.agent_id);
