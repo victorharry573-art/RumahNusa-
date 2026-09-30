@@ -628,21 +628,16 @@ body.rn-site-unlocked.rn-category-selected > #properties{display:none!important}
 </header>
 
 <section id="rnCustomerGate" class="rn-customer-gate" aria-label="RumahNusa customer access">
-  <h2>Welcome to RumahNusa Real Estate</h2>
-  <p>Welcome to RumahNusa — Real Estate created around the way you want to live. We believe a home should give you comfort when you return, beauty you enjoy every day, privacy when you need it, and peace of mind for the people you care about. RumahNusa brings together carefully presented homes, beautiful rooms, welcoming living spaces, thoughtful details, and properties designed for different ways of life. Take your time, explore with confidence, and let us help you find a place where you can live comfortably, feel secure, and build the life you want. <strong>Start by telling us about yourself, then log in to begin your personal RumahNusa home search.</strong></p>
-
-  <div id="rnGateLogin" hidden>
-    <h3>Log in to RumahNusa</h3>
-    <p>Your details are ready. Log in to continue to your private RumahNusa home search.</p>
+  <div id="rnGateLogin">
+    <h2>Welcome to RumahNusa Real Estate</h2>
+    <p>Welcome to RumahNusa — a place to begin your search for a beautiful home, comfortable rooms, peaceful surroundings, privacy, and a life you can enjoy with confidence. We believe a home should feel welcoming when you arrive, comfortable when you stay, and peaceful when you return each day. Our carefully presented properties are created to help you find a home that matches the way you want to live. <strong>Log in or create your RumahNusa account to begin your personal home search.</strong></p>
     <div class="rn-gate-grid">
       <input id="rnGateEmail" type="email" autocomplete="email" placeholder="Email" required>
       <div class="rn-password-wrap">
         <input id="rnGatePassword" type="password" autocomplete="current-password" placeholder="Password" required>
         <button id="rnGatePasswordToggle" class="rn-password-toggle" type="button" aria-label="Show password" aria-pressed="false" title="Show password">
           <svg id="rnGatePasswordEye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path>
-            <circle cx="12" cy="12" r="3"></circle>
-            <path d="M3 3l18 18"></path>
+            <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle><path d="M3 3l18 18"></path>
           </svg>
         </button>
       </div>
@@ -651,21 +646,19 @@ body.rn-site-unlocked.rn-category-selected > #properties{display:none!important}
       <button class="btn" id="rnGateSignIn" type="button">Log in</button>
       <button class="btn secondary" id="rnGateShowSignUp" type="button">Sign up</button>
     </div>
-    <div id="rnGateStatus" class="rn-gate-status" aria-live="polite">Log in to continue.</div>
+    <div id="rnGateStatus" class="rn-gate-status" aria-live="polite">Log in or sign up to continue.</div>
   </div>
 
   <div id="rnGateSignup" hidden>
-    <h3>Create your RumahNusa account</h3>
-    <p>Use your email address and create a password. RumahNusa may send a confirmation email to your inbox before you log in.</p>
+    <h2>Create your RumahNusa account</h2>
+    <p>Choose an email and password to create your private RumahNusa account. After your account is ready, we will ask for your name, age, and gender.</p>
     <div class="rn-gate-grid">
       <input id="rnGateSignupEmail" type="email" autocomplete="email" placeholder="Email address" required>
       <div class="rn-password-wrap">
         <input id="rnGateSignupPassword" type="password" autocomplete="new-password" placeholder="Create password (6+ characters)" required>
         <button id="rnGateSignupPasswordToggle" class="rn-password-toggle" type="button" aria-label="Show password" aria-pressed="false" title="Show password">
           <svg id="rnGateSignupPasswordEye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path>
-            <circle cx="12" cy="12" r="3"></circle>
-            <path d="M3 3l18 18"></path>
+            <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle><path d="M3 3l18 18"></path>
           </svg>
         </button>
       </div>
@@ -673,9 +666,7 @@ body.rn-site-unlocked.rn-category-selected > #properties{display:none!important}
         <input id="rnGateSignupConfirm" type="password" autocomplete="new-password" placeholder="Confirm password" required>
         <button id="rnGateSignupConfirmToggle" class="rn-password-toggle" type="button" aria-label="Show password" aria-pressed="false" title="Show password">
           <svg id="rnGateSignupConfirmEye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path>
-            <circle cx="12" cy="12" r="3"></circle>
-            <path d="M3 3l18 18"></path>
+            <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle><path d="M3 3l18 18"></path>
           </svg>
         </button>
       </div>
@@ -684,12 +675,12 @@ body.rn-site-unlocked.rn-category-selected > #properties{display:none!important}
       <button class="btn" id="rnGateSignUp" type="button">Create account</button>
       <button class="btn secondary" id="rnGateBackToLogin" type="button">Back to log in</button>
     </div>
-    <div id="rnGateSignupStatus" class="rn-gate-status" aria-live="polite">Create your account, then check your email if confirmation is requested.</div>
+    <div id="rnGateSignupStatus" class="rn-gate-status" aria-live="polite"></div>
   </div>
 
-  <div id="rnGateProfile" class="rn-gate-profile" style="display:block;">
-    <h3>Before you enter RumahNusa</h3>
-    <p>Tell us your name, age, and gender so your home search can be connected to your customer details. This lets RumahNusa connect your home search with your customer details.</p>
+  <div id="rnGateProfile" class="rn-gate-profile" hidden>
+    <h2>Welcome to RumahNusa</h2>
+    <p>Before you enter your private home search, tell us your name, age, and gender. This helps RumahNusa connect your home choices with your customer details.</p>
     <div class="rn-gate-grid">
       <input id="rnGateName" type="text" placeholder="Your full name" autocomplete="name" required>
       <input id="rnGateAge" type="number" min="18" max="120" placeholder="Age" required>
@@ -705,74 +696,18 @@ body.rn-site-unlocked.rn-category-selected > #properties{display:none!important}
     <div id="rnGateProfileStatus" class="rn-gate-status" aria-live="polite"></div>
   </div>
 
-  <div id="rnGateLogin" hidden>
-    <h3>Log in to RumahNusa</h3>
-    <p>Your details are ready. Log in to continue to your private RumahNusa home search.</p>
-    <div class="rn-gate-grid">
-      <input id="rnGateEmail" type="email" autocomplete="email" placeholder="Email" required>
-      <div class="rn-password-wrap">
-        <input id="rnGatePassword" type="password" autocomplete="current-password" placeholder="Password" required>
-        <button id="rnGatePasswordToggle" class="rn-password-toggle" type="button" aria-label="Show password" aria-pressed="false" title="Show password">
-          <svg id="rnGatePasswordEye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path>
-            <circle cx="12" cy="12" r="3"></circle>
-            <path d="M3 3l18 18"></path>
-          </svg>
-        </button>
-      </div>
-    </div>
-    <div class="rn-gate-actions">
-      <button class="btn" id="rnGateSignIn" type="button">Log in</button>
-      <button class="btn secondary" id="rnGateShowSignUp" type="button">Sign up</button>
-    </div>
-    <div id="rnGateStatus" class="rn-gate-status" aria-live="polite">Log in to continue.</div>
-  </div>
-
-  <div id="rnGateSignup" hidden>
-    <h3>Create your RumahNusa account</h3>
-    <p>Use your email address and create a password. RumahNusa may send a confirmation email to your inbox before you log in.</p>
-    <div class="rn-gate-grid">
-      <input id="rnGateSignupEmail" type="email" autocomplete="email" placeholder="Email address" required>
-      <div class="rn-password-wrap">
-        <input id="rnGateSignupPassword" type="password" autocomplete="new-password" placeholder="Create password (6+ characters)" required>
-        <button id="rnGateSignupPasswordToggle" class="rn-password-toggle" type="button" aria-label="Show password" aria-pressed="false" title="Show password">
-          <svg id="rnGateSignupPasswordEye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path>
-            <circle cx="12" cy="12" r="3"></circle>
-            <path d="M3 3l18 18"></path>
-          </svg>
-        </button>
-      </div>
-      <div class="rn-password-wrap">
-        <input id="rnGateSignupConfirm" type="password" autocomplete="new-password" placeholder="Confirm password" required>
-        <button id="rnGateSignupConfirmToggle" class="rn-password-toggle" type="button" aria-label="Show password" aria-pressed="false" title="Show password">
-          <svg id="rnGateSignupConfirmEye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path>
-            <circle cx="12" cy="12" r="3"></circle>
-            <path d="M3 3l18 18"></path>
-          </svg>
-        </button>
-      </div>
-    </div>
-    <div class="rn-gate-actions">
-      <button class="btn" id="rnGateSignUp" type="button">Create account</button>
-      <button class="btn secondary" id="rnGateBackToLogin" type="button">Back to log in</button>
-    </div>
-    <div id="rnGateSignupStatus" class="rn-gate-status" aria-live="polite">Create your account, then check your email if confirmation is requested.</div>
-  </div>
-
-  <div id="rnGateCategory" class="rn-gate-category">
-    <h3>Welcome again to RumahNusa Real Estate</h3>
-    <p class="rn-gate-category-note">You are now ready to explore a home that can give you comfort, beauty, privacy, peace of mind, and a place to enjoy everyday life. Choose a home type below. Its homes will open immediately, and you will see only that type until you choose another category.</p>
+  <div id="rnGateCategory" class="rn-gate-category" hidden>
+    <h2>Welcome to RumahNusa Real Estate</h2>
+    <p class="rn-gate-category-note">Now choose the kind of home you want. Each choice opens its own collection immediately — apartments show apartments, separate Rumah shows separate Rumah, villas show villas, and so on. You will see only the category you choose until you go back and choose a different one.</p>
     <div id="rnGateCategoryOptions" class="client-options">
-      <button type="button" class="client-option" data-gate-property="Apartemen"><strong>Apartment</strong><small>Open apartments and their rooms.</small></button>
-      <button type="button" class="client-option" data-gate-property="Separate Rumah"><strong>Separate Rumah</strong><small>Open separate houses and their rooms.</small></button>
-      <button type="button" class="client-option" data-gate-property="Vila"><strong>Villa</strong><small>Open villas and their rooms.</small></button>
-      <button type="button" class="client-option" data-gate-property="Neighborhood Rumah"><strong>Neighborhood</strong><small>Open neighborhood homes only.</small></button>
-      <button type="button" class="client-option" data-gate-property="Townhouse"><strong>Townhouse</strong><small>Open townhouse homes only.</small></button>
-      <button type="button" class="client-option" data-gate-property="Penthouse"><strong>Penthouse</strong><small>Open penthouses and their rooms.</small></button>
-      <button type="button" class="client-option" data-gate-property="Family Residence"><strong>Family Residence</strong><small>Open family residences only.</small></button>
-      <button type="button" class="client-option" data-gate-property="Investment Property"><strong>Investment Property</strong><small>Open investment properties only.</small></button>
+      <button type="button" class="client-option" data-gate-property="Apartemen"><strong>Apartment</strong><small>Open apartments and their rooms immediately.</small></button>
+      <button type="button" class="client-option" data-gate-property="Separate Rumah"><strong>Separate Rumah</strong><small>Open separate Rumah and their rooms immediately.</small></button>
+      <button type="button" class="client-option" data-gate-property="Vila"><strong>Villa</strong><small>Open villas and their rooms immediately.</small></button>
+      <button type="button" class="client-option" data-gate-property="Neighborhood Rumah"><strong>Neighborhood</strong><small>Open neighborhood homes immediately.</small></button>
+      <button type="button" class="client-option" data-gate-property="Townhouse"><strong>Townhouse</strong><small>Open townhouses immediately.</small></button>
+      <button type="button" class="client-option" data-gate-property="Penthouse"><strong>Penthouse</strong><small>Open penthouses and their rooms immediately.</small></button>
+      <button type="button" class="client-option" data-gate-property="Family Residence"><strong>Family Residence</strong><small>Open family residences immediately.</small></button>
+      <button type="button" class="client-option" data-gate-property="Investment Property"><strong>Investment Property</strong><small>Open investment properties immediately.</small></button>
     </div>
     <div id="rnGateCategoryStatus" class="rn-gate-status" aria-live="polite"></div>
   </div>
@@ -1713,7 +1648,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     profileBox.hidden=false;
     categoryBox.hidden=true;
     categoryBox.classList.remove('active');
-    profileStatus.textContent='You are logged in. Now complete your name, age, and gender.';
+    profileStatus.textContent='You are logged in. Tell us your name, age, and gender before choosing your home.';
     setTimeout(()=>name.focus(),50);
   }
 
@@ -1812,7 +1747,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
         password.value='';
         if(result.data.session){
           signupStatus.textContent='Account created successfully. You are now logged in.';
-          showCategory(result.data.user);
+          showProfile();
         }else{
           signupStatus.textContent='Account created. Please open your email inbox, confirm your RumahNusa email, then return here and log in.';
           signupBox.hidden=true;
