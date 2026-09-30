@@ -2103,11 +2103,39 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   const categoryStatus=document.getElementById('rnGateCategoryStatus');
   const email=document.getElementById('rnGateEmail');
   const password=document.getElementById('rnGatePassword');
+  const passwordToggle=document.getElementById('rnGatePasswordToggle');
+  const passwordEye=document.getElementById('rnGatePasswordEye');
   const name=document.getElementById('rnGateName');
   const gender=document.getElementById('rnGateGender');
   const age=document.getElementById('rnGateAge');
   const signIn=document.getElementById('rnGateSignIn');
   const continueBtn=document.getElementById('rnGateContinue');
+
+  // The password eye must work independently of Supabase loading.
+  function setGatePasswordEye(visible){
+    if(passwordEye){
+      passwordEye.innerHTML=visible
+        ? '<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle>'
+        : '<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle><path d="M3 3l18 18"></path>';
+    }
+    if(passwordToggle){
+      passwordToggle.setAttribute('aria-label',visible?'Hide password':'Show password');
+      passwordToggle.title=visible?'Hide password':'Show password';
+      passwordToggle.setAttribute('aria-pressed',String(visible));
+    }
+  }
+
+  if(passwordToggle && password){
+    passwordToggle.addEventListener('click',function(event){
+      event.preventDefault();
+      event.stopPropagation();
+      const showing=password.type==='text';
+      password.type=showing?'password':'text';
+      setGatePasswordEye(!showing);
+    });
+    setGatePasswordEye(false);
+  }
+
   if(!gate||!window.supabase||!window.RUMAHNUSA_SUPABASE_URL||!window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY){
     if(status) status.textContent='RumahNusa account service is not ready yet. Please refresh the page.';
     return;
@@ -2159,24 +2187,6 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   }
 
   signIn.addEventListener('click',function(){login('signin');});
-  const passwordToggle=document.getElementById('rnGatePasswordToggle');
-  const passwordEye=document.getElementById('rnGatePasswordEye');
-  function setGatePasswordEye(visible){
-    if(passwordEye){
-      passwordEye.innerHTML=visible
-        ? '<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle>'
-        : '<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle><path d="M3 3l18 18"></path>';
-    }
-    passwordToggle.setAttribute('aria-label',visible?'Hide password':'Show password');
-    passwordToggle.title=visible?'Hide password':'Show password';
-    passwordToggle.setAttribute('aria-pressed',String(visible));
-  }
-  if(passwordToggle) passwordToggle.addEventListener('click',function(){
-    const showing=password.type==='text';
-    password.type=showing?'password':'text';
-    setGatePasswordEye(!showing);
-  });
-  setGatePasswordEye(false);
 
   continueBtn.addEventListener('click',async function(){
     if(!currentUser){profileStatus.textContent='Please log in first.';return;}
