@@ -912,7 +912,7 @@ body.rn-site-unlocked.rn-category-selected > #properties{display:none!important}
     <div class="client-steps" aria-label="Profil progress">
       <span class="client-step active">1. Profil</span>
       <span class="client-step">2. Rumah</span>
-      <span class="client-step">3. Kehidupan</span>
+      <span class="client-step">3. Pilihan</span>
       <span class="client-step">4. Kontak</span>
       <span class="client-step">5. Kotak Masuk</span>
     </div>
@@ -923,7 +923,6 @@ body.rn-site-unlocked.rn-category-selected > #properties{display:none!important}
         <p>Ketuk satu jenis rumah dan koleksi rumah dari jenis tersebut akan langsung terbuka untuk Anda.</p>
         <div class="client-options" id="propertyOptions">
           <button type="button" class="client-option" data-value="Apartemen"><strong>Apartemen</strong><small>Hunian kota modern dengan fasilitas bersama.</small></button>
-          <button type="button" class="client-option" data-value="Hotel"><strong>Hotel</strong><small>Hotel untuk dimiliki, bukan untuk disewa.</small></button>
           <button type="button" class="client-option" data-value="Separate Rumah"><strong>Separate Rumah</strong><small>Rumah pribadi dengan pilihan 4–11 kamar tidur.</small></button>
           <button type="button" class="client-option" data-value="Vila"><strong>Vila</strong><small>Hunian nyaman dengan ruang luar yang menyenangkan.</small></button>
           <button type="button" class="client-option" data-value="Neighborhood Rumah"><strong>Neighborhood Rumah</strong><small>Rumah dalam lingkungan hunian dengan pilihan 4–11 kamar tidur.</small></button>
@@ -933,8 +932,9 @@ body.rn-site-unlocked.rn-category-selected > #properties{display:none!important}
           <button type="button" class="client-option" data-value="Investment Property"><strong>Investment Property</strong><small>Properti untuk investasi jangka panjang atau kepemilikan.</small></button>
         </div>
         <div class="client-actions">
-  <button class="btn secondary" type="button" data-back>Kembali</button>
-</div>
+          <button class="btn secondary" type="button" data-back>Kembali</button>
+          <button class="btn client-next" id="propertyChooseContinue" type="button" disabled>Choose &amp; Continue</button>
+        </div>
         <div id="rnCategoryCollection" class="rn-category-collection" hidden aria-live="polite">
           <div class="rn-category-head">
             <div>
@@ -1334,10 +1334,12 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
   let current = 0;
   const state = { property: '', purpose: 'Beli', rentalTerm: '' };
 
+  const flowDomIndex = [2,0,1,3];
   function showStep(index) {
-    current = Math.max(0, Math.min(index, steps.length - 1));
-    steps.forEach((s, i) => s.classList.toggle('active', i === current));
-    badges.forEach((b, i) => b.classList.toggle('active', i === Math.min(current, badges.length - 1)));
+    current = Math.max(0, Math.min(index, flowDomIndex.length - 1));
+    const domIndex = flowDomIndex[current];
+    steps.forEach((s, i) => s.classList.toggle('active', i === domIndex));
+    badges.forEach((b, i) => b.classList.toggle('active', i === current));
     window.__rumahnusaCustomerStep = current;
     document.querySelector('.client-panel').scrollIntoView({behavior:'smooth', block:'start'});
   }
@@ -1347,9 +1349,16 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
 
   form.querySelectorAll('.client-next').forEach(btn => btn.addEventListener('click', () => {
     if (current === 0) {
-      if (!state.property) return;
+      const name = document.getElementById('clientName');
+      const gender = document.getElementById('clientJenis kelamin');
+      const age = document.getElementById('clientUsia');
+      if (!name.reportValidity() || !gender.reportValidity() || !age.reportValidity()) return;
+      if (Number(age.value) < 18) { age.setCustomValidity('Please enter an age of 18 or older.'); age.reportValidity(); age.setCustomValidity(''); return; }
     }
     if (current === 1) {
+      if (!state.property) return;
+    }
+    if (current === 2) {
       if (state.property !== 'Apartemen' && purpose.value !== 'Beli') {
         purpose.value = 'Beli';
         state.purpose = 'Beli';
@@ -1362,13 +1371,6 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
       if (!budgetEl || !budgetEl.reportValidity()) return;
       state.purpose = purpose.value;
       state.rentalTerm = purpose.value === 'Sewa' ? rentalTerm.value : '';
-    }
-    if (current === 2) {
-      const name = document.getElementById('clientName');
-      const gender = document.getElementById('clientJenis kelamin');
-      const age = document.getElementById('clientUsia');
-      if (!name.reportValidity() || !gender.reportValidity() || !age.reportValidity()) return;
-      if (Number(age.value) < 18) { age.setCustomValidity('Please enter an age of 18 or older.'); age.reportValidity(); age.setCustomValidity(''); return; }
     }
     if (current === 3) {
       const required = ['clientPhone','clientEmail','clientCity','clientMarital','household','clientCityWant'];
@@ -1482,7 +1484,9 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
     state.property = btn.dataset.value;
     updatePurposeChoices();
     updateRoomChoices();
-    // The floating Choose & Continue button is enabled by the dedicated navigation safeguard below.
+    const next=document.getElementById('propertyChooseContinue');
+    if(next) next.disabled=false;
+    if(typeof window.__rumahnusaRenderCategory==='function') window.__rumahnusaRenderCategory(state.property);
   }));
 
   function buildSummary() {
@@ -2544,6 +2548,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     if(note) note.className=apartment?'apartment-layouts':'apartment-layouts';
     updateBudgetPreview();
   }
+  window.__rumahnusaRenderCategory=renderCategory;
 
   document.querySelectorAll('#propertyOptions .client-option').forEach(btn=>{
     btn.addEventListener('click',()=>{
@@ -2558,76 +2563,12 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     rentalWrap.hidden=!(isApartment && purpose.value==='Sewa');
   });
 
-  const originalNext=document.querySelector('.client-form-step[data-step="3"] .client-next');
-  if(originalNext) originalNext.addEventListener('click',()=>{
-    const selected=document.querySelector('#propertyOptions .client-option.selected');
-    if(selected) renderCategory(selected.dataset.value);
-  });
+
 })();
 </script>
 
 
-<script>
-/* RumahNusa property-selection navigation:
-   the old WhatsApp button area is now the floating Choose & Continue control.
-   It stays hidden until a property category is selected and remains available
-   while the customer scrolls through the selected category listings. */
-(function(){
-  const form=document.getElementById('clientProfilForm');
-  const floatButton=document.getElementById('propertyContinueFloat');
-  const options=Array.from(document.querySelectorAll('#propertyOptions .client-option'));
-  const steps=form ? Array.from(form.querySelectorAll('.client-form-step')) : [];
-  const badges=Array.from(document.querySelectorAll('.client-step'));
-  if(!form || !floatButton || !steps.length) return;
 
-  function syncButton(){
-    const selected=!!document.querySelector('#propertyOptions .client-option.selected');
-    const current=Number.isInteger(window.__rumahnusaCustomerStep) ? window.__rumahnusaCustomerStep : 0;
-    const show=current===0 && selected;
-    floatButton.hidden=!show;
-    floatButton.disabled=!selected;
-  }
-
-  options.forEach(function(option){
-    option.addEventListener('click',function(){
-      options.forEach(function(item){ item.classList.remove('selected'); });
-      option.classList.add('selected');
-      syncButton();
-    });
-  });
-
-  floatButton.addEventListener('click',function(event){
-    event.preventDefault();
-    const selected=document.querySelector('#propertyOptions .client-option.selected');
-    if(!selected) return;
-    if(typeof window.__rumahnusaShowCustomerStep==='function'){
-      window.__rumahnusaShowCustomerStep(1);
-    } else {
-      steps.forEach(function(step,index){ step.classList.toggle('active',index===1); });
-      badges.forEach(function(badge,index){ badge.classList.toggle('active',index===1); });
-      window.__rumahnusaCustomerStep=1;
-    }
-    syncButton();
-  });
-
-  form.querySelectorAll('[data-back]').forEach(function(button){
-    button.addEventListener('click',function(){
-      setTimeout(syncButton,0);
-    });
-  });
-
-  const originalShow=window.__rumahnusaShowCustomerStep;
-  if(originalShow){
-    window.__rumahnusaShowCustomerStep=function(index){
-      originalShow(index);
-      syncButton();
-    };
-  }
-
-  window.__rumahnusaCustomerStep=0;
-  syncButton();
-})();
-</script>
 
 
 </body>
