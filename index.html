@@ -631,7 +631,13 @@ body.rn-site-unlocked.rn-category-selected > #properties{display:none!important}
       <input id="rnGateEmail" type="email" autocomplete="email" placeholder="Email" required>
       <div class="rn-password-wrap">
         <input id="rnGatePassword" type="password" autocomplete="current-password" placeholder="Password" required>
-        <button id="rnGatePasswordToggle" class="rn-password-toggle" type="button" aria-label="Show password" aria-pressed="false">◉</button>
+        <button id="rnGatePasswordToggle" class="rn-password-toggle" type="button" aria-label="Show password" aria-pressed="false" title="Show password">
+  <svg id="rnGatePasswordEye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path>
+    <circle cx="12" cy="12" r="3"></circle>
+    <path d="M3 3l18 18"></path>
+  </svg>
+</button>
       </div>
     </div>
     <div class="rn-gate-actions">
@@ -2144,13 +2150,23 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 
   signIn.addEventListener('click',function(){login('signin');});
   const passwordToggle=document.getElementById('rnGatePasswordToggle');
+  const passwordEye=document.getElementById('rnGatePasswordEye');
+  function setGatePasswordEye(visible){
+    if(passwordEye){
+      passwordEye.innerHTML=visible
+        ? '<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle>'
+        : '<path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="3"></circle><path d="M3 3l18 18"></path>';
+    }
+    passwordToggle.setAttribute('aria-label',visible?'Hide password':'Show password');
+    passwordToggle.title=visible?'Hide password':'Show password';
+    passwordToggle.setAttribute('aria-pressed',String(visible));
+  }
   if(passwordToggle) passwordToggle.addEventListener('click',function(){
     const showing=password.type==='text';
     password.type=showing?'password':'text';
-    passwordToggle.textContent=showing?'◉':'◌';
-    passwordToggle.setAttribute('aria-label',showing?'Show password':'Hide password');
-    passwordToggle.setAttribute('aria-pressed',String(!showing));
+    setGatePasswordEye(!showing);
   });
+  setGatePasswordEye(false);
 
   continueBtn.addEventListener('click',async function(){
     if(!currentUser){profileStatus.textContent='Please log in first.';return;}
