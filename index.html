@@ -599,8 +599,8 @@ footer p {
 </header>
 
 <section id="rnCustomerGate" class="rn-customer-gate" aria-label="RumahNusa customer access">
-  <h2>Welcome to RumahNusa</h2>
-  <p>Sign in first, then tell us your name, age and gender. After that, choose exactly the type of home you want to see.</p>
+  <h2>Welcome to RumahNusa Real Estate</h2>
+  <p>Welcome to RumahNusa, where finding a home is about more than beautiful rooms. We want you to discover a place that feels comfortable, peaceful, welcoming, and right for the life you want to build. Take your time, explore with confidence, and let RumahNusa help you find a home where you can feel at ease. Please log in or create your account to begin your personal home search.</p>
 
   <div id="rnGateLogin">
     <div class="rn-gate-grid">
@@ -615,8 +615,8 @@ footer p {
   </div>
 
   <div id="rnGateProfile" class="rn-gate-profile" hidden>
-    <h3>Before you choose a home</h3>
-    <p>Complete these details first. Your choices will stay with your RumahNusa request.</p>
+    <h3>Tell us a little about you</h3>
+    <p>Your name, gender, and age help RumahNusa understand who we are welcoming and keep your home search personal.</p>
     <div class="rn-gate-grid">
       <input id="rnGateName" type="text" placeholder="Your full name" autocomplete="name" required>
       <select id="rnGateGender" required>
@@ -633,8 +633,8 @@ footer p {
   </div>
 
   <div id="rnGateCategory" class="rn-gate-category">
-    <h3>Choose the type of home you want</h3>
-    <p class="rn-gate-category-note">Tap one category. Its homes will open immediately. You will not see other home types unless you choose another category.</p>
+    <h3>Choose the kind of home you want to explore</h3>
+    <p class="rn-gate-category-note">Tap one category and its homes will open immediately. You will only see that category until you choose a different one.</p>
     <div id="rnGateCategoryOptions" class="client-options">
       <button type="button" class="client-option" data-gate-property="Apartemen"><strong>Apartment</strong><small>Open apartment homes and room choices.</small></button>
       <button type="button" class="client-option" data-gate-property="Separate Rumah"><strong>Separate Rumah</strong><small>Open separate houses and their room choices.</small></button>
@@ -785,7 +785,7 @@ footer p {
       <p>RumahNusa menawarkan pengalaman mencari hunian yang nyaman, indah, dan menenangkan. Masuk atau buat akun terlebih dahulu. Setelah Anda masuk, pilih jenis rumah yang Anda inginkan dan koleksi rumah dari jenis tersebut akan langsung terbuka untuk Anda.</p>
     </div>
 
-    <div class="client-steps" aria-label="Profil progress" id="rnClientSteps" hidden>
+    <div class="client-steps" aria-label="Profil progress">
       <span class="client-step active">1. Profil</span>
       <span class="client-step">2. Rumah</span>
       <span class="client-step">3. Kehidupan</span>
@@ -793,27 +793,11 @@ footer p {
       <span class="client-step">5. Kotak Masuk</span>
     </div>
 
-    <div id="rnWelcomeGate" class="rn-welcome-gate">
-      <h3>Selamat datang di RumahNusa</h3>
-      <p>RumahNusa adalah tempat untuk menemukan hunian yang nyaman, indah, dan memberi Anda ruang untuk hidup dengan tenang. Silakan masuk atau buat akun terlebih dahulu. Setelah masuk, pilihan rumah akan terbuka dan Anda dapat memilih jenis rumah yang sesuai dengan kehidupan Anda.</p>
-      <div class="rn-welcome-grid">
-        <input id="rnGateName" type="text" placeholder="Nama lengkap">
-        <select id="rnGateGender"><option value="">Pria atau wanita</option><option value="Pria">Pria</option><option value="Wanita">Wanita</option></select>
-        <input id="rnGateAge" type="number" min="18" max="120" placeholder="Usia">
-        <input id="rnGateEmail" type="email" placeholder="Email">
-        <input id="rnGatePassword" type="password" minlength="6" placeholder="Password minimal 6 karakter">
-      </div>
-      <div class="rn-welcome-actions">
-        <button class="btn" id="rnGateSignIn" type="button">Masuk</button>
-        <button class="btn secondary" id="rnGateSignUp" type="button">Buat Akun &amp; Lanjutkan</button>
-      </div>
-      <p id="rnGateState" class="rn-auth-message">Masuk atau buat akun untuk membuka pilihan rumah.</p>
-    </div>
     <form id="clientProfilForm">
       <div class="client-form-step active" data-step="1">
         <h3>Pilih jenis rumah Anda</h3>
         <p>Setelah Anda masuk ke RumahNusa, ketuk satu jenis rumah dan koleksi rumah dari jenis tersebut akan langsung terbuka.</p>
-        <div class="client-options" id="propertyOptions" hidden>
+        <div class="client-options" id="propertyOptions">
           <button type="button" class="client-option" data-value="Apartemen"><strong>Apartemen</strong><small>Hunian kota modern dengan fasilitas bersama.</small></button>
           <button type="button" class="client-option" data-value="Separate Rumah"><strong>Separate Rumah</strong><small>Rumah pribadi dengan pilihan 4–11 kamar tidur.</small></button>
           <button type="button" class="client-option" data-value="Vila"><strong>Vila</strong><small>Hunian nyaman dengan ruang luar yang menyenangkan.</small></button>
@@ -1498,13 +1482,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     .rn-agent-toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}
     .rn-agent-thread{max-height:360px;overflow:auto;border:1px solid #d9e2ec;border-radius:8px;padding:10px;background:#f8fbfd}
     .rn-live-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#20a464;margin-right:6px}
-    .rn-welcome-gate{background:linear-gradient(180deg,#ffffff,#f7fbff);border:1px solid #d9e2ec;border-radius:16px;padding:22px;margin:18px 0}
-    .rn-welcome-gate h3{margin:0 0 10px;font-size:25px;color:#16324f}
-    .rn-welcome-gate>p{line-height:1.7;color:#486581}
-    .rn-welcome-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
-    .rn-welcome-grid input,.rn-welcome-grid select{width:100%;box-sizing:border-box;border:1px solid #bcccdc;border-radius:9px;padding:12px;font:inherit;background:#fff}
-    .rn-welcome-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-    @media(max-width:650px){.rn-welcome-grid{grid-template-columns:1fr}.rn-welcome-gate h3{font-size:21px}}
+
   `;
   document.head.appendChild(style);
 
@@ -1523,7 +1501,6 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       <button class="btn secondary" id="rnSignOut" type="button" hidden>Keluar</button>
     </div>
   `;
-  authPanel.hidden=true;
   inbox.insertBefore(authPanel,inbox.firstChild);
 
   const agentPanel=document.createElement('div');
@@ -1565,19 +1542,6 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   const agentComposer=document.getElementById('rnAgentComposer');
   const agentSend=document.getElementById('rnAgentSend');
   const claimBtn=document.getElementById('rnClaimAgent');
-  const welcomeGate=document.getElementById('rnWelcomeGate');
-  const clientForm=document.getElementById('clientProfilForm');
-  const clientSteps=document.getElementById('rnClientSteps');
-  const gateName=document.getElementById('rnGateName');
-  const gateGender=document.getElementById('rnGateGender');
-  const gateAge=document.getElementById('rnGateAge');
-  const gateEmail=document.getElementById('rnGateEmail');
-  const gatePassword=document.getElementById('rnGatePassword');
-  const gateSignIn=document.getElementById('rnGateSignIn');
-  const gateSignUp=document.getElementById('rnGateSignUp');
-  const gateState=document.getElementById('rnGateState');
-  const propertyOptions=document.getElementById('propertyOptions');
-  const categoryCollection=document.getElementById('rnCategoryCollection');
 
   function esc(s){return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/\n/g,'<br>');}
   function status(t){authState.textContent=t;}
@@ -1591,28 +1555,6 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       target.appendChild(b);
     });
     target.scrollTop=target.scrollHeight;
-  }
-  function gateStatus(t){ if(gateState) gateState.textContent=t; if(authState) authState.textContent=t; }
-  function gateValues(){
-    return {name:(gateName?.value||'').trim(),gender:gateGender?.value||'',age:Number(gateAge?.value||0),email:(gateEmail?.value||'').trim(),password:gatePassword?.value||''};
-  }
-  function validateGate(v){
-    if(!v.name || !v.gender || !v.age || v.age<18){gateStatus('Masukkan nama, pilih pria atau wanita, dan usia minimal 18 tahun.');return false;}
-    if(!v.email || !v.email.includes('@')){gateStatus('Masukkan email yang benar.');return false;}
-    if(v.password.length<6){gateStatus('Password harus minimal 6 karakter.');return false;}
-    return true;
-  }
-  async function saveGateProfile(user,v){
-    const {error}=await client.from('profiles').update({full_name:v.name,email:v.email}).eq('id',user.id);
-    if(error) throw error;
-  }
-  function openHouseChoices(){
-    if(welcomeGate) welcomeGate.hidden=true;
-    if(clientForm) clientForm.hidden=false;
-    if(clientSteps) clientSteps.hidden=false;
-    if(propertyOptions) propertyOptions.hidden=false;
-    if(categoryCollection) categoryCollection.hidden=true;
-    document.querySelector('#client-profile')?.scrollIntoView({behavior:'smooth',block:'start'});
   }
   async function getProfile(user){
     const {data,error}=await client.from('profiles').select('*').eq('id',user.id).maybeSingle();
@@ -1789,7 +1731,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     emailInput.value=user.email||'';passwordInput.value='';
     status('Masuk sebagai '+(state.profile.role==='agent'?'agen':'pelanggan')+'.');
     if(state.profile.role==='agent'){agentPanel.hidden=false;inbox.querySelector('.inbox-thread').hidden=true;await loadAgentConversations();}
-    else{agentPanel.hidden=true;inbox.querySelector('.inbox-thread').hidden=false;openHouseChoices();const conv=await ensureCustomerConversation();if(conv){await loadConversationMessages(conv.id,document.getElementById('messageList'));subscribeConversation(conv.id,document.getElementById('messageList'));}}
+    else{agentPanel.hidden=true;inbox.querySelector('.inbox-thread').hidden=false;const conv=await ensureCustomerConversation();if(conv){await loadConversationMessages(conv.id,document.getElementById('messageList'));subscribeConversation(conv.id,document.getElementById('messageList'));}}
   }
   async function loadAgentConversations(){
     if(!state.user||state.profile?.role!=='agent')return;
@@ -1814,24 +1756,6 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     subscribeConversation(conv.id,agentThread);
     await client.from('messages').update({read_at:new Date().toISOString()}).eq('conversation_id',conv.id).eq('sender_role','customer').is('read_at',null);
   }
-  async function gateSignInNow(){
-    const v=gateValues(); if(!validateGate(v)) return;
-    gateStatus('Memeriksa akun RumahNusa...');
-    const {data,error}=await client.auth.signInWithPassword({email:v.email,password:v.password});
-    if(error){gateStatus('Belum dapat masuk: '+error.message);return;}
-    try{await saveGateProfile(data.user,v);await applyUser(data.user);gateStatus('Selamat datang kembali. Pilihan rumah sekarang terbuka.');}
-    catch(e){gateStatus('Akun masuk, tetapi profil belum tersimpan: '+e.message);}
-  }
-  async function gateSignUpNow(){
-    const v=gateValues(); if(!validateGate(v)) return;
-    gateStatus('Membuat akun RumahNusa...');
-    const {data,error}=await client.auth.signUp({email:v.email,password:v.password,options:{data:{full_name:v.name,gender:v.gender,age:v.age}}});
-    if(error){gateStatus('Akun belum dapat dibuat: '+error.message);return;}
-    if(data.user && !data.session){gateStatus('Akun dibuat. Periksa email konfirmasi, lalu masuk untuk membuka pilihan rumah.');return;}
-    if(data.user){try{await saveGateProfile(data.user,v);await applyUser(data.user);gateStatus('Akun siap. Pilihan rumah sekarang terbuka.');}catch(e){gateStatus('Akun dibuat, tetapi profil belum tersimpan: '+e.message);}}
-  }
-  gateSignIn?.addEventListener('click',gateSignInNow);
-  gateSignUp?.addEventListener('click',gateSignUpNow);
   signIn.addEventListener('click',signInNow);
   signUp.addEventListener('click',signUpNow);
   signOut.addEventListener('click',async()=>{await stopChannel();await client.auth.signOut();state.user=null;state.profile=null;state.conversation=null;state.agentSelected=null;signIn.hidden=false;signUp.hidden=false;signOut.hidden=true;agentPanel.hidden=true;status('Anda sudah keluar.');});
@@ -1855,10 +1779,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     agentComposer.value='';
     await loadConversationMessages(state.agentSelected.id,agentThread);
   });
-  if(clientForm) clientForm.hidden=true;
-  if(propertyOptions) propertyOptions.hidden=true;
-  if(clientSteps) clientSteps.hidden=true;
-  client.auth.getSession().then(({data})=>{if(data.session)applyUser(data.session.user);else if(welcomeGate)welcomeGate.hidden=false;});
+  client.auth.getSession().then(({data})=>{if(data.session)applyUser(data.session.user);});
   client.auth.onAuthStateChange((_event,session)=>{if(session&&!state.user)applyUser(session.user);});
 })();
 </script>
