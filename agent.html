@@ -78,11 +78,25 @@ async function loadConversations(){
    .select('*')
    .or('agent_id.eq.'+user.id+',agent_id.is.null')
    .order('updated_at',{ascending:false});
- if(error){setStatus('Unable to load conversations: '+error.message,false,true);return}
- await renderConversations(data||[]);
+ if(error){
+   setStatus('Unable to load conversations: '+error.message,false,true);
+   return;
+ }
+ const rows=data||[];
+ await renderConversations(rows);
  if(selected){
-   const fresh=(data||[]).find(x=>x.id===selected.id);
-   if(fresh){selected=fresh;await loadMessages()}
+   const fresh=rows.find(x=>x.id===selected.id);
+   if(fresh){selected=fresh;await loadMessages();}
+ } else if(rows.length){
+   // Automatically open the newest customer conversation so a new message
+   // is visible without requiring the agent to tap another control first.
+   selected=rows[0];
+   $('title').textContent=selected.property_name||'Customer conversation';
+   const profiles=await getProfileEmails([selected]);
+   $('customerEmail').textContent='Email: '+(customerEmail(selected)||profiles[selected.customer_id]?.email||'Email unavailable');
+   $('claim').classList.toggle('hidden',!!selected.agent_id);
+   await loadMessages();
+   subscribeToMessages();
  }
  lastConversationRefresh=Date.now();
 }
@@ -115,7 +129,8 @@ async function renderConversations(rows){
 async function selectConversation(conv){
  if(!conv)return;
  selected=conv;
- await renderConversations([...(await getCurrentConversations())]);
+ const rows=await getCurrentConversations();
+ await renderConversations(rows);
  $('title').textContent=conv.property_name||'Customer conversation';
  const profiles=await getProfileEmails([conv]);
  $('customerEmail').textContent='Email: '+(customerEmail(conv)||profiles[conv.customer_id]?.email||'Email unavailable');
@@ -183,9 +198,9 @@ async function startAgent(){
  if(!user){setStatus('No active agent session. Please open the inbox from the agent device session.',false,true);return}
  await loadConversations();
  subscribeToInbox();
- subscribeToMessages();
- // Realtime is primary. A 1-second fallback keeps the inbox fresh if a realtime
- // connection temporarily drops or a mobile network changes.
+ if(selected) subscribeToMessages();
+ // Realtime is primary. The 1-second fallback also checks for newly created
+ // conversations so messages remain visible on mobile networks.
  setInterval(()=>{if(document.visibilityState==='visible'&&Date.now()-lastConversationRefresh>=1000)loadConversations()},1000);
 }
 startAgent().catch(e=>setStatus(e.message||'Unable to open the inbox.',false,true));
