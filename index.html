@@ -1247,7 +1247,12 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
   function updateBudgetPreview() {
     if (!clientBudget) return;
     const amount = Number(clientBudget.value);
-    const priceText = amount > 0 ? '
+    const priceText = amount > 0 ? '$' + amount.toLocaleString('en-US') : 'Not selected yet';
+    const category = state.property || 'your selected property';
+    const transaction = purpose.value || 'Beli';
+    selectionInfo.innerHTML = '<strong>' + category + '</strong> — ' + rooms.value + ' · ' + transaction + ' · <strong>Price / budget: ' + priceText + '</strong>. This price will be sent to the RumahNusa agent inbox before you continue.';
+  }
+  clientBudget.addEventListener('input', updateBudgetPreview);
 
   document.querySelectorAll('#propertyOptions .client-option').forEach(btn => btn.addEventListener('click', () => {
     document.querySelectorAll('#propertyOptions .client-option').forEach(x => x.classList.remove('selected'));
@@ -1264,7 +1269,7 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
       '<strong>' + v('clientName') + '</strong><br>' +
       state.property + ' · ' + state.purpose + '<br>' +
       v('rooms') + '<br>' +
-      'Harga / anggaran: 
+      'Harga / anggaran: $' + Number(v('clientBudget') || 0).toLocaleString('en-US') + '<br>' +
       'Kota pilihan: ' + v('clientCityWant') + '<br>' +
       'Rumahhold: ' + v('household') + ' · Kota saat ini: ' + v('clientCity') + '<br>' +
       'Email: ' + v('clientEmail') + ' · Telepon: ' + v('clientPhone');
