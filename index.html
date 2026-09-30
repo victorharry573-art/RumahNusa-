@@ -339,9 +339,19 @@ body.rn-site-unlocked footer { display:none !important; }
 }
 .rn-customer-gate h2 { color:#102a43; margin-bottom:8px; }
 .rn-customer-gate p { color:#627d98; }
-.rn-password-wrap{position:relative;display:flex;align-items:center}
-.rn-password-wrap input{width:100%;padding-right:48px}
-.rn-password-toggle{position:absolute;right:7px;top:50%;transform:translateY(-50%);width:38px;height:38px;border:0;border-radius:8px;background:#eef6ff;color:#075985;cursor:pointer;font-size:18px}
+.rn-password-wrap{position:relative;display:flex;align-items:center;width:100%}
+.rn-password-wrap input{width:100%;padding-right:58px!important;box-sizing:border-box}
+.rn-password-toggle{
+  position:absolute;right:5px;top:50%;transform:translateY(-50%);
+  width:46px;height:42px;min-width:46px;padding:0;margin:0;
+  display:flex;align-items:center;justify-content:center;
+  border:0;border-radius:8px;background:transparent;color:#102a43;
+  cursor:pointer;z-index:10;touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+}
+.rn-password-toggle svg{width:25px;height:25px;display:block;pointer-events:none}
+.rn-password-toggle:hover{background:#eef6ff}
+.rn-password-toggle:active{background:#dbeafe}
 .rn-password-toggle:focus{outline:2px solid #0ea5e9;outline-offset:2px}
 body.rn-site-locked > :not(header):not(#rnCustomerGate){display:none!important}
 body.rn-site-locked header nav,body.rn-site-locked header .lang-switch{display:none!important}
@@ -1517,9 +1527,9 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       <div class="rn-password-wrap">
         <input id="rnAuthPassword" type="password" placeholder="Password" autocomplete="current-password">
         <button class="rn-password-toggle" id="rnPasswordToggle" type="button" aria-label="Tampilkan password" aria-pressed="false" title="Tampilkan password">
-          <svg id="rnPasswordEye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg id="rnPasswordEye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path>
-            <circle cx="12" cy="12" r="2.5"></circle>
+            <circle cx="12" cy="12" r="3"></circle>
           </svg>
         </button>
       </div>
