@@ -351,7 +351,7 @@ body.rn-site-unlocked footer { display:none !important; }
 .rn-customer-gate p { color:#627d98; }
 .rn-password-wrap{position:relative;display:flex;align-items:center;width:100%}
 .rn-password-wrap input{width:100%;padding-right:58px!important;box-sizing:border-box}
-.rn-password-toggle{position:absolute;right:4px;top:50%;transform:translateY(-50%);z-index:30;width:50px;height:50px;border:0;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#17324d;border-radius:10px;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.rn-password-toggle{position:absolute;right:4px;top:50%;transform:translateY(-50%);z-index:999;width:56px;height:56px;border:0;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#17324d;border-radius:12px;touch-action:manipulation;-webkit-tap-highlight-color:transparent;pointer-events:auto;user-select:none}
 .rn-password-toggle svg{width:25px;height:25px;pointer-events:none;display:block}
 .rn-password-toggle:hover{background:#eef6ff}
 .rn-password-toggle:active{background:#dbeafe}
@@ -1539,13 +1539,15 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   }
 
   if(passwordToggle && password){
-    passwordToggle.addEventListener('click',function(event){
+    // Mobile-safe eye control: one tap toggles exactly once.
+    passwordToggle.addEventListener('pointerup',function(event){
       event.preventDefault();
       event.stopPropagation();
       const showing=password.type==='text';
       password.type=showing?'password':'text';
       setGatePasswordEye(!showing);
-    });
+      password.focus();
+    },{passive:false});
     setGatePasswordEye(false);
   }
 
