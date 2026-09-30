@@ -55,7 +55,7 @@ button.secondary{background:#e5edf4;color:#183b56}.actions{display:flex;gap:8px;
 </div>
 </section>
 </main>
-<script src="supabase-config.js"></script>
+<script src="supabase-config.js?v=20261001"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (function(){
@@ -63,7 +63,15 @@ const URL=window.RUMAHNUSA_SUPABASE_URL||'https://vuhrkijzjmnbsaqnpdmg.supabase.
 const KEY=window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY;
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/\n/g,'<br>');
-if(!KEY){$('status').textContent='Supabase configuration is not available.';return}
+if(!KEY){
+  $('status').textContent='Supabase configuration is still loading. Please refresh once.';
+  setTimeout(function(){
+    const retryKey=window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY;
+    if(retryKey){ location.reload(); }
+    else { $('status').textContent='Supabase configuration is not available. Please refresh the page again.'; }
+  },1200);
+  return
+}
 const db=window.supabase.createClient(URL,KEY);
 let user=null,selected=null,liveChannel=null,messageChannel=null,lastConversationRefresh=0;
 
