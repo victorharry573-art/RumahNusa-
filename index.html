@@ -749,7 +749,7 @@ footer p {
             </select>
             <small id="purposeNote" style="color:#627d98;">Pilih beli atau sewa sesuai kategori yang Anda pilih.</small>
           </div>
-          <div class="client-field full" id="rentalTermOptions" hidden>
+          <div class="client-field full" id="rentalTermOptions" hidden style="display:none !important">
             <label for="rentalTerm">Lama sewa</label>
             <select id="rentalTerm">
               <option value="1 tahun">1 tahun</option>
@@ -1181,12 +1181,14 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
       purpose.value = 'Beli';
       state.purpose = 'Beli';
       rentalTermOptions.hidden = true;
+      rentalTermOptions.style.display = 'none';
       rentalTerm.value = '';
       state.rentalTerm = '';
       purposeNote.textContent = 'Properti ini hanya tersedia untuk dibeli. Hanya apartemen yang dapat disewa.';
     } else {
       purposeNote.textContent = 'Apartemen dapat dibeli atau disewa. Jika disewa, pilih lama sewa 1–5 tahun.';
       rentalTermOptions.hidden = purpose.value !== 'Sewa';
+      rentalTermOptions.style.display = purpose.value === 'Sewa' ? '' : 'none';
       if (purpose.value !== 'Sewa') {
         rentalTerm.value = '';
         state.rentalTerm = '';
@@ -1198,6 +1200,7 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
     state.purpose = purpose.value;
     if (purpose.value === 'Sewa' && state.property === 'Apartemen') {
       rentalTermOptions.hidden = false;
+      rentalTermOptions.style.display = '';
       state.rentalTerm = rentalTerm.value;
     } else {
       rentalTermOptions.hidden = true;
@@ -1813,6 +1816,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     purpose.value='Beli';
     purposeNote.textContent = name==='Apartemen' ? 'Apartments can be bought or rented for 1–5 years.' : 'SALE ONLY — This property category is permanently for sale. Rental is not available.';
     rentalWrap.hidden=name!=='Apartemen';
+    rentalWrap.style.display = name==='Apartemen' ? (purpose.value==='Sewa' ? '' : 'none') : 'none';
     floorWrap.hidden=!(name==='Separate Rumah'||name==='Neighborhood Rumah');
     layoutTitle.textContent=d.title+' details';
     layoutDetails.innerHTML=d.listings.map(x=>'<div class="house-layout"><strong>'+x[0]+'</strong><p>'+x[3]+'</p></div>').join('');
@@ -1827,7 +1831,10 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   });
 
   purpose.addEventListener('change',()=>{
-    rentalWrap.hidden=purpose.value!=='Sewa'||!document.querySelector('#propertyOptions .client-option.selected')||document.querySelector('#propertyOptions .client-option.selected').dataset.value!=='Apartemen';
+    const selectedCategory=document.querySelector('#propertyOptions .client-option.selected')?.dataset.value;
+    const isApartment=selectedCategory==='Apartemen';
+    rentalWrap.hidden=!isApartment||purpose.value!=='Sewa';
+    rentalWrap.style.display=isApartment&&purpose.value==='Sewa'?'':'none';
   });
 
   const originalNext=document.querySelector('.client-form-step[data-step="3"] .client-next');
