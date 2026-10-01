@@ -1144,7 +1144,7 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
   let current = 0;
   const state = { property: '', purpose: 'Beli', rentalTerm: '' };
 
-  const flowDomIndex = [2,0,1,3];
+  const flowDomIndex = [0,1,2,3,4];
   function showStep(index) {
     current = Math.max(0, Math.min(index, flowDomIndex.length - 1));
     const domIndex = flowDomIndex[current];
@@ -1159,16 +1159,15 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
 
   form.querySelectorAll('.client-next').forEach(btn => btn.addEventListener('click', () => {
     if (current === 0) {
-      const name = document.getElementById('clientName');
-      const gender = document.getElementById('clientJenis kelamin');
-      const age = document.getElementById('clientUsia');
-      if (!name.reportValidity() || !gender.reportValidity() || !age.reportValidity()) return;
-      if (Number(age.value) < 18) { age.setCustomValidity('Please enter an age of 18 or older.'); age.reportValidity(); age.setCustomValidity(''); return; }
+      if (!state.property) {
+        const box = document.getElementById('propertyOptions');
+        if (box) box.scrollIntoView({behavior:'smooth', block:'center'});
+        return;
+      }
+      showStep(1);
+      return;
     }
     if (current === 1) {
-      if (!state.property) return;
-    }
-    if (current === 2) {
       if (state.property !== 'Apartemen' && purpose.value !== 'Beli') {
         purpose.value = 'Beli';
         state.purpose = 'Beli';
@@ -1181,13 +1180,32 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
       if (!budgetEl || !budgetEl.reportValidity()) return;
       state.purpose = purpose.value;
       state.rentalTerm = purpose.value === 'Sewa' ? rentalTerm.value : '';
+      showStep(2);
+      return;
+    }
+    if (current === 2) {
+      const name = document.getElementById('clientName');
+      const gender = document.getElementById('clientJenis kelamin');
+      const age = document.getElementById('clientUsia');
+      if (!name.reportValidity() || !gender.reportValidity() || !age.reportValidity()) return;
+      if (Number(age.value) < 18) {
+        age.setCustomValidity('Please enter an age of 18 or older.');
+        age.reportValidity();
+        age.setCustomValidity('');
+        return;
+      }
+      showStep(3);
+      return;
     }
     if (current === 3) {
       const required = ['clientPhone','clientEmail','clientCity','clientMarital','household','clientCityWant'];
-      for (const id of required) { const el=document.getElementById(id); if (!el.reportValidity()) return; }
+      for (const id of required) {
+        const el = document.getElementById(id);
+        if (!el || !el.reportValidity()) return;
+      }
       buildSummary();
+      showStep(4);
     }
-    showStep(current + 1);
   }));
 
   const purpose = document.getElementById('purpose');
@@ -1492,15 +1510,20 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   }
 
   function validGatePhone(){
-    const phone=normalizePhone(phoneNumber.value);
-    if(!phoneCountry?.value){phoneStatus.textContent='Please select your country first.';return null;}
+    let country=phoneCountry?.value||'';
+    if(!country) country='+62';
+    const raw=String(phoneNumber.value||'').trim().replace(/[()\\-\.\s]/g,'');
+    let phone=raw;
+    if(!phone.startsWith('+')){
+      phone=raw.replace(/^0+/,'');
+      phone=country+phone;
+    }
     if(!/^\\+[1-9]\\d{7,14}$/.test(phone)){
-      phoneStatus.textContent='Enter a valid phone number with country code.';
+      phoneStatus.textContent='Enter a valid phone number.';
       return null;
     }
     return phone;
   }
-
   function continueToVerification(){
     const phone=validGatePhone();
     if(!phone)return;
@@ -1595,7 +1618,13 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     status('Masuk sebagai '+(profile.role==='agent'?'agen':'pelanggan')+'.');
   }
 
-  phoneContinue.addEventListener('click',continueToVerification);
+  phoneContinue.disabled=false;
+  phoneContinue.style.pointerEvents='auto';
+  phoneContinue.addEventListener('click',function(event){
+    event.preventDefault();
+    event.stopPropagation();
+    continueToVerification();
+  });
   verificationMethod.addEventListener('change',chooseVerificationMethod);
   confirmationButton.addEventListener('click',sendPhoneCode);
   phoneVerifyCode.addEventListener('click',verifyPhoneCode);
