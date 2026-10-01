@@ -649,31 +649,27 @@ body.rn-gate-active{margin:0;}
       <div class="rn-welcome-copy">
         <h2>Welcome to RumahNusa Real Estate</h2>
         <p>RumahNusa is a place where beautiful homes, comfort, privacy, and peace of mind come together. We help you discover a home that feels right for your everyday life, your family, and your future.</p>
-        <p>Once you log in, you can choose the home category you want and see homes from that category only.</p>
-        <p class="rn-welcome-instruction"><strong>Log in to begin your private RumahNusa home search.</strong></p>
+        <p>RumahNusa is created for people who want more than a property. It is a place to discover beautiful homes, comfortable spaces, privacy, peace of mind, and a lifestyle you can feel proud to call your own.</p>
+        <p>Take your time, discover homes that feel right for your life, and choose a place where comfort, family, rest, and beautiful everyday moments can come together.</p>
+        <p class="rn-welcome-instruction"><strong>Enter your name, choose your gender, tell us your age, and begin your private RumahNusa home search.</strong></p>
       </div>
-      <div id="rnGateLoginStep" class="rn-gate-step">
-        <label for="rnGateEmail">Email</label>
-        <input id="rnGateEmail" type="email" autocomplete="email" placeholder="Your email">
-        <label for="rnGatePassword">Password</label>
-        <div class="rn-password-wrap">
-          <input id="rnGatePassword" type="password" autocomplete="current-password" placeholder="Your password">
-          <button id="rnGatePasswordEye" class="rn-password-eye" type="button" aria-label="Show password" aria-pressed="false">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path><circle cx="12" cy="12" r="2.7"></circle></svg>
-          </button>
-        </div>
-        <button id="rnGateLoginButton" class="btn" type="button">Login</button>
-        <p id="rnGateLoginStatus" class="rn-gate-status" aria-live="polite"></p>
-      </div>
-      <div id="rnGateIdentityStep" class="rn-gate-step" hidden>
+      <div id="rnGateIdentityStep" class="rn-gate-step">
         <label for="rnGateName">Your name</label>
-        <input id="rnGateName" type="text" autocomplete="name" placeholder="Your full name">
-        <label>Are you a man or woman?</label>
-        <div class="rn-gender-options">
-          <button type="button" class="rn-gender-option" data-gender="Female">Woman</button>
-          <button type="button" class="rn-gender-option" data-gender="Male">Man</button>
+        <input id="rnGateName" type="text" autocomplete="name" placeholder="Enter your name">
+        <div id="rnGateGenderStep" hidden>
+          <label>Are you a man or woman?</label>
+          <div class="rn-gender-options">
+            <button type="button" class="rn-gender-option" data-gender="Female">Woman</button>
+            <button type="button" class="rn-gender-option" data-gender="Male">Man</button>
+          </div>
         </div>
-        <label for="rnGateAge">Your age</label>
+        <div id="rnGateAgeStep" hidden>
+          <label for="rnGateAge">Tell us your age</label>
+          <input id="rnGateAge" type="number" min="18" max="120" inputmode="numeric" placeholder="18 or older">
+        </div>
+        <button id="rnGateIdentityContinue" class="btn" type="button" disabled>Continue to RumahNusa</button>
+        <p id="rnGateLoginStatus" class="rn-gate-status" aria-live="polite"></p>
+      </div>        <label for="rnGateAge">Your age</label>
         <input id="rnGateAge" type="number" min="18" max="120" inputmode="numeric" placeholder="Your age">
         <button id="rnGateIdentityContinue" class="btn" type="button" disabled>Continue to homes</button>
       </div>
@@ -862,40 +858,41 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
 
 <script>
 (function(){
-  const loginStep=document.getElementById('rnGateLoginStep'), identityStep=document.getElementById('rnGateIdentityStep');
-  const loginBtn=document.getElementById('rnGateLoginButton'), email=document.getElementById('rnGateEmail'), password=document.getElementById('rnGatePassword');
-  const eye=document.getElementById('rnGatePasswordEye'), status=document.getElementById('rnGateLoginStatus'), name=document.getElementById('rnGateName'), age=document.getElementById('rnGateAge'), identityContinue=document.getElementById('rnGateIdentityContinue');
-  const welcome=document.getElementById('rnWelcomeGate'), form=document.getElementById('clientProfilForm');
-  const genders=Array.from(document.querySelectorAll('#rnGateIdentityStep .rn-gender-option')); let gender='';
-  if(!loginBtn||!form)return;
-  eye.addEventListener('click',function(){
-    const show=password.type==='password'; password.type=show?'text':'password';
-    eye.setAttribute('aria-label',show?'Hide password':'Show password'); eye.setAttribute('aria-pressed',show?'true':'false');
-    eye.innerHTML=show?'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18"></path><path d="M10.6 5.9A10.8 10.8 0 0 1 12 5.8c6 0 9.5 6.2 9.5 6.2a17.2 17.2 0 0 1-3.1 3.7"></path><path d="M6.4 7.2C3.9 9.1 2.5 12 2.5 12s3.5 6 9.5 6c1.4 0 2.7-.3 3.8-.8"></path></svg>':'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path><circle cx="12" cy="12" r="2.7"></circle></svg>';
+  const genderStep=document.getElementById('rnGateGenderStep');
+  const ageStep=document.getElementById('rnGateAgeStep');
+  const status=document.getElementById('rnGateLoginStatus');
+  const name=document.getElementById('rnGateName');
+  const age=document.getElementById('rnGateAge');
+  const identityContinue=document.getElementById('rnGateIdentityContinue');
+  const welcome=document.getElementById('rnWelcomeGate');
+  const form=document.getElementById('clientProfilForm');
+  const genders=Array.from(document.querySelectorAll('#rnGateIdentityStep .rn-gender-option'));
+  let gender='';
+  if(!form||!name||!age||!identityContinue)return;
+  function valid(){
+    const a=Number(age.value);
+    identityContinue.disabled=!(name.value.trim()&&gender&&a>=18&&a<=120);
+  }
+  name.addEventListener('input',function(){ if(name.value.trim())genderStep.hidden=false; valid(); });
+  genders.forEach(function(button){
+    button.addEventListener('click',function(){
+      gender=button.dataset.gender||'';
+      genders.forEach(function(item){item.classList.toggle('selected',item===button);});
+      ageStep.hidden=false;
+      age.focus();
+      valid();
+    });
   });
-  function valid(){identityContinue.disabled=!(name.value.trim()&&gender&&Number(age.value)>=18);}
-  genders.forEach(b=>b.addEventListener('click',()=>{gender=b.dataset.gender||'';genders.forEach(x=>x.classList.toggle('selected',x===b));valid();}));
-  [name,age].forEach(x=>x.addEventListener('input',valid));
-  loginBtn.addEventListener('click',async()=>{
-    const e=email.value.trim(),p=password.value;if(!e||!p){status.textContent='Enter your email and password.';return;}
-    loginBtn.disabled=true;status.textContent='Logging in…';
-    try{
-      if(!window.supabase||!window.RUMAHNUSA_SUPABASE_URL||!window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY){status.textContent='Login service is not ready yet.';return;}
-      const client=window.supabase.createClient(window.RUMAHNUSA_SUPABASE_URL,window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY);
-      const {data,error}=await client.auth.signInWithPassword({email:e,password:p});
-      if(error||!data.user){status.textContent='Login failed. Check your email and password.';return;}
-      window.__rnGateUser=data.user;loginStep.hidden=true;identityStep.hidden=false;status.textContent='';
-    }catch(e){status.textContent='Login could not be completed. Please try again.';}finally{loginBtn.disabled=false;}
-  });
-  identityContinue.addEventListener('click',async()=>{
-    if(identityContinue.disabled||!window.__rnGateUser)return;
-    try{
-      const client=window.supabase.createClient(window.RUMAHNUSA_SUPABASE_URL,window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY);
-      await client.from('profiles').upsert({id:window.__rnGateUser.id,email:window.__rnGateUser.email||'',full_name:name.value.trim(),role:'customer'},{onConflict:'id'});
-    }catch(e){}
-    window.__rnCustomerIdentity={name:name.value.trim(),gender,age:Number(age.value)};
-    welcome.hidden=true;form.hidden=false;document.body.classList.remove('rn-gate-active');
-    form.querySelectorAll('.client-form-step').forEach((s,i)=>s.classList.toggle('active',i===0));
+  age.addEventListener('input',valid);
+  identityContinue.addEventListener('click',function(){
+    const a=Number(age.value);
+    if(!name.value.trim()||!gender||a<18||a>120)return;
+    window.__rnCustomerIdentity={name:name.value.trim(),gender:gender,age:a};
+    window.__rnCustomerNeedsAnonymousSession=true;
+    welcome.hidden=true;
+    form.hidden=false;
+    document.body.classList.remove('rn-gate-active');
+    form.querySelectorAll('.client-form-step').forEach(function(step,i){step.classList.toggle('active',i===0);});
     document.getElementById('propertyOptions')?.scrollIntoView({behavior:'smooth',block:'start'});
   });
 })();
@@ -1121,7 +1118,8 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
     const isLargeHouse = state.property === 'Separate Rumah' || state.property === 'Neighborhood Rumah';
     const specText = isLargeHouse ? houseSpecs[v('rooms')] : apartmentSpecs[v('rooms')];
     const transactionText = state.purpose === 'Sewa' ? 'Saya ingin menyewa ' + state.property + ' selama ' + state.rentalTerm : 'Saya ingin membeli ' + state.property;
-    const requestMessage = transactionText + '. Pilihan: ' + v('rooms') + '.' + ' Kota pilihan: ' + v('clientCityWant') + '. Spesifikasi: ' + specText + (isLargeHouse ? ' Setiap rumah memiliki kolam renang besar dan area parkir mobil.' : '') + ' Tentang saya: ' + (v('aboutClient') || '');
+    const identity=window.__rnCustomerIdentity||{};
+    const requestMessage = 'Pelanggan: ' + (identity.name||v('clientName')) + '. Gender: ' + (identity.gender||'Tidak disebutkan') + '. Age: ' + (identity.age||'Tidak disebutkan') + '. ' + transactionText + '. Pilihan: ' + v('rooms') + '.' + ' Kota pilihan: ' + v('clientCityWant') + '. Spesifikasi: ' + specText + (isLargeHouse ? ' Setiap rumah memiliki kolam renang besar dan area parkir mobil.' : '') + ' Tentang saya: ' + (v('aboutClient') || '');
     addInboxMessage(requestMessage, 'customer');
     document.getElementById('clientKotak Masuk').scrollIntoView({behavior:'smooth', block:'start'});
   });
@@ -1409,6 +1407,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       await loadAgentConversations();
     }else{
       agentPanel.hidden=true;
+      authPanel.hidden=true;
       inbox.querySelector('.inbox-thread').hidden=false;
       const conv=await ensureCustomerConversation();
       if(conv){
