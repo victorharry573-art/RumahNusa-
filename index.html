@@ -186,6 +186,11 @@ nav a {
 .rn-home-category{min-height:142px!important;padding:18px 12px!important;border:1px solid #d9e2ec!important;border-radius:14px!important;background:#fff!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;text-align:center!important;transition:transform .15s,border-color .15s,box-shadow .15s!important}
 .rn-home-category:hover,.rn-home-category:focus-visible{transform:translateY(-2px);border-color:#1597e5!important;box-shadow:0 6px 18px rgba(16,42,67,.12)}
 .rn-home-category.selected{border-color:#1597e5!important;background:#f3faff!important;box-shadow:0 0 0 2px rgba(21,151,229,.12)}
+.rn-home-category-grid.rn-category-open{display:block!important}
+.rn-home-category-grid.rn-category-open .rn-home-category:not(.selected){display:none!important}
+.rn-home-category-grid.rn-category-open .rn-home-category.selected{display:flex!important;width:100%;min-height:132px!important;margin-bottom:14px}
+.rn-category-collection{width:100%;box-sizing:border-box;margin-top:0;padding:18px 0 4px}
+.rn-choose-another{margin-top:18px;width:100%;min-height:48px}
 .rn-home-icon{font-size:38px;line-height:1;margin-bottom:10px}
 .rn-home-category strong{font-size:16px;color:#183b56}
 .rn-home-category small{display:block;color:#627d98;font-size:12px;line-height:1.4;margin-top:5px}
@@ -711,7 +716,8 @@ body.rn-gate-active{margin:0;}
           </div>
           <div id="rnCategoryListings" class="rn-listing-grid"></div>
           <div id="rnCategoryConfidence" class="rn-confidence"></div>
-          <p class="rn-collection-note">Only listings from the selected category are shown here. Choose another category above to change what you see.</p>
+          <p class="rn-collection-note">You are viewing only this category. To see another category, tap the button below.</p>
+          <button id="rnChooseAnotherCategory" class="btn secondary rn-choose-another" type="button">Choose another category</button>
         </div>
 
       </div>
@@ -1518,9 +1524,11 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   const layoutTitle=document.getElementById('layoutTitle');
   const layoutDetails=document.getElementById('layoutDetails');
   const selectionInfo=document.getElementById('rnSelectionInfo');
-  if(!collection||!purpose||!rooms) return;
+  const categoryGrid=document.getElementById('propertyOptions');
+  const chooseAnother=document.getElementById('rnChooseAnotherCategory');
+  if(!collection||!purpose||!rooms||!categoryGrid) return;
 
-  const data={
+  const data=const data={
     'Apartemen':{
       title:'Apartments for Your City Life',
       badge:'APARTMENT',
@@ -1656,10 +1664,33 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 
   function setOptions(select,values){
     select.innerHTML=values.map(v=>'<option>'+v+'</option>').join('');
+  };
+
+  function setOptions(select,values){
+    select.innerHTML=values.map(v=>'<option>'+v+'</option>').join('');
   }
+
+  function closeCategory(){
+    categoryGrid.classList.remove('rn-category-open');
+    document.querySelectorAll('#propertyOptions .client-option').forEach(btn=>btn.classList.remove('selected'));
+    collection.hidden=true;
+    categoryGrid.insertAdjacentElement('afterend',collection);
+    document.querySelector('.rn-home-welcome')?.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
   function renderCategory(name){
     const d=data[name]; if(!d)return;
+    const selected=document.querySelector('#propertyOptions .client-option[data-value="'+CSS.escape(name)+'"]');
+    if(!selected)return;
+
+    document.querySelectorAll('#propertyOptions .client-option').forEach(btn=>btn.classList.toggle('selected',btn===selected));
+    categoryGrid.classList.add('rn-category-open');
+
+    // Put the selected category and its collection together. Other categories
+    // are temporarily hidden so the customer sees only the chosen property type.
+    selected.insertAdjacentElement('afterend',collection);
     collection.hidden=false;
+
     title.textContent=d.title;
     intro.textContent=d.intro;
     badge.textContent=d.badge;
@@ -1672,24 +1703,23 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       ? '<option value="Beli">Beli</option><option value="Sewa">Sewa</option>'
       : '<option value="Beli">Beli</option>';
     purpose.value='Beli';
-    purposeNote.textContent = name==='Apartemen' ? 'Apartments can be bought or rented for 1–5 years.' : 'SALE ONLY — This property category is permanently for sale. Rental is not available.';
+    purposeNote.textContent=name==='Apartemen'?'Apartments can be bought or rented for 1–5 years.':'SALE ONLY — This property category is permanently for sale. Rental is not available.';
     rentalWrap.hidden=!(name==='Apartemen' && purpose.value==='Sewa');
     layoutTitle.textContent=d.title+' details';
     layoutDetails.innerHTML=d.listings.map(x=>'<div class="house-layout"><strong>'+x[0]+'</strong><p>'+x[3]+'</p></div>').join('');
-    selectionInfo.innerHTML='<strong>'+d.title+'</strong> — '+d.buy+' Choose from the homes, rooms and plans available in your selected category. Only this category is shown until you choose another one.';
-    const apartment=name==='Apartemen';
-    const note=layoutDetails.parentElement.querySelector('.apartment-layouts');
-    if(note) note.className=apartment?'apartment-layouts':'apartment-layouts';
+    selectionInfo.innerHTML='<strong>'+d.title+'</strong> — '+d.buy+' Choose your rooms and purchase plan here. Your payment amount will be entered in the Amount section before you send the request to the RumahNusa agent.';
     updateBudgetPreview();
+
+    requestAnimationFrame(function(){
+      selected.scrollIntoView({behavior:'smooth',block:'start'});
+    });
   }
-  window.__rumahnusaRenderCategory=renderCategory;
 
   document.querySelectorAll('#propertyOptions .client-option').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      if(document.getElementById('client-profile')?.classList.contains('rn-login-locked')) return;
-      renderCategory(btn.dataset.value);
-    });
+    btn.addEventListener('click',()=>renderCategory(btn.dataset.value));
   });
+
+  chooseAnother?.addEventListener('click',closeCategory);
 
   purpose.addEventListener('change',()=>{
     const selectedCategory=document.querySelector('#propertyOptions .client-option.selected')?.dataset.value;
@@ -1697,9 +1727,12 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     rentalWrap.hidden=!(isApartment && purpose.value==='Sewa');
   });
 
-
-})();
-</script>
+  const originalNext=document.querySelector('.client-form-step[data-step="3"] .client-next');
+  if(originalNext) originalNext.addEventListener('click',()=>{
+    const selected=document.querySelector('#propertyOptions .client-option.selected');
+    if(selected) renderCategory(selected.dataset.value);
+  });
+})();</script>
 
 
 
