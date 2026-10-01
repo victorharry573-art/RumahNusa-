@@ -361,7 +361,23 @@ body.rn-site-unlocked footer { display:none !important; }
 .rn-gate-welcome{font-size:16px;line-height:1.6;margin:10px 0;color:#486581}
 
 @media(max-width:700px){.rn-gate-grid{grid-template-columns:1fr}.rn-gate-grid .full{grid-column:auto}}
-</style></head>
+</style><style>
+body.rn-gate-active > *:not(#client-profile){display:none !important;}
+body.rn-gate-active{margin:0;}
+.rn-welcome-gate{max-width:720px;margin:0 auto;padding:48px 22px 80px;text-align:center;}
+.rn-welcome-copy h2{font-size:clamp(30px,6vw,48px);margin-bottom:18px;}
+.rn-welcome-copy p{font-size:17px;line-height:1.75;color:#486581;margin:12px auto;max-width:650px;}
+.rn-welcome-instruction{margin-top:28px !important;color:#102a43 !important;}
+.rn-gate-step{max-width:520px;margin:28px auto 0;padding:24px;border:1px solid #d9e2ec;border-radius:18px;background:#fff;box-shadow:0 8px 30px rgba(16,42,67,.08);}
+.rn-gate-step label{display:block;font-weight:700;margin-bottom:10px;text-align:left;}
+.rn-gate-step input{width:100%;box-sizing:border-box;padding:14px 16px;border:1px solid #bcccdc;border-radius:10px;font-size:16px;margin-bottom:12px;}
+.rn-gender-options{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+.rn-gender-option{min-height:50px;border:1px solid #bcccdc;border-radius:10px;background:#fff;font-weight:700;cursor:pointer;}
+.rn-gender-option.selected{border-color:#0879bd;background:#eaf5fb;}
+.rn-gate-step button.btn{width:100%;min-height:50px;}
+.rn-gate-step button:disabled{opacity:.5;cursor:not-allowed;}
+</style>
+</head>
 
 <body class="rn-site-locked"><section id="rnPhoneGate" aria-label="RumahNusa customer login">
   <div class="rn-gate-card">
@@ -556,6 +572,37 @@ body.rn-site-unlocked footer { display:none !important; }
       <p>RumahNusa hadir untuk membantu Anda menemukan hunian yang indah, nyaman, dan sesuai dengan kehidupan yang Anda bayangkan. Jelajahi pilihan rumah dengan tenang, lihat ruang-ruangnya, bayangkan kehidupan di dalamnya, dan pilih tempat yang membuat Anda merasa nyaman serta memiliki ketenangan pikiran.</p>
     </div>
 
+
+    <div id="rnWelcomeGate" class="rn-welcome-gate">
+      <div class="rn-welcome-copy">
+        <h2>Welcome to RumahNusa Real Estate</h2>
+        <p>RumahNusa is created for people who want more than a beautiful house. We help you discover a place that feels comfortable, peaceful, welcoming, and right for the life you want to build.</p>
+        <p>Take your time, choose the home that speaks to you, and discover spaces designed for comfort, beauty, family, rest, and peace of mind.</p>
+        <p class="rn-welcome-instruction"><strong>First, please add your name.</strong></p>
+      </div>
+
+      <div id="rnGateNameStep" class="rn-gate-step">
+        <label for="rnGateName">Add your name</label>
+        <input id="rnGateName" type="text" autocomplete="name" placeholder="Your full name">
+        <button id="rnGateNameContinue" class="btn" type="button">Continue</button>
+      </div>
+
+      <div id="rnGateGenderStep" class="rn-gate-step" hidden>
+        <label>Choose your gender</label>
+        <div class="rn-gender-options">
+          <button type="button" class="rn-gender-option" data-gender="Female">Female</button>
+          <button type="button" class="rn-gender-option" data-gender="Male">Male</button>
+        </div>
+        <button id="rnGateGenderContinue" class="btn" type="button" disabled>Continue</button>
+      </div>
+
+      <div id="rnGateAgeStep" class="rn-gate-step" hidden>
+        <label for="rnGateAge">Add your age</label>
+        <input id="rnGateAge" type="number" min="18" max="120" inputmode="numeric" placeholder="Your age">
+        <button id="rnGateAgeContinue" class="btn" type="button">Continue to homes</button>
+      </div>
+    </div>
+
     <form id="clientProfilForm" hidden>
       <div class="client-form-step active" data-step="1">
         <h3>Pilih jenis rumah Anda</h3>
@@ -635,241 +682,10 @@ body.rn-site-unlocked footer { display:none !important; }
       </div>
 
 
-<div class="client-form-step" data-step="3">
-        <h3>Tentang Kami you</h3>
-        <p>Mulai dengan informasi dasar yang ingin Anda gunakan untuk pencarian properti RumahNusa.</p>
-        <div class="client-grid">
-          <div class="client-field">
-            <label for="clientName">Nama lengkap</label>
-            <input id="clientName" required placeholder="Nama lengkap Anda">
-          </div>
-          <div class="client-field">
-            <label for="clientJenis kelamin">Jenis kelamin</label>
-            <select id="clientJenis kelamin" required>
-              <option value="">Pilih</option>
-              <option>Perempuan</option><option>Laki-laki</option><option>Tidak ingin menyebutkan</option>
-            </select>
-          </div>
-          <div class="client-field">
-            <label for="clientUsia">Usia</label>
-            <input id="clientUsia" type="number" min="18" max="120" required placeholder="18 tahun atau lebih">
-          </div>
-        </div>
-        <div class="client-actions"><span></span><button class="btn client-next" type="button">Lanjutkan</button></div>
-      </div>
-
-
 <div class="client-form-step" data-step="4">
-        <h3>Kontak and living plans</h3>
-        <p>Berikan informasi yang cukup agar agen dapat menanggapi permintaan Anda.</p>
+        <h3>Tell us about your living plans</h3>
+        <p>Share the details that will help the RumahNusa agent understand what you are looking for.</p>
         <div class="client-grid">
-          <div class="client-field full">
-  <label for="clientCountry">Negara nomor telepon</label>
-  <div style="display:grid;grid-template-columns:150px 1fr;gap:10px;">
-    <select id="clientCountry" aria-label="Negara nomor telepon">
-      <option value="ID" data-flag="🇮🇩" data-code="+62">🇮🇩 Indonesia (+62)</option>
-      <option value="MY" data-flag="🇲🇾" data-code="+60">🇲🇾 Malaysia (+60)</option>
-      <option value="SG" data-flag="🇸🇬" data-code="+65">🇸🇬 Singapura (+65)</option>
-      <option value="US" data-flag="🇺🇸" data-code="+1">🇺🇸 Amerika Serikat (+1)</option>
-      <option value="CA" data-flag="🇨🇦" data-code="+1">🇨🇦 Kanada (+1)</option>
-      <option value="GB" data-flag="🇬🇧" data-code="+44">🇬🇧 Britania Raya (+44)</option>
-      <option value="AU" data-flag="🇦🇺" data-code="+61">🇦🇺 Australia (+61)</option>
-      <option value="NZ" data-flag="🇳🇿" data-code="+64">🇳🇿 Selandia Baru (+64)</option>
-      <option value="AF" data-flag="🇦🇫" data-code="+93">🇦🇫 Afghanistan (+93)</option>
-      <option value="AL" data-flag="🇦🇱" data-code="+355">🇦🇱 Albania (+355)</option>
-      <option value="DZ" data-flag="🇩🇿" data-code="+213">🇩🇿 Aljazair (+213)</option>
-      <option value="AD" data-flag="🇦🇩" data-code="+376">🇦🇩 Andorra (+376)</option>
-      <option value="AO" data-flag="🇦🇴" data-code="+244">🇦🇴 Angola (+244)</option>
-      <option value="AG" data-flag="🇦🇬" data-code="+1">🇦🇬 Antigua dan Barbuda (+1)</option>
-      <option value="AR" data-flag="🇦🇷" data-code="+54">🇦🇷 Argentina (+54)</option>
-      <option value="AM" data-flag="🇦🇲" data-code="+374">🇦🇲 Armenia (+374)</option>
-      <option value="AT" data-flag="🇦🇹" data-code="+43">🇦🇹 Austria (+43)</option>
-      <option value="AZ" data-flag="🇦🇿" data-code="+994">🇦🇿 Azerbaijan (+994)</option>
-      <option value="BS" data-flag="🇧🇸" data-code="+1">🇧🇸 Bahama (+1)</option>
-      <option value="BH" data-flag="🇧🇭" data-code="+973">🇧🇭 Bahrain (+973)</option>
-      <option value="BD" data-flag="🇧🇩" data-code="+880">🇧🇩 Bangladesh (+880)</option>
-      <option value="BB" data-flag="🇧🇧" data-code="+1">🇧🇧 Barbados (+1)</option>
-      <option value="BY" data-flag="🇧🇾" data-code="+375">🇧🇾 Belarus (+375)</option>
-      <option value="BE" data-flag="🇧🇪" data-code="+32">🇧🇪 Belgia (+32)</option>
-      <option value="BZ" data-flag="🇧🇿" data-code="+501">🇧🇿 Belize (+501)</option>
-      <option value="BJ" data-flag="🇧🇯" data-code="+229">🇧🇯 Benin (+229)</option>
-      <option value="BT" data-flag="🇧🇹" data-code="+975">🇧🇹 Bhutan (+975)</option>
-      <option value="BO" data-flag="🇧🇴" data-code="+591">🇧🇴 Bolivia (+591)</option>
-      <option value="BA" data-flag="🇧🇦" data-code="+387">🇧🇦 Bosnia dan Herzegovina (+387)</option>
-      <option value="BW" data-flag="🇧🇼" data-code="+267">🇧🇼 Botswana (+267)</option>
-      <option value="BR" data-flag="🇧🇷" data-code="+55">🇧🇷 Brasil (+55)</option>
-      <option value="BN" data-flag="🇧🇳" data-code="+673">🇧🇳 Brunei (+673)</option>
-      <option value="BG" data-flag="🇧🇬" data-code="+359">🇧🇬 Bulgaria (+359)</option>
-      <option value="BF" data-flag="🇧🇫" data-code="+226">🇧🇫 Burkina Faso (+226)</option>
-      <option value="BI" data-flag="🇧🇮" data-code="+257">🇧🇮 Burundi (+257)</option>
-      <option value="CV" data-flag="🇨🇻" data-code="+238">🇨🇻 Cabo Verde (+238)</option>
-      <option value="KH" data-flag="🇰🇭" data-code="+855">🇰🇭 Kamboja (+855)</option>
-      <option value="CM" data-flag="🇨🇲" data-code="+237">🇨🇲 Kamerun (+237)</option>
-      <option value="CF" data-flag="🇨🇫" data-code="+236">🇨🇫 Republik Afrika Tengah (+236)</option>
-      <option value="TD" data-flag="🇹🇩" data-code="+235">🇹🇩 Chad (+235)</option>
-      <option value="CL" data-flag="🇨🇱" data-code="+56">🇨🇱 Chili (+56)</option>
-      <option value="CN" data-flag="🇨🇳" data-code="+86">🇨🇳 Tiongkok (+86)</option>
-      <option value="CO" data-flag="🇨🇴" data-code="+57">🇨🇴 Kolombia (+57)</option>
-      <option value="KM" data-flag="🇰🇲" data-code="+269">🇰🇲 Komoro (+269)</option>
-      <option value="CG" data-flag="🇨🇬" data-code="+242">🇨🇬 Kongo (+242)</option>
-      <option value="CD" data-flag="🇨🇩" data-code="+243">🇨🇩 Republik Demokratik Kongo (+243)</option>
-      <option value="CR" data-flag="🇨🇷" data-code="+506">🇨🇷 Kosta Rika (+506)</option>
-      <option value="CI" data-flag="🇨🇮" data-code="+225">🇨🇮 Pantai Gading (+225)</option>
-      <option value="HR" data-flag="🇭🇷" data-code="+385">🇭🇷 Kroasia (+385)</option>
-      <option value="CU" data-flag="🇨🇺" data-code="+53">🇨🇺 Kuba (+53)</option>
-      <option value="CY" data-flag="🇨🇾" data-code="+357">🇨🇾 Siprus (+357)</option>
-      <option value="CZ" data-flag="🇨🇿" data-code="+420">🇨🇿 Ceko (+420)</option>
-      <option value="DK" data-flag="🇩🇰" data-code="+45">🇩🇰 Denmark (+45)</option>
-      <option value="DJ" data-flag="🇩🇯" data-code="+253">🇩🇯 Djibouti (+253)</option>
-      <option value="DM" data-flag="🇩🇲" data-code="+1">🇩🇲 Dominika (+1)</option>
-      <option value="DO" data-flag="🇩🇴" data-code="+1">🇩🇴 Republik Dominika (+1)</option>
-      <option value="EC" data-flag="🇪🇨" data-code="+593">🇪🇨 Ekuador (+593)</option>
-      <option value="EG" data-flag="🇪🇬" data-code="+20">🇪🇬 Mesir (+20)</option>
-      <option value="SV" data-flag="🇸🇻" data-code="+503">🇸🇻 El Salvador (+503)</option>
-      <option value="GQ" data-flag="🇬🇶" data-code="+240">🇬🇶 Guinea Khatulistiwa (+240)</option>
-      <option value="ER" data-flag="🇪🇷" data-code="+291">🇪🇷 Eritrea (+291)</option>
-      <option value="EE" data-flag="🇪🇪" data-code="+372">🇪🇪 Estonia (+372)</option>
-      <option value="SZ" data-flag="🇸🇿" data-code="+268">🇸🇿 Eswatini (+268)</option>
-      <option value="ET" data-flag="🇪🇹" data-code="+251">🇪🇹 Etiopia (+251)</option>
-      <option value="FJ" data-flag="🇫🇯" data-code="+679">🇫🇯 Fiji (+679)</option>
-      <option value="FI" data-flag="🇫🇮" data-code="+358">🇫🇮 Finlandia (+358)</option>
-      <option value="FR" data-flag="🇫🇷" data-code="+33">🇫🇷 Prancis (+33)</option>
-      <option value="GA" data-flag="🇬🇦" data-code="+241">🇬🇦 Gabon (+241)</option>
-      <option value="GM" data-flag="🇬🇲" data-code="+220">🇬🇲 Gambia (+220)</option>
-      <option value="GE" data-flag="🇬🇪" data-code="+995">🇬🇪 Georgia (+995)</option>
-      <option value="DE" data-flag="🇩🇪" data-code="+49">🇩🇪 Jerman (+49)</option>
-      <option value="GH" data-flag="🇬🇭" data-code="+233">🇬🇭 Ghana (+233)</option>
-      <option value="GR" data-flag="🇬🇷" data-code="+30">🇬🇷 Yunani (+30)</option>
-      <option value="GD" data-flag="🇬🇩" data-code="+1">🇬🇩 Grenada (+1)</option>
-      <option value="GT" data-flag="🇬🇹" data-code="+502">🇬🇹 Guatemala (+502)</option>
-      <option value="GN" data-flag="🇬🇳" data-code="+224">🇬🇳 Guinea (+224)</option>
-      <option value="GW" data-flag="🇬🇼" data-code="+245">🇬🇼 Guinea-Bissau (+245)</option>
-      <option value="GY" data-flag="🇬🇾" data-code="+592">🇬🇾 Guyana (+592)</option>
-      <option value="HT" data-flag="🇭🇹" data-code="+509">🇭🇹 Haiti (+509)</option>
-      <option value="HN" data-flag="🇭🇳" data-code="+504">🇭🇳 Honduras (+504)</option>
-      <option value="HU" data-flag="🇭🇺" data-code="+36">🇭🇺 Hungaria (+36)</option>
-      <option value="IS" data-flag="🇮🇸" data-code="+354">🇮🇸 Islandia (+354)</option>
-      <option value="IN" data-flag="🇮🇳" data-code="+91">🇮🇳 India (+91)</option>
-      <option value="IR" data-flag="🇮🇷" data-code="+98">🇮🇷 Iran (+98)</option>
-      <option value="IQ" data-flag="🇮🇶" data-code="+964">🇮🇶 Irak (+964)</option>
-      <option value="IE" data-flag="🇮🇪" data-code="+353">🇮🇪 Irlandia (+353)</option>
-      <option value="IL" data-flag="🇮🇱" data-code="+972">🇮🇱 Israel (+972)</option>
-      <option value="IT" data-flag="🇮🇹" data-code="+39">🇮🇹 Italia (+39)</option>
-      <option value="JM" data-flag="🇯🇲" data-code="+1">🇯🇲 Jamaika (+1)</option>
-      <option value="JP" data-flag="🇯🇵" data-code="+81">🇯🇵 Jepang (+81)</option>
-      <option value="JO" data-flag="🇯🇴" data-code="+962">🇯🇴 Yordania (+962)</option>
-      <option value="KZ" data-flag="🇰🇿" data-code="+7">🇰🇿 Kazakhstan (+7)</option>
-      <option value="KE" data-flag="🇰🇪" data-code="+254">🇰🇪 Kenya (+254)</option>
-      <option value="KI" data-flag="🇰🇮" data-code="+686">🇰🇮 Kiribati (+686)</option>
-      <option value="KP" data-flag="🇰🇵" data-code="+850">🇰🇵 Korea Utara (+850)</option>
-      <option value="KR" data-flag="🇰🇷" data-code="+82">🇰🇷 Korea Selatan (+82)</option>
-      <option value="KW" data-flag="🇰🇼" data-code="+965">🇰🇼 Kuwait (+965)</option>
-      <option value="KG" data-flag="🇰🇬" data-code="+996">🇰🇬 Kirgizstan (+996)</option>
-      <option value="LA" data-flag="🇱🇦" data-code="+856">🇱🇦 Laos (+856)</option>
-      <option value="LV" data-flag="🇱🇻" data-code="+371">🇱🇻 Latvia (+371)</option>
-      <option value="LB" data-flag="🇱🇧" data-code="+961">🇱🇧 Lebanon (+961)</option>
-      <option value="LS" data-flag="🇱🇸" data-code="+266">🇱🇸 Lesotho (+266)</option>
-      <option value="LR" data-flag="🇱🇷" data-code="+231">🇱🇷 Liberia (+231)</option>
-      <option value="LY" data-flag="🇱🇾" data-code="+218">🇱🇾 Libya (+218)</option>
-      <option value="LI" data-flag="🇱🇮" data-code="+423">🇱🇮 Liechtenstein (+423)</option>
-      <option value="LT" data-flag="🇱🇹" data-code="+370">🇱🇹 Lituania (+370)</option>
-      <option value="LU" data-flag="🇱🇺" data-code="+352">🇱🇺 Luksemburg (+352)</option>
-      <option value="MG" data-flag="🇲🇬" data-code="+261">🇲🇬 Madagaskar (+261)</option>
-      <option value="MW" data-flag="🇲🇼" data-code="+265">🇲🇼 Malawi (+265)</option>
-      <option value="MV" data-flag="🇲🇻" data-code="+960">🇲🇻 Maladewa (+960)</option>
-      <option value="ML" data-flag="🇲🇱" data-code="+223">🇲🇱 Mali (+223)</option>
-      <option value="MT" data-flag="🇲🇹" data-code="+356">🇲🇹 Malta (+356)</option>
-      <option value="MH" data-flag="🇲🇭" data-code="+692">🇲🇭 Kepulauan Marshall (+692)</option>
-      <option value="MR" data-flag="🇲🇷" data-code="+222">🇲🇷 Mauritania (+222)</option>
-      <option value="MU" data-flag="🇲🇺" data-code="+230">🇲🇺 Mauritius (+230)</option>
-      <option value="MX" data-flag="🇲🇽" data-code="+52">🇲🇽 Meksiko (+52)</option>
-      <option value="FM" data-flag="🇫🇲" data-code="+691">🇫🇲 Mikronesia (+691)</option>
-      <option value="MD" data-flag="🇲🇩" data-code="+373">🇲🇩 Moldova (+373)</option>
-      <option value="MC" data-flag="🇲🇨" data-code="+377">🇲🇨 Monako (+377)</option>
-      <option value="MN" data-flag="🇲🇳" data-code="+976">🇲🇳 Mongolia (+976)</option>
-      <option value="ME" data-flag="🇲🇪" data-code="+382">🇲🇪 Montenegro (+382)</option>
-      <option value="MA" data-flag="🇲🇦" data-code="+212">🇲🇦 Maroko (+212)</option>
-      <option value="MZ" data-flag="🇲🇿" data-code="+258">🇲🇿 Mozambik (+258)</option>
-      <option value="MM" data-flag="🇲🇲" data-code="+95">🇲🇲 Myanmar (+95)</option>
-      <option value="NA" data-flag="🇳🇦" data-code="+264">🇳🇦 Namibia (+264)</option>
-      <option value="NR" data-flag="🇳🇷" data-code="+674">🇳🇷 Nauru (+674)</option>
-      <option value="NP" data-flag="🇳🇵" data-code="+977">🇳🇵 Nepal (+977)</option>
-      <option value="NL" data-flag="🇳🇱" data-code="+31">🇳🇱 Belanda (+31)</option>
-      <option value="NI" data-flag="🇳🇮" data-code="+505">🇳🇮 Nikaragua (+505)</option>
-      <option value="NE" data-flag="🇳🇪" data-code="+227">🇳🇪 Niger (+227)</option>
-      <option value="NG" data-flag="🇳🇬" data-code="+234">🇳🇬 Nigeria (+234)</option>
-      <option value="MK" data-flag="🇲🇰" data-code="+389">🇲🇰 Makedonia Utara (+389)</option>
-      <option value="NO" data-flag="🇳🇴" data-code="+47">🇳🇴 Norwegia (+47)</option>
-      <option value="OM" data-flag="🇴🇲" data-code="+968">🇴🇲 Oman (+968)</option>
-      <option value="PK" data-flag="🇵🇰" data-code="+92">🇵🇰 Pakistan (+92)</option>
-      <option value="PW" data-flag="🇵🇼" data-code="+680">🇵🇼 Palau (+680)</option>
-      <option value="PS" data-flag="🇵🇸" data-code="+970">🇵🇸 Palestina (+970)</option>
-      <option value="PA" data-flag="🇵🇦" data-code="+507">🇵🇦 Panama (+507)</option>
-      <option value="PG" data-flag="🇵🇬" data-code="+675">🇵🇬 Papua Nugini (+675)</option>
-      <option value="PY" data-flag="🇵🇾" data-code="+595">🇵🇾 Paraguay (+595)</option>
-      <option value="PE" data-flag="🇵🇪" data-code="+51">🇵🇪 Peru (+51)</option>
-      <option value="PH" data-flag="🇵🇭" data-code="+63">🇵🇭 Filipina (+63)</option>
-      <option value="PL" data-flag="🇵🇱" data-code="+48">🇵🇱 Polandia (+48)</option>
-      <option value="PT" data-flag="🇵🇹" data-code="+351">🇵🇹 Portugal (+351)</option>
-      <option value="QA" data-flag="🇶🇦" data-code="+974">🇶🇦 Qatar (+974)</option>
-      <option value="RO" data-flag="🇷🇴" data-code="+40">🇷🇴 Rumania (+40)</option>
-      <option value="RU" data-flag="🇷🇺" data-code="+7">🇷🇺 Rusia (+7)</option>
-      <option value="RW" data-flag="🇷🇼" data-code="+250">🇷🇼 Rwanda (+250)</option>
-      <option value="KN" data-flag="🇰🇳" data-code="+1">🇰🇳 Saint Kitts dan Nevis (+1)</option>
-      <option value="LC" data-flag="🇱🇨" data-code="+1">🇱🇨 Saint Lucia (+1)</option>
-      <option value="VC" data-flag="🇻🇨" data-code="+1">🇻🇨 Saint Vincent dan Grenadines (+1)</option>
-      <option value="WS" data-flag="🇼🇸" data-code="+685">🇼🇸 Samoa (+685)</option>
-      <option value="SM" data-flag="🇸🇲" data-code="+378">🇸🇲 San Marino (+378)</option>
-      <option value="ST" data-flag="🇸🇹" data-code="+239">🇸🇹 Sao Tome dan Principe (+239)</option>
-      <option value="SA" data-flag="🇸🇦" data-code="+966">🇸🇦 Arab Saudi (+966)</option>
-      <option value="SN" data-flag="🇸🇳" data-code="+221">🇸🇳 Senegal (+221)</option>
-      <option value="RS" data-flag="🇷🇸" data-code="+381">🇷🇸 Serbia (+381)</option>
-      <option value="SC" data-flag="🇸🇨" data-code="+248">🇸🇨 Seychelles (+248)</option>
-      <option value="SL" data-flag="🇸🇱" data-code="+232">🇸🇱 Sierra Leone (+232)</option>
-      <option value="SK" data-flag="🇸🇰" data-code="+421">🇸🇰 Slovakia (+421)</option>
-      <option value="SI" data-flag="🇸🇮" data-code="+386">🇸🇮 Slovenia (+386)</option>
-      <option value="SB" data-flag="🇸🇧" data-code="+677">🇸🇧 Kepulauan Solomon (+677)</option>
-      <option value="SO" data-flag="🇸🇴" data-code="+252">🇸🇴 Somalia (+252)</option>
-      <option value="ZA" data-flag="🇿🇦" data-code="+27">🇿🇦 Afrika Selatan (+27)</option>
-      <option value="SS" data-flag="🇸🇸" data-code="+211">🇸🇸 Sudan Selatan (+211)</option>
-      <option value="ES" data-flag="🇪🇸" data-code="+34">🇪🇸 Spanyol (+34)</option>
-      <option value="LK" data-flag="🇱🇰" data-code="+94">🇱🇰 Sri Lanka (+94)</option>
-      <option value="SD" data-flag="🇸🇩" data-code="+249">🇸🇩 Sudan (+249)</option>
-      <option value="SR" data-flag="🇸🇷" data-code="+597">🇸🇷 Suriname (+597)</option>
-      <option value="SE" data-flag="🇸🇪" data-code="+46">🇸🇪 Swedia (+46)</option>
-      <option value="CH" data-flag="🇨🇭" data-code="+41">🇨🇭 Swiss (+41)</option>
-      <option value="SY" data-flag="🇸🇾" data-code="+963">🇸🇾 Suriah (+963)</option>
-      <option value="TJ" data-flag="🇹🇯" data-code="+992">🇹🇯 Tajikistan (+992)</option>
-      <option value="TZ" data-flag="🇹🇿" data-code="+255">🇹🇿 Tanzania (+255)</option>
-      <option value="TH" data-flag="🇹🇭" data-code="+66">🇹🇭 Thailand (+66)</option>
-      <option value="TL" data-flag="🇹🇱" data-code="+670">🇹🇱 Timor-Leste (+670)</option>
-      <option value="TG" data-flag="🇹🇬" data-code="+228">🇹🇬 Togo (+228)</option>
-      <option value="TO" data-flag="🇹🇴" data-code="+676">🇹🇴 Tonga (+676)</option>
-      <option value="TT" data-flag="🇹🇹" data-code="+1">🇹🇹 Trinidad dan Tobago (+1)</option>
-      <option value="TN" data-flag="🇹🇳" data-code="+216">🇹🇳 Tunisia (+216)</option>
-      <option value="TR" data-flag="🇹🇷" data-code="+90">🇹🇷 Turki (+90)</option>
-      <option value="TM" data-flag="🇹🇲" data-code="+993">🇹🇲 Turkmenistan (+993)</option>
-      <option value="TV" data-flag="🇹🇻" data-code="+688">🇹🇻 Tuvalu (+688)</option>
-      <option value="UG" data-flag="🇺🇬" data-code="+256">🇺🇬 Uganda (+256)</option>
-      <option value="UA" data-flag="🇺🇦" data-code="+380">🇺🇦 Ukraina (+380)</option>
-      <option value="AE" data-flag="🇦🇪" data-code="+971">🇦🇪 Uni Emirat Arab (+971)</option>
-      <option value="UY" data-flag="🇺🇾" data-code="+598">🇺🇾 Uruguay (+598)</option>
-      <option value="UZ" data-flag="🇺🇿" data-code="+998">🇺🇿 Uzbekistan (+998)</option>
-      <option value="VU" data-flag="🇻🇺" data-code="+678">🇻🇺 Vanuatu (+678)</option>
-      <option value="VA" data-flag="🇻🇦" data-code="+39">🇻🇦 Vatikan (+39)</option>
-      <option value="VE" data-flag="🇻🇪" data-code="+58">🇻🇪 Venezuela (+58)</option>
-      <option value="VN" data-flag="🇻🇳" data-code="+84">🇻🇳 Vietnam (+84)</option>
-      <option value="YE" data-flag="🇾🇪" data-code="+967">🇾🇪 Yaman (+967)</option>
-      <option value="ZM" data-flag="🇿🇲" data-code="+260">🇿🇲 Zambia (+260)</option>
-      <option value="ZW" data-flag="🇿🇼" data-code="+263">🇿🇼 Zimbabwe (+263)</option>
-    </select>
-    <div style="display:flex;align-items:center;border:1px solid #cbd5e1;border-radius:9px;background:white;overflow:hidden;">
-      <span id="phonePrefix" style="padding:13px 10px;font-weight:bold;color:#075985;background:#f0f9ff;">🇮🇩 +62</span>
-      <input id="clientPhone" type="tel" inputmode="numeric" autocomplete="tel-national" pattern="[0-9 ]{5,15}" placeholder="81234567890" required style="border:0;border-radius:0;flex:1;" aria-label="Phone number without country code">
-    </div>
-  </div>
-  <small style="color:#627d98;">Pilih your country. The flag and country code are added automatically; enter numbers only.</small>
-</div>
           <div class="client-field"><label for="clientCity">Kota tempat tinggal saat ini</label><input id="clientCity" placeholder="Kota saat ini" required></div>
           <div class="client-field"><label for="clientMarital">Status keluarga</label><select id="clientMarital" required><option value="">Pilih</option><option>Lajang</option><option>Menikah</option><option>Tidak ingin menyebutkan</option></select></div>
           <div class="client-field"><label for="household">Berapa orang yang akan tinggal di sana?</label><input id="household" type="number" min="1" max="30" value="1" required></div>
@@ -964,6 +780,57 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
 </script>
 
 <script>
+(function(){
+  document.body.classList.add('rn-gate-active');
+  const gate=document.getElementById('rnWelcomeGate');
+  const nameStep=document.getElementById('rnGateNameStep');
+  const genderStep=document.getElementById('rnGateGenderStep');
+  const ageStep=document.getElementById('rnGateAgeStep');
+  const name=document.getElementById('rnGateName');
+  const age=document.getElementById('rnGateAge');
+  const nameBtn=document.getElementById('rnGateNameContinue');
+  const genderBtn=document.getElementById('rnGateGenderContinue');
+  const ageBtn=document.getElementById('rnGateAgeContinue');
+  const genderButtons=Array.from(document.querySelectorAll('.rn-gender-option'));
+  let gender='';
+  function syncOriginalFields(){
+    const n=document.getElementById('clientName');
+    const g=document.getElementById('clientJenis kelamin');
+    const a=document.getElementById('clientUsia');
+    if(n) n.value=name.value.trim();
+    if(g) g.value=gender;
+    if(a) a.value=age.value;
+  }
+  nameBtn.addEventListener('click',function(){
+    if(!name.value.trim()){name.focus();return;}
+    nameStep.hidden=true; genderStep.hidden=false;
+  });
+  genderButtons.forEach(function(btn){
+    btn.addEventListener('click',function(){
+      gender=btn.dataset.gender;
+      genderButtons.forEach(function(b){b.classList.toggle('selected',b===btn);});
+      genderBtn.disabled=false;
+    });
+  });
+  genderBtn.addEventListener('click',function(){
+    if(!gender)return;
+    genderStep.hidden=true; ageStep.hidden=false; age.focus();
+  });
+  ageBtn.addEventListener('click',function(){
+    const value=Number(age.value);
+    if(!Number.isFinite(value)||value<18||value>120){age.focus();return;}
+    syncOriginalFields();
+    document.body.classList.remove('rn-gate-active');
+    gate.hidden=true;
+    const form=document.getElementById('clientProfilForm');
+    if(form){form.hidden=false;}
+    const panel=document.querySelector('.client-panel');
+    if(panel) panel.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+})();
+</script>
+
+<script>
 (function() {
   const form = document.getElementById('clientProfilForm');
   if (!form) return;
@@ -972,7 +839,7 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
   let current = 0;
   const state = { property: '', purpose: 'Beli', rentalTerm: '' };
 
-  const flowDomIndex = [0,1,2,3,4];
+  const flowDomIndex = [0,1,2,3];
   function showStep(index) {
     current = Math.max(0, Math.min(index, flowDomIndex.length - 1));
     const domIndex = flowDomIndex[current];
@@ -1022,27 +889,16 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
       return;
     }
     if (current === 2) {
-      const name = document.getElementById('clientName');
-      const gender = document.getElementById('clientJenis kelamin');
-      const age = document.getElementById('clientUsia');
-      if (!name.reportValidity() || !gender.reportValidity() || !age.reportValidity()) return;
-      if (Number(age.value) < 18) {
-        age.setCustomValidity('Please enter an age of 18 or older.');
-        age.reportValidity();
-        age.setCustomValidity('');
-        return;
-      }
-      showStep(3);
-      return;
-    }
-    if (current === 3) {
-      const required = ['clientPhone','clientCity','clientMarital','household','clientCityWant'];
+      const required = ['clientCity','clientMarital','household','clientCityWant'];
       for (const id of required) {
         const el = document.getElementById(id);
         if (!el || !el.reportValidity()) return;
       }
       buildSummary();
-      showStep(4);
+      showStep(3);
+    }
+    if (current === 3) {
+      buildSummary();
     }
   }));
 
@@ -1452,11 +1308,8 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     let conv=await ensureCustomerConversation();
     if(!conv){
       const v=id=>document.getElementById(id)?.value||'';
-      const customerEmail=(v('clientEmail')||state.user.email||'').trim();
       const requestLabel=window.__rnPropertyName||v('clientCityWant')||'Permintaan RumahNusa';
-      // Keep the customer's email with the conversation itself so the agent inbox
-      // can show the email even when profile-email visibility is restricted by RLS.
-      const propertyLabel=customerEmail ? customerEmail+' | '+requestLabel : requestLabel;
+      const propertyLabel=requestLabel;
       const {data,error}=await client.from('conversations').insert({
         customer_id:state.user.id,
         property_name:propertyLabel
@@ -1484,10 +1337,6 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     const purpose=v('purpose')||'Beli';
     const rooms=v('rooms');
     const rentalTerm=purpose==='Sewa'?v('rentalTerm'):'Tidak berlaku';
-    const country=document.getElementById('clientCountry');
-    const countryName=country?.options[country.selectedIndex]?.text||'';
-    const countryCode=country?.options[country.selectedIndex]?.dataset.code||'';
-    const phone=countryCode+' '+v('clientPhone');
     const budget=v('clientBudget');
     const files=Array.from(document.getElementById('requestDocuments')?.files||[]);
     const specText=isLargeHouse?houseSpecs[rooms]:apartmentSpecs[rooms];
@@ -1500,8 +1349,6 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       'NAMA: '+v('clientName'),
       'JENIS KELAMIN: '+v('clientJenis kelamin'),
       'USIA: '+v('clientUsia'),
-      'TELEPON: '+phone,
-      'NEGARA NOMOR TELEPON: '+countryName,
       'KOTA TEMPAT TINGGAL SAAT INI: '+v('clientCity'),
       'STATUS KELUARGA: '+v('clientMarital'),
       'JUMLAH ORANG YANG AKAN TINGGAL: '+v('household'),
@@ -1537,11 +1384,11 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     // Keep the customer's latest identity details in their Supabase profile.
     const {error:profileError}=await client.from('profiles').update({
       full_name:v('clientName'),
-      phone:phone
+      phone:null
     }).eq('id',state.user.id);
     if(profileError){status('Data pelanggan belum dapat disimpan: '+profileError.message);return;}
 
-    window.__rnPropertyName=(v('clientEmail')||state.user.email||'').trim()+' | '+v('clientName')+' · '+property+' · '+purpose+' · '+rooms;
+    window.__rnPropertyName=v('clientName')+' · '+property+' · '+purpose+' · '+rooms;
     await sendCustomerMessage(requestMessage);
 
     // Attempt real file upload when the private Storage bucket is configured.
@@ -1598,7 +1445,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       const b=document.createElement('button');
       b.type='button';
       b.className='rn-agent-conv'+(state.agentSelected?.id===conv.id?' active':'');
-      const customerPhone=(conv.property_name||'').split(' | ')[0].trim() || 'Customer phone not available';
+      const customerPhone=(conv.property_name||'').split(' | ')[0].trim() || 'Customer';
       b.innerHTML='<strong>'+esc(customerPhone)+'</strong><br><span style="font-size:12px;color:#627d98;">Tap to open customer conversation</span>';
       b.setAttribute('aria-label','Open customer conversation for '+customerPhone);
       b.addEventListener('click',()=>selectAgentConversation(conv));
@@ -1656,7 +1503,12 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     agentComposer.value='';
     await loadConversationMessages(state.agentSelected.id,agentThread);
   });
-  client.auth.getSession().then(({data})=>{if(data.session)applyUser(data.session.user);});
+  client.auth.getSession().then(async({data})=>{
+    if(data.session){applyUser(data.session.user);return;}
+    const anon=await client.auth.signInAnonymously();
+    if(anon.error){console.warn('Anonymous customer session unavailable:',anon.error.message);return;}
+    if(anon.data.user) await applyUser(anon.data.user);
+  });
   client.auth.onAuthStateChange((_event,session)=>{if(session&&!state.user)applyUser(session.user);});
 })();
 </script>
