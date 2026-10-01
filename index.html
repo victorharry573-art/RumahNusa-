@@ -980,8 +980,7 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
       v('rooms') + '<br>' +
       'Amount: $' + amount + '<br>' +
       'Kota pilihan: ' + v('clientCityWant') + '<br>' +
-      'Rumahhold: ' + v('household') + ' · Kota saat ini: ' + v('clientCity') + '<br>' +
-      'Telepon: ' + v('clientPhone');
+      'Rumahhold: ' + v('household') + ' · Kota saat ini: ' + v('clientCity');
   }
 
   function addInboxMessage(text, sender) {
@@ -1038,24 +1037,7 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
  setLang('id');
 })();
 </script>
-<script>
-(function(){
- const country=document.getElementById('clientCountry');
- const prefix=document.getElementById('phonePrefix');
- const phone=document.getElementById('clientPhone');
- function updatePhone(){
-   if(!country||!prefix||!phone) return;
-   const o=country.options[country.selectedIndex];
-   if(!o) return;
-   prefix.textContent=(o.dataset.flag||'🌐')+' '+(o.dataset.code||'');
-   phone.placeholder=o.value==='ID'?'81234567890':'Masukkan nomor lokal';
- }
- country.addEventListener('change',updatePhone);
- country.addEventListener('input',updatePhone);
- phone.addEventListener('input',function(){this.value=this.value.replace(/[^0-9 ]/g,'');});
- updatePhone();
-})();
-</script>
+
 
 
 <script src="supabase-config.js"></script>
