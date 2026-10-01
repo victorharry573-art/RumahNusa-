@@ -1201,7 +1201,6 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     const purpose=v('purpose')||'Beli';
     const rooms=v('rooms');
     const rentalTerm=purpose==='Sewa'?v('rentalTerm'):'Tidak berlaku';
-    const budgetUsd=v('clientBudget');
     const budgetIdr=v('clientBudgetIdr');
     const identity=window.__rnCustomerIdentity||{};
     const isApartment=property==='Apartemen';
@@ -1375,7 +1374,6 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       'Property category: '+(window.__rnCustomerFlowState?.property||''),
       'Rooms: '+v('rooms'),
       'Purchase plan: '+(window.__rnCustomerFlowState?.purpose||''),
-      'Amount (USD): $'+amount,
       'Amount (IDR): Rp '+idr,
       'Email: '+v('clientEmail'),
       'Phone: '+v('clientPhone'),
@@ -1610,11 +1608,11 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     const formatIdr=n=>'Rp '+Math.round(n).toLocaleString('id-ID');
     const addIdrPrice=price=>{
       const m=String(price||'').match(/\$([0-9][0-9,]*)/);
-      if(!m)return '';
+      if(!m)return String(price||'');
       const usd=Number(m[1].replace(/,/g,''));
-      return '<span class="rn-listing-price-idr">≈ '+formatIdr(usd*usdToIdrRate)+'</span><small style="display:block;color:#627d98;margin-top:2px;">Rupiah estimate · rate used: Rp17,900/USD</small>';
+      return formatIdr(usd*usdToIdrRate);
     };
-    listings.innerHTML=d.listings.map(x=>'<article class="rn-listing"><img loading="lazy" src="'+x[4]+'" alt="'+x[0]+' interior and exterior"><div class="rn-listing-body"><h5>'+x[0]+'</h5><p>📍 '+x[1]+'</p><p class="rn-listing-price">'+x[2]+'</p>'+addIdrPrice(x[2])+'<div class="rn-listing-specs">'+x[3].split(' · ').map(s=>'<span>'+s+'</span>').join('')+'</div><p>'+d.buy+'</p><button type="button" class="rn-listing-continue">Continue with this home</button></div></article>').join('');
+    listings.innerHTML=d.listings.map(x=>'<article class="rn-listing"><img loading="lazy" src="'+x[4]+'" alt="'+x[0]+' interior and exterior"><div class="rn-listing-body"><h5>'+x[0]+'</h5><p>📍 '+x[1]+'</p><p class="rn-listing-price">'+addIdrPrice(x[2])+'</p>+'<div class="rn-listing-specs">'+x[3].split(' · ').map(s=>'<span>'+s+'</span>').join('')+'</div><p>'+d.buy+'</p><button type="button" class="rn-listing-continue">Continue with this home</button></div></article>').join('');
     choiceTitle.textContent=d.title+' — choose your rooms and plan';
     choiceIntro.textContent=d.intro;
     setOptions(rooms,d.rooms);
