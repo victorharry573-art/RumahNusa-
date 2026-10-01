@@ -1807,14 +1807,27 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   const tabs=Array.from(viewer.querySelectorAll('.rn-home-viewer-tab'));
   const panels=Array.from(viewer.querySelectorAll('[data-viewer-panel]'));
 
-  function hide(){
+  let viewerHistoryOpen=false;
+  function hide(useHistory=true){
     viewer.hidden=true;
     document.body.style.overflow='';
+    if(useHistory && viewerHistoryOpen){
+      viewerHistoryOpen=false;
+      if(history.state && history.state.rnHomeViewer) history.back();
+    }
   }
-  close?.addEventListener('click',hide);
-  back?.addEventListener('click',hide);
-  viewer.addEventListener('click',e=>{if(e.target===viewer)hide();});
-  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!viewer.hidden)hide();});
+  close?.addEventListener('click',()=>hide(true));
+  back?.addEventListener('click',()=>hide(true));
+  viewer.addEventListener('click',e=>{if(e.target===viewer)hide(true);});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!viewer.hidden)hide(true);});
+
+  window.addEventListener('popstate',function(){
+    if(viewerHistoryOpen){
+      viewerHistoryOpen=false;
+      viewer.hidden=true;
+      document.body.style.overflow='';
+    }
+  });
 
   tabs.forEach(tab=>tab.addEventListener('click',()=>{
     tabs.forEach(x=>x.classList.toggle('active',x===tab));
@@ -1825,7 +1838,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     const title=viewer.querySelector('[data-viewer-title]')?.textContent||'';
     const card=Array.from(document.querySelectorAll('#rnCategoryListings .rn-listing')).find(x=>(x.querySelector('h5')?.textContent||'')===title);
     if(card)card.querySelector('.rn-select-home')?.click();
-    hide();
+    hide(true);
   });
 
   // Reliable in-page swipe: start anywhere in the viewer, not only at the browser edge.
@@ -2158,6 +2171,10 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
           viewer.querySelector('[data-viewer-image]').alt=title+' — RumahNusa property';
           viewer.querySelector('[data-viewer-price]').textContent=card.querySelector('.rn-listing-price')?.textContent||'Contact RumahNusa';
           viewer.querySelector('[data-viewer-specs]').innerHTML=Array.from(card.querySelectorAll('.rn-listing-specs span')).map(s=>'<div class="rn-home-viewer-chip">'+esc(s.textContent)+'</div>').join('');
+          if(!viewerHistoryOpen){
+            history.pushState({rnHomeViewer:true},'',location.href);
+            viewerHistoryOpen=true;
+          }
           viewer.hidden=false;
           document.body.style.overflow='hidden';
         }
