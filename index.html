@@ -656,24 +656,14 @@ body.rn-gate-active{margin:0;}
         <p>RumahNusa is where beautiful homes, comfort, privacy, and peace of mind come together. We help you discover a place that feels right for your everyday life, your family, and your future.</p>
         <p>Every home is presented with care so you can explore beautiful rooms, comfortable living spaces, thoughtful details, and the feeling of coming home.</p>
         <p>Take your time, discover the home that fits your life, and choose a place where you can live comfortably and enjoy peace of mind.</p>
-        <p class="rn-welcome-instruction"><strong>Before you begin, tell us your name, gender, and age. Then you can explore and choose your beautiful RumahNusa home.</strong></p>
+        <p class="rn-welcome-instruction"><strong>Welcome to RumahNusa Real Estate — a place created for beautiful living, comfort, privacy, and peace of mind. Tell us your name, gender, and age to enter, then explore the home category that feels right for your life.</strong></p>
       </div>
       <div id="rnGateIdentityStep" class="rn-gate-step">
         <div id="rnGateIdentityFields">
-          <div class="rn-gate-field"><label for="rnGateEmail">Email</label><input id="rnGateEmail" type="email" autocomplete="username" placeholder="Enter your email"></div>
-          <div class="rn-gate-field">
-            <label for="rnGatePassword">Password</label>
-            <div class="rn-password-wrap">
-              <input id="rnGatePassword" type="password" autocomplete="current-password" placeholder="Enter your password">
-              <button id="rnGatePasswordEye" class="rn-password-eye" type="button" aria-label="Show password" aria-pressed="false">
-                <svg class="rn-eye-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.2-6 9.5-6 9.5 6 9.5 6-3.2 6-9.5 6-9.5-6-9.5-6Z"></path><circle cx="12" cy="12" r="2.5"></circle></svg>
-              </button>
-            </div>
-          </div>
           <div class="rn-gate-field"><label for="rnGateName">Your name</label><input id="rnGateName" type="text" autocomplete="name" placeholder="Enter your name"></div>
           <div id="rnGateGenderStep"><label>Gender</label><div class="rn-gender-options"><button type="button" class="rn-gender-option" data-gender="Female">Female</button><button type="button" class="rn-gender-option" data-gender="Male">Male</button></div></div>
           <div id="rnGateAgeStep"><label for="rnGateAge">Your age</label><input id="rnGateAge" type="number" min="18" max="120" inputmode="numeric" placeholder="18 or older"></div>
-          <button id="rnGateIdentityContinue" class="btn" type="button" disabled>Login &amp; Continue</button>
+          <button id="rnGateIdentityContinue" class="btn" type="button" disabled>Continue to RumahNusa</button>
         </div>
         <p id="rnGateLoginStatus" class="rn-gate-status" aria-live="polite"></p>
       </div>
@@ -686,7 +676,7 @@ body.rn-gate-active{margin:0;}
         <div class="rn-home-welcome">
           <h3>Welcome to RumahNusa Real Estate</h3>
           <p>Welcome to a place where beautiful homes, comfort, privacy, and peace of mind come together. RumahNusa helps you discover a home that can feel right for your everyday life, your family, and your future.</p>
-          <p class="rn-home-prompt">Choose the home category that feels right for you. Tap once and its homes will open immediately.</p>
+          <p class="rn-home-prompt">Choose your beautiful home category. Tap once and that category will open immediately, with only those homes shown.</p>
         </div>
         <div class="client-options rn-home-category-grid" id="propertyOptions" aria-label="RumahNusa home categories">
           <button type="button" class="client-option rn-home-category" data-value="Apartemen"><span class="rn-home-icon" aria-hidden="true">🏢</span><strong>Apartment</strong><small>City apartments, rooms, views and shared facilities.</small></button>
@@ -698,7 +688,6 @@ body.rn-gate-active{margin:0;}
           <button type="button" class="client-option rn-home-category" data-value="Penthouse"><span class="rn-home-icon" aria-hidden="true">🌆</span><strong>Penthouse</strong><small>Large high-rise homes with city views.</small></button>
           <button type="button" class="client-option rn-home-category" data-value="Family Residence"><span class="rn-home-icon" aria-hidden="true">👨‍👩‍👧‍👦</span><strong>Family Residence</strong><small>Comfortable homes designed around family life.</small></button>
           <button type="button" class="client-option rn-home-category" data-value="Investment Property"><span class="rn-home-icon" aria-hidden="true">📈</span><strong>Investment Property</strong><small>Properties for long-term ownership and investment.</small></button>
-          <button type="button" class="client-option rn-home-category" data-value="Hotel"><span class="rn-home-icon" aria-hidden="true">🏨</span><strong>Hotel</strong><small>Hotel rooms, suites and hospitality spaces.</small></button>
         </div>
         <div class="client-actions">
           <button class="btn secondary" type="button" data-back>Kembali</button>
@@ -928,9 +917,6 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
 <script>
 (function(){
   const status=document.getElementById('rnGateLoginStatus');
-  const email=document.getElementById('rnGateEmail');
-  const password=document.getElementById('rnGatePassword');
-  const eye=document.getElementById('rnGatePasswordEye');
   const name=document.getElementById('rnGateName');
   const age=document.getElementById('rnGateAge');
   const identityContinue=document.getElementById('rnGateIdentityContinue');
@@ -938,20 +924,13 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
   const form=document.getElementById('clientProfilForm');
   const genders=Array.from(document.querySelectorAll('#rnGateIdentityFields .rn-gender-option'));
   let gender='';
-  if(!form||!name||!age||!identityContinue||!email||!password)return;
-
-  eye?.addEventListener('click',function(){
-    const show=password.type==='password';
-    password.type=show?'text':'password';
-    eye.setAttribute('aria-pressed',show?'true':'false');
-    eye.setAttribute('aria-label',show?'Hide password':'Show password');
-  });
+  if(!form||!name||!age||!identityContinue)return;
 
   function validIdentity(){
     const a=Number(age.value);
-    identityContinue.disabled=!(email.value.trim()&&password.value&&name.value.trim()&&gender&&a>=18&&a<=120);
+    identityContinue.disabled=!(name.value.trim()&&gender&&a>=18&&a<=120);
   }
-  [email,password,name,age].forEach(el=>el.addEventListener('input',validIdentity));
+  [name,age].forEach(el=>el.addEventListener('input',validIdentity));
   genders.forEach(function(button){
     button.addEventListener('click',function(){
       gender=button.dataset.gender||'';
@@ -960,31 +939,16 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
     });
   });
 
-  identityContinue.addEventListener('click',async function(){
+  identityContinue.addEventListener('click',function(){
     const a=Number(age.value);
     if(identityContinue.disabled)return;
-    identityContinue.disabled=true;
-    status.textContent='Signing you in...';
-    try{
-      if(!window.supabase||!window.RUMAHNUSA_SUPABASE_URL||!window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY){
-        throw new Error('Login service is not ready.');
-      }
-      const authClient=window.supabase.createClient(window.RUMAHNUSA_SUPABASE_URL,window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY);
-      const result=await authClient.auth.signInWithPassword({email:email.value.trim(),password:password.value});
-      if(result.error) throw result.error;
-      window.__rnCustomerUser=result.data.user;
-      window.__rnCustomerAuthClient=authClient;
-      window.__rnCustomerIdentity={name:name.value.trim(),gender:gender,age:a,email:email.value.trim()};
-      status.textContent='Login successful. Welcome to RumahNusa.';
-      welcome.hidden=true;
-      form.hidden=false;
-      document.body.classList.remove('rn-gate-active');
-      form.querySelectorAll('.client-form-step').forEach(function(step,i){step.classList.toggle('active',i===0);});
-      document.getElementById('propertyOptions')?.scrollIntoView({behavior:'smooth',block:'start'});
-    }catch(error){
-      status.textContent='Login failed. Please check your email and password.';
-      identityContinue.disabled=false;
-    }
+    window.__rnCustomerIdentity={name:name.value.trim(),gender:gender,age:a};
+    status.textContent='Welcome to RumahNusa. Your home choices are now open.';
+    welcome.hidden=true;
+    form.hidden=false;
+    document.body.classList.remove('rn-gate-active');
+    form.querySelectorAll('.client-form-step').forEach(function(step,i){step.classList.toggle('active',i===0);});
+    document.getElementById('propertyOptions')?.scrollIntoView({behavior:'smooth',block:'start'});
   });
   validIdentity();
 })();
@@ -1147,8 +1111,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     .rn-welcome-copy{padding:28px 18px;margin:18px 0;border:1px solid #d9e2ec;border-radius:18px;background:linear-gradient(135deg,#f7fbff,#fff)}
     .rn-welcome-copy h2{margin:0 0 10px}
     .rn-welcome-copy p{line-height:1.65;margin:8px 0}
-    #rnGateSignup .rn-password-wrap{margin-top:0}
-    #rnGateSignupStatus{margin-top:10px}
+    
 
 
   `;
