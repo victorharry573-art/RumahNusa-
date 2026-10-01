@@ -665,14 +665,14 @@ body.rn-gate-active{margin:0;}
         <p>RumahNusa is where beautiful homes, comfort, privacy, and peace of mind come together. We help you discover a place that feels right for your everyday life, your family, and your future.</p>
         <p>Every home is presented with care so you can explore beautiful rooms, comfortable living spaces, thoughtful details, and the feeling of coming home.</p>
         <p>Take your time, discover the home that fits your life, and choose a place where you can live comfortably and enjoy peace of mind.</p>
-        <p class="rn-welcome-instruction"><strong>Welcome to RumahNusa Real Estate — a place created for beautiful living, comfort, privacy, and peace of mind. Enter your name, choose whether you are a woman or man, enter your age, and tap Login to begin choosing your beautiful home.</strong></p>
+        <p class="rn-welcome-instruction"><strong>Welcome to RumahNusa Real Estate — a place created for beautiful living, comfort, privacy, and peace of mind. Enter your name, choose whether you are a woman or man, enter your age, and tap Continue to RumahNusa to begin choosing your beautiful home.</strong></p>
       </div>
       <div id="rnGateIdentityStep" class="rn-gate-step">
         <div id="rnGateIdentityFields">
           <div class="rn-gate-field"><label for="rnGateName">Your name</label><input id="rnGateName" type="text" autocomplete="name" placeholder="Enter your name"></div>
           <div id="rnGateGenderStep"><label>Are you a woman or man?</label><div class="rn-gender-options"><button type="button" class="rn-gender-option" data-gender="Woman">Woman</button><button type="button" class="rn-gender-option" data-gender="Man">Man</button></div></div>
           <div id="rnGateAgeStep"><label for="rnGateAge">Your age</label><input id="rnGateAge" type="number" min="18" max="120" inputmode="numeric" placeholder="18 or older"></div>
-          <button id="rnGateIdentityContinue" class="btn" type="button" disabled>Login</button>
+          <button id="rnGateIdentityContinue" class="btn" type="button" disabled>Continue to RumahNusa</button>
         </div>
         <p id="rnGateLoginStatus" class="rn-gate-status" aria-live="polite"></p>
       </div>
@@ -1875,7 +1875,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 
       try{
         if(!window.supabase||!window.RUMAHNUSA_SUPABASE_URL||!window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY){
-          status.textContent='Login is temporarily unavailable. Please try again.';
+          status.textContent='RumahNusa is temporarily unavailable. Please try again.';
           loginBtn.disabled=false;
           return;
         }
@@ -1887,7 +1887,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
             options:{data:{full_name:name.value.trim(),gender,age:a}}
           });
           if(anonymous.error||!anonymous.data?.user){
-            status.textContent='Login is temporarily unavailable. Please try again.';
+            status.textContent='RumahNusa is temporarily unavailable. Please try again.';
             loginBtn.disabled=false;
             return;
           }
@@ -1904,7 +1904,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
           role:'customer'
         },{onConflict:'id'});
       }catch(e){
-        status.textContent='Login is temporarily unavailable. Please try again.';
+        status.textContent='RumahNusa is temporarily unavailable. Please try again.';
         loginBtn.disabled=false;
         return;
       }
