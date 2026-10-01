@@ -450,7 +450,7 @@ body.rn-site-unlocked footer { display:none !important; }
 .rn-password-wrap input{width:100%;box-sizing:border-box;padding:14px 52px 14px 12px;border:1px solid #8aa4bc;border-radius:10px;font:inherit;min-height:56px}
 .rn-password-eye{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:44px;height:44px;border:0;background:transparent;border-radius:50%;display:grid;place-items:center;cursor:pointer;touch-action:manipulation}
 .rn-password-eye svg{width:26px;height:26px;fill:none;stroke:#334e68;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}.rn-password-eye:focus-visible{outline:3px solid #7cc4e8;outline-offset:2px}
-.rn-password-eye:active{background:#eef4f8}.rn-gate-status{margin:10px 0 0;color:#486581;line-height:1.5}.rn-password-wrap{position:relative}.rn-password-wrap input{padding-right:54px !important}.rn-password-eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:44px;height:44px;border:0;background:transparent;color:#486581;font-size:20px;cursor:pointer;border-radius:50%;display:flex;align-items:center;justify-content:center}.rn-password-eye:active{background:#eaf5fb}.rn-password-eye[aria-pressed="true"]{color:#0879bd}
+.rn-password-eye:active{background:#eef4f8}.rn-gate-status{margin:10px 0 0;color:#486581;line-height:1.5}.rn-password-wrap{position:relative}.rn-password-wrap input{padding-right:54px !important}.rn-password-eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:44px;height:44px;border:0;background:transparent;color:#486581;font-size:20px;cursor:pointer;border-radius:50%;display:flex;align-items:center;justify-content:center}.rn-password-eye:active{background:#eaf5fb}.rn-password-eye[aria-pressed="true"]{color:#0879bd}.rn-eye-icon{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .rn-gate-welcome{font-size:16px;line-height:1.6;margin:10px 0;color:#486581}
 
 @media(max-width:700px){.rn-gate-grid{grid-template-columns:1fr}.rn-gate-grid .full{grid-column:auto}}
@@ -666,7 +666,9 @@ body.rn-gate-active{margin:0;}
           <label for="rnGatePassword">Password</label>
           <div class="rn-password-wrap">
             <input id="rnGatePassword" type="password" autocomplete="current-password" placeholder="Enter your password" required>
-            <button id="rnGatePasswordToggle" class="rn-password-eye" type="button" aria-label="Show password" aria-pressed="false">◉</button>
+            <button id="rnGatePasswordToggle" class="rn-password-eye" type="button" aria-label="Show password" aria-pressed="false">
+  <svg class="rn-eye-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="2.8"></circle></svg>
+</button>
           </div>
           <button id="rnGateLogin" class="btn" type="button">Login</button>
         </div>
@@ -898,7 +900,7 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
   toggle?.addEventListener('click',function(){
     const showing=password.type==='text';
     password.type=showing?'password':'text';
-    toggle.textContent=showing?'◉':'◉';
+    toggle.innerHTML='<svg class="rn-eye-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="2.8"></circle></svg>';
     toggle.setAttribute('aria-label',showing?'Show password':'Hide password');
     toggle.setAttribute('aria-pressed',String(!showing));
   });
