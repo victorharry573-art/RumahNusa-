@@ -1385,8 +1385,19 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     loginCountry.addEventListener('change',syncLoginCountry);
     loginCountry.addEventListener('input',syncLoginCountry);
   }
-  populateLoginCountries();
-  setTimeout(populateLoginCountries,50);
+  // The login gate appears before the customer form in the HTML, so the
+  // customer country select does not exist yet when this script first runs.
+  // Populate again after the whole page has been parsed so the country picker
+  // contains the complete list and is immediately tappable on Android.
+  function populateLoginCountriesWhenReady(){
+    populateLoginCountries();
+    syncLoginCountry();
+  }
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', populateLoginCountriesWhenReady, {once:true});
+  }else{
+    populateLoginCountriesWhenReady();
+  }
 
   // Password login has been removed. RumahNusa uses phone + SMS confirmation code.
 
