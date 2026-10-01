@@ -1702,6 +1702,56 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 /* The legacy sequential flow has been disabled. RumahNusa now uses the category-and-price selection flow below. */
 </script>
 
+<div id="rnHomeViewer" class="rn-home-viewer" hidden role="dialog" aria-modal="true" aria-label="RumahNusa home viewer">
+  <div class="rn-home-viewer-panel">
+    <div class="rn-home-viewer-top">
+      <div>
+        <div class="rn-home-viewer-title" data-viewer-title>RumahNusa Home</div>
+        <div style="font-size:13px;opacity:.9" data-viewer-location></div>
+      </div>
+      <button class="rn-home-viewer-close" type="button" aria-label="Close">Close</button>
+    </div>
+    <div class="rn-home-viewer-tabs">
+      <button class="rn-home-viewer-tab active" type="button" data-tab="photo">Photo</button>
+      <button class="rn-home-viewer-tab" type="button" data-tab="360">360°</button>
+    </div>
+    <div class="rn-home-viewer-photo" data-viewer-panel="photo"><img data-viewer-image alt=""></div>
+    <div class="rn-home-viewer-photo" data-viewer-panel="360" hidden>
+      <div style="border-radius:14px;background:#263238;color:#fff;padding:50px 24px;text-align:center;font-weight:700">360° viewing area<br><span style="font-weight:400;font-size:14px;opacity:.85">The property's 360° file can be connected here.</span></div>
+    </div>
+    <div class="rn-home-viewer-section">
+      <h4>Inside this home</h4>
+      <div style="font-weight:700;margin-bottom:8px" data-viewer-price></div>
+      <div class="rn-home-viewer-chips" data-viewer-specs></div>
+    </div>
+    <p class="rn-home-viewer-note">Tap anywhere on a home card to open it. Choose the home below when you are ready to continue.</p>
+    <button class="rn-home-viewer-choose" type="button">Choose this home &amp; continue</button>
+  </div>
+</div>
+<script>
+(function(){
+  const viewer=document.getElementById('rnHomeViewer');
+  if(!viewer)return;
+  const close=viewer.querySelector('.rn-home-viewer-close');
+  const choose=viewer.querySelector('.rn-home-viewer-choose');
+  const tabs=Array.from(viewer.querySelectorAll('.rn-home-viewer-tab'));
+  const panels=Array.from(viewer.querySelectorAll('[data-viewer-panel]'));
+  function hide(){viewer.hidden=true;document.body.style.overflow='';}
+  close.addEventListener('click',hide);
+  viewer.addEventListener('click',e=>{if(e.target===viewer)hide();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!viewer.hidden)hide();});
+  tabs.forEach(tab=>tab.addEventListener('click',()=>{
+    tabs.forEach(x=>x.classList.toggle('active',x===tab));
+    panels.forEach(p=>p.hidden=p.dataset.viewerPanel!==tab.dataset.tab);
+  }));
+  choose.addEventListener('click',()=>{
+    const title=viewer.querySelector('[data-viewer-title]')?.textContent||'';
+    const card=Array.from(document.querySelectorAll('#rnCategoryListings .rn-listing')).find(x=>(x.querySelector('h5')?.textContent||'')===title);
+    if(card)card.querySelector('.rn-select-home')?.click();
+    hide();
+  });
+})();
+</script>
 </body>
 <script>
 /* RumahNusa sequential customer experience — one choice/question at a time. */
@@ -1931,6 +1981,19 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
         body.appendChild(selectButton);
         body.appendChild(pricing);
 
+        function openHomeViewer(){
+          const viewer=document.getElementById('rnHomeViewer');
+          if(!viewer)return;
+          viewer.querySelector('[data-viewer-title]').textContent=title;
+          viewer.querySelector('[data-viewer-location]').textContent=location;
+          viewer.querySelector('[data-viewer-image]').src=card.querySelector('img')?.src||'';
+          viewer.querySelector('[data-viewer-image]').alt=title+' — RumahNusa property';
+          viewer.querySelector('[data-viewer-price]').textContent=card.querySelector('.rn-listing-price')?.textContent||'Contact RumahNusa';
+          viewer.querySelector('[data-viewer-specs]').innerHTML=Array.from(card.querySelectorAll('.rn-listing-specs span')).map(s=>'<div class="rn-home-viewer-chip">'+esc(s.textContent)+'</div>').join('');
+          viewer.hidden=false;
+          document.body.style.overflow='hidden';
+        }
+
         function selectHome(){
           setSelectedCard(card);
           listings.querySelectorAll('.rn-home-inside').forEach(x=>{if(x!==details)x.hidden=true;});
@@ -1941,17 +2004,16 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
           card.scrollIntoView({behavior:'smooth',block:'center'});
         }
 
-        detailButton.addEventListener('click',function(){
-          details.hidden=!details.hidden;
-          detailButton.setAttribute('aria-expanded',String(!details.hidden));
-          detailButton.textContent=details.hidden?'View inside':'Hide inside';
+        detailButton.addEventListener('click',function(event){
+          event.stopPropagation();
+          openHomeViewer();
         });
 
         selectButton.addEventListener('click',function(event){event.stopPropagation();selectHome();});
 
         card.addEventListener('click',function(event){
           if(event.target.closest('input,select,button,label'))return;
-          selectHome();
+          openHomeViewer();
         });
         card.setAttribute('role','button');
         card.setAttribute('tabindex','0');
@@ -2052,5 +2114,26 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 @media(max-width:600px){
   #propertyContinueFloat{right:12px;bottom:14px;min-width:150px}
 }
+
+.rn-listing{cursor:pointer;touch-action:manipulation}
+.rn-listing:focus-visible{outline:3px solid #0879bd;outline-offset:3px}
+.rn-home-viewer{position:fixed;inset:0;z-index:20000;background:rgba(0,0,0,.72);display:flex;align-items:flex-start;justify-content:center;overflow:auto}
+.rn-home-viewer[hidden]{display:none!important}
+.rn-home-viewer-panel{width:min(760px,100%);min-height:100%;background:#fff;color:#102a43}
+.rn-home-viewer-top{position:sticky;top:0;z-index:2;background:#ef4444;color:#fff;padding:16px 18px;display:flex;align-items:center;gap:14px}
+.rn-home-viewer-title{font-size:20px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rn-home-viewer-close{margin-left:auto;background:transparent;border:0;color:#fff;font-size:17px;padding:8px 10px;cursor:pointer}
+.rn-home-viewer-tabs{display:flex;gap:28px;padding:12px 18px;border-bottom:1px solid #e5e7eb}
+.rn-home-viewer-tab{border:0;background:transparent;padding:8px 2px;font-weight:800;font-size:16px;cursor:pointer}
+.rn-home-viewer-tab.active{color:#ef4444;border-bottom:3px solid #ef4444}
+.rn-home-viewer-photo{padding:18px}
+.rn-home-viewer-photo img{width:100%;display:block;aspect-ratio:16/10;object-fit:cover;border-radius:14px}
+.rn-home-viewer-section{padding:0 18px 18px}
+.rn-home-viewer-section h4{margin:8px 0 10px;font-size:20px}
+.rn-home-viewer-chips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.rn-home-viewer-chip{padding:14px;border:1px solid #d9e2ec;border-radius:12px;background:#f8fbfd;font-weight:700}
+.rn-home-viewer-choose{margin:0 18px 24px;width:calc(100% - 36px);padding:15px;border:0;border-radius:12px;background:#0879bd;color:#fff;font-size:17px;font-weight:800;cursor:pointer}
+.rn-home-viewer-note{padding:0 18px 18px;color:#627d98;font-size:13px;line-height:1.5}
+@media(max-width:520px){.rn-home-viewer-chips{grid-template-columns:1fr}.rn-home-viewer-title{font-size:17px}}
 </style>
 </html>
