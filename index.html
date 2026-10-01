@@ -703,16 +703,15 @@ body.rn-gate-active{margin:0;}
           <div id="rnCategoryListings" class="rn-listing-grid"></div>
           <div id="rnCategoryConfidence" class="rn-confidence"></div>
           <p class="rn-collection-note">You are viewing only this category. Choose your home, then continue to complete your details.</p>
-          <div class="rn-category-actions">
-            <button id="rnPropertyContinue" class="btn" type="button">Choose &amp; Continue</button>
-            
+          <div class="rn-category-actions" aria-live="polite">
+            <p id="rnSelectionPrompt">Select one home and enter your price to continue.</p>
           </div>
         </div>
 
       </div>
 
 
-<div class="client-form-step" data-step="2">
+<div class="client-form-step rn-selection-hidden" data-step="2">
   <h3>Choose your purchase plan</h3>
   <p id="purchasePlanPrompt">Choose one option to continue.</p>
   <div class="rn-one-choice">
@@ -727,7 +726,7 @@ body.rn-gate-active{margin:0;}
   <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Continue</button></div>
 </div>
 
-<div class="client-form-step" data-step="3">
+<div class="client-form-step rn-selection-hidden" data-step="3">
   <h3>Rental duration</h3>
   <p>Choose how long you want the apartment rental.</p>
   <div class="rn-one-choice">
@@ -740,14 +739,14 @@ body.rn-gate-active{margin:0;}
   <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Continue</button></div>
 </div>
 
-<div class="client-form-step" data-step="4">
+<div class="client-form-step rn-selection-hidden" data-step="4">
   <h3>Choose your bedrooms</h3>
   <p>Select one bedroom option. The next question appears after you continue.</p>
   <div class="rn-one-choice"><label for="rooms">Bedrooms</label><select id="rooms"><option value="">Choose one</option></select></div>
   <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Continue</button></div>
 </div>
 
-<div class="client-form-step" data-step="5">
+<div class="client-form-step rn-selection-hidden" data-step="5">
   <h3>Amount you want to pay</h3>
   <p>Enter the amount you want the RumahNusa agent to see.</p>
   <div class="rn-one-choice" id="purchaseAmountSection">
@@ -962,107 +961,7 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
 </script>
 
 <script>
-/* Login gate is controlled by the final Supabase login script below. */
-</script>
-
-<script>
-(function(){
-  const form=document.getElementById('clientProfilForm');
-  if(!form)return;
-  const steps=Array.from(form.querySelectorAll('.client-form-step'));
-  const badges=Array.from(document.querySelectorAll('.client-step'));
-  let current=0;
-  const state={property:'',purpose:'Beli',rentalTerm:'',paymentMethod:''};
-  window.__rnCustomerFlowState=state;
-
-  function isNonApartment(){return state.property && state.property!=='Apartemen';}
-  function showStep(index){
-    current=Math.max(0,Math.min(index,steps.length-1));
-    steps.forEach((s,i)=>s.classList.toggle('active',i===current));
-    badges.forEach((b,i)=>b.classList.toggle('active',i===Math.min(current,badges.length-1)));
-    window.__rumahnusaCustomerStep=current;
-    document.querySelector('.client-panel')?.scrollIntoView({behavior:'smooth',block:'start'});
-  }
-  window.__rumahnusaShowCustomerStep=showStep;
-
-  form.querySelectorAll('[data-back]').forEach(btn=>btn.addEventListener('click',()=>showStep(current-1)));
-
-  document.getElementById('changeHouseCategory')?.addEventListener('click',()=>showStep(0));
-
-  const propertyContinue=document.getElementById('rnPropertyContinue');
-  propertyContinue?.addEventListener('click',function(){
-    if(!state.property)return;
-    showStep(1);
-  });
-
-  form.querySelectorAll('.client-next').forEach(btn=>btn.addEventListener('click',function(){
-    if(btn.closest('[data-non-apartment-only="true"]') && !isNonApartment())return;
-
-    if(current===1){
-      const purpose=document.getElementById('purpose');
-      const rentalTerm=document.getElementById('rentalTerm');
-      if(state.property!=='Apartemen'){purpose.value='Beli';state.purpose='Beli';}
-      if(state.property==='Apartemen'&&purpose.value==='Sewa'&&!rentalTerm.value){rentalTerm.focus();return;}
-      const budget=document.getElementById('clientBudget');
-      if(!budget?.reportValidity())return;
-      if(isNonApartment()){
-        const idr=document.getElementById('clientBudgetIdr');
-        if(!idr?.reportValidity())return;
-      }
-      state.purpose=purpose.value;
-      state.rentalTerm=purpose.value==='Sewa'?rentalTerm.value:'';
-      showStep(isNonApartment()?2:6);
-      return;
-    }
-
-    if(current===2){
-      for(const id of ['clientEmail','clientPhone','clientAddress','meetingDay','meetingTime']){
-        const el=document.getElementById(id);if(!el?.reportValidity())return;
-      }
-      showStep(3);return;
-    }
-    if(current===3){
-      for(const id of ['clientMarital','clientChildren','clientOccupation','clientPurchaseReason','clientUse','clientCity','clientCityWant','household']){
-        const el=document.getElementById(id);if(!el?.reportValidity())return;
-      }
-      showStep(4);return;
-    }
-    if(current===4){
-      const type=document.getElementById('privateIdentityType');
-      const photo=document.getElementById('privateIdentityPhoto');
-      if(!type?.value||!photo?.files?.length){photo?.focus();return;}
-      window.__rnPrivateDocumentSeen=true;
-      const status=document.getElementById('privateDocumentStatus');
-      if(status)status.textContent='Document accepted for this step. It is being cleared from the page and will not be uploaded or sent to the agent.';
-      // Do not read, upload, store, or transmit the document.
-      try{photo.value='';}catch(e){}
-      showStep(5);return;
-    }
-    if(current===5){
-      const chosen=document.querySelector('input[name="paymentMethod"]:checked');
-      if(!chosen){document.getElementById('paymentStatus').textContent='Please choose a payment method first.';return;}
-      state.paymentMethod=chosen.value;
-      document.getElementById('paymentStatus').textContent='Payment method selected. A real payment provider must be connected before a payment can be processed.';
-      showStep(6);return;
-    }
-    if(current===6){
-      buildSummary();
-    }
-  }));
-
-  document.getElementById('paymentContinue')?.addEventListener('click',function(){
-    const chosen=document.querySelector('input[name="paymentMethod"]:checked');
-    if(!chosen){document.getElementById('paymentStatus').textContent='Please choose a payment method first.';return;}
-    state.paymentMethod=chosen.value;
-    document.getElementById('paymentStatus').textContent='Payment provider connection is required before real payment is taken.';
-    showStep(6);
-  });
-
-  // The apartment path remains separate: purchase/rental selection leads directly to the existing request review.
-  document.getElementById('sendProfil')?.addEventListener('click',function(){
-    if(typeof window.__rnSendRequest==='function')window.__rnSendRequest();
-  });
-})();
+/* Customer navigation is handled by the final RumahNusa sequential experience. */
 </script>
 
 <script>
@@ -2279,8 +2178,6 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     const form=document.getElementById('clientProfilForm');
     const gate=document.getElementById('rnWelcomeGate');
     const loginBtn=document.getElementById('rnGateIdentityContinue');
-    const email=null;
-    const password=null;
     const name=document.getElementById('rnGateName');
     const age=document.getElementById('rnGateAge');
     const status=document.getElementById('rnGateLoginStatus');
@@ -2288,241 +2185,290 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     if(!form||!gate||!loginBtn)return;
 
     let gender='';
-    genders.forEach(b=>b.addEventListener('click',()=>{gender=b.dataset.gender||'';genders.forEach(x=>x.classList.toggle('selected',x===b));updateLogin();}));
-    [name,age].forEach(x=>x?.addEventListener('input',updateLogin));
+    const state=window.__rnCustomerFlowState||{property:'',purpose:'Beli',rentalTerm:'',paymentMethod:'',selectedHome:'',selectedHomePriceUSD:'',selectedHomePriceIDR:''};
+    window.__rnCustomerFlowState=state;
+
     function updateLogin(){
       const a=Number(age?.value);
       loginBtn.disabled=!(name?.value.trim()&&gender&&a>=18&&a<=120);
     }
+    genders.forEach(b=>b.addEventListener('click',()=>{
+      gender=b.dataset.gender||'';
+      genders.forEach(x=>x.classList.toggle('selected',x===b));
+      updateLogin();
+    }));
+    [name,age].forEach(x=>x?.addEventListener('input',updateLogin));
     updateLogin();
 
-    // Keep the same button that updateLogin() controls.
-    // Replacing the button here was causing the visible button to stay disabled.
-    const login=loginBtn;
-    login.addEventListener('click',async function(){
-      const a=Number(age.value);
-      if(!name.value.trim()||!gender||a<18||a>120)return;
-      login.disabled=true;
-      status.textContent='Welcome to RumahNusa…';
-      window.__rnCustomerIdentity={name:name.value.trim(),gender,age:a};
-      try{
-        if(window.supabase&&window.RUMAHNUSA_SUPABASE_URL&&window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY){
-          const db=window.supabase.createClient(window.RUMAHNUSA_SUPABASE_URL,window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY);
-          const {data,error}=await db.auth.signInAnonymously();
-          if(!error && data?.user){
-            window.__rnAnonymousUser=data.user;
-            try{await db.from('profiles').upsert({id:data.user.id,full_name:name.value.trim(),role:'customer'},{onConflict:'id'});}catch(e){}
-          }
-        }
-      }catch(e){}
-      status.textContent='Welcome to RumahNusa. Choose your beautiful home.';
-      gate.hidden=true;
-      form.hidden=false;
-      document.body.classList.remove('rn-gate-active');
-      document.getElementById('client-profile')?.classList.remove('rn-login-locked');
-      document.getElementById('propertyOptions')?.classList.remove('rn-login-locked');
-      form.querySelectorAll('.client-form-step').forEach((s,i)=>s.classList.toggle('active',i===0));
-      window.scrollTo({top:0,behavior:'smooth'});
-      login.disabled=false;
-    });
-
-    /* Sequential wizard. */
-    let steps=Array.from(form.querySelectorAll('.client-form-step'));
-    let current=0;
-    const state=window.__rnCustomerFlowState||{property:'',purpose:'',rentalTerm:'',paymentMethod:'',selectedHome:''};
-    window.__rnCustomerFlowState=state;
-    function syncSteps(){
-      steps=Array.from(form.querySelectorAll('.client-form-step'));
-      steps.forEach((s,i)=>s.classList.toggle('active',i===current));
-      window.__rumahnusaCustomerStep=current;
+    function showDataStep(stepNumber){
+      const steps=Array.from(form.querySelectorAll('.client-form-step'));
+      steps.forEach(step=>{
+        const number=Number(step.dataset.step);
+        step.classList.toggle('active',number===stepNumber);
+      });
+      form.querySelectorAll('.rn-selection-hidden').forEach(step=>step.classList.remove('active'));
+      window.__rumahnusaCustomerStep=stepNumber;
       window.scrollTo({top:document.getElementById('client-profile')?.offsetTop||0,behavior:'smooth'});
     }
+    window.__rumahnusaShowCustomerStep=showDataStep;
+
     function clearMedia(id){
       const input=document.getElementById(id);
       if(!input)return;
       try{input.value='';}catch(e){}
-      if(input.files?.length){
-        const replacement=input.cloneNode(true);
-        input.replaceWith(replacement);
-      }
     }
-    function validateStep(){
-      const idMap={2:'purpose',3:'rentalTerm',4:'rooms',5:'clientBudget',6:'clientEmail',7:'clientPhone',8:'clientAddress',9:'meetingDay',10:'meetingTime',11:'clientMarital',12:'clientChildren',13:'clientOccupation',14:'clientPurchaseReason',15:'clientUse',16:'clientCity',17:'clientCityWant',18:'household'};
-      const id=idMap[current];
+
+    function validateCurrent(stepNumber){
+      const requiredByStep={
+        6:'clientEmail',7:'clientPhone',8:'clientAddress',9:'meetingDay',
+        10:'meetingTime',11:'clientMarital',12:'clientChildren',13:'clientOccupation',
+        14:'clientPurchaseReason',15:'clientUse',16:'clientCity',17:'clientCityWant',18:'household'
+      };
+      const id=requiredByStep[stepNumber];
       if(id){
         const el=document.getElementById(id);
         if(el&&!el.reportValidity())return false;
       }
-      if(current===5 && state.property!=='Apartemen'){
-        const el=document.getElementById('clientBudgetIdr');
-        if(el&&!el.reportValidity())return false;
+      if(stepNumber===19){
+        const type=document.getElementById('privateIdentityType');
+        const photo=document.getElementById('privateIdentityPhoto');
+        if(!type?.value||!photo?.files?.length){photo?.focus();return false;}
       }
-      if(current===3 && state.purpose!=='Sewa')return true;
+      if(stepNumber===20){
+        const photo=document.getElementById('faceScanPhoto');
+        if(!photo?.files?.length){photo?.focus();return false;}
+      }
+      if(stepNumber===21){
+        const photo=document.getElementById('frontCameraPhoto');
+        if(!photo?.files?.length){photo?.focus();return false;}
+      }
+      if(stepNumber===22){
+        const chosen=document.querySelector('input[name="paymentMethod"]:checked');
+        if(!chosen){document.getElementById('paymentStatus').textContent='Choose a payment method first.';return false;}
+        state.paymentMethod=chosen.value;
+      }
       return true;
     }
-    function next(){
-      if(current===0)return;
-      if(!validateStep())return;
-      if(current===2){
-        state.purpose=document.getElementById('purpose').value;
-        if(state.property==='Apartemen'&&state.purpose==='Sewa'){current=3;syncSteps();return;}
-        current=4;syncSteps();return;
+
+    function nextFrom(stepNumber){
+      if(!validateCurrent(stepNumber))return;
+      if(stepNumber>=6&&stepNumber<23){
+        if(stepNumber===19)clearMedia('privateIdentityPhoto');
+        if(stepNumber===20)clearMedia('faceScanPhoto');
+        if(stepNumber===21)clearMedia('frontCameraPhoto');
+        showDataStep(stepNumber+1);
       }
-      if(current===3){state.rentalTerm=document.getElementById('rentalTerm').value;current=4;syncSteps();return;}
-      if(current===4){state.rooms=document.getElementById('rooms').value;current=5;syncSteps();return;}
-      if(current===5){
-        if(state.property==='Apartemen'){current=6;} else {current=6;}
-        syncSteps();return;
-      }
-      if(current>=6&&current<18){current+=1;syncSteps();return;}
-      if(current===18){current=19;syncSteps();return;}
-      if(current===19){
-        clearMedia('privateIdentityPhoto');
-        document.getElementById('privateDocumentStatus').textContent='Document cleared from this step. It is not stored or sent to the agent.';
-        current=20;syncSteps();return;
-      }
-      if(current===20){
-        clearMedia('faceScanPhoto');
-        document.getElementById('faceScanStatus').textContent='';
-        current=21;syncSteps();return;
-      }
-      if(current===21){
-        clearMedia('frontCameraPhoto');
-        document.getElementById('frontCameraStatus').textContent='';
-        current=22;syncSteps();return;
-      }
-      if(current===22){
-        const chosen=document.querySelector('input[name="paymentMethod"]:checked');
-        if(!chosen){document.getElementById('paymentStatus').textContent='Choose a payment method first.';return;}
-        state.paymentMethod=chosen.value;current=23;window.buildSummary?.();syncSteps();return;
+      if(stepNumber===22){
+        window.buildSummary?.();
       }
     }
-    form.addEventListener('click',function(e){
-      const back=e.target.closest('[data-back]');
-      if(back){e.preventDefault(); if(current>0){ if(current===20)clearMedia('faceScanPhoto'); if(current===21)clearMedia('frontCameraPhoto'); if(current===19)clearMedia('privateIdentityPhoto'); current-=1;syncSteps(); } return;}
-      const nextBtn=e.target.closest('.client-next');
-      if(nextBtn){e.preventDefault();next();}
-    });
 
-    /* Replace old direct send handler with the existing safe Supabase request sender. */
-    const send=document.getElementById('sendProfil');
-    if(send){
-      const fresh=send.cloneNode(true);send.replaceWith(fresh);
-      fresh.addEventListener('click',async function(){
-        if(typeof window.__rnSendRequest==='function'){await window.__rnSendRequest();}
-      });
-    }
-
-    /* Category listings: each home is selectable. Continue is hidden until a home is selected. */
-    const listings=document.getElementById('rnCategoryListings');
-    const continueBtn=document.getElementById('rnPropertyContinue');
-    const collection=document.getElementById('rnCategoryCollection');
-    if(listings&&continueBtn){
-      continueBtn.hidden=true;
-      continueBtn.disabled=true;
-      continueBtn.textContent='Select this beautiful home & Continue';
-      continueBtn.style.position='sticky';
-      continueBtn.style.right='0';
-      continueBtn.style.bottom='12px';
-      continueBtn.style.zIndex='50';
-      continueBtn.style.float='right';
-      function wireListings(){
-        listings.querySelectorAll('.rn-listing').forEach(card=>{
-          if(card.dataset.rnWired)return;
-          card.dataset.rnWired='1';
-          card.setAttribute('role','button');
-          card.setAttribute('tabindex','0');
-          card.addEventListener('click',function(){
-            listings.querySelectorAll('.rn-listing').forEach(x=>x.classList.remove('rn-home-selected'));
-            card.classList.add('rn-home-selected');
-            state.selectedHome=card.querySelector('h5')?.textContent||'';
-            continueBtn.hidden=false;
-            continueBtn.disabled=false;
-          });
-          card.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();card.click();}});
-        });
-      }
-      new MutationObserver(wireListings).observe(listings,{childList:true});
-      wireListings();
-      continueBtn.addEventListener('click',function(e){
-        e.preventDefault();
-        if(!state.selectedHome)return;
-        current=1; /* data-step 2 is index 1 */
-        syncSteps();
-      });
-    }
-
-    /* Hide the old category action until a home is actually selected. */
-    const catObserver=new MutationObserver(function(){wireCategoryState();});
-    function wireCategoryState(){
-      const selected=document.querySelector('#propertyOptions .client-option.selected');
-      if(!selected){
-        continueBtn && (continueBtn.hidden=true,continueBtn.disabled=true);
-        if(collection)collection.hidden=true;
-        state.property='';
+    form.addEventListener('click',function(event){
+      const back=event.target.closest('[data-back]');
+      if(back){
+        event.preventDefault();
+        const current=Number(window.__rumahnusaCustomerStep||1);
+        if(current>6)showDataStep(current-1);
+        else showDataStep(1);
         return;
       }
-      state.property=selected.dataset.value||'';
-    }
-    document.getElementById('propertyOptions')?.addEventListener('click',function(e){
-      const btn=e.target.closest('.client-option');
-      if(btn){
-        setTimeout(function(){
-          state.property=btn.dataset.value||'';
-          if(listings){continueBtn.hidden=true;continueBtn.disabled=true;}
-          state.selectedHome='';
-          const note=document.querySelector('.rn-collection-note');
-          if(note)note.textContent='Select one beautiful home below. After you select it, Choose & Continue will appear.';
-        },50);
+      const nextButton=event.target.closest('.client-next');
+      if(nextButton){
+        event.preventDefault();
+        nextFrom(Number(nextButton.closest('.client-form-step')?.dataset.step||0));
       }
     });
-    catObserver.observe(document.getElementById('propertyOptions')||document.body,{attributes:true,subtree:true,attributeFilter:['class']});
 
-    /* Enforce category-specific bedroom options and payment fields after each category render. */
-    function refreshCategoryDetails(){
-      const selected=document.querySelector('#propertyOptions .client-option.selected');
-      const name=selected?.dataset.value||state.property;
-      state.property=name||'';
-      const room=document.getElementById('rooms');
-      if(room){
-        const opts=name==='Apartemen'?['2 bedrooms','3 bedrooms','4 bedrooms']:['4 bedrooms','5 bedrooms','6 bedrooms','7 bedrooms','8 bedrooms','9 bedrooms','10 bedrooms','11 bedrooms'];
-        room.innerHTML='<option value="">Choose one</option>'+opts.map(x=>'<option>'+x+'</option>').join('');
-      }
-      const purpose=document.getElementById('purpose');
-      if(purpose){
-        purpose.innerHTML=name==='Apartemen'?'<option value="">Choose one</option><option value="Beli">Buy</option><option value="Sewa">Rent</option>':'<option value="Beli">Buy</option>';
-      }
-      const usdSection=document.getElementById('purchaseAmountSection');
-      const idrSection=document.getElementById('purchaseAmountIdrSection');
-      const usd=document.getElementById('clientBudget');
-      const idr=document.getElementById('clientBudgetIdr');
-      const apartment=name==='Apartemen';
-      if(usdSection)usdSection.hidden=!apartment;
-      if(idrSection)idrSection.hidden=apartment;
-      if(usd)usd.required=apartment;
-      if(idr)idr.required=!apartment;
+    // Gate: name, gender, and age are completed before the home categories appear.
+    loginBtn.addEventListener('click',async function(){
+      const a=Number(age.value);
+      if(!name.value.trim()||!gender||a<18||a>120)return;
+      loginBtn.disabled=true;
+      status.textContent='Welcome to RumahNusa…';
+      window.__rnCustomerIdentity={name:name.value.trim(),gender,age:a};
+
+      try{
+        if(window.supabase&&window.RUMAHNUSA_SUPABASE_URL&&window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY){
+          const db=window.supabase.createClient(window.RUMAHNUSA_SUPABASE_URL,window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY);
+          const {data,error}=await db.auth.signInAnonymously();
+          if(!error&&data?.user){
+            window.__rnAnonymousUser=data.user;
+            try{
+              await db.from('profiles').upsert({
+                id:data.user.id,
+                full_name:name.value.trim(),
+                role:'customer'
+              },{onConflict:'id'});
+            }catch(e){}
+          }
+        }
+      }catch(e){}
+
+      status.textContent='Welcome to RumahNusa. Choose your beautiful home.';
+      gate.hidden=true;
+      form.hidden=false;
+      document.getElementById('client-profile')?.classList.remove('rn-login-locked');
+      document.body.classList.remove('rn-gate-active');
+      showDataStep(1);
+      loginBtn.disabled=false;
+    });
+
+    // Only the selected category's listings are rendered. The fixed control appears
+    // only after both a home and at least one price have been selected.
+    const categoryOptions=document.querySelectorAll('#propertyOptions .client-option');
+    const listings=document.getElementById('rnCategoryListings');
+    const collection=document.getElementById('rnCategoryCollection');
+    const selectionPrompt=document.getElementById('rnSelectionPrompt');
+    const fixedContinue=document.getElementById('propertyContinueFloat');
+
+    function esc(value){
+      return String(value??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
-    setInterval(refreshCategoryDetails,800);
 
-    /* Never allow private media to reach the request payload. */
-    window.__rnPrivateDocumentSeen=false;
-    window.__rnPrivateMediaClear=()=>['privateIdentityPhoto','faceScanPhoto','frontCameraPhoto'].forEach(clearMedia);
+    function selectedPriceReady(){
+      return !!state.selectedHome &&
+        (Number(state.selectedHomePriceUSD)>0 || Number(state.selectedHomePriceIDR)>0);
+    }
 
-    syncSteps();
+    function syncContinue(){
+      if(!fixedContinue)return;
+      const ready=selectedPriceReady() && !!state.property;
+      fixedContinue.hidden=!ready;
+      fixedContinue.disabled=!ready;
+      if(selectionPrompt){
+        selectionPrompt.textContent=ready
+          ? 'Your home and price are selected. Tap Continue on the right to complete your details.'
+          : 'Select one home and enter your price to continue.';
+      }
+    }
+
+    function setSelectedCard(card){
+      listings?.querySelectorAll('.rn-listing').forEach(x=>x.classList.remove('rn-home-selected'));
+      card.classList.add('rn-home-selected');
+      state.selectedHome=card.dataset.home||card.querySelector('h5')?.textContent||'';
+      state.selectedHomePriceUSD='';
+      state.selectedHomePriceIDR='';
+      const usd=card.querySelector('.rn-home-price-usd');
+      const idr=card.querySelector('.rn-home-price-idr');
+      if(usd)usd.value='';
+      if(idr)idr.value='';
+      syncContinue();
+    }
+
+    function wireListings(){
+      if(!listings)return;
+      listings.querySelectorAll('.rn-listing').forEach(card=>{
+        if(card.dataset.rnHouseWired)return;
+        card.dataset.rnHouseWired='1';
+        card.setAttribute('role','button');
+        card.setAttribute('tabindex','0');
+        card.addEventListener('click',function(event){
+          if(event.target.closest('input,select,button,label'))return;
+          setSelectedCard(card);
+        });
+        card.addEventListener('keydown',function(event){
+          if(event.key==='Enter'||event.key===' '){event.preventDefault();setSelectedCard(card);}
+        });
+
+        const pricing=document.createElement('div');
+        pricing.className='rn-house-price-picker';
+        pricing.innerHTML=
+          '<strong>Your price for this home</strong>'+
+          '<label>USD ($)<input class="rn-home-price-usd" type="number" min="1" step="1" inputmode="decimal" placeholder="Example: 350000"></label>'+
+          '<label>IDR (Rupiah)<input class="rn-home-price-idr" type="number" min="1" step="1" inputmode="numeric" placeholder="Example: 500000000"></label>'+
+          '<small>Enter either USD or IDR. You can choose one currency.</small>';
+        card.querySelector('.rn-listing-body')?.appendChild(pricing);
+
+        pricing.querySelectorAll('input').forEach(input=>{
+          input.addEventListener('input',function(){
+            if(!card.classList.contains('rn-home-selected'))setSelectedCard(card);
+            if(input.classList.contains('rn-home-price-usd')){
+              state.selectedHomePriceUSD=input.value;
+              if(input.value)pricing.querySelector('.rn-home-price-idr').value='';
+              state.selectedHomePriceIDR=pricing.querySelector('.rn-home-price-idr').value;
+            }else{
+              state.selectedHomePriceIDR=input.value;
+              if(input.value)pricing.querySelector('.rn-home-price-usd').value='';
+              state.selectedHomePriceUSD=pricing.querySelector('.rn-home-price-usd').value;
+            }
+            document.getElementById('clientBudget').value=state.selectedHomePriceUSD||'';
+            document.getElementById('clientBudgetIdr').value=state.selectedHomePriceIDR||'';
+            syncContinue();
+          });
+        });
+      });
+      syncContinue();
+    }
+
+    const listingObserver=new MutationObserver(wireListings);
+    if(listings)listingObserver.observe(listings,{childList:true,subtree:true});
+    wireListings();
+
+    categoryOptions.forEach(option=>{
+      option.addEventListener('click',function(){
+        categoryOptions.forEach(x=>x.classList.remove('selected'));
+        option.classList.add('selected');
+        state.property=option.dataset.value||'';
+        state.selectedHome='';
+        state.selectedHomePriceUSD='';
+        state.selectedHomePriceIDR='';
+        document.getElementById('clientBudget').value='';
+        document.getElementById('clientBudgetIdr').value='';
+        fixedContinue && (fixedContinue.hidden=true,fixedContinue.disabled=true);
+        setTimeout(wireListings,100);
+      });
+    });
+
+    fixedContinue?.addEventListener('click',function(event){
+      event.preventDefault();
+      if(!selectedPriceReady())return;
+      showDataStep(6);
+    });
+
+    document.getElementById('changeHouseCategory')?.addEventListener('click',function(){
+      state.selectedHome='';
+      state.selectedHomePriceUSD='';
+      state.selectedHomePriceIDR='';
+      showDataStep(1);
+      syncContinue();
+    });
+
+    // Start locked at the welcome gate; after login, only step 1 is visible.
+    form.hidden=true;
+    form.querySelectorAll('.rn-selection-hidden').forEach(step=>step.classList.remove('active'));
+    window.__rumahnusaCustomerStep=1;
+    syncContinue();
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
 </script>
 <style>
-.rn-one-choice{display:flex;flex-direction:column;gap:10px;padding:18px;border:1px solid #d9e2ec;border-radius:14px;background:#fff}
-.rn-one-choice input,.rn-one-choice select,.rn-one-choice textarea{width:100%;box-sizing:border-box;padding:14px;border:1px solid #bcccdc;border-radius:10px;font:inherit;min-height:52px}
-.rn-one-choice textarea{min-height:130px}
-.rn-home-selected{outline:4px solid #0879bd;outline-offset:2px}
-.rn-category-actions{display:flex;justify-content:flex-end;min-height:56px}
-.rn-category-actions #rnPropertyContinue[hidden]{display:none!important}
-.rn-choose-another{display:none!important}
-#rnPropertyContinue{min-width:240px}
-.rn-private-document-box{display:flex;flex-direction:column;gap:12px;padding:18px;border:1px solid #d9e2ec;border-radius:14px;background:#fff}
-.client-form-step .client-actions{margin-top:20px}
+.rn-selection-hidden{display:none!important}
+.rn-category-actions{display:flex;justify-content:flex-end;min-height:48px}
+.rn-house-selected{outline:3px solid #0879bd;outline-offset:2px}
+.rn-house-price-picker{margin-top:14px;padding:14px;border:1px solid #d9e2ec;border-radius:12px;background:#f8fbfd;display:grid;gap:10px}
+.rn-house-price-picker label{display:grid;gap:6px;font-weight:600}
+.rn-house-price-picker input{width:100%;box-sizing:border-box;padding:12px;border:1px solid #bcccdc;border-radius:9px;font:inherit}
+.rn-house-price-picker small{color:#486581}
+#propertyContinueFloat{
+  position:fixed;
+  right:16px;
+  bottom:18px;
+  z-index:10000;
+  min-width:150px;
+  padding:14px 18px;
+  border:0;
+  border-radius:12px;
+  background:#0879bd;
+  color:#fff;
+  font-weight:700;
+  font-size:16px;
+  box-shadow:0 5px 18px rgba(0,0,0,.2);
+}
+#propertyContinueFloat[hidden]{display:none!important}
+#propertyContinueFloat:disabled{opacity:.55}
+@media(max-width:600px){
+  #propertyContinueFloat{right:12px;bottom:14px;min-width:150px}
+}
 </style>
 </html>
