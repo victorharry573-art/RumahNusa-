@@ -1773,6 +1773,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 <div id="rnHomeViewer" class="rn-home-viewer" hidden role="dialog" aria-modal="true" aria-label="RumahNusa home viewer">
   <div class="rn-home-viewer-panel">
     <div class="rn-home-viewer-top">
+      <button class="rn-home-viewer-back" type="button" aria-label="Back to homes">‹ Back</button>
       <div>
         <div class="rn-home-viewer-title" data-viewer-title>RumahNusa Home</div>
         <div style="font-size:13px;opacity:.9" data-viewer-location></div>
@@ -1801,23 +1802,50 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   const viewer=document.getElementById('rnHomeViewer');
   if(!viewer)return;
   const close=viewer.querySelector('.rn-home-viewer-close');
+  const back=viewer.querySelector('.rn-home-viewer-back');
   const choose=viewer.querySelector('.rn-home-viewer-choose');
   const tabs=Array.from(viewer.querySelectorAll('.rn-home-viewer-tab'));
   const panels=Array.from(viewer.querySelectorAll('[data-viewer-panel]'));
-  function hide(){viewer.hidden=true;document.body.style.overflow='';}
-  close.addEventListener('click',hide);
+
+  function hide(){
+    viewer.hidden=true;
+    document.body.style.overflow='';
+  }
+  close?.addEventListener('click',hide);
+  back?.addEventListener('click',hide);
   viewer.addEventListener('click',e=>{if(e.target===viewer)hide();});
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!viewer.hidden)hide();});
+
   tabs.forEach(tab=>tab.addEventListener('click',()=>{
     tabs.forEach(x=>x.classList.toggle('active',x===tab));
     panels.forEach(p=>p.hidden=p.dataset.viewerPanel!==tab.dataset.tab);
   }));
+
   choose.addEventListener('click',()=>{
     const title=viewer.querySelector('[data-viewer-title]')?.textContent||'';
     const card=Array.from(document.querySelectorAll('#rnCategoryListings .rn-listing')).find(x=>(x.querySelector('h5')?.textContent||'')===title);
     if(card)card.querySelector('.rn-select-home')?.click();
     hide();
   });
+
+  // Reliable in-page swipe: start anywhere in the viewer, not only at the browser edge.
+  // A horizontal swipe in either direction closes the viewer; vertical scrolling remains normal.
+  let startX=0,startY=0,tracking=false;
+  viewer.addEventListener('touchstart',e=>{
+    if(viewer.hidden||!e.touches[0])return;
+    startX=e.touches[0].clientX;
+    startY=e.touches[0].clientY;
+    tracking=true;
+  },{passive:true});
+  viewer.addEventListener('touchend',e=>{
+    if(!tracking||!e.changedTouches[0])return;
+    const dx=e.changedTouches[0].clientX-startX;
+    const dy=Math.abs(e.changedTouches[0].clientY-startY);
+    tracking=false;
+    if(Math.abs(dx)>=70&&Math.abs(dx)>dy*1.25){
+      hide();
+    }
+  },{passive:true});
 })();
 </script>
 
@@ -1826,7 +1854,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   .rn-swipe-hint{position:fixed;left:50%;bottom:86px;transform:translateX(-50%);z-index:999;background:rgba(20,38,56,.92);color:#fff;padding:9px 14px;border-radius:20px;font-size:13px;box-shadow:0 4px 14px rgba(0,0,0,.18);opacity:0;pointer-events:none;transition:opacity .25s}
   .rn-swipe-hint.show{opacity:1}
 </style>
-<div id="rnSwipeHint" class="rn-swipe-hint" aria-live="polite">Swipe from the edge or use Android Back to go back</div>
+<div id="rnSwipeHint" class="rn-swipe-hint" aria-live="polite">Swipe left or right to go back</div>
 <script>
 (function(){
   const state={stack:[],lastX:0,lastY:0,startTime:0};
@@ -1835,31 +1863,41 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     const active=document.querySelector('.client-form-step.active');
     const category=document.querySelector('#propertyOptions .client-option.selected');
     const collection=document.getElementById('rnCategoryCollection');
-    return {step:active?.dataset.step||'',category:category?.dataset.value||'',collectionOpen:!!collection&&!collection.hidden};
+    const viewer=document.getElementById('rnHomeViewer');
+    const modal=document.getElementById('rnHouseModal');
+    return {step:active?.dataset.step||'',category:category?.dataset.value||'',collectionOpen:!!collection&&!collection.hidden,viewerOpen:!!viewer&&!viewer.hidden,modalOpen:!!modal&&!modal.hidden};
   }
   function key(v){return JSON.stringify(v)}
-  function capture(){const v=currentView(); if(!state.stack.length||key(state.stack[state.stack.length-1])!==key(v)) state.stack.push(v); if(state.stack.length>20)state.stack.shift();}
-  function restore(v){
-    const steps=Array.from(document.querySelectorAll('.client-form-step'));
-    const badges=Array.from(document.querySelectorAll('.client-step'));
-    if(v.step!==''&&steps.length){const i=steps.findIndex(s=>s.dataset.step===v.step);if(i>=0){steps.forEach((s,n)=>s.classList.toggle('active',n===i));badges.forEach((b,n)=>b.classList.toggle('active',n===Math.min(i,badges.length-1)));}}
-    if(v.category){const opt=document.querySelector('#propertyOptions .client-option[data-value="'+CSS.escape(v.category)+'"]');if(opt){opt.click();}}
-    const collection=document.getElementById('rnCategoryCollection'); if(collection)collection.hidden=!v.collectionOpen;
-    window.scrollTo({top:0,behavior:'smooth'});
-  }
+  function capture(){const v=currentView();if(!state.stack.length||key(state.stack[state.stack.length-1])!==key(v))state.stack.push(v);if(state.stack.length>30)state.stack.shift();}
   function goBack(){
+    const viewer=document.getElementById('rnHomeViewer');
+    if(viewer&&!viewer.hidden){viewer.querySelector('.rn-home-viewer-back')?.click();return true;}
+    const modal=document.getElementById('rnHouseModal');
+    if(modal&&!modal.hidden){document.getElementById('rnHouseModalClose')?.click();return true;}
     if(state.stack.length>1){state.stack.pop();restore(state.stack[state.stack.length-1]);return true;}
     const active=document.querySelector('.client-form-step.active');
     if(active&&active.dataset.step&&active.dataset.step!=='1'){const b=active.querySelector('[data-back]');if(b){b.click();return true;}}
     return false;
   }
+  function restore(v){
+    const steps=Array.from(document.querySelectorAll('.client-form-step'));
+    const badges=Array.from(document.querySelectorAll('.client-step'));
+    if(v.step!==''&&steps.length){const i=steps.findIndex(s=>s.dataset.step===v.step);if(i>=0){steps.forEach((s,n)=>s.classList.toggle('active',n===i));badges.forEach((b,n)=>b.classList.toggle('active',n===Math.min(i,badges.length-1)));}}
+    if(v.category){const opt=document.querySelector('#propertyOptions .client-option[data-value="'+CSS.escape(v.category)+'"]');if(opt&&!opt.classList.contains('selected'))opt.click();}
+    const collection=document.getElementById('rnCategoryCollection');if(collection)collection.hidden=!v.collectionOpen;
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
   document.addEventListener('touchstart',e=>{if(!e.touches[0])return;state.lastX=e.touches[0].clientX;state.lastY=e.touches[0].clientY;state.startTime=Date.now();},{passive:true});
-  document.addEventListener('touchend',e=>{if(!e.changedTouches[0])return;const x=e.changedTouches[0].clientX,y=e.changedTouches[0].clientY;const dx=x-state.lastX,dy=y-state.lastY;const edge=state.lastX<28||state.lastX>innerWidth-28; if(edge&&Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)&&Date.now()-state.startTime<900){if(dx>0)goBack();}}, {passive:true});
+  document.addEventListener('touchend',e=>{
+    if(!e.changedTouches[0])return;
+    const x=e.changedTouches[0].clientX,y=e.changedTouches[0].clientY;
+    const dx=x-state.lastX,dy=y-state.lastY;
+    if(Math.abs(dx)>=90&&Math.abs(dx)>Math.abs(dy)*1.35&&Date.now()-state.startTime<1200){goBack();}
+  },{passive:true});
   window.addEventListener('popstate',()=>goBack());
   document.addEventListener('click',()=>setTimeout(capture,50),true);
   setTimeout(capture,300);
   window.addEventListener('load',()=>setTimeout(capture,300));
-  window.addEventListener('beforeunload',()=>{});
   if(hint){hint.classList.add('show');setTimeout(()=>hint.classList.remove('show'),3500);}
 })();
 </script>
@@ -2271,5 +2309,5 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 .rn-home-viewer-choose{margin:0 18px 24px;width:calc(100% - 36px);padding:15px;border:0;border-radius:12px;background:#0879bd;color:#fff;font-size:17px;font-weight:800;cursor:pointer}
 .rn-home-viewer-note{padding:0 18px 18px;color:#627d98;font-size:13px;line-height:1.5}
 @media(max-width:520px){.rn-home-viewer-chips{grid-template-columns:1fr}.rn-home-viewer-title{font-size:17px}}
-</style>
+.rn-home-viewer-back{border:0;background:rgba(255,255,255,.16);color:#fff;border-radius:10px;padding:9px 12px;font-weight:700;font-size:14px;cursor:pointer;touch-action:manipulation}.rn-home-viewer-back:active{transform:scale(.98)}</style>
 </html>
