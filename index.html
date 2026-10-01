@@ -365,14 +365,24 @@ body.rn-site-unlocked footer { display:none !important; }
     <input id="rnPhoneNumber" type="tel" inputmode="tel" autocomplete="tel" placeholder="81234567890" aria-label="Phone number" style="width:100%;box-sizing:border-box;padding:14px 12px;border:1px solid #8aa4bc;border-radius:10px;font:inherit;min-height:56px;">
     <small style="display:block;margin-top:7px;color:#627d98;">Select your country, then enter your phone number without the country code.</small>
 
-    <div id="rnGateCodeWrap" class="rn-code-wrap" hidden>
-      <label for="rnPhoneCode" style="display:block;margin-bottom:7px;font-weight:700;">Confirmation code</label>
-      <input id="rnPhoneCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="Enter code" aria-label="Confirmation code">
+    <div id="rnGateVerificationChoice" hidden style="margin-top:14px;">
+      <label for="rnGateVerifyMethod" style="display:block;margin-bottom:7px;font-weight:700;">Choose how to verify</label>
+      <select id="rnGateVerifyMethod" style="width:100%;box-sizing:border-box;padding:14px 12px;border:1px solid #8aa4bc;border-radius:10px;font:inherit;min-height:56px;">
+        <option value="" selected>Choose SMS or WhatsApp</option>
+        <option value="sms">SMS</option>
+        <option value="whatsapp">WhatsApp</option>
+      </select>
     </div>
 
     <div class="rn-gate-actions">
-      <button class="btn" id="rnGateSendCode" type="button">Send confirmation code</button>
-      <button class="btn secondary" id="rnGateVerifyCode" type="button" hidden>Confirm and Enter</button>
+      <button class="btn" id="rnGateContinue" type="button">Continue</button>
+      <button class="btn secondary" id="rnGateConfirmationButton" type="button" hidden>Confirmation Code</button>
+    </div>
+
+    <div id="rnGateCodeWrap" class="rn-code-wrap" hidden style="margin-top:14px;">
+      <label for="rnPhoneCode" style="display:block;margin-bottom:7px;font-weight:700;">Confirmation code</label>
+      <input id="rnPhoneCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="Enter code" aria-label="Confirmation code">
+      <button class="btn" id="rnGateVerifyCode" type="button" hidden style="margin-top:10px;">Confirm and Enter</button>
     </div>
     <p id="rnGateStatus" class="rn-gate-status" aria-live="polite"></p>
   </div>
@@ -1272,12 +1282,16 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   const phoneNumber=document.getElementById('rnPhoneNumber');
   const phoneCode=document.getElementById('rnPhoneCode');
   const codeWrap=document.getElementById('rnGateCodeWrap');
-  const phoneSendCode=document.getElementById('rnGateSendCode');
+  const phoneContinue=document.getElementById('rnGateContinue');
+  const verificationChoice=document.getElementById('rnGateVerificationChoice');
+  const verificationMethod=document.getElementById('rnGateVerifyMethod');
+  const confirmationButton=document.getElementById('rnGateConfirmationButton');
   const phoneVerifyCode=document.getElementById('rnGateVerifyCode');
   const phoneGate=document.getElementById('rnPhoneGate');
   const phoneStatus=document.getElementById('rnGateStatus');
 
   const phoneCountry=document.getElementById('rnPhoneCountry');
+  let selectedVerificationMethod='';
 
   function normalizePhone(value){
     let p=String(value||'').trim().replace(/[()\-\.\s]/g,'');
@@ -1286,27 +1300,62 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     return String(phoneCountry?.value||'')+p;
   }
 
-  async function sendPhoneCode(){
+  function validGatePhone(){
     const phone=normalizePhone(phoneNumber.value);
-    if(!phoneCountry?.value){phoneStatus.textContent='Please select your country first.';return;}
-    if(!/^\+[1-9]\d{7,14}$/.test(phone)){
+    if(!phoneCountry?.value){phoneStatus.textContent='Please select your country first.';return null;}
+    if(!/^\\+[1-9]\\d{7,14}$/.test(phone)){
       phoneStatus.textContent='Enter a valid phone number with country code.';
+      return null;
+    }
+    return phone;
+  }
+
+  function continueToVerification(){
+    const phone=validGatePhone();
+    if(!phone)return;
+    verificationChoice.hidden=false;
+    phoneContinue.hidden=true;
+    phoneStatus.textContent='Choose SMS or WhatsApp, then continue.';
+    verificationMethod.focus();
+  }
+
+  function chooseVerificationMethod(){
+    selectedVerificationMethod=verificationMethod.value;
+    if(!selectedVerificationMethod){
+      phoneStatus.textContent='Please choose SMS or WhatsApp.';
       return;
     }
-    phoneSendCode.disabled=true;
-    phoneStatus.textContent='Sending your confirmation code…';
+    confirmationButton.hidden=false;
+    phoneStatus.textContent=selectedVerificationMethod==='sms'
+      ? 'SMS selected. Tap Confirmation Code to receive your code.'
+      : 'WhatsApp selected. Tap Confirmation Code to request your code.';
+  }
+
+  async function sendPhoneCode(){
+    const phone=validGatePhone();
+    if(!phone)return;
+    if(!selectedVerificationMethod){
+      phoneStatus.textContent='Choose SMS or WhatsApp first.';
+      return;
+    }
+    confirmationButton.disabled=true;
+    phoneStatus.textContent='Requesting your confirmation code…';
     try{
+      if(selectedVerificationMethod==='whatsapp'){
+        phoneStatus.textContent='WhatsApp verification requires a WhatsApp OTP provider to be connected to Supabase. SMS verification is available now.';
+        return;
+      }
       const {error}=await client.auth.signInWithOtp({phone,options:{shouldCreateUser:true}});
       if(error) throw error;
       codeWrap.hidden=false;
       phoneVerifyCode.hidden=false;
-      phoneSendCode.hidden=true;
+      confirmationButton.hidden=true;
       phoneCode.focus();
-      phoneStatus.textContent='Your confirmation code has been sent. Enter it to enter RumahNusa.';
+      phoneStatus.textContent='Your confirmation code has been sent by SMS. Enter it below.';
     }catch(error){
       phoneStatus.textContent='The confirmation code could not be sent: '+error.message;
     }finally{
-      phoneSendCode.disabled=false;
+      confirmationButton.disabled=false;
     }
   }
 
@@ -1355,7 +1404,9 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     status('Masuk sebagai '+(profile.role==='agent'?'agen':'pelanggan')+'.');
   }
 
-  phoneSendCode.addEventListener('click',sendPhoneCode);
+  phoneContinue.addEventListener('click',continueToVerification);
+  verificationMethod.addEventListener('change',chooseVerificationMethod);
+  confirmationButton.addEventListener('click',sendPhoneCode);
   phoneVerifyCode.addEventListener('click',verifyPhoneCode);
   phoneCode.addEventListener('keydown',e=>{if(e.key==='Enter')verifyPhoneCode();});
   client.auth.getSession().then(({data})=>{
