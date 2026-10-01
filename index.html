@@ -1342,26 +1342,37 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   let otpSent=false;
   let pendingPhone='';
 
-  // Copy the working country list into the login selector.
+  // Keep the login country picker independent and always load the full
+  // 195-country list already used by the customer phone form.
   const customerCountry=document.getElementById('clientCountry');
   function populateLoginCountries(){
-    if(customerCountry && loginCountry && customerCountry.options.length){
-      loginCountry.innerHTML=customerCountry.innerHTML;
-      loginCountry.value=customerCountry.value || 'ID';
+    if(!loginCountry) return;
+    if(customerCountry && customerCountry.options.length){
+      loginCountry.replaceChildren(...Array.from(customerCountry.options).map(o=>o.cloneNode(true)));
     }
+    if(loginCountry.options.length && !loginCountry.value) loginCountry.value='ID';
+    syncLoginCountry();
   }
-  populateLoginCountries();
-  setTimeout(populateLoginCountries,0);
 
   function syncLoginCountry(){
     if(!loginCountry||!loginPhonePrefix)return;
     const option=loginCountry.options[loginCountry.selectedIndex];
-    const flag=option?.dataset.flag || '🌐';
-    const code=option?.dataset.code || '';
+    if(!option) return;
+    const flag=option.dataset.flag || '🌐';
+    const code=option.dataset.code || '';
     loginPhonePrefix.textContent=flag+' '+code;
+    loginPhone.placeholder=option.value==='ID' ? '81234567890' : 'Enter local phone number';
   }
-  loginCountry?.addEventListener('change',syncLoginCountry);
-  syncLoginCountry();
+
+  // Native select controls remain directly tappable on Android.
+  if(loginCountry){
+    loginCountry.style.pointerEvents='auto';
+    loginCountry.style.touchAction='manipulation';
+    loginCountry.addEventListener('change',syncLoginCountry);
+    loginCountry.addEventListener('input',syncLoginCountry);
+  }
+  populateLoginCountries();
+  setTimeout(populateLoginCountries,50);
 
   // Password login has been removed. RumahNusa uses phone + SMS confirmation code.
 
