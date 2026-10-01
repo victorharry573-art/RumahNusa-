@@ -189,7 +189,7 @@ nav a {
 .rn-home-category-grid.rn-category-open{display:block!important}
 .rn-home-category-grid.rn-category-open .rn-home-category:not(.selected){display:none!important}
 .rn-home-category-grid.rn-category-open .rn-home-category.selected{display:flex!important;width:100%;min-height:132px!important;margin-bottom:14px}
-.rn-category-collection{width:100%;box-sizing:border-box;margin-top:0;padding:18px 0 4px}
+.rn-category-collection{width:100%;box-sizing:border-box;margin-top:0;padding:18px 0 4px}.rn-category-actions{display:grid;gap:10px;margin-top:18px}.rn-private-document-box,.rn-payment-box{border:1px solid #d9e2ec;border-radius:14px;padding:18px;background:#fff}.rn-private-document-box select,.rn-private-document-box input{width:100%;box-sizing:border-box;padding:13px;margin-top:8px;border:1px solid #bcccdc;border-radius:10px}.rn-payment-box{display:grid;gap:12px}.rn-payment-box label{display:block;padding:14px;border:1px solid #d9e2ec;border-radius:10px;cursor:pointer}.rn-payment-box input{margin-right:10px}
 .rn-choose-another{margin-top:18px;width:100%;min-height:48px}
 .rn-home-icon{font-size:38px;line-height:1;margin-bottom:10px}
 .rn-home-category strong{font-size:16px;color:#183b56}
@@ -922,277 +922,161 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
 
 <script>
 (function(){
-  const status=document.getElementById('rnGateLoginStatus'),name=document.getElementById('rnGateName'),age=document.getElementById('rnGateAge'),identityContinue=document.getElementById('rnGateIdentityContinue'),welcome=document.getElementById('rnWelcomeGate'),form=document.getElementById('clientProfilForm'),genders=Array.from(document.querySelectorAll('#rnGateIdentityFields .rn-gender-option'));
+  const status=document.getElementById('rnGateLoginStatus');
+  const email=document.getElementById('rnGateEmail');
+  const password=document.getElementById('rnGatePassword');
+  const eye=document.getElementById('rnGatePasswordEye');
+  const name=document.getElementById('rnGateName');
+  const age=document.getElementById('rnGateAge');
+  const identityContinue=document.getElementById('rnGateIdentityContinue');
+  const welcome=document.getElementById('rnWelcomeGate');
+  const form=document.getElementById('clientProfilForm');
+  const genders=Array.from(document.querySelectorAll('#rnGateIdentityFields .rn-gender-option'));
   let gender='';
-  if(!form||!name||!age||!identityContinue)return;
-  function validIdentity(){const a=Number(age.value);identityContinue.disabled=!(name.value.trim()&&gender&&a>=18&&a<=120);}
-  name.addEventListener('input',validIdentity);age.addEventListener('input',validIdentity);
-  genders.forEach(function(button){button.addEventListener('click',function(){gender=button.dataset.gender||'';genders.forEach(function(item){item.classList.toggle('selected',item===button);});validIdentity();});});
+  if(!form||!name||!age||!identityContinue||!email||!password)return;
+
+  eye?.addEventListener('click',function(){
+    const show=password.type==='password';
+    password.type=show?'text':'password';
+    eye.setAttribute('aria-pressed',show?'true':'false');
+    eye.setAttribute('aria-label',show?'Hide password':'Show password');
+  });
+
+  function validIdentity(){
+    const a=Number(age.value);
+    identityContinue.disabled=!(email.value.trim()&&password.value&&name.value.trim()&&gender&&a>=18&&a<=120);
+  }
+  [email,password,name,age].forEach(el=>el.addEventListener('input',validIdentity));
+  genders.forEach(function(button){
+    button.addEventListener('click',function(){
+      gender=button.dataset.gender||'';
+      genders.forEach(item=>item.classList.toggle('selected',item===button));
+      validIdentity();
+    });
+  });
+
   identityContinue.addEventListener('click',async function(){
-    const a=Number(age.value);if(!name.value.trim()||!gender||a<18||a>120)return;
-    identityContinue.disabled=true;status.textContent='Opening your RumahNusa home search...';
-    window.__rnCustomerIdentity={name:name.value.trim(),gender:gender,age:a};
+    const a=Number(age.value);
+    if(identityContinue.disabled)return;
+    identityContinue.disabled=true;
+    status.textContent='Signing you in...';
     try{
-      if(window.supabase&&window.RUMAHNUSA_SUPABASE_URL&&window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY){
-        const authClient=window.supabase.createClient(window.RUMAHNUSA_SUPABASE_URL,window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY);
-        const existing=await authClient.auth.getSession();
-        if(!existing.data.session){
-          const anon=await authClient.auth.signInAnonymously();
-          if(!anon.error) window.__rnCustomerUser=anon.data.user;
-        }else window.__rnCustomerUser=existing.data.session.user;
+      if(!window.supabase||!window.RUMAHNUSA_SUPABASE_URL||!window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY){
+        throw new Error('Login service is not ready.');
       }
-    }catch(e){}
-    welcome.hidden=true;form.hidden=false;document.body.classList.remove('rn-gate-active');
-    form.querySelectorAll('.client-form-step').forEach(function(step,i){step.classList.toggle('active',i===0);});
-    document.getElementById('propertyOptions')?.scrollIntoView({behavior:'smooth',block:'start'});
-    identityContinue.disabled=false;
+      const authClient=window.supabase.createClient(window.RUMAHNUSA_SUPABASE_URL,window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY);
+      const result=await authClient.auth.signInWithPassword({email:email.value.trim(),password:password.value});
+      if(result.error) throw result.error;
+      window.__rnCustomerUser=result.data.user;
+      window.__rnCustomerAuthClient=authClient;
+      window.__rnCustomerIdentity={name:name.value.trim(),gender:gender,age:a,email:email.value.trim()};
+      status.textContent='Login successful. Welcome to RumahNusa.';
+      welcome.hidden=true;
+      form.hidden=false;
+      document.body.classList.remove('rn-gate-active');
+      form.querySelectorAll('.client-form-step').forEach(function(step,i){step.classList.toggle('active',i===0);});
+      document.getElementById('propertyOptions')?.scrollIntoView({behavior:'smooth',block:'start'});
+    }catch(error){
+      status.textContent='Login failed. Please check your email and password.';
+      identityContinue.disabled=false;
+    }
   });
   validIdentity();
 })();
 </script>
 
 <script>
-(function() {
-  const form = document.getElementById('clientProfilForm');
-  if (!form) return;
-  const steps = Array.from(form.querySelectorAll('.client-form-step'));
-  const badges = Array.from(document.querySelectorAll('.client-step'));
-  let current = 0;
-  const state = { property: '', purpose: 'Beli', rentalTerm: '' };
+(function(){
+  const form=document.getElementById('clientProfilForm');
+  if(!form)return;
+  const steps=Array.from(form.querySelectorAll('.client-form-step'));
+  const badges=Array.from(document.querySelectorAll('.client-step'));
+  let current=0;
+  const state={property:'',purpose:'Beli',rentalTerm:'',paymentMethod:''};
+  window.__rnCustomerFlowState=state;
 
-  const flowDomIndex = [0,1,2,3];
-  function showStep(index) {
-    current = Math.max(0, Math.min(index, flowDomIndex.length - 1));
-    const domIndex = flowDomIndex[current];
-    steps.forEach((s, i) => s.classList.toggle('active', i === domIndex));
-    badges.forEach((b, i) => b.classList.toggle('active', i === current));
-    window.__rumahnusaCustomerStep = current;
-    document.querySelector('.client-panel').scrollIntoView({behavior:'smooth', block:'start'});
+  function isNonApartment(){return state.property && state.property!=='Apartemen';}
+  function showStep(index){
+    current=Math.max(0,Math.min(index,steps.length-1));
+    steps.forEach((s,i)=>s.classList.toggle('active',i===current));
+    badges.forEach((b,i)=>b.classList.toggle('active',i===Math.min(current,badges.length-1)));
+    window.__rumahnusaCustomerStep=current;
+    document.querySelector('.client-panel')?.scrollIntoView({behavior:'smooth',block:'start'});
   }
-  window.__rumahnusaShowCustomerStep = showStep;
+  window.__rumahnusaShowCustomerStep=showStep;
 
-  form.querySelectorAll('[data-back]').forEach(btn => btn.addEventListener('click', () => showStep(current - 1)));
+  form.querySelectorAll('[data-back]').forEach(btn=>btn.addEventListener('click',()=>showStep(current-1)));
 
-  const changeHouseCategory = document.getElementById('changeHouseCategory');
-  if (changeHouseCategory) {
-    changeHouseCategory.addEventListener('click', function () {
-      showStep(0);
-      const box = document.getElementById('propertyOptions');
-      if (box) box.scrollIntoView({behavior:'smooth', block:'start'});
-    });
-  }
+  document.getElementById('changeHouseCategory')?.addEventListener('click',()=>showStep(0));
 
-  const propertyChooseContinue = document.getElementById('propertyChooseContinue');
-  if(propertyChooseContinue){
-    propertyChooseContinue.addEventListener('click', function(event){
-      event.preventDefault();
-      event.stopPropagation();
-      if(!state.property) return;
-      showStep(1);
-    });
-  }
+  const propertyContinue=document.getElementById('rnPropertyContinue');
+  propertyContinue?.addEventListener('click',function(){
+    if(!state.property)return;
+    showStep(1);
+  });
 
-  form.querySelectorAll('.client-next').forEach(btn => btn.addEventListener('click', () => {
-    if (current === 0) {
-      if (!state.property) {
-        const box = document.getElementById('propertyOptions');
-        if (box) box.scrollIntoView({behavior:'smooth', block:'center'});
-        return;
-      }
-      showStep(1);
+  form.querySelectorAll('.client-next').forEach(btn=>btn.addEventListener('click',function(){
+    if(btn.closest('[data-non-apartment-only="true"]') && !isNonApartment())return;
+
+    if(current===1){
+      const purpose=document.getElementById('purpose');
+      const rentalTerm=document.getElementById('rentalTerm');
+      if(state.property!=='Apartemen'){purpose.value='Beli';state.purpose='Beli';}
+      if(state.property==='Apartemen'&&purpose.value==='Sewa'&&!rentalTerm.value){rentalTerm.focus();return;}
+      const budget=document.getElementById('clientBudget');
+      if(!budget?.reportValidity())return;
+      state.purpose=purpose.value;
+      state.rentalTerm=purpose.value==='Sewa'?rentalTerm.value:'';
+      showStep(isNonApartment()?2:4);
       return;
     }
-    if (current === 1) {
-      if (state.property !== 'Apartemen' && purpose.value !== 'Beli') {
-        purpose.value = 'Beli';
-        state.purpose = 'Beli';
+
+    if(current===2){
+      for(const id of ['clientEmail','clientPhone','clientAddress','meetingDay','meetingTime']){
+        const el=document.getElementById(id);if(!el?.reportValidity())return;
       }
-      if (state.property === 'Apartemen' && purpose.value === 'Sewa' && !rentalTerm.value) {
-        rentalTerm.focus();
-        return;
-      }
-      const budgetEl = document.getElementById('clientBudget');
-      if (!budgetEl || !budgetEl.reportValidity()) return;
-      state.purpose = purpose.value;
-      state.rentalTerm = purpose.value === 'Sewa' ? rentalTerm.value : '';
-      showStep(2);
-      return;
+      showStep(3);return;
     }
-    if (current === 2) {
-      const required = ['clientCity','clientMarital','household','clientCityWant'];
-      for (const id of required) {
-        const el = document.getElementById(id);
-        if (!el || !el.reportValidity()) return;
+    if(current===3){
+      for(const id of ['clientMarital','clientChildren','clientOccupation','clientPurchaseReason','clientUse','clientCity','clientCityWant','household']){
+        const el=document.getElementById(id);if(!el?.reportValidity())return;
       }
-      buildSummary();
-      showStep(3);
+      showStep(4);return;
     }
-    if (current === 3) {
+    if(current===4){
+      const type=document.getElementById('privateIdentityType');
+      const photo=document.getElementById('privateIdentityPhoto');
+      if(!type?.value||!photo?.files?.length){photo?.focus();return;}
+      window.__rnPrivateDocumentSeen=true;
+      const status=document.getElementById('privateDocumentStatus');
+      if(status)status.textContent='Document accepted for this step. It is being cleared from the page and will not be uploaded or sent to the agent.';
+      // Do not read, upload, store, or transmit the document.
+      try{photo.value='';}catch(e){}
+      showStep(5);return;
+    }
+    if(current===5){
+      const chosen=document.querySelector('input[name="paymentMethod"]:checked');
+      if(!chosen){document.getElementById('paymentStatus').textContent='Please choose a payment method first.';return;}
+      state.paymentMethod=chosen.value;
+      document.getElementById('paymentStatus').textContent='Payment method selected. A real payment provider must be connected before a payment can be processed.';
+      showStep(6);return;
+    }
+    if(current===6){
       buildSummary();
     }
   }));
 
-  const purpose = document.getElementById('purpose');
-  const purposeNote = document.getElementById('purposeNote');
-  const rentalTermOptions = document.getElementById('rentalTermOptions');
-  const rentalTerm = document.getElementById('rentalTerm');
-  const rooms = document.getElementById('rooms');
-  const layoutTitle = document.getElementById('layoutTitle');
-  const layoutDetails = document.getElementById('layoutDetails');
-
-  const apartmentSpecs = {
-    '2 kamar tidur': '1 kamar mandi sangat besar dengan toilet di dalam; 1 parlor sangat besar dengan dapur di dalam; furnitur lengkap; AC di parlor dan kedua kamar tidur.',
-    '3 kamar tidur': '2 kamar mandi sangat besar dengan toilet di dalam; 1 parlor sangat besar dengan dapur di dalam; furnitur lengkap; AC dan perlengkapan lengkap.',
-    '4 kamar tidur': '3 kamar mandi dengan toilet di dalam; 2 parlor sangat besar dengan dapur terintegrasi; furnitur lengkap; AC dan perlengkapan lengkap.'
-  };
-
-  const houseSpecs = {
-    '4 kamar tidur': '1 kamar mandi sangat besar dengan toilet di dalam; 1 parlor sangat besar yang dapat menampung dapur; furnitur indah; AC di parlor dan setiap kamar tidur.',
-    '5 kamar tidur': '2 kamar mandi besar dengan toilet di dalam; 1 parlor sangat besar yang dapat menampung dapur; furnitur indah; AC di parlor dan setiap kamar tidur.',
-    '6 kamar tidur': '3 kamar mandi sangat besar dengan toilet di dalam; 2 parlor sangat besar yang dapat menampung dapur; furnitur lengkap; AC dan desain interior yang nyaman.',
-    '7 kamar tidur': '4 kamar mandi dengan toilet di dalam; 3 parlor sangat besar dengan dapur; furnitur lengkap; AC dan ruang keluarga yang nyaman.',
-    '8 kamar tidur': '4 kamar mandi besar dengan toilet di dalam; 3 parlor sangat besar dengan dapur; furnitur lengkap; AC, kolam renang besar, dan area parkir.',
-    '9 kamar tidur': '4 kamar mandi besar dengan toilet di dalam; 3 parlor sangat besar dengan dapur; furnitur lengkap; AC, kolam renang besar, dan area parkir.',
-    '10 kamar tidur': '5 kamar mandi dengan toilet di dalam; 4 area dapur; parlor-parlor sangat besar, furnitur lengkap, AC, kolam renang besar, dan area parkir.',
-    '11 kamar tidur': '5 kamar mandi dengan toilet di dalam; 4 area dapur; parlor-parlor sangat besar, furnitur lengkap, AC, kolam renang besar, dan area parkir.'
-  };
-
-  function updatePurposeChoices() {
-    const apartment = state.property === 'Apartemen';
-    Array.from(purpose.options).forEach(option => {
-      option.hidden = option.value === 'Sewa' && !apartment;
-    });
-    if (!apartment) {
-      purpose.value = 'Beli';
-      state.purpose = 'Beli';
-      rentalTermOptions.hidden = true;
-      rentalTermOptions.style.display = 'none';
-      rentalTerm.value = '';
-      state.rentalTerm = '';
-      purposeNote.textContent = 'Properti ini hanya tersedia untuk dibeli. Hanya apartemen yang dapat disewa.';
-    } else {
-      purposeNote.textContent = 'Apartemen dapat dibeli atau disewa. Jika disewa, pilih lama sewa 1–5 tahun.';
-      rentalTermOptions.hidden = purpose.value !== 'Sewa';
-      rentalTermOptions.style.display = purpose.value === 'Sewa' ? '' : 'none';
-      if (purpose.value !== 'Sewa') {
-        rentalTerm.value = '';
-        state.rentalTerm = '';
-      }
-    }
-  }
-
-  purpose.addEventListener('change', () => {
-    state.purpose = purpose.value;
-    if (purpose.value === 'Sewa' && state.property === 'Apartemen') {
-      rentalTermOptions.hidden = false;
-      rentalTermOptions.style.display = '';
-      state.rentalTerm = rentalTerm.value;
-    } else {
-      rentalTermOptions.hidden = true;
-      state.rentalTerm = '';
-    }
-    updateLayoutDetails();
+  document.getElementById('paymentContinue')?.addEventListener('click',function(){
+    const chosen=document.querySelector('input[name="paymentMethod"]:checked');
+    if(!chosen){document.getElementById('paymentStatus').textContent='Please choose a payment method first.';return;}
+    state.paymentMethod=chosen.value;
+    document.getElementById('paymentStatus').textContent='Payment provider connection is required before real payment is taken.';
+    showStep(6);
   });
 
-  rentalTerm.addEventListener('change', () => {
-    state.rentalTerm = rentalTerm.value;
-  });
-
-  function updateRoomChoices() {
-    const isLargeHouse = state.property === 'Separate Rumah' || state.property === 'Neighborhood Rumah';
-    const values = isLargeHouse ? [4,5,6,7,8,9,10,11] : [2,3,4];
-    const current = parseInt(rooms.value,10);
-    rooms.innerHTML = values.map(n => '<option>' + n + ' kamar tidur</option>').join('');
-    if (values.includes(current)) rooms.value = current + ' kamar tidur';
-    if (isLargeHouse) {
-      layoutTitle.textContent = 'Standar rumah Separate / Neighborhood';
-    } else {
-      layoutTitle.textContent = 'Standar apartemen RumahNusa';
-    }
-    updateLayoutDetails();
-  }
-
-  function updateLayoutDetails() {
-    const isLargeHouse = state.property === 'Separate Rumah' || state.property === 'Neighborhood Rumah';
-    const selected = rooms.value;
-    const spec = isLargeHouse ? houseSpecs[selected] : apartmentSpecs[selected];
-    layoutDetails.innerHTML = '<div class="' + (isLargeHouse ? 'house-layout' : 'apartment-layout') + '"><strong>' + selected + '</strong><p>' + spec + '</p>' +
-      (isLargeHouse ? '<p class="house-feature-note"><strong>Fasilitas umum:</strong> setiap rumah memiliki kolam renang yang besar dan nyaman, area parkir mobil, furnitur indah, AC di setiap kamar dan area keluarga, serta pencahayaan dan desain interior yang dibuat sangat nyaman.</p>' : '') +
-      '</div>';
-  }
-
-  rooms.addEventListener('change', updateLayoutDetails);
-
-  const clientBudget = document.getElementById('clientBudget');
-  function updateBudgetPreview() {
-    const category = state.property || 'your selected property';
-    const transaction = purpose.value || 'Beli';
-    selectionInfo.innerHTML = '<strong>' + category + '</strong> — ' + rooms.value + ' · ' + transaction + '. Your amount will be entered in the Amount section and sent to the RumahNusa agent inbox.';
-  }
-
-  document.querySelectorAll('#propertyOptions .client-option').forEach(btn => btn.addEventListener('click', () => {
-    document.querySelectorAll('#propertyOptions .client-option').forEach(x => x.classList.remove('selected'));
-    btn.classList.add('selected');
-    state.property = btn.dataset.value;
-    updatePurposeChoices();
-    updateRoomChoices();
-    const next=document.getElementById('propertyChooseContinue');
-    if(next){ next.disabled=true; next.hidden=true; }
-    if(typeof window.__rumahnusaRenderCategory==='function') window.__rumahnusaRenderCategory(state.property);
-    const collection=document.getElementById('rnCategoryCollection');
-    if(collection) setTimeout(()=>collection.scrollIntoView({behavior:'smooth',block:'start'}),50);
-  }));
-  function buildSummary() {
-    const v = id => document.getElementById(id).value;
-    const amount = Number(v('clientBudget') || 0).toLocaleString('en-US');
-    document.getElementById('clientSummary').innerHTML =
-      '<strong>' + v('clientName') + '</strong><br>' +
-      state.property + ' · ' + state.purpose + '<br>' +
-      v('rooms') + '<br>' +
-      'Amount: $' + amount + '<br>' +
-      'Kota pilihan: ' + v('clientCityWant') + '<br>' +
-      'Rumahhold: ' + v('household') + ' · Kota saat ini: ' + v('clientCity');
-  }
-
-  function addInboxMessage(text, sender) {
-    const list = document.getElementById('messageList');
-    const bubble = document.createElement('div');
-    bubble.className = 'message-bubble ' + (sender === 'customer' ? 'customer' : 'agent');
-    const label = sender === 'customer' ? 'Anda' : 'Agen RumahNusa';
-    bubble.innerHTML = '<div>' + text.replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>') + '</div>' +
-      (sender === 'customer' ? '<div class="message-meta"><span class="message-checks">✓</span><span>Terkirim</span></div>' : '<div class="message-meta"><span>Dibalas agen</span></div>');
-    list.appendChild(bubble);
-    list.scrollTop = list.scrollHeight;
-  }
-
-  document.getElementById('sendProfil').addEventListener('click', () => {
-    const budgetEl = document.getElementById('clientBudget');
-    if (!budgetEl.reportValidity()) {
-      budgetEl.focus();
-      return;
-    }
-    buildSummary();
-    document.getElementById('clientKotak Masuk').hidden = false;
-    document.getElementById('sendProfil').textContent = 'Permintaan Terkirim';
-    document.getElementById('sendProfil').disabled = true;
-    document.getElementById('inboxStatusCard').textContent = 'Pesan Anda sudah masuk ke percakapan RumahNusa. ✓ Terkirim — menunggu agen membacanya.';
-    const v = id => document.getElementById(id).value;
-    const isLargeHouse = state.property === 'Separate Rumah' || state.property === 'Neighborhood Rumah';
-    const specText = isLargeHouse ? houseSpecs[v('rooms')] : apartmentSpecs[v('rooms')];
-    const transactionText = state.purpose === 'Sewa' ? 'Saya ingin menyewa ' + state.property + ' selama ' + state.rentalTerm : 'Saya ingin membeli ' + state.property;
-    const identity=window.__rnCustomerIdentity||{};
-    const requestMessage = 'Pelanggan: ' + (identity.name||v('clientName')) + '. Gender: ' + (identity.gender||'Tidak disebutkan') + '. Age: ' + (identity.age||'Tidak disebutkan') + '. ' + transactionText + '. Pilihan: ' + v('rooms') + '.' + ' Kota pilihan: ' + v('clientCityWant') + '. Spesifikasi: ' + specText + (isLargeHouse ? ' Setiap rumah memiliki kolam renang besar dan area parkir mobil.' : '') + ' Tentang saya: ' + (v('aboutClient') || '');
-    addInboxMessage(requestMessage, 'customer');
-    document.getElementById('clientKotak Masuk').scrollIntoView({behavior:'smooth', block:'start'});
-  });
-
-  document.getElementById('sendInboxMessage').addEventListener('click', () => {
-    const box = document.getElementById('messageComposer');
-    const text = box.value.trim();
-    if (!text) { box.focus(); return; }
-    addInboxMessage(text, 'customer');
-    document.getElementById('inboxStatusCard').textContent = 'Pesan Anda sudah terkirim. ✓ Menunggu agen membacanya.';
-    box.value = '';
+  // The apartment path remains separate: purchase/rental selection leads directly to the existing request review.
+  document.getElementById('sendProfil')?.addEventListener('click',function(){
+    if(typeof window.__rnSendRequest==='function')window.__rnSendRequest();
   });
 })();
 </script>
@@ -1557,6 +1441,36 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 
 <script>
 (function(){
+  function v(id){return document.getElementById(id)?.value||'';}
+  window.buildSummary=function(){
+    const identity=window.__rnCustomerIdentity||{};
+    const amount=Number(v('clientBudget')||0).toLocaleString('en-US');
+    const lines=[
+      '<strong>'+(identity.name||v('clientName')||'Customer')+'</strong>',
+      'Property category: '+(window.__rnCustomerFlowState?.property||''),
+      'Rooms: '+v('rooms'),
+      'Purchase plan: '+(window.__rnCustomerFlowState?.purpose||''),
+      'Amount: $'+amount,
+      'Email: '+v('clientEmail'),
+      'Phone: '+v('clientPhone'),
+      'Current address: '+v('clientAddress'),
+      'Meeting: '+v('meetingDay')+' at '+v('meetingTime'),
+      'Family status: '+v('clientMarital'),
+      'Children: '+v('clientChildren'),
+      'Occupation: '+v('clientOccupation'),
+      'Reason for purchase: '+v('clientPurchaseReason'),
+      'Use: '+v('clientUse'),
+      'Current city: '+v('clientCity'),
+      'Preferred property city: '+v('clientCityWant'),
+      'Household size: '+v('household'),
+      'Payment method: '+(window.__rnCustomerFlowState?.paymentMethod||'Not selected')
+    ];
+    const box=document.getElementById('clientSummary');if(box)box.innerHTML=lines.join('<br>');
+  };
+})();
+</script>
+<script>
+(function(){
   const collection=document.getElementById('rnCategoryCollection');
   const title=document.getElementById('rnCategoryTitle');
   const intro=document.getElementById('rnCategoryIntro');
@@ -1572,6 +1486,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   const layoutTitle=document.getElementById('layoutTitle');
   const layoutDetails=document.getElementById('layoutDetails');
   const selectionInfo=document.getElementById('rnSelectionInfo');
+  const propertyContinue=document.getElementById('rnPropertyContinue');
   const categoryGrid=document.getElementById('propertyOptions');
   const chooseAnother=document.getElementById('rnChooseAnotherCategory');
   if(!collection||!purpose||!rooms||!categoryGrid) return;
@@ -1744,6 +1659,9 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 
   function renderCategory(name){
     const d=data[name]; if(!d)return;
+    window.__rnCustomerFlowState=window.__rnCustomerFlowState||{property:'',purpose:'Beli',rentalTerm:'',paymentMethod:''};
+    window.__rnCustomerFlowState.property=name;
+    window.__rnCustomerFlowState.purpose='Beli';
     const selected=document.querySelector('#propertyOptions .client-option[data-value="'+CSS.escape(name)+'"]');
     if(!selected)return;
 
@@ -1768,6 +1686,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       : '<option value="Beli">Beli</option>';
     purpose.value='Beli';
     purposeNote.textContent=name==='Apartemen'?'Apartments can be bought or rented for 1–5 years.':'SALE ONLY — This property category is permanently for sale. Rental is not available.';
+    if(propertyContinue) propertyContinue.hidden=false;
     rentalWrap.hidden=!(name==='Apartemen' && purpose.value==='Sewa');
     layoutTitle.textContent=d.title+' details';
     layoutDetails.innerHTML=d.listings.map(x=>'<div class="house-layout"><strong>'+x[0]+'</strong><p>'+x[3]+'</p></div>').join('');
@@ -1829,5 +1748,14 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 
 
 
+<script>
+(function(){
+  const send=document.getElementById('sendProfil');
+  if(!send)return;
+  window.__rnSendRequest=async function(){
+    send.click();
+  };
+})();
+</script>
 </body>
 </html>
