@@ -339,6 +339,7 @@ body.rn-site-unlocked footer { display:none !important; }
 }
 /* Login controls must remain directly tappable on mobile. */
 .rn-gate-actions .btn,
+#propertyChooseContinue,
 #rnGateSignIn,
 #rnGatePasswordToggle {
   position: relative;
@@ -744,6 +745,7 @@ body.rn-site-unlocked footer { display:none !important; }
         </div>
         <div class="client-actions">
           <button class="btn secondary" type="button" data-back>Kembali</button>
+          <button id="propertyChooseContinue" class="btn" type="button" disabled>Choose &amp; Continue</button>
         </div>
         <div id="rnCategoryCollection" class="rn-category-collection" hidden aria-live="polite">
           <div class="rn-category-head">
@@ -1157,6 +1159,16 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
 
   form.querySelectorAll('[data-back]').forEach(btn => btn.addEventListener('click', () => showStep(current - 1)));
 
+  const propertyChooseContinue = document.getElementById('propertyChooseContinue');
+  if(propertyChooseContinue){
+    propertyChooseContinue.addEventListener('click', function(event){
+      event.preventDefault();
+      event.stopPropagation();
+      if(!state.property) return;
+      showStep(1);
+    });
+  }
+
   form.querySelectorAll('.client-next').forEach(btn => btn.addEventListener('click', () => {
     if (current === 0) {
       if (!state.property) {
@@ -1313,7 +1325,10 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
     updatePurposeChoices();
     updateRoomChoices();
     const next=document.getElementById('propertyChooseContinue');
-    if(next) next.disabled=false;
+    if(next){
+      next.disabled=false;
+      next.setAttribute('aria-disabled','false');
+    }
     if(typeof window.__rumahnusaRenderCategory==='function') window.__rumahnusaRenderCategory(state.property);
   }));
 
@@ -1620,10 +1635,18 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 
   phoneContinue.disabled=false;
   phoneContinue.style.pointerEvents='auto';
+  phoneContinue.setAttribute('aria-disabled','false');
   phoneContinue.addEventListener('click',function(event){
     event.preventDefault();
     event.stopPropagation();
+    phoneContinue.disabled=true;
+    const oldText=phoneContinue.textContent;
+    phoneContinue.textContent='Checking…';
     continueToVerification();
+    setTimeout(function(){
+      phoneContinue.disabled=false;
+      phoneContinue.textContent=oldText;
+    },700);
   });
   verificationMethod.addEventListener('change',chooseVerificationMethod);
   confirmationButton.addEventListener('click',sendPhoneCode);
