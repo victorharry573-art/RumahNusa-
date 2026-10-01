@@ -104,6 +104,20 @@ nav a {
   min-width: 0;
 }
 
+.rn-home-welcome{max-width:760px;margin:0 auto 24px;text-align:center}
+.rn-home-welcome h3{font-size:30px;margin-bottom:10px;color:#075985}
+.rn-home-welcome p{color:#486581;margin:8px 0}
+.rn-home-prompt{font-weight:700;color:#183b56!important}
+.rn-home-category-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:22px}
+.rn-home-category{min-height:142px!important;padding:18px 12px!important;border:1px solid #d9e2ec!important;border-radius:14px!important;background:#fff!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;text-align:center!important;transition:transform .15s,border-color .15s,box-shadow .15s!important}
+.rn-home-category:hover,.rn-home-category:focus-visible{transform:translateY(-2px);border-color:#1597e5!important;box-shadow:0 6px 18px rgba(16,42,67,.12)}
+.rn-home-category.selected{border-color:#1597e5!important;background:#f3faff!important;box-shadow:0 0 0 2px rgba(21,151,229,.12)}
+.rn-home-icon{font-size:38px;line-height:1;margin-bottom:10px}
+.rn-home-category strong{font-size:16px;color:#183b56}
+.rn-home-category small{display:block;color:#627d98;font-size:12px;line-height:1.4;margin-top:5px}
+@media(max-width:700px){.rn-home-category-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.rn-home-category{min-height:132px!important;padding:14px 8px!important}.rn-home-welcome h3{font-size:25px}}
+@media(max-width:420px){.rn-home-category-grid{grid-template-columns:1fr 1fr}.rn-home-category small{font-size:11px}}
+
 .btn {
   background: #0879bd;
   color: white;
@@ -564,19 +578,24 @@ body.rn-gate-active{margin:0;}
       <div class="client-form-step active" data-step="1">
         <h3>Pilih jenis rumah Anda</h3>
         <p>Ketuk satu jenis rumah dan koleksi rumah dari jenis tersebut akan langsung terbuka untuk Anda.</p>
-        <div class="client-options" id="propertyOptions">
-          <button type="button" class="client-option" data-value="Apartemen"><strong>Apartemen</strong><small>Hunian kota modern dengan fasilitas bersama.</small></button>
-          <button type="button" class="client-option" data-value="Separate Rumah"><strong>Separate Rumah</strong><small>Rumah pribadi dengan pilihan 4–11 kamar tidur.</small></button>
-          <button type="button" class="client-option" data-value="Vila"><strong>Vila</strong><small>Hunian nyaman dengan ruang luar yang menyenangkan.</small></button>
-          <button type="button" class="client-option" data-value="Neighborhood Rumah"><strong>Neighborhood Rumah</strong><small>Rumah dalam lingkungan hunian dengan pilihan 4–11 kamar tidur.</small></button>
-          <button type="button" class="client-option" data-value="Townhouse"><strong>Townhouse</strong><small>Hunian bertingkat yang praktis dengan suasana komunitas.</small></button>
-          <button type="button" class="client-option" data-value="Penthouse"><strong>Penthouse</strong><small>Hunian luas di gedung tinggi dengan suasana premium.</small></button>
-          <button type="button" class="client-option" data-value="Family Residence"><strong>Family Residence</strong><small>Ruang nyaman yang dirancang untuk kehidupan keluarga.</small></button>
-          <button type="button" class="client-option" data-value="Investment Property"><strong>Investment Property</strong><small>Properti untuk investasi jangka panjang atau kepemilikan.</small></button>
+        <div class="rn-home-welcome">
+          <h3>Welcome to RumahNusa Real Estate</h3>
+          <p>Welcome to a place where beautiful homes, comfort, privacy, and peace of mind come together. RumahNusa helps you discover a home that can feel right for your everyday life, your family, and your future.</p>
+          <p class="rn-home-prompt">Choose the home category that speaks to you. Tap a category and its homes will open immediately.</p>
+        </div>
+        <div class="client-options rn-home-category-grid" id="propertyOptions" aria-label="RumahNusa home categories">
+          <button type="button" class="client-option rn-home-category" data-value="Apartemen"><span class="rn-home-icon" aria-hidden="true">🏢</span><strong>Apartment</strong><small>City apartments, rooms, views and shared facilities.</small></button>
+          <button type="button" class="client-option rn-home-category" data-value="Hotel"><span class="rn-home-icon" aria-hidden="true">🏨</span><strong>Hotel</strong><small>Hotel rooms, suites and guest facilities.</small></button>
+          <button type="button" class="client-option rn-home-category" data-value="Separate Rumah"><span class="rn-home-icon" aria-hidden="true">🏠</span><strong>Separate Rumah</strong><small>Private houses with their own rooms and spaces.</small></button>
+          <button type="button" class="client-option rn-home-category" data-value="Vila"><span class="rn-home-icon" aria-hidden="true">🏝️</span><strong>Villa</strong><small>Private villas, outdoor spaces and pools.</small></button>
+          <button type="button" class="client-option rn-home-category" data-value="Neighborhood Rumah"><span class="rn-home-icon" aria-hidden="true">🏘️</span><strong>Neighborhood</strong><small>Homes within welcoming residential surroundings.</small></button>
+          <button type="button" class="client-option rn-home-category" data-value="Townhouse"><span class="rn-home-icon" aria-hidden="true">🏙️</span><strong>Townhouse</strong><small>Connected homes with comfortable living spaces.</small></button>
+          <button type="button" class="client-option rn-home-category" data-value="Penthouse"><span class="rn-home-icon" aria-hidden="true">🌆</span><strong>Penthouse</strong><small>Large high-rise homes with city views.</small></button>
+          <button type="button" class="client-option rn-home-category" data-value="Family Residence"><span class="rn-home-icon" aria-hidden="true">👨‍👩‍👧‍👦</span><strong>Family Residence</strong><small>Comfortable homes designed around family life.</small></button>
+          <button type="button" class="client-option rn-home-category" data-value="Investment Property"><span class="rn-home-icon" aria-hidden="true">📈</span><strong>Investment Property</strong><small>Properties for long-term ownership and investment.</small></button>
         </div>
         <div class="client-actions">
           <button class="btn secondary" type="button" data-back>Kembali</button>
-          <button id="propertyChooseContinue" class="btn" type="button" disabled>Choose &amp; Continue</button>
         </div>
         <div id="rnCategoryCollection" class="rn-category-collection" hidden aria-live="polite">
           <div class="rn-category-head">
@@ -964,13 +983,11 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
     updatePurposeChoices();
     updateRoomChoices();
     const next=document.getElementById('propertyChooseContinue');
-    if(next){
-      next.disabled=false;
-      next.setAttribute('aria-disabled','false');
-    }
+    if(next){ next.disabled=true; next.hidden=true; }
     if(typeof window.__rumahnusaRenderCategory==='function') window.__rumahnusaRenderCategory(state.property);
+    const collection=document.getElementById('rnCategoryCollection');
+    if(collection) setTimeout(()=>collection.scrollIntoView({behavior:'smooth',block:'start'}),50);
   }));
-
   function buildSummary() {
     const v = id => document.getElementById(id).value;
     const amount = Number(v('clientBudget') || 0).toLocaleString('en-US');
@@ -1431,6 +1448,19 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
         ['RumahNusa City Hotel — 10 Rooms','Jakarta, Indonesia','Contact RumahNusa for the selected hotel','10 guest rooms · reception/lobby · bathrooms/toilets · dining area · kitchen · furnished · parking','https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=85'],
         ['RumahNusa Grand Hotel — 20 Rooms','Jakarta, Indonesia','Contact RumahNusa for the selected hotel','20 guest rooms · spacious lobby · guest bathrooms · dining area · kitchen · furnished spaces · parking','https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=85'],
         ['RumahNusa Signature Hotel — 30 Rooms','Jakarta, Indonesia','Contact RumahNusa for the selected hotel','30 guest rooms · grand lobby · suites · bathrooms/toilets · dining and kitchen areas · furnished · parking','https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=85']
+      ]
+    },
+    'Hotel':{
+      title:'Hotels',
+      badge:'HOTEL',
+      intro:'A hotel-only collection. See only hotel rooms and suites, with their own comfort, services, dining, pool and guest facilities.',
+      confidence:'Choose a hotel when you want a comfortable stay with welcoming rooms, helpful facilities and a place to relax with peace of mind.',
+      buy:'Hotel stays are presented as accommodation options.',
+      rooms:['1 kamar','2 kamar','Suite'],
+      listings:[
+        ['RumahNusa City Hotel — Deluxe Room','Jakarta, Indonesia','Contact RumahNusa for the selected room','Deluxe room · private bathroom/toilet · furnished · AC · guest facilities','https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=1200&q=85'],
+        ['RumahNusa City Hotel — Family Suite','Jakarta, Indonesia','Contact RumahNusa for the selected suite','Family suite · bedrooms · bathrooms/toilets · living area · AC · hotel facilities','https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=85'],
+        ['RumahNusa Resort Hotel — Pool Suite','Bali, Indonesia','Contact RumahNusa for the selected suite','Pool suite · furnished room · bathroom/toilet · private outdoor space · resort facilities','https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=1200&q=85']
       ]
     },
     'Separate Rumah':{
