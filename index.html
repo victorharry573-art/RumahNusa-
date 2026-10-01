@@ -660,10 +660,12 @@ body.rn-gate-active{margin:0;}
       </div>
       <div id="rnGateIdentityStep" class="rn-gate-step">
         <div id="rnGateIdentityFields">
+          <div class="rn-gate-field"><label for="rnGateEmail">Email</label><input id="rnGateEmail" type="email" autocomplete="email" placeholder="Enter your email"></div>
+          <div class="rn-gate-field rn-password-wrap"><label for="rnGatePassword">Password</label><input id="rnGatePassword" type="password" autocomplete="current-password" placeholder="Enter your password"><button id="rnGatePasswordToggle" class="rn-password-eye" type="button" aria-label="Show password" aria-pressed="false"><svg class="rn-eye-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="2.5"></circle></svg></button></div>
           <div class="rn-gate-field"><label for="rnGateName">Your name</label><input id="rnGateName" type="text" autocomplete="name" placeholder="Enter your name"></div>
           <div id="rnGateGenderStep"><label>Gender</label><div class="rn-gender-options"><button type="button" class="rn-gender-option" data-gender="Female">Female</button><button type="button" class="rn-gender-option" data-gender="Male">Male</button></div></div>
           <div id="rnGateAgeStep"><label for="rnGateAge">Your age</label><input id="rnGateAge" type="number" min="18" max="120" inputmode="numeric" placeholder="18 or older"></div>
-          <button id="rnGateIdentityContinue" class="btn" type="button" disabled>Continue to RumahNusa</button>
+          <button id="rnGateIdentityContinue" class="btn" type="button" disabled>Login &amp; Continue</button>
         </div>
         <p id="rnGateLoginStatus" class="rn-gate-status" aria-live="polite"></p>
       </div>
@@ -714,136 +716,183 @@ body.rn-gate-active{margin:0;}
 
 
 <div class="client-form-step" data-step="2">
-        <h3 id="rnChoiceTitle">Tentukan kebutuhan rumah</h3>
-        <p id="rnChoiceIntro">Pilih kategori Anda untuk melihat hanya rumah yang sesuai dengan pilihan tersebut.</p>
-        <div class="client-grid">
-          <div class="client-field full">
-            <label for="purpose">Pilihan kepemilikan</label>
-            <select id="purpose">
-              <option value="Beli">Beli</option>
-              <option value="Sewa">Sewa</option>
-            </select>
-            <small id="purposeNote" style="color:#627d98;">Pilih beli atau sewa sesuai kategori yang Anda pilih.</small>
-          </div>
-          <div class="client-field full" id="rentalTermOptions" hidden style="display:none !important">
-            <label for="rentalTerm">Lama sewa</label>
-            <select id="rentalTerm">
-              <option value="1 tahun">1 tahun</option>
-              <option value="2 tahun">2 tahun</option>
-              <option value="3 tahun">3 tahun</option>
-              <option value="4 tahun">4 tahun</option>
-              <option value="5 tahun">5 tahun</option>
-            </select>
-          </div>
-          <div class="client-field full">
-            <label for="rooms">Jumlah kamar tidur</label>
-            <select id="rooms">
-              <option>2 kamar tidur</option><option>3 kamar tidur</option><option>4 kamar tidur</option>
-            </select>
-          </div>
-          <div class="client-field full">
-            <label id="layoutTitle">Standar apartemen RumahNusa</label>
-            <div id="layoutDetails" class="apartment-layouts"></div>
-          </div>
-          <div class="client-field full" id="purchaseAmountSection">
-            <label for="clientBudget">Amount you want to pay (USD)</label>
-            <input id="clientBudget" type="number" min="0" step="1" placeholder="Example: 350000" required>
-            <small style="color:#627d98;">Enter the amount you want to pay for the property you selected. This amount will be sent to the RumahNusa agent.</small>
-          </div>
-          <div class="client-field full" id="purchaseAmountIdrSection" hidden>
-            <label for="clientBudgetIdr">Amount you want to pay (IDR / Rupiah)</label>
-            <input id="clientBudgetIdr" type="number" min="0" step="1" placeholder="Example: 500000000">
-            <small style="color:#627d98;">For non-apartment properties, enter the amount in Indonesian rupiah that you want the agent to see.</small>
-          </div>
-          <div class="client-field full">
-            <div id="rnSelectionInfo" class="inbox-status-card">Pilihan kategori, jumlah kamar, transaksi, dan harga Anda akan dikirim ke inbox agen RumahNusa.</div>
-          </div>
-        </div>
-        <div class="client-actions"><button class="btn secondary" type="button" data-back>Kembali</button><button class="btn secondary" type="button" id="changeHouseCategory">Change house category</button><button class="btn client-next" type="button">Lanjutkan</button></div>
-      </div>
+  <h3>Choose your purchase plan</h3>
+  <p id="purchasePlanPrompt">Choose one option to continue.</p>
+  <div class="rn-one-choice">
+    <label for="purpose">Purchase plan</label>
+    <select id="purpose">
+      <option value="">Choose one</option>
+      <option value="Beli">Buy</option>
+      <option value="Sewa">Rent</option>
+    </select>
+    <small id="purposeNote">Choose one option.</small>
+  </div>
+  <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Continue</button></div>
+</div>
 
+<div class="client-form-step" data-step="3">
+  <h3>Rental duration</h3>
+  <p>Choose how long you want the apartment rental.</p>
+  <div class="rn-one-choice">
+    <label for="rentalTerm">Rental duration</label>
+    <select id="rentalTerm">
+      <option value="">Choose one</option>
+      <option value="1 year">1 year</option><option value="2 years">2 years</option><option value="3 years">3 years</option><option value="4 years">4 years</option><option value="5 years">5 years</option>
+    </select>
+  </div>
+  <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Continue</button></div>
+</div>
 
-<div class="client-form-step" data-step="3" data-non-apartment-only="true">
-        <h3>Contact details</h3>
-        <p>Complete these details so RumahNusa can prepare your request and arrange contact with the agent.</p>
-        <div class="client-grid">
-          <div class="client-field full"><label for="clientEmail">Email</label><input id="clientEmail" type="email" autocomplete="email" placeholder="Enter your email" required></div>
-          <div class="client-field full"><label for="clientPhone">Phone number</label><input id="clientPhone" type="tel" autocomplete="tel" placeholder="Enter your phone number" required></div>
-          <div class="client-field full"><label for="clientAddress">Current address</label><input id="clientAddress" autocomplete="street-address" placeholder="Enter the address where you live now" required></div>
-          <div class="client-field full">
-            <label for="meetingDay">When would you like the agent to meet you?</label>
-            <select id="meetingDay" required>
-              <option value="">Choose a day</option>
-              <option>Tomorrow</option>
-              <option>Next tomorrow</option>
-            </select>
-          </div>
-          <div class="client-field full">
-            <label for="meetingTime">Choose your preferred meeting time</label>
-            <select id="meetingTime" required>
-              <option value="">Choose a time</option>
-              <option>09:00</option><option>10:00</option><option>11:00</option>
-              <option>13:00</option><option>14:00</option><option>15:00</option>
-              <option>16:00</option><option>17:00</option>
-            </select>
-          </div>
-        </div>
-        <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Continue</button></div>
-      </div>
+<div class="client-form-step" data-step="4">
+  <h3>Choose your bedrooms</h3>
+  <p>Select one bedroom option. The next question appears after you continue.</p>
+  <div class="rn-one-choice"><label for="rooms">Bedrooms</label><select id="rooms"><option value="">Choose one</option></select></div>
+  <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Continue</button></div>
+</div>
 
-      <div class="client-form-step" data-step="4" data-non-apartment-only="true">
-        <h3>Tell RumahNusa about your plans</h3>
-        <div class="client-grid">
-          <div class="client-field"><label for="clientMarital">Are you married or single?</label><select id="clientMarital" required><option value="">Choose</option><option>Single</option><option>Married</option></select></div>
-          <div class="client-field"><label for="clientChildren">Do you have children?</label><select id="clientChildren" required><option value="">Choose</option><option>Yes</option><option>No</option></select></div>
-          <div class="client-field full"><label for="clientOccupation">What do you do for a living?</label><select id="clientOccupation" required>
-            <option value="">Choose your work</option><option>Business owner</option><option>Employee</option><option>Professional</option><option>Entrepreneur</option><option>Investor</option><option>Government worker</option><option>Teacher</option><option>Doctor / healthcare</option><option>Engineer</option><option>Technology</option><option>Sales / marketing</option><option>Law / finance</option><option>Student</option><option>Retired</option><option>Other</option>
-          </select></div>
-          <div class="client-field full"><label for="clientPurchaseReason">Why do you want to buy this property?</label><textarea id="clientPurchaseReason" placeholder="Tell RumahNusa your reason" required></textarea></div>
-          <div class="client-field full"><label for="clientUse">Will you use the property for business or living?</label><select id="clientUse" required><option value="">Choose</option><option>Living home</option><option>Business</option><option>Both</option></select></div>
-          <div class="client-field full"><label for="clientCity">Current city</label><input id="clientCity" placeholder="City where you live now" required></div>
-          <div class="client-field full"><label for="clientCityWant">Preferred property city</label><input id="clientCityWant" placeholder="Example: Jakarta" required></div>
-          <div class="client-field full"><label for="household">How many people will live there?</label><input id="household" type="number" min="1" max="30" value="1" required></div>
-        </div>
-        <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Continue</button></div>
-      </div>
+<div class="client-form-step" data-step="5">
+  <h3>Amount you want to pay</h3>
+  <p>Enter the amount you want the RumahNusa agent to see.</p>
+  <div class="rn-one-choice" id="purchaseAmountSection">
+    <label for="clientBudget">Amount in USD</label><input id="clientBudget" type="number" min="0" step="1" placeholder="Example: 350000">
+  </div>
+  <div class="rn-one-choice" id="purchaseAmountIdrSection" hidden>
+    <label for="clientBudgetIdr">Amount in IDR / Rupiah</label><input id="clientBudgetIdr" type="number" min="0" step="1" placeholder="Example: 500000000">
+  </div>
+  <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Continue</button></div>
+</div>
 
-      <div class="client-form-step" data-step="5" data-non-apartment-only="true">
-        <h3>Private identity document</h3>
-        <p>This photo is processed only in the browser and is <strong>not uploaded to RumahNusa, Supabase, or the agent inbox.</strong> After you continue, the selected photo is cleared from the page.</p>
-        <div class="rn-private-document-box">
-          <label for="privateIdentityType">Take a picture of your document</label>
-          <select id="privateIdentityType" required>
-            <option value="">Choose one</option>
-            <option>Passport</option><option>ID Card</option><option>Family Card</option>
-            <option>Taxpayer Identification Number (NPWP)</option><option>Driving License</option><option>Visa</option><option>Residence Permit</option>
-          </select>
-          <input id="privateIdentityPhoto" type="file" accept="image/*" capture="environment" required>
-          <p id="privateDocumentStatus" class="inbox-note">Your document photo will disappear when you continue and will not be included in the agent inbox.</p>
-        </div>
-        <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" id="privateDocumentContinue" type="button">Done &amp; Continue</button></div>
-      </div>
+<div class="client-form-step" data-step="6">
+  <h3>Your email</h3>
+  <div class="rn-one-choice"><label for="clientEmail">Email</label><input id="clientEmail" type="email" autocomplete="email" placeholder="Enter your email"></div>
+  <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Continue</button></div>
+</div>
 
-      <div class="client-form-step" data-step="6" data-non-apartment-only="true">
-        <h3>Complete your process</h3>
-        <p>Select a payment method below. RumahNusa must connect a real payment provider before any real payment is taken.</p>
-        <div class="rn-payment-box">
-          <label><input type="radio" name="paymentMethod" value="Bank transfer"> Bank transfer</label>
-          <label><input type="radio" name="paymentMethod" value="Card"> Card</label>
-          <label><input type="radio" name="paymentMethod" value="Other payment provider"> Other payment provider</label>
-          <p class="inbox-note">Select your payment method to continue. A real payment provider must be connected before any money is charged.</p>
-        </div>
-        <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" id="paymentContinue" type="button">Payment &amp; Continue</button></div>
-        <p id="paymentStatus" class="rn-gate-status" aria-live="polite"></p>
-      </div>
+<div class="client-form-step" data-step="7">
+  <h3>Your phone number</h3>
+  <div class="rn-one-choice"><label for="clientPhone">Phone number</label><input id="clientPhone" type="tel" autocomplete="tel" placeholder="Enter your phone number"></div>
+  <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Continue</button></div>
+</div>
 
-      <div class="client-form-step" data-step="7">
-        <h3>RumahNusa agent request</h3>
-        <p>Everything you selected will be listed for the agent. Private identity documents are never included.</p>
-        <div id="clientSummary" class="client-summary"></div>
-        <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn" id="sendProfil" type="button">Continue to Agent Inbox</button></div>
-      </div>
+<div class="client-form-step" data-step="8">
+  <h3>Your current address</h3>
+  <div class="rn-one-choice"><label for="clientAddress">Current address</label><input id="clientAddress" autocomplete="street-address" placeholder="Enter the address where you live"></div>
+  <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Continue</button></div>
+</div>
 
+<div class="client-form-step" data-step="9">
+  <h3>Meeting day</h3>
+  <div class="rn-one-choice"><label for="meetingDay">When would you like the agent to meet you?</label><select id="meetingDay"><option value="">Choose one</option><option>Tomorrow</option><option>Next tomorrow</option></select></div>
+  <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Continue</button></div>
+</div>
+
+<div class="client-form-step" data-step="10">
+  <h3>Meeting time</h3>
+  <div class="rn-one-choice"><label for="meetingTime">Choose your preferred meeting time</label><select id="meetingTime"><option value="">Choose one</option><option>09:00</option><option>10:00</option><option>11:00</option><option>13:00</option><option>14:00</option><option>15:00</option><option>16:00</option><option>17:00</option></select></div>
+  <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Continue</button></div>
+</div>
+
+<div class="client-form-step" data-step="11">
+  <h3>Family status</h3>
+  <div class="rn-one-choice"><label for="clientMarital">Are you married or single?</label><select id="clientMarital"><option value="">Choose one</option><option>Single</option><option>Married</option></select></div>
+  <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Continue</button></div>
+</div>
+
+<div class="client-form-step" data-step="12">
+  <h3>Children</h3>
+  <div class="rn-one-choice"><label for="clientChildren">Do you have children?</label><select id="clientChildren"><option value="">Choose one</option><option>Yes</option><option>No</option></select></div>
+  <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Continue</button></div>
+</div>
+
+<div class="client-form-step" data-step="13">
+  <h3>Occupation</h3>
+  <div class="rn-one-choice"><label for="clientOccupation">What do you do for a living?</label><select id="clientOccupation"><option value="">Choose one</option><option>Business owner</option><option>Employee</option><option>Professional</option><option>Entrepreneur</option><option>Investor</option><option>Government worker</option><option>Teacher</option><option>Doctor / healthcare</option><option>Engineer</option><option>Technology</option><option>Sales / marketing</option><option>Law / finance</option><option>Student</option><option>Retired</option><option>Other</option></select></div>
+  <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Continue</button></div>
+</div>
+
+<div class="client-form-step" data-step="14">
+  <h3>Reason for choosing this home</h3>
+  <div class="rn-one-choice"><label for="clientPurchaseReason">Why do you want this property?</label><textarea id="clientPurchaseReason" placeholder="Tell RumahNusa your reason"></textarea></div>
+  <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Continue</button></div>
+</div>
+
+<div class="client-form-step" data-step="15">
+  <h3>How will you use the property?</h3>
+  <div class="rn-one-choice"><label for="clientUse">Business or living?</label><select id="clientUse"><option value="">Choose one</option><option>Living home</option><option>Business</option><option>Both</option></select></div>
+  <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Continue</button></div>
+</div>
+
+<div class="client-form-step" data-step="16">
+  <h3>Current city</h3>
+  <div class="rn-one-choice"><label for="clientCity">Where do you live now?</label><input id="clientCity" placeholder="City where you live now"></div>
+  <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Continue</button></div>
+</div>
+
+<div class="client-form-step" data-step="17">
+  <h3>Preferred property city</h3>
+  <div class="rn-one-choice"><label for="clientCityWant">Where do you want the property?</label><input id="clientCityWant" placeholder="Example: Jakarta"></div>
+  <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Continue</button></div>
+</div>
+
+<div class="client-form-step" data-step="18">
+  <h3>Household size</h3>
+  <div class="rn-one-choice"><label for="household">How many people will live there?</label><input id="household" type="number" min="1" max="30" value="1"></div>
+  <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Continue</button></div>
+</div>
+
+<div class="client-form-step" data-step="19">
+  <h3>Private identity document</h3>
+  <p>Your document photo is used only in this browser step. It is never uploaded to RumahNusa, Supabase, or the agent inbox. It is deleted immediately when you continue.</p>
+  <div class="rn-private-document-box">
+    <label for="privateIdentityType">Document type</label>
+    <select id="privateIdentityType"><option value="">Choose one</option><option>Passport</option><option>ID Card</option><option>Family Card</option><option>Taxpayer Identification Number (NPWP)</option><option>Driving License</option><option>Visa</option><option>Residence Permit</option></select>
+    <label for="privateIdentityPhoto">Take a picture of your document</label>
+    <input id="privateIdentityPhoto" type="file" accept="image/*" capture="environment">
+    <p id="privateDocumentStatus" class="inbox-note">Nothing from this photo is sent to the agent.</p>
+  </div>
+  <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Done &amp; Continue</button></div>
+</div>
+
+<div class="client-form-step" data-step="20">
+  <h3>Face scan</h3>
+  <p>Take a face photo for this step only. RumahNusa does not upload or keep it. It is deleted immediately when you continue.</p>
+  <div class="rn-private-document-box">
+    <label for="faceScanPhoto">Take your face scan photo</label>
+    <input id="faceScanPhoto" type="file" accept="image/*" capture="user">
+    <p id="faceScanStatus" class="inbox-note">Your face photo stays only in this browser step.</p>
+  </div>
+  <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Face Scan &amp; Continue</button></div>
+</div>
+
+<div class="client-form-step" data-step="21">
+  <h3>Front camera photo</h3>
+  <p>Take a front-camera photo for this step only. It is deleted immediately when you continue and is never sent to the agent.</p>
+  <div class="rn-private-document-box">
+    <label for="frontCameraPhoto">Take a front-camera picture</label>
+    <input id="frontCameraPhoto" type="file" accept="image/*" capture="user">
+    <p id="frontCameraStatus" class="inbox-note">This photo is not included in the agent inbox.</p>
+  </div>
+  <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Photo &amp; Continue</button></div>
+</div>
+
+<div class="client-form-step" data-step="22">
+  <h3>Payment method</h3>
+  <p>Choose one payment method. No payment is taken until a real payment provider is connected.</p>
+  <div class="rn-one-choice">
+    <label><input type="radio" name="paymentMethod" value="Bank transfer"> Bank transfer</label>
+    <label><input type="radio" name="paymentMethod" value="Card"> Card</label>
+    <label><input type="radio" name="paymentMethod" value="Other payment provider"> Other payment provider</label>
+    <p id="paymentStatus" class="rn-gate-status" aria-live="polite"></p>
+  </div>
+  <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Payment &amp; Continue</button></div>
+</div>
+
+<div class="client-form-step" data-step="23">
+  <h3>Review your request</h3>
+  <p>Review the choices you made. Private document, face-scan, and front-camera photos are not included.</p>
+  <div id="clientSummary" class="client-summary"></div>
+  <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn" id="sendProfil" type="button">Continue to Agent Inbox</button></div>
+</div>
     </form>
 
     <div id="clientKotak Masuk" class="client-inbox" hidden>
@@ -916,43 +965,7 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
 </script>
 
 <script>
-(function(){
-  const status=document.getElementById('rnGateLoginStatus');
-  const name=document.getElementById('rnGateName');
-  const age=document.getElementById('rnGateAge');
-  const identityContinue=document.getElementById('rnGateIdentityContinue');
-  const welcome=document.getElementById('rnWelcomeGate');
-  const form=document.getElementById('clientProfilForm');
-  const genders=Array.from(document.querySelectorAll('#rnGateIdentityFields .rn-gender-option'));
-  let gender='';
-  if(!form||!name||!age||!identityContinue)return;
-
-  function validIdentity(){
-    const a=Number(age.value);
-    identityContinue.disabled=!(name.value.trim()&&gender&&a>=18&&a<=120);
-  }
-  [name,age].forEach(el=>el.addEventListener('input',validIdentity));
-  genders.forEach(function(button){
-    button.addEventListener('click',function(){
-      gender=button.dataset.gender||'';
-      genders.forEach(item=>item.classList.toggle('selected',item===button));
-      validIdentity();
-    });
-  });
-
-  identityContinue.addEventListener('click',function(){
-    const a=Number(age.value);
-    if(identityContinue.disabled)return;
-    window.__rnCustomerIdentity={name:name.value.trim(),gender:gender,age:a};
-    status.textContent='Welcome to RumahNusa. Your home choices are now open.';
-    welcome.hidden=true;
-    form.hidden=false;
-    document.body.classList.remove('rn-gate-active');
-    form.querySelectorAll('.client-form-step').forEach(function(step,i){step.classList.toggle('active',i===0);});
-    document.getElementById('propertyOptions')?.scrollIntoView({behavior:'smooth',block:'start'});
-  });
-  validIdentity();
-})();
+/* Login gate is controlled by the final Supabase login script below. */
 </script>
 
 <script>
@@ -2265,4 +2278,256 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 </script>
 
 </body>
+<script>
+/* RumahNusa sequential customer experience — one choice/question at a time. */
+(function(){
+  function boot(){
+    const form=document.getElementById('clientProfilForm');
+    const gate=document.getElementById('rnWelcomeGate');
+    const loginBtn=document.getElementById('rnGateIdentityContinue');
+    const email=document.getElementById('rnGateEmail');
+    const password=document.getElementById('rnGatePassword');
+    const name=document.getElementById('rnGateName');
+    const age=document.getElementById('rnGateAge');
+    const status=document.getElementById('rnGateLoginStatus');
+    const genders=Array.from(document.querySelectorAll('#rnGateIdentityFields .rn-gender-option'));
+    const eye=document.getElementById('rnGatePasswordToggle');
+    if(!form||!gate||!loginBtn)return;
+
+    /* Password eye: tap to reveal, tap again to hide. */
+    eye?.addEventListener('click',function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      const visible=password.type==='text';
+      password.type=visible?'password':'text';
+      eye.setAttribute('aria-pressed',String(!visible));
+      eye.setAttribute('aria-label',visible?'Show password':'Hide password');
+      eye.innerHTML='<svg class="rn-eye-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="2.5"></circle></svg>';
+    });
+
+    let gender='';
+    genders.forEach(b=>b.addEventListener('click',()=>{gender=b.dataset.gender||'';genders.forEach(x=>x.classList.toggle('selected',x===b));updateLogin();}));
+    [email,password,name,age].forEach(x=>x?.addEventListener('input',updateLogin));
+    function updateLogin(){
+      const a=Number(age?.value);
+      loginBtn.disabled=!(email?.value.trim()&&password?.value&&name?.value.trim()&&gender&&a>=18&&a<=120);
+    }
+    updateLogin();
+
+    loginBtn.replaceWith(loginBtn.cloneNode(true));
+    const login=document.getElementById('rnGateIdentityContinue');
+    login.addEventListener('click',async function(){
+      const a=Number(age.value);
+      if(!email.value.trim()||!password.value||!name.value.trim()||!gender||a<18||a>120)return;
+      login.disabled=true;
+      status.textContent='Checking your login…';
+      try{
+        if(!window.supabase||!window.RUMAHNUSA_SUPABASE_URL||!window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY){
+          throw new Error('Login service is not ready yet.');
+        }
+        const db=window.supabase.createClient(window.RUMAHNUSA_SUPABASE_URL,window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY);
+        const {data,error}=await db.auth.signInWithPassword({email:email.value.trim(),password:password.value});
+        if(error)throw error;
+        window.__rnCustomerIdentity={name:name.value.trim(),gender,age:a,email:email.value.trim()};
+        try{await db.from('profiles').update({full_name:name.value.trim(),email:email.value.trim()}).eq('id',data.user.id);}catch(e){}
+        status.textContent='Login successful. Welcome to RumahNusa.';
+        gate.hidden=true;
+        form.hidden=false;
+        document.body.classList.remove('rn-gate-active');
+        form.querySelectorAll('.client-form-step').forEach((s,i)=>s.classList.toggle('active',i===0));
+        window.scrollTo({top:0,behavior:'smooth'});
+      }catch(err){
+        status.textContent='Login could not be completed. Please check your email and password.';
+        login.disabled=false;
+      }
+    });
+
+    /* Sequential wizard. */
+    let steps=Array.from(form.querySelectorAll('.client-form-step'));
+    let current=0;
+    const state=window.__rnCustomerFlowState||{property:'',purpose:'',rentalTerm:'',paymentMethod:'',selectedHome:''};
+    window.__rnCustomerFlowState=state;
+    function syncSteps(){
+      steps=Array.from(form.querySelectorAll('.client-form-step'));
+      steps.forEach((s,i)=>s.classList.toggle('active',i===current));
+      window.__rumahnusaCustomerStep=current;
+      window.scrollTo({top:document.getElementById('client-profile')?.offsetTop||0,behavior:'smooth'});
+    }
+    function clearMedia(id){
+      const input=document.getElementById(id);
+      if(!input)return;
+      try{input.value='';}catch(e){}
+      if(input.files?.length){
+        const replacement=input.cloneNode(true);
+        input.replaceWith(replacement);
+      }
+    }
+    function validateStep(){
+      const idMap={2:'purpose',3:'rentalTerm',4:'rooms',5:'clientBudget',6:'clientEmail',7:'clientPhone',8:'clientAddress',9:'meetingDay',10:'meetingTime',11:'clientMarital',12:'clientChildren',13:'clientOccupation',14:'clientPurchaseReason',15:'clientUse',16:'clientCity',17:'clientCityWant',18:'household'};
+      const id=idMap[current];
+      if(id){
+        const el=document.getElementById(id);
+        if(el&&!el.reportValidity())return false;
+      }
+      if(current===5 && state.property!=='Apartemen'){
+        const el=document.getElementById('clientBudgetIdr');
+        if(el&&!el.reportValidity())return false;
+      }
+      if(current===3 && state.purpose!=='Sewa')return true;
+      return true;
+    }
+    function next(){
+      if(current===0)return;
+      if(!validateStep())return;
+      if(current===2){
+        state.purpose=document.getElementById('purpose').value;
+        if(state.property==='Apartemen'&&state.purpose==='Sewa'){current=3;syncSteps();return;}
+        current=4;syncSteps();return;
+      }
+      if(current===3){state.rentalTerm=document.getElementById('rentalTerm').value;current=4;syncSteps();return;}
+      if(current===4){state.rooms=document.getElementById('rooms').value;current=5;syncSteps();return;}
+      if(current===5){
+        if(state.property==='Apartemen'){current=6;} else {current=6;}
+        syncSteps();return;
+      }
+      if(current>=6&&current<18){current+=1;syncSteps();return;}
+      if(current===18){current=19;syncSteps();return;}
+      if(current===19){
+        clearMedia('privateIdentityPhoto');
+        document.getElementById('privateDocumentStatus').textContent='Document cleared from this step. It is not stored or sent to the agent.';
+        current=20;syncSteps();return;
+      }
+      if(current===20){
+        clearMedia('faceScanPhoto');
+        document.getElementById('faceScanStatus').textContent='Face photo cleared from this step. It is not stored or sent to the agent.';
+        current=21;syncSteps();return;
+      }
+      if(current===21){
+        clearMedia('frontCameraPhoto');
+        document.getElementById('frontCameraStatus').textContent='Front-camera photo cleared from this step. It is not stored or sent to the agent.';
+        current=22;syncSteps();return;
+      }
+      if(current===22){
+        const chosen=document.querySelector('input[name="paymentMethod"]:checked');
+        if(!chosen){document.getElementById('paymentStatus').textContent='Choose a payment method first.';return;}
+        state.paymentMethod=chosen.value;current=23;window.buildSummary?.();syncSteps();return;
+      }
+    }
+    form.addEventListener('click',function(e){
+      const back=e.target.closest('[data-back]');
+      if(back){e.preventDefault(); if(current>0){ if(current===20)clearMedia('faceScanPhoto'); if(current===21)clearMedia('frontCameraPhoto'); if(current===19)clearMedia('privateIdentityPhoto'); current-=1;syncSteps(); } return;}
+      const nextBtn=e.target.closest('.client-next');
+      if(nextBtn){e.preventDefault();next();}
+    });
+
+    /* Replace old direct send handler with the existing safe Supabase request sender. */
+    const send=document.getElementById('sendProfil');
+    if(send){
+      const fresh=send.cloneNode(true);send.replaceWith(fresh);
+      fresh.addEventListener('click',async function(){
+        if(typeof window.__rnSendRequest==='function'){await window.__rnSendRequest();}
+      });
+    }
+
+    /* Category listings: each home is selectable. Continue is hidden until a home is selected. */
+    const listings=document.getElementById('rnCategoryListings');
+    const continueBtn=document.getElementById('rnPropertyContinue');
+    const collection=document.getElementById('rnCategoryCollection');
+    if(listings&&continueBtn){
+      continueBtn.hidden=true;
+      continueBtn.disabled=true;
+      continueBtn.textContent='Select this beautiful home & Continue';
+      continueBtn.style.position='sticky';
+      continueBtn.style.right='0';
+      continueBtn.style.bottom='12px';
+      continueBtn.style.zIndex='50';
+      continueBtn.style.float='right';
+      function wireListings(){
+        listings.querySelectorAll('.rn-listing').forEach(card=>{
+          if(card.dataset.rnWired)return;
+          card.dataset.rnWired='1';
+          card.setAttribute('role','button');
+          card.setAttribute('tabindex','0');
+          card.addEventListener('click',function(){
+            listings.querySelectorAll('.rn-listing').forEach(x=>x.classList.remove('rn-home-selected'));
+            card.classList.add('rn-home-selected');
+            state.selectedHome=card.querySelector('h5')?.textContent||'';
+            continueBtn.hidden=false;
+            continueBtn.disabled=false;
+          });
+          card.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();card.click();}});
+        });
+      }
+      new MutationObserver(wireListings).observe(listings,{childList:true});
+      wireListings();
+      continueBtn.addEventListener('click',function(e){
+        e.preventDefault();
+        if(!state.selectedHome)return;
+        current=1; /* data-step 2 is index 1 */
+        syncSteps();
+      });
+    }
+
+    /* Hide the old category action until a home is actually selected. */
+    const catObserver=new MutationObserver(function(){wireCategoryState();});
+    function wireCategoryState(){
+      const selected=document.querySelector('#propertyOptions .client-option.selected');
+      if(!selected){
+        continueBtn && (continueBtn.hidden=true,continueBtn.disabled=true);
+        if(collection)collection.hidden=true;
+        state.property='';
+        return;
+      }
+      state.property=selected.dataset.value||'';
+    }
+    document.getElementById('propertyOptions')?.addEventListener('click',function(e){
+      const btn=e.target.closest('.client-option');
+      if(btn){
+        setTimeout(function(){
+          state.property=btn.dataset.value||'';
+          if(listings){continueBtn.hidden=true;continueBtn.disabled=true;}
+          state.selectedHome='';
+        },50);
+      }
+    });
+    catObserver.observe(document.getElementById('propertyOptions')||document.body,{attributes:true,subtree:true,attributeFilter:['class']});
+
+    /* Enforce category-specific bedroom options and payment fields after each category render. */
+    function refreshCategoryDetails(){
+      const selected=document.querySelector('#propertyOptions .client-option.selected');
+      const name=selected?.dataset.value||state.property;
+      state.property=name||'';
+      const room=document.getElementById('rooms');
+      if(room){
+        const opts=name==='Apartemen'?['2 bedrooms','3 bedrooms','4 bedrooms']:['4 bedrooms','5 bedrooms','6 bedrooms','7 bedrooms','8 bedrooms','9 bedrooms','10 bedrooms','11 bedrooms'];
+        room.innerHTML='<option value="">Choose one</option>'+opts.map(x=>'<option>'+x+'</option>').join('');
+      }
+      const purpose=document.getElementById('purpose');
+      if(purpose){
+        purpose.innerHTML=name==='Apartemen'?'<option value="">Choose one</option><option value="Beli">Buy</option><option value="Sewa">Rent</option>':'<option value="Beli">Buy</option>';
+      }
+      const idr=document.getElementById('purchaseAmountIdrSection');
+      if(idr)idr.hidden=name==='Apartemen';
+    }
+    setInterval(refreshCategoryDetails,800);
+
+    /* Never allow private media to reach the request payload. */
+    window.__rnPrivateDocumentSeen=false;
+    window.__rnPrivateMediaClear=()=>['privateIdentityPhoto','faceScanPhoto','frontCameraPhoto'].forEach(clearMedia);
+
+    syncSteps();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+})();
+</script>
+<style>
+.rn-one-choice{display:flex;flex-direction:column;gap:10px;padding:18px;border:1px solid #d9e2ec;border-radius:14px;background:#fff}
+.rn-one-choice input,.rn-one-choice select,.rn-one-choice textarea{width:100%;box-sizing:border-box;padding:14px;border:1px solid #bcccdc;border-radius:10px;font:inherit;min-height:52px}
+.rn-one-choice textarea{min-height:130px}
+.rn-home-selected{outline:4px solid #0879bd;outline-offset:2px}
+.rn-category-actions{display:flex;justify-content:flex-end;min-height:56px}
+.rn-category-actions #rnPropertyContinue[hidden]{display:none!important}
+.rn-private-document-box{display:flex;flex-direction:column;gap:12px;padding:18px;border:1px solid #d9e2ec;border-radius:14px;background:#fff}
+.client-form-step .client-actions{margin-top:20px}
+</style>
 </html>
