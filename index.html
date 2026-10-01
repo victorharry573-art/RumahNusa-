@@ -1435,12 +1435,14 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   window.buildSummary=function(){
     const identity=window.__rnCustomerIdentity||{};
     const amount=Number(v('clientBudget')||0).toLocaleString('en-US');
+    const idr=Number(v('clientBudgetIdr')||0).toLocaleString('id-ID');
     const lines=[
-      '<strong>'+(identity.name||v('clientName')||'Customer')+'</strong>',
+      '<strong>'+(identity.name||'Customer')+'</strong>',
       'Property category: '+(window.__rnCustomerFlowState?.property||''),
       'Rooms: '+v('rooms'),
       'Purchase plan: '+(window.__rnCustomerFlowState?.purpose||''),
-      'Amount: 
+      'Amount (USD): $'+amount,
+      'Amount (IDR): Rp '+idr,
       'Email: '+v('clientEmail'),
       'Phone: '+v('clientPhone'),
       'Current address: '+v('clientAddress'),
@@ -1455,7 +1457,8 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       'Household size: '+v('household'),
       'Payment method: '+(window.__rnCustomerFlowState?.paymentMethod||'Not selected')
     ];
-    const box=document.getElementById('clientSummary');if(box)box.innerHTML=lines.join('<br>');
+    const box=document.getElementById('clientSummary');
+    if(box)box.innerHTML=lines.join('<br>');
   };
 })();
 </script>
@@ -1754,7 +1757,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 })();
 </script>
 
-</html>
+
 +amount,
       'Email: '+v('clientEmail'),
       'Phone: '+v('clientPhone'),
