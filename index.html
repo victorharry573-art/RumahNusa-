@@ -1430,12 +1430,14 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
  const prefix=document.getElementById('phonePrefix');
  const phone=document.getElementById('clientPhone');
  function updatePhone(){
+   if(!country||!prefix||!phone) return;
    const o=country.options[country.selectedIndex];
-   prefix.textContent=(o.dataset.flag||'')+' '+(o.dataset.code||'');
-   phone.value='';
+   if(!o) return;
+   prefix.textContent=(o.dataset.flag||'🌐')+' '+(o.dataset.code||'');
    phone.placeholder=o.value==='ID'?'81234567890':'Masukkan nomor lokal';
  }
  country.addEventListener('change',updatePhone);
+ country.addEventListener('input',updatePhone);
  phone.addEventListener('input',function(){this.value=this.value.replace(/[^0-9 ]/g,'');});
  updatePhone();
 })();
@@ -1534,9 +1536,25 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   const customerCountry=document.getElementById('clientCountry');
   function populateLoginCountries(){
     if(!loginCountry) return;
-    // Keep the country selected by the customer. Never reset the picker to Indonesia.
-    // The complete country list is already embedded in the login picker.
-    if(!loginCountry.options.length){
+    // Build the login country picker from the same complete country list used
+    // by the customer phone form, so the chosen country is never stuck on Indonesia.
+    if(customerCountry && customerCountry.options.length){
+      const current=loginCountry.value;
+      loginCountry.innerHTML='';
+      Array.from(customerCountry.options).forEach(function(source){
+        const option=document.createElement('option');
+        option.value=source.value;
+        option.textContent=source.textContent;
+        option.dataset.flag=source.dataset.flag||'🌐';
+        option.dataset.code=source.dataset.code||'';
+        loginCountry.appendChild(option);
+      });
+      if(current && Array.from(loginCountry.options).some(function(o){return o.value===current;})){
+        loginCountry.value=current;
+      }else{
+        loginCountry.value=customerCountry.value||'ID';
+      }
+    }else if(!loginCountry.options.length){
       loginCountry.innerHTML='<option value="ID" data-flag="🇮🇩" data-code="+62">🇮🇩 Indonesia (+62)</option>';
     }
     syncLoginCountry();
