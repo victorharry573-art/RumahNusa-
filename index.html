@@ -653,25 +653,28 @@ body.rn-gate-active{margin:0;}
         <p>Take your time, discover homes that feel right for your life, and choose a place where comfort, family, rest, and beautiful everyday moments can come together.</p>
         <p class="rn-welcome-instruction"><strong>Enter your name, choose your gender, tell us your age, and begin your private RumahNusa home search.</strong></p>
       </div>
+
       <div id="rnGateIdentityStep" class="rn-gate-step">
-        <label for="rnGateName">Your name</label>
-        <input id="rnGateName" type="text" autocomplete="name" placeholder="Enter your name">
+        <div class="rn-gate-field">
+          <label for="rnGateName">Your name</label>
+          <input id="rnGateName" type="text" autocomplete="name" placeholder="Enter your name">
+        </div>
+
         <div id="rnGateGenderStep" hidden>
-          <label>Are you a man or woman?</label>
+          <label>Gender</label>
           <div class="rn-gender-options">
-            <button type="button" class="rn-gender-option" data-gender="Female">Woman</button>
-            <button type="button" class="rn-gender-option" data-gender="Male">Man</button>
+            <button type="button" class="rn-gender-option" data-gender="Female">Female</button>
+            <button type="button" class="rn-gender-option" data-gender="Male">Male</button>
           </div>
         </div>
+
         <div id="rnGateAgeStep" hidden>
-          <label for="rnGateAge">Tell us your age</label>
+          <label for="rnGateAge">Your age</label>
           <input id="rnGateAge" type="number" min="18" max="120" inputmode="numeric" placeholder="18 or older">
         </div>
+
         <button id="rnGateIdentityContinue" class="btn" type="button" disabled>Continue to RumahNusa</button>
         <p id="rnGateLoginStatus" class="rn-gate-status" aria-live="polite"></p>
-      </div>        <label for="rnGateAge">Your age</label>
-        <input id="rnGateAge" type="number" min="18" max="120" inputmode="numeric" placeholder="Your age">
-        <button id="rnGateIdentityContinue" class="btn" type="button" disabled>Continue to homes</button>
       </div>
     </div>
 
