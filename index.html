@@ -584,7 +584,7 @@ body.rn-gate-active{margin:0;}
         <span class="tag">DIJUAL</span>
         <h3>Modern Family Rumah</h3>
         <p class="location">📍 Bali, Indonesia</p>
-        <p class="price">$350,000</p>
+        <p class="price">Rp 6.265.000.000</p>
 
         <div class="features">
           <span>🛏 3 Beds</span>
@@ -620,7 +620,7 @@ body.rn-gate-active{margin:0;}
         <span class="tag">DIJUAL</span>
         <h3>Vila with Private Pool</h3>
         <p class="location">📍 Bali, Indonesia</p>
-        <p class="price">$550,000</p>
+        <p class="price">Rp 9.845.000.000</p>
 
         <div class="features">
           <span>🛏 4 Beds</span>
@@ -757,13 +757,11 @@ body.rn-gate-active{margin:0;}
 
 <div class="client-form-step rn-selection-hidden" data-step="5">
   <h3>Amount you want to pay</h3>
-  <p>Enter the amount you want the RumahNusa agent to see.</p>
+  <p>Enter the amount you want to pay in Rupiah. Customers see property prices in Rupiah only.</p>
   <div class="rn-one-choice" id="purchaseAmountSection">
-    <label for="clientBudget">Amount in USD</label><input id="clientBudget" type="number" min="0" step="1" placeholder="Example: 350000">
+    <label for="clientBudgetIdr">Amount in Rupiah</label><input id="clientBudgetIdr" type="number" min="0" step="1" inputmode="numeric" placeholder="Contoh: 350000000">
   </div>
-  <div class="rn-one-choice" id="purchaseAmountIdrSection" hidden>
-    <label for="clientBudgetIdr">Amount in IDR / Rupiah</label><input id="clientBudgetIdr" type="number" min="0" step="1" placeholder="Example: 500000000">
-  </div>
+  
   <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Continue</button></div>
 </div>
 
@@ -881,14 +879,64 @@ body.rn-gate-active{margin:0;}
 </div>
 
 <div class="client-form-step" data-step="22">
-  <h3>Payment method</h3>
-  <p>Choose one payment method. No payment is taken until a real payment provider is connected.</p>
-  <div class="rn-one-choice">
-    <label><input type="radio" name="paymentMethod" value="Bank transfer"> Bank transfer</label>
-    <label><input type="radio" name="paymentMethod" value="Card"> Card</label>
-    <label><input type="radio" name="paymentMethod" value="Other payment provider"> Other payment provider</label>
-    <p id="paymentStatus" class="rn-gate-status" aria-live="polite"></p>
+  <h3>Choose how to pay</h3>
+  <p>Choose the currency you want to use. RumahNusa will record your selected country and bank for the agent. This page does not take the payment itself.</p>
+  <div class="rn-payment-box">
+    <label><input type="radio" name="paymentCurrency" value="USD"> Pay in USD</label>
+    <label><input type="radio" name="paymentCurrency" value="IDR"> Pay in Rupiah</label>
+    <label><input type="radio" name="paymentCurrency" value="EUR"> Pay in Euro</label>
   </div>
+
+  <div id="usdPaymentPanel" class="rn-payment-box" hidden>
+    <strong>United States payment method</strong>
+    <label for="usdBank">Choose your U.S. bank</label>
+    <select id="usdBank">
+      <option value="">Choose a bank</option>
+      <option>Bank of America</option><option>JPMorgan Chase</option><option>Wells Fargo</option>
+      <option>Citibank</option><option>U.S. Bank</option><option>PNC Bank</option>
+      <option>Truist</option><option>Capital One</option><option>TD Bank</option>
+      <option>Goldman Sachs Bank USA</option><option>Other U.S. bank</option>
+    </select>
+    <input id="usdBankOther" type="text" placeholder="If you chose Other, enter your bank name" hidden>
+  </div>
+
+  <div id="idrPaymentPanel" class="rn-payment-box" hidden>
+    <strong>Indonesia payment method</strong>
+    <label for="idrBank">Choose your Indonesian bank</label>
+    <select id="idrBank">
+      <option value="">Pilih bank</option>
+      <option>Bank Mandiri</option><option>Bank Rakyat Indonesia (BRI)</option>
+      <option>Bank Central Asia (BCA)</option><option>Bank Negara Indonesia (BNI)</option>
+      <option>Bank Tabungan Negara (BTN)</option><option>CIMB Niaga</option>
+      <option>Bank Danamon</option><option>Bank Permata</option><option>Bank OCBC NISP</option>
+      <option>Bank Syariah Indonesia (BSI)</option><option>Bank Mega</option><option>Other Indonesian bank</option>
+    </select>
+    <input id="idrBankOther" type="text" placeholder="Jika Other, masukkan nama bank" hidden>
+  </div>
+
+  <div id="eurPaymentPanel" class="rn-payment-box" hidden>
+    <strong>Euro payment method</strong>
+    <label for="eurCountry">Choose your euro-area country</label>
+    <select id="eurCountry">
+      <option value="">Choose country</option>
+      <option>Austria</option><option>Belgium</option><option>Bulgaria</option><option>Croatia</option>
+      <option>Cyprus</option><option>Estonia</option><option>Finland</option><option>France</option>
+      <option>Germany</option><option>Greece</option><option>Ireland</option><option>Italy</option>
+      <option>Latvia</option><option>Lithuania</option><option>Luxembourg</option><option>Malta</option>
+      <option>Netherlands</option><option>Portugal</option><option>Slovakia</option><option>Slovenia</option><option>Spain</option>
+    </select>
+    <label for="eurBank">Choose your bank</label>
+    <select id="eurBank">
+      <option value="">Choose a bank</option>
+      <option>BNP Paribas</option><option>Deutsche Bank</option><option>ING</option>
+      <option>UniCredit</option><option>Intesa Sanpaolo</option><option>Banco Santander</option>
+      <option>CaixaBank</option><option>Commerzbank</option><option>ABN AMRO</option>
+      <option>Other euro-area bank</option>
+    </select>
+    <input id="eurBankOther" type="text" placeholder="If you chose Other, enter your bank name" hidden>
+  </div>
+
+  <p id="paymentStatus" class="rn-gate-status" aria-live="polite"></p>
   <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Payment &amp; Continue</button></div>
 </div>
 
@@ -1182,8 +1230,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       'RUMAH / LISTING YANG DIPILIH: '+(window.__rnSelectedHome?.title||'Belum dipilih'),
       'TRANSAKSI: '+purpose,
       'KAMAR TIDUR / TIPE RUANG: '+rooms,
-      'AMOUNT (USD): '+(isApartment?budgetUsd:'Tidak berlaku'),
-      'AMOUNT (IDR): '+(isApartment?'Tidak berlaku':budgetIdr),
+      'AMOUNT (IDR): Rp '+Number(budgetIdr||0).toLocaleString('id-ID'),
       'LAMA SEWA: '+rentalTerm,
       'KOTA PROPERTI YANG DIINGINKAN: '+v('clientCityWant'),
       'WAKTU BERTEMU AGEN: '+v('meetingDay')+' · '+v('meetingTime'),
@@ -1193,6 +1240,9 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       '━━━━━━━━━━━━━━━━━━━━',
       'ALASAN MEMBELI: '+v('clientPurchaseReason'),
       'PENGGUNAAN: '+v('clientUse'),
+      'MATA UANG PEMBAYARAN: '+(window.__rnCustomerFlowState?.paymentCurrency||'Belum dipilih'),
+      'NEGARA PEMBAYARAN: '+(window.__rnCustomerFlowState?.paymentCountry||'Belum dipilih'),
+      'BANK PEMBAYARAN: '+(window.__rnCustomerFlowState?.paymentBank||'Belum dipilih'),
       'METODE PEMBAYARAN YANG DIPILIH: '+(window.__rnCustomerFlowState?.paymentMethod||'Belum dipilih'),
       '',
       'PRIVATE DOCUMENT STATUS: Dokumen identitas.',
@@ -1319,7 +1369,6 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   function v(id){return document.getElementById(id)?.value||'';}
   window.buildSummary=function(){
     const identity=window.__rnCustomerIdentity||{};
-    const amount=Number(v('clientBudget')||0).toLocaleString('en-US');
     const idr=Number(v('clientBudgetIdr')||0).toLocaleString('id-ID');
     const lines=[
       '<strong>'+(identity.name||'Customer')+'</strong>',
@@ -1340,7 +1389,9 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       'Current city: '+v('clientCity'),
       'Preferred property city: '+v('clientCityWant'),
       'Household size: '+v('household'),
-      'Payment method: '+(window.__rnCustomerFlowState?.paymentMethod||'Not selected')
+      'Payment currency: '+(window.__rnCustomerFlowState?.paymentCurrency||'Not selected'),
+      'Payment country: '+(window.__rnCustomerFlowState?.paymentCountry||'Not selected'),
+      'Payment bank: '+(window.__rnCustomerFlowState?.paymentBank||'Not selected')
     ];
     const box=document.getElementById('clientSummary');
     if(box)box.innerHTML=lines.join('<br>');
@@ -1378,7 +1429,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       buy:'Apartments are available to buy or rent. Rental terms are 1–5 years.',
       rooms:['2 kamar tidur','3 kamar tidur','4 kamar tidur'],
       listings:[
-        ['Luxury Apartment — 2 Bedrooms','Jakarta, Indonesia','$200,000+ to buy · Rent from $5,000/year','2 bedrooms · 1 very large bathroom/toilet · large parlor + kitchen · furnished · AC','https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85'],
+        ['Luxury Apartment — 2 Bedrooms','Jakarta, Indonesia','Rp 3.580.000.000+ · Sewa mulai Rp 89.500.000/tahun','2 bedrooms · 1 very large bathroom/toilet · large parlor + kitchen · furnished · AC','https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85'],
         ['Luxury Apartment — 3 Bedrooms','Jakarta, Indonesia','Contact RumahNusa for the selected apartment','3 bedrooms · 2 very large bathrooms/toilets · large parlor + kitchen · furnished · AC','https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1200&q=85'],
         ['Luxury Apartment — 4 Bedrooms','Jakarta, Indonesia','Contact RumahNusa for the selected apartment','4 bedrooms · 3 bathrooms/toilets · 2 large parlors · integrated kitchen · furnished · AC','https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=85']
       ]
@@ -1917,6 +1968,40 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 <!-- RUMAHNUSA_SWIPE_BACK_END -->
 </body>
 <script>
+<script>
+(function(){
+  const radios=[...document.querySelectorAll('input[name="paymentCurrency"]')];
+  const panels={
+    USD:document.getElementById('usdPaymentPanel'),
+    IDR:document.getElementById('idrPaymentPanel'),
+    EUR:document.getElementById('eurPaymentPanel')
+  };
+  const selects={
+    USD:document.getElementById('usdBank'),
+    IDR:document.getElementById('idrBank'),
+    EUR:document.getElementById('eurBank')
+  };
+  function sync(){
+    const currency=radios.find(r=>r.checked)?.value||'';
+    Object.keys(panels).forEach(k=>{ if(panels[k]) panels[k].hidden=k!==currency; });
+    Object.keys(selects).forEach(k=>{
+      const s=selects[k]; if(!s)return;
+      s.required=k===currency;
+    });
+  }
+  radios.forEach(r=>r.addEventListener('change',sync));
+  document.getElementById('usdBank')?.addEventListener('change',e=>{
+    document.getElementById('usdBankOther').hidden=e.target.value!=='Other U.S. bank';
+  });
+  document.getElementById('idrBank')?.addEventListener('change',e=>{
+    document.getElementById('idrBankOther').hidden=e.target.value!=='Other Indonesian bank';
+  });
+  document.getElementById('eurBank')?.addEventListener('change',e=>{
+    document.getElementById('eurBankOther').hidden=e.target.value!=='Other euro-area bank';
+  });
+  sync();
+})();
+</script>
 /* RumahNusa sequential customer experience — one choice/question at a time. */
 (function(){
   function boot(){
@@ -1988,9 +2073,28 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
         if(!photo?.files?.length){photo?.focus();return false;}
       }
       if(stepNumber===22){
-        const chosen=document.querySelector('input[name="paymentMethod"]:checked');
-        if(!chosen){document.getElementById('paymentStatus').textContent='Choose a payment method first.';return false;}
-        state.paymentMethod=chosen.value;
+        const currency=document.querySelector('input[name="paymentCurrency"]:checked')?.value||'';
+        if(!currency){document.getElementById('paymentStatus').textContent='Choose how you want to pay first.';return false;}
+        let country='', bank='';
+        if(currency==='USD'){
+          bank=document.getElementById('usdBank')?.value||'';
+          country='United States';
+          if(bank==='Other U.S. bank') bank=document.getElementById('usdBankOther')?.value.trim()||'';
+        }else if(currency==='IDR'){
+          bank=document.getElementById('idrBank')?.value||'';
+          country='Indonesia';
+          if(bank==='Other Indonesian bank') bank=document.getElementById('idrBankOther')?.value.trim()||'';
+        }else if(currency==='EUR'){
+          country=document.getElementById('eurCountry')?.value||'';
+          bank=document.getElementById('eurBank')?.value||'';
+          if(bank==='Other euro-area bank') bank=document.getElementById('eurBankOther')?.value.trim()||'';
+          if(!country){document.getElementById('paymentStatus').textContent='Choose your euro-area country.';return false;}
+        }
+        if(!bank){document.getElementById('paymentStatus').textContent='Choose your bank.';return false;}
+        state.paymentMethod=currency+' · '+country+' · '+bank;
+        window.__rnCustomerFlowState.paymentCurrency=currency;
+        window.__rnCustomerFlowState.paymentCountry=country;
+        window.__rnCustomerFlowState.paymentBank=bank;
       }
       return true;
     }
@@ -2155,7 +2259,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
         const pricing=document.createElement('div');
         pricing.className='rn-house-price-picker';
         pricing.hidden=true;
-        pricing.innerHTML='<strong>Select your amount for this home</strong><label>USD ($)<input class="rn-home-price-usd" type="number" min="1" step="1" inputmode="decimal" placeholder="Example: 350000"></label><label>IDR (Rupiah)<input class="rn-home-price-idr" type="number" min="1" step="1" inputmode="numeric" placeholder="Example: 500000000"></label><small>Enter either USD or IDR.</small>';
+        pricing.innerHTML='<strong>Enter your amount in Rupiah</strong><label>Amount (Rupiah)<input class="rn-home-price-idr" type="number" min="1" step="1" inputmode="numeric" placeholder="Contoh: 500000000"></label><small>RumahNusa customers see prices and enter amounts in Rupiah only.</small>';
 
         body.appendChild(detailButton);
         body.appendChild(details);
@@ -2218,16 +2322,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
         pricing.querySelectorAll('input').forEach(input=>{
           input.addEventListener('input',function(){
             if(!card.classList.contains('rn-home-selected'))selectHome();
-            if(input.classList.contains('rn-home-price-usd')){
-              state.selectedHomePriceUSD=input.value;
-              if(input.value)pricing.querySelector('.rn-home-price-idr').value='';
-              state.selectedHomePriceIDR=pricing.querySelector('.rn-home-price-idr').value;
-            }else{
-              state.selectedHomePriceIDR=input.value;
-              if(input.value)pricing.querySelector('.rn-home-price-usd').value='';
-              state.selectedHomePriceUSD=pricing.querySelector('.rn-home-price-usd').value;
-            }
-            document.getElementById('clientBudget').value=state.selectedHomePriceUSD||'';
+            state.selectedHomePriceIDR=input.value;
             document.getElementById('clientBudgetIdr').value=state.selectedHomePriceIDR||'';
             syncContinue();
           });
