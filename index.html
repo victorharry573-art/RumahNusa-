@@ -1866,47 +1866,45 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     });
 
     // Gate: name, gender, and age are completed before the home categories appear.
+    // The Continue button must always open the RumahNusa home selector after valid identity
+    // details are entered. Supabase sign-in is attempted in the background, but a temporary
+    // auth configuration problem must never make the visible Continue button appear broken.
     loginBtn.addEventListener('click',async function(){
       const a=Number(age.value);
       if(!name.value.trim()||!gender||a<18||a>120)return;
+
       loginBtn.disabled=true;
       status.textContent='Welcome to RumahNusa…';
       window.__rnCustomerIdentity={name:name.value.trim(),gender,age:a};
 
       try{
-        if(!window.supabase||!window.RUMAHNUSA_SUPABASE_URL||!window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY){
-          status.textContent='RumahNusa is temporarily unavailable. Please try again.';
-          loginBtn.disabled=false;
-          return;
-        }
-        const db=window.supabase.createClient(window.RUMAHNUSA_SUPABASE_URL,window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY);
-        let sessionResult=await db.auth.getSession();
-        let user=sessionResult?.data?.session?.user||null;
-        if(!user){
-          const anonymous=await db.auth.signInAnonymously({
-            options:{data:{full_name:name.value.trim(),gender,age:a}}
-          });
-          if(anonymous.error||!anonymous.data?.user){
-            status.textContent='RumahNusa is temporarily unavailable. Please try again.';
-            loginBtn.disabled=false;
-            return;
+        if(window.supabase&&window.RUMAHNUSA_SUPABASE_URL&&window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY){
+          const db=window.supabase.createClient(window.RUMAHNUSA_SUPABASE_URL,window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY);
+          const sessionResult=await db.auth.getSession();
+          let user=sessionResult?.data?.session?.user||null;
+
+          if(!user){
+            const anonymous=await db.auth.signInAnonymously({
+              options:{data:{full_name:name.value.trim(),gender,age:a}}
+            });
+            if(!anonymous.error&&anonymous.data?.user) user=anonymous.data.user;
+          }else{
+            await db.auth.updateUser({data:{full_name:name.value.trim(),gender,age:a}});
           }
-          user=anonymous.data.user;
-        }else{
-          await db.auth.updateUser({data:{full_name:name.value.trim(),gender,age:a}});
+
+          if(user){
+            window.__rnLoggedInUser=user;
+            await db.from('profiles').upsert({
+              id:user.id,
+              full_name:name.value.trim(),
+              email:'',
+              role:'customer'
+            },{onConflict:'id'});
+          }
         }
-        window.__rnLoggedInUser=user;
-        window.__rnCustomerIdentity={name:name.value.trim(),gender,age:a};
-        await db.from('profiles').upsert({
-          id:user.id,
-          full_name:name.value.trim(),
-          email:'',
-          role:'customer'
-        },{onConflict:'id'});
       }catch(e){
-        status.textContent='RumahNusa is temporarily unavailable. Please try again.';
-        loginBtn.disabled=false;
-        return;
+        // Continue the customer experience even if authentication is temporarily unavailable.
+        console.warn('RumahNusa authentication will be completed when the inbox is used.',e);
       }
 
       status.textContent='Welcome to RumahNusa. Choose your beautiful home.';
