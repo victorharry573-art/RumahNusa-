@@ -13,6 +13,25 @@
   padding: 0;
 }
 
+html, body {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+body {
+  min-height: 100vh;
+}
+
+img, video, iframe, svg, canvas {
+  max-width: 100%;
+}
+
+button, input, select, textarea {
+  max-width: 100%;
+}
+
 body {
   font-family: Arial, sans-serif;
   color: #102a43;
@@ -378,7 +397,34 @@ body.rn-site-unlocked footer { display:none !important; }
 </style><style>
 body.rn-gate-active > *:not(#client-profile){display:none !important;}
 body.rn-gate-active{margin:0;}
-.rn-welcome-gate{max-width:720px;margin:0 auto;padding:48px 22px 80px;text-align:center;}
+.rn-welcome-gate{width:100%;max-width:720px;margin:0 auto;padding:48px 22px 80px;text-align:center;overflow:visible;}
+.rn-welcome-gate, .client-panel, #clientProfilForm, #propertyOptions, #rnCategoryCollection {
+  max-width: 100%;
+  min-width: 0;
+}
+.rn-home-category-grid {
+  width: 100%;
+}
+.rn-listing-grid {
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+.rn-listing-grid > * {
+  min-width: 0;
+}
+.rn-listing-grid img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  display: block;
+}
+@media (max-width: 800px) {
+  .rn-listing-grid { grid-template-columns: 1fr; }
+  .rn-listing-grid img { height: 220px; }
+}
 .rn-welcome-copy h2{font-size:clamp(30px,6vw,48px);margin-bottom:18px;}
 .rn-welcome-copy p{font-size:17px;line-height:1.75;color:#486581;margin:12px auto;max-width:650px;}
 .rn-welcome-instruction{margin-top:28px !important;color:#102a43 !important;}
