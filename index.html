@@ -750,7 +750,7 @@ body.rn-gate-active{margin:0;}
             <div id="rnSelectionInfo" class="inbox-status-card">Pilihan kategori, jumlah kamar, transaksi, dan harga Anda akan dikirim ke inbox agen RumahNusa.</div>
           </div>
         </div>
-        <div class="client-actions"><button class="btn secondary" type="button" data-back>Kembali</button><button class="btn client-next" type="button">Lanjutkan</button></div>
+        <div class="client-actions"><button class="btn secondary" type="button" data-back>Kembali</button><button class="btn secondary" type="button" id="changeHouseCategory">Change house category</button><button class="btn client-next" type="button">Lanjutkan</button></div>
       </div>
 
 
@@ -903,6 +903,15 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
   window.__rumahnusaShowCustomerStep = showStep;
 
   form.querySelectorAll('[data-back]').forEach(btn => btn.addEventListener('click', () => showStep(current - 1)));
+
+  const changeHouseCategory = document.getElementById('changeHouseCategory');
+  if (changeHouseCategory) {
+    changeHouseCategory.addEventListener('click', function () {
+      showStep(0);
+      const box = document.getElementById('propertyOptions');
+      if (box) box.scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  }
 
   const propertyChooseContinue = document.getElementById('propertyChooseContinue');
   if(propertyChooseContinue){
