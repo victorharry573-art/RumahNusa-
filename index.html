@@ -500,7 +500,7 @@ body.rn-gate-active{margin:0;}
 .rn-gate-step label{display:block;font-weight:700;margin-bottom:10px;text-align:left;}
 .rn-gate-step input{width:100%;box-sizing:border-box;padding:14px 16px;border:1px solid #bcccdc;border-radius:10px;font-size:16px;margin-bottom:12px;}
 .rn-gender-options{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
-.rn-gender-option{min-height:50px;border:1px solid #bcccdc;border-radius:10px;background:#fff;font-weight:700;cursor:pointer;}
+.rn-gender-option{min-height:50px;border:1px solid #bcccdc;border-radius:10px;background:#fff;font-weight:700;cursor:pointer;}.rn-gender-option{position:relative;z-index:20;touch-action:manipulation;-webkit-tap-highlight-color:rgba(8,121,189,.15);user-select:none;}
 .rn-gender-option.selected{border-color:#0879bd;background:#eaf5fb;}
 .rn-gate-step button.btn{width:100%;min-height:50px;}
 .rn-gate-step button:disabled{opacity:.5;cursor:not-allowed;}
@@ -2020,19 +2020,28 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       const a=Number(age?.value);
       loginBtn.disabled=!(name?.value.trim()&&gender&&a>=18&&a<=120);
     }
-    // Gender is a real tap target: Female or Male.
-    // Event delegation also keeps it working if the gate is re-rendered.
-    document.getElementById('rnGateGenderStep')?.addEventListener('click',function(event){
-      const b=event.target.closest('.rn-gender-option');
-      if(!b) return;
-      event.preventDefault();
-      gender=b.dataset.gender||'';
+    // Gender buttons are explicit touch targets. Use both pointer and click
+    // handlers so they respond reliably on Android touchscreens.
+    function chooseGender(button){
+      if(!button) return;
+      gender=button.dataset.gender||'';
       genders.forEach(x=>{
-        const selected=x===b;
+        const selected=x===button;
         x.classList.toggle('selected',selected);
         x.setAttribute('aria-pressed',selected?'true':'false');
       });
       updateLogin();
+    }
+    genders.forEach(function(button){
+      button.style.pointerEvents='auto';
+      button.addEventListener('pointerup',function(event){
+        event.preventDefault();
+        chooseGender(button);
+      });
+      button.addEventListener('click',function(event){
+        event.preventDefault();
+        chooseGender(button);
+      });
     });
     [name,age].forEach(x=>x?.addEventListener('input',updateLogin));
     updateLogin();
