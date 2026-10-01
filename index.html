@@ -2000,6 +2000,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   sync();
 })();
 </script>
+<script>
 /* RumahNusa sequential customer experience — one choice/question at a time. */
 (function(){
   function boot(){
@@ -2034,7 +2035,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     }
     genders.forEach(function(button){
       button.style.pointerEvents='auto';
-      button.addEventListener('pointerup',function(event){
+      button.addEventListener('pointerdown',function(event){
         event.preventDefault();
         chooseGender(button);
       });
