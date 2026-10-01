@@ -634,7 +634,7 @@ body.rn-gate-active{margin:0;}
     <h2>Welcome to RumahNusa Real Estate</h2>
     <p>Welcome to RumahNusa — where comfort, beauty, privacy, and peace of mind come together.</p>
     <p>A home is more than rooms and walls. It is a place to rest, enjoy your family, build your future, and feel comfortable every day.</p>
-    <p>Login to begin your private RumahNusa home search. After a successful login, you can choose the home category that fits your life and immediately explore homes from that category.</p>
+    <p>Log in to begin your private RumahNusa home search. Once you are signed in, you can choose the beautiful home category that fits your life and explore that category with confidence, comfort, and peace of mind.</p>
   </div>
 </section>
 
@@ -660,10 +660,20 @@ body.rn-gate-active{margin:0;}
       </div>
       <div id="rnGateIdentityStep" class="rn-gate-step">
         <div id="rnGateIdentityFields">
+          <div class="rn-gate-field"><label for="rnGateEmail">Email</label><input id="rnGateEmail" type="email" autocomplete="username" placeholder="Enter your email"></div>
+          <div class="rn-gate-field">
+            <label for="rnGatePassword">Password</label>
+            <div class="rn-password-wrap">
+              <input id="rnGatePassword" type="password" autocomplete="current-password" placeholder="Enter your password">
+              <button id="rnGatePasswordEye" class="rn-password-eye" type="button" aria-label="Show password" aria-pressed="false">
+                <svg class="rn-eye-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.2-6 9.5-6 9.5 6 9.5 6-3.2 6-9.5 6-9.5-6-9.5-6Z"></path><circle cx="12" cy="12" r="2.5"></circle></svg>
+              </button>
+            </div>
+          </div>
           <div class="rn-gate-field"><label for="rnGateName">Your name</label><input id="rnGateName" type="text" autocomplete="name" placeholder="Enter your name"></div>
           <div id="rnGateGenderStep"><label>Gender</label><div class="rn-gender-options"><button type="button" class="rn-gender-option" data-gender="Female">Female</button><button type="button" class="rn-gender-option" data-gender="Male">Male</button></div></div>
           <div id="rnGateAgeStep"><label for="rnGateAge">Your age</label><input id="rnGateAge" type="number" min="18" max="120" inputmode="numeric" placeholder="18 or older"></div>
-          <button id="rnGateIdentityContinue" class="btn" type="button" disabled>Continue to RumahNusa</button>
+          <button id="rnGateIdentityContinue" class="btn" type="button" disabled>Login &amp; Continue</button>
         </div>
         <p id="rnGateLoginStatus" class="rn-gate-status" aria-live="polite"></p>
       </div>
@@ -672,11 +682,11 @@ body.rn-gate-active{margin:0;}
     <form id="clientProfilForm" hidden>
       <div class="client-form-step active" data-step="1">
         <h3>Choose your home category</h3>
-        <p>Tap one category and its homes will open immediately. You will see only that category until you choose another one.</p>
+        <p>Tap a home category and its homes will open immediately. You will see only that category until you choose another one.</p>
         <div class="rn-home-welcome">
           <h3>Welcome to RumahNusa Real Estate</h3>
           <p>Welcome to a place where beautiful homes, comfort, privacy, and peace of mind come together. RumahNusa helps you discover a home that can feel right for your everyday life, your family, and your future.</p>
-          <p class="rn-home-prompt">Choose the home category that speaks to you. Tap a category and its homes will open immediately.</p>
+          <p class="rn-home-prompt">Choose the home category that feels right for you. Tap once and its homes will open immediately.</p>
         </div>
         <div class="client-options rn-home-category-grid" id="propertyOptions" aria-label="RumahNusa home categories">
           <button type="button" class="client-option rn-home-category" data-value="Apartemen"><span class="rn-home-icon" aria-hidden="true">🏢</span><strong>Apartment</strong><small>City apartments, rooms, views and shared facilities.</small></button>
@@ -688,6 +698,7 @@ body.rn-gate-active{margin:0;}
           <button type="button" class="client-option rn-home-category" data-value="Penthouse"><span class="rn-home-icon" aria-hidden="true">🌆</span><strong>Penthouse</strong><small>Large high-rise homes with city views.</small></button>
           <button type="button" class="client-option rn-home-category" data-value="Family Residence"><span class="rn-home-icon" aria-hidden="true">👨‍👩‍👧‍👦</span><strong>Family Residence</strong><small>Comfortable homes designed around family life.</small></button>
           <button type="button" class="client-option rn-home-category" data-value="Investment Property"><span class="rn-home-icon" aria-hidden="true">📈</span><strong>Investment Property</strong><small>Properties for long-term ownership and investment.</small></button>
+          <button type="button" class="client-option rn-home-category" data-value="Hotel"><span class="rn-home-icon" aria-hidden="true">🏨</span><strong>Hotel</strong><small>Hotel rooms, suites and hospitality spaces.</small></button>
         </div>
         <div class="client-actions">
           <button class="btn secondary" type="button" data-back>Kembali</button>
@@ -702,8 +713,11 @@ body.rn-gate-active{margin:0;}
           </div>
           <div id="rnCategoryListings" class="rn-listing-grid"></div>
           <div id="rnCategoryConfidence" class="rn-confidence"></div>
-          <p class="rn-collection-note">You are viewing only this category. To see another category, tap the button below.</p>
-          <button id="rnChooseAnotherCategory" class="btn secondary rn-choose-another" type="button">Choose another category</button>
+          <p class="rn-collection-note">You are viewing only this category. Choose your home, then continue to complete your details.</p>
+          <div class="rn-category-actions">
+            <button id="rnPropertyContinue" class="btn" type="button">Choose &amp; Continue</button>
+            <button id="rnChooseAnotherCategory" class="btn secondary rn-choose-another" type="button">Choose another category</button>
+          </div>
         </div>
 
       </div>
@@ -754,30 +768,87 @@ body.rn-gate-active{margin:0;}
       </div>
 
 
-<div class="client-form-step" data-step="4">
-        <h3>Tell us about your living plans</h3>
-        <p>Share the details that will help the RumahNusa agent understand what you are looking for.</p>
+<div class="client-form-step" data-step="3" data-non-apartment-only="true">
+        <h3>Contact details</h3>
+        <p>Complete these details so RumahNusa can prepare your request and arrange contact with the agent.</p>
         <div class="client-grid">
-          <div class="client-field"><label for="clientCity">Kota tempat tinggal saat ini</label><input id="clientCity" placeholder="Kota saat ini" required></div>
-          <div class="client-field"><label for="clientMarital">Status keluarga</label><select id="clientMarital" required><option value="">Pilih</option><option>Lajang</option><option>Menikah</option><option>Tidak ingin menyebutkan</option></select></div>
-          <div class="client-field"><label for="household">Berapa orang yang akan tinggal di sana?</label><input id="household" type="number" min="1" max="30" value="1" required></div>
-          <div class="client-field"><label for="clientCityWant">Kota properti pilihan</label><input id="clientCityWant" placeholder="Contoh: Jakarta" required></div>
+          <div class="client-field full"><label for="clientEmail">Email</label><input id="clientEmail" type="email" autocomplete="email" placeholder="Enter your email" required></div>
+          <div class="client-field full"><label for="clientPhone">Phone number</label><input id="clientPhone" type="tel" autocomplete="tel" placeholder="Enter your phone number" required></div>
+          <div class="client-field full"><label for="clientAddress">Current address</label><input id="clientAddress" autocomplete="street-address" placeholder="Enter the address where you live now" required></div>
           <div class="client-field full">
-            <label for="requestDocuments">Dokumen / foto untuk agen</label>
-            <input id="requestDocuments" type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" multiple>
-            <small style="color:#627d98;">Pilih semua file yang ingin ikut dengan permintaan Anda.</small>
+            <label for="meetingDay">When would you like the agent to meet you?</label>
+            <select id="meetingDay" required>
+              <option value="">Choose a day</option>
+              <option>Tomorrow</option>
+              <option>Next tomorrow</option>
+            </select>
           </div>
-          <div class="client-field full"><label for="aboutClient">Ceritakan tentang diri Anda</label><textarea id="aboutClient" placeholder="Bagikan informasi tentang gaya hidup, keluarga, pekerjaan, waktu pindah, atau preferensi rumah Anda."></textarea></div>
+          <div class="client-field full">
+            <label for="meetingTime">Choose your preferred meeting time</label>
+            <select id="meetingTime" required>
+              <option value="">Choose a time</option>
+              <option>09:00</option><option>10:00</option><option>11:00</option>
+              <option>13:00</option><option>14:00</option><option>15:00</option>
+              <option>16:00</option><option>17:00</option>
+            </select>
+          </div>
         </div>
-        <div class="client-actions"><button class="btn secondary" type="button" data-back>Kembali</button><button class="btn client-next" type="button">Tinjau Permintaan</button></div>
+        <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Continue</button></div>
       </div>
 
-      <div class="client-form-step" data-step="5">
-        <h3>Siap untuk Agen RumahNusa</h3>
-        <p>Tinjau permintaan Anda, lalu kirim ke kotak masuk kontak RumahNusa.</p>
-        <div id="clientSummary" class="client-summary"></div>
-<div class="client-actions"><button class="btn secondary" type="button" data-back>Kembali</button><button class="btn" id="sendProfil" type="button">Kirim Permintaan</button></div>
+      <div class="client-form-step" data-step="4" data-non-apartment-only="true">
+        <h3>Tell RumahNusa about your plans</h3>
+        <div class="client-grid">
+          <div class="client-field"><label for="clientMarital">Are you married or single?</label><select id="clientMarital" required><option value="">Choose</option><option>Single</option><option>Married</option></select></div>
+          <div class="client-field"><label for="clientChildren">Do you have children?</label><select id="clientChildren" required><option value="">Choose</option><option>Yes</option><option>No</option></select></div>
+          <div class="client-field full"><label for="clientOccupation">What do you do for a living?</label><select id="clientOccupation" required>
+            <option value="">Choose your work</option><option>Business owner</option><option>Employee</option><option>Professional</option><option>Entrepreneur</option><option>Investor</option><option>Government worker</option><option>Teacher</option><option>Doctor / healthcare</option><option>Engineer</option><option>Technology</option><option>Sales / marketing</option><option>Law / finance</option><option>Student</option><option>Retired</option><option>Other</option>
+          </select></div>
+          <div class="client-field full"><label for="clientPurchaseReason">Why do you want to buy this property?</label><textarea id="clientPurchaseReason" placeholder="Tell RumahNusa your reason" required></textarea></div>
+          <div class="client-field full"><label for="clientUse">Will you use the property for business or living?</label><select id="clientUse" required><option value="">Choose</option><option>Living home</option><option>Business</option><option>Both</option></select></div>
+          <div class="client-field full"><label for="clientCity">Current city</label><input id="clientCity" placeholder="City where you live now" required></div>
+          <div class="client-field full"><label for="clientCityWant">Preferred property city</label><input id="clientCityWant" placeholder="Example: Jakarta" required></div>
+          <div class="client-field full"><label for="household">How many people will live there?</label><input id="household" type="number" min="1" max="30" value="1" required></div>
+        </div>
+        <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Continue</button></div>
       </div>
+
+      <div class="client-form-step" data-step="5" data-non-apartment-only="true">
+        <h3>Private identity document</h3>
+        <p>This photo is processed only in the browser and is <strong>not uploaded to RumahNusa, Supabase, or the agent inbox.</strong> After you continue, the selected photo is cleared from the page.</p>
+        <div class="rn-private-document-box">
+          <label for="privateIdentityType">Take a picture of your document</label>
+          <select id="privateIdentityType" required>
+            <option value="">Choose one</option>
+            <option>Passport</option><option>ID Card</option><option>Family Card</option>
+            <option>Taxpayer Identification Number (NPWP)</option><option>Driving License</option><option>Visa</option><option>Residence Permit</option>
+          </select>
+          <input id="privateIdentityPhoto" type="file" accept="image/*" capture="environment" required>
+          <p id="privateDocumentStatus" class="inbox-note">Your document photo will disappear when you continue and will not be included in the agent inbox.</p>
+        </div>
+        <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" id="privateDocumentContinue" type="button">Done &amp; Continue</button></div>
+      </div>
+
+      <div class="client-form-step" data-step="6" data-non-apartment-only="true">
+        <h3>Complete your process</h3>
+        <p>Select a payment method below. RumahNusa must connect a real payment provider before any real payment is taken.</p>
+        <div class="rn-payment-box">
+          <label><input type="radio" name="paymentMethod" value="Bank transfer"> Bank transfer</label>
+          <label><input type="radio" name="paymentMethod" value="Card"> Card</label>
+          <label><input type="radio" name="paymentMethod" value="Other payment provider"> Other payment provider</label>
+          <p class="inbox-note">Pay to complete your process and meet the agent.</p>
+        </div>
+        <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" id="paymentContinue" type="button">Pay &amp; Continue</button></div>
+        <p id="paymentStatus" class="rn-gate-status" aria-live="polite"></p>
+      </div>
+
+      <div class="client-form-step" data-step="7">
+        <h3>RumahNusa agent request</h3>
+        <p>Everything you selected will be listed for the agent. Private identity documents are never included.</p>
+        <div id="clientSummary" class="client-summary"></div>
+        <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn" id="sendProfil" type="button">Continue to Agent Inbox</button></div>
+      </div>
+
     </form>
 
     <div id="clientKotak Masuk" class="client-inbox" hidden>
@@ -791,9 +862,7 @@ body.rn-gate-active{margin:0;}
           <textarea id="messageComposer" placeholder="Tulis pesan untuk agen RumahNusa..."></textarea>
           <button class="btn" id="sendInboxMessage" type="button">Kirim Pesan</button>
         </div>
-        <label for="clientDocument" style="display:block;margin-top:16px;"><strong>Kirim dokumen</strong></label>
-        <input id="clientDocument" type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
-        <p class="inbox-note">✓ satu centang = terkirim · ✓✓ dua centang = sudah dilihat agen.</p>
+                <p class="inbox-note">✓ satu centang = terkirim · ✓✓ dua centang = sudah dilihat agen.</p>
         <p class="inbox-note">RumahNusa siap membantu Anda menemukan rumah yang sesuai dengan kebutuhan, gaya hidup, dan rencana Anda.</p>
       </div>
       <p style="margin-top:16px;">Email agen secara langsung: <a href="mailto:rumahnusarealestate@gmail.com">rumahnusarealestate@gmail.com</a></p>
@@ -1637,6 +1706,19 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
         ['Residential Investment — 2 Bedrooms','Jakarta, Indonesia','Contact RumahNusa for the selected property','2 bedrooms · furnished living area · kitchen · bathroom/toilet · parking · investment-focused property details','https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85'],
         ['Residential Investment — 4 Bedrooms','Jakarta, Indonesia','Contact RumahNusa for the selected property','4 bedrooms · furnished rooms · parlors · kitchen · bathrooms/toilets · parking','https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=85'],
         ['Large Investment Property — 6 Bedrooms','Jakarta, Indonesia','Contact RumahNusa for the selected property','6 bedrooms · multiple living spaces · kitchen · bathrooms/toilets · furnished · parking','https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=85']
+      ]
+    },
+    'Hotel':{
+      title:'Hotels & Suites',
+      badge:'HOTEL',
+      intro:'A hotel-only collection. Explore hotel rooms, suites, comfortable bathrooms, dining spaces, pools, parking and hospitality facilities.',
+      confidence:'Choose a hotel space where comfort, privacy and a peaceful stay come together, whether you are staying for a short visit, a business trip or a longer stay.',
+      buy:'Hotels are presented as hospitality properties. Contact RumahNusa for availability, room terms and pricing.',
+      rooms:['Hotel room','Deluxe room','Suite','Family suite'],
+      listings:[
+        ['RumahNusa City Hotel — Deluxe Room','Jakarta, Indonesia','Contact RumahNusa for availability','Deluxe room · private bathroom/toilet · furnished sleeping area · AC · hotel services · parking','https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=1200&q=85'],
+        ['RumahNusa Grand Suite','Jakarta, Indonesia','Contact RumahNusa for availability','Large suite · private bathroom/toilet · living area · furnished · AC · city view · hotel facilities','https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=85'],
+        ['RumahNusa Family Hotel Suite','Bali, Indonesia','Contact RumahNusa for availability','Family suite · multiple sleeping spaces · bathroom/toilet · furnished · AC · pool access · parking','https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=85']
       ]
     }
   };
