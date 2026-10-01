@@ -379,50 +379,7 @@ body.rn-gate-active{margin:0;}
 </style>
 </head>
 
-<body class="rn-site-locked"><section id="rnPhoneGate" aria-label="RumahNusa customer login">
-  <div class="rn-gate-card">
-    <h1>Welcome to RumahNusa Real Estate</h1>
-    <p class="rn-gate-welcome">Welcome to RumahNusa Real Estate — a place to discover beautiful homes created for comfort, privacy, peace of mind, and a life you can truly enjoy.</p>
-    <p class="rn-gate-welcome">Login to begin your private home search. After you log in, you can choose the home style that feels right for you and explore homes within that category.</p>
-    <h2>Login to RumahNusa</h2>
-
-    <label for="rnLoginEmail" style="display:block;margin-top:12px;font-weight:700;">Email</label>
-    <input id="rnLoginEmail" type="email" autocomplete="email" placeholder="Enter your email" aria-label="Email" style="width:100%;box-sizing:border-box;padding:14px 12px;border:1px solid #8aa4bc;border-radius:10px;font:inherit;min-height:56px;">
-
-    <label for="rnLoginPassword" style="display:block;margin-top:12px;font-weight:700;">Password</label>
-    <div class="rn-password-wrap">
-      <input id="rnLoginPassword" type="password" autocomplete="current-password" placeholder="Enter your password" aria-label="Password">
-      <button id="rnPasswordEye" class="rn-password-eye" type="button" aria-label="Show password" aria-pressed="false">
-        <svg class="rn-eye-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.2 12s3.5-6 9.8-6 9.8 6 9.8 6-3.5 6-9.8 6-9.8-6-9.8-6Z"></path><circle cx="12" cy="12" r="2.7"></circle></svg>
-        <svg class="rn-eye-closed" viewBox="0 0 24 24" aria-hidden="true" hidden><path d="M3 3l18 18"></path><path d="M10.6 6.2A10.8 10.8 0 0 1 12 6c6.3 0 9.8 6 9.8 6a17.8 17.8 0 0 1-3.1 3.6"></path><path d="M6.3 8.1C3.8 9.7 2.2 12 2.2 12s3.5 6 9.8 6a10.8 10.8 0 0 0 3.1-.5"></path></svg>
-      </button>
-    </div>
-    <small style="display:block;margin-top:6px;color:#627d98;">Tap the eye to show the password. Tap it again to hide it.</small>
-
-    <div class="rn-gate-actions">
-      <button class="btn" id="rnLoginButton" type="button">Login</button>
-    </div>
-    <p id="rnPhoneGateMessage" class="rn-gate-status" aria-live="polite"></p>
-  </div>
-</section>
-<script id="rn-phone-gate-js">
-(function(){
-  const gate=document.getElementById('rnPhoneGate');
-  if(!gate)return;
-  const children=Array.from(document.body.children);
-  children.forEach(el=>{
-    if(el!==gate&&el.tagName!=='SCRIPT') el.dataset.rnLockedDisplay=el.style.display||'';
-  });
-  const lock=()=>children.forEach(el=>{
-    if(el!==gate&&el.tagName!=='SCRIPT') el.style.display='none';
-  });
-  const unlock=()=>children.forEach(el=>{
-    if(el!==gate&&el.tagName!=='SCRIPT') el.style.display=el.dataset.rnLockedDisplay||'';
-  });
-  lock();
-  window.__rnPhoneGateUnlock=unlock;
-})();
-</script>
+<body class="rn-gate-active">
 <header>
   <div class="logo">Rumah<span>Nusa</span></div>
 
@@ -1178,77 +1135,11 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     return;
   }
 
-  const loginEmail=document.getElementById('rnLoginEmail');
-  const loginPassword=document.getElementById('rnLoginPassword');
-  const passwordEye=document.getElementById('rnPasswordEye');
-  const loginButton=document.getElementById('rnLoginButton');
-  const phoneGate=document.getElementById('rnPhoneGate');
-
-  // Password eye: large, easy-to-tap control like a balance visibility button.
-  passwordEye?.addEventListener('click',function(){
-    const showing=loginPassword.type==='text';
-    loginPassword.type=showing?'password':'text';
-    passwordEye.setAttribute('aria-pressed',String(!showing));
-    passwordEye.setAttribute('aria-label',showing?'Show password':'Hide password');
-    const open=passwordEye.querySelector('.rn-eye-open');
-    const closed=passwordEye.querySelector('.rn-eye-closed');
-    if(open) open.hidden=!showing;
-    if(closed) closed.hidden=showing;
-  });
-
-  async function finishEmailLogin(user){
-    state.user=user;
-    let profile=await getProfile(user);
-    state.profile=profile;
-    phoneGate.style.display='none';
-    document.body.classList.remove('rn-site-locked');
-    document.body.classList.add('rn-site-unlocked');
-    const profileForm=document.getElementById('client-profile');
-    if(profileForm){
-      profileForm.hidden=false;
-      profileForm.classList.remove('rn-login-locked');
-      profileForm.querySelectorAll('.client-form-step').forEach((step,i)=>step.classList.toggle('active',i===0));
-      profileForm.scrollIntoView({behavior:'smooth',block:'start'});
-    }
-    if(profile.role==='agent'){
-      agentPanel.hidden=false;
-      inbox.querySelector('.inbox-thread').hidden=true;
-      await loadAgentConversations();
-    }else{
-      agentPanel.hidden=true;
-      inbox.querySelector('.inbox-thread').hidden=false;
-    }
-    status('Login successful.');
-  }
-
-  loginButton.addEventListener('click',async function(){
-    const email=loginEmail.value.trim();
-    const password=loginPassword.value;
-    if(!email || !password){
-      status('Enter your email and password.');
-      return;
-    }
-    loginButton.disabled=true;
-    loginButton.textContent='Logging in…';
-    try{
-      const {data,error}=await client.auth.signInWithPassword({email,password});
-      if(error) throw error;
-      if(!data.user) throw new Error('Secure login session was not created.');
-      await finishEmailLogin(data.user);
-    }catch(error){
-      status('Login could not continue: '+error.message);
-    }finally{
-      loginButton.disabled=false;
-      loginButton.textContent='Login';
-    }
-  });
-
-  loginEmail.addEventListener('keydown',e=>{if(e.key==='Enter')loginButton.click();});
-  loginPassword.addEventListener('keydown',e=>{if(e.key==='Enter')loginButton.click();});
-
-  const authState=document.getElementById('rnPhoneGateMessage');
- || document.body;
+  // Customers do not use email, phone, username or password on the public site.
+  // Supabase uses an internal anonymous session only so the private agent inbox can remain protected.
+  const authState={textContent:''};
   const signOut=null;
+
   const agentList=document.getElementById('rnAgentList');
   const agentThread=document.getElementById('rnAgentThread');
   const agentComposer=document.getElementById('rnAgentComposer');
@@ -1326,8 +1217,6 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   async function submitRequest(){
     if(!state.user){
       inbox.hidden=false;
-      status('Complete phone verification first, then send your request.');
-      authPanel.scrollIntoView({behavior:'smooth',block:'center'});
       return;
     }
     const v=id=>document.getElementById(id)?.value||'';
@@ -1504,9 +1393,12 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     await loadConversationMessages(state.agentSelected.id,agentThread);
   });
   client.auth.getSession().then(async({data})=>{
-    if(data.session){applyUser(data.session.user);return;}
+    if(data.session){await applyUser(data.session.user);return;}
     const anon=await client.auth.signInAnonymously();
-    if(anon.error){console.warn('Anonymous customer session unavailable:',anon.error.message);return;}
+    if(anon.error){
+      console.warn('Anonymous customer session unavailable:',anon.error.message);
+      return;
+    }
     if(anon.data.user) await applyUser(anon.data.user);
   });
   client.auth.onAuthStateChange((_event,session)=>{if(session&&!state.user)applyUser(session.user);});
