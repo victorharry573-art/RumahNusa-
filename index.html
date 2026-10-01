@@ -2296,8 +2296,9 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     }
     updateLogin();
 
-    loginBtn.replaceWith(loginBtn.cloneNode(true));
-    const login=document.getElementById('rnGateIdentityContinue');
+    // Keep the same button that updateLogin() controls.
+    // Replacing the button here was causing the visible button to stay disabled.
+    const login=loginBtn;
     login.addEventListener('click',async function(){
       const a=Number(age.value);
       if(!name.value.trim()||!gender||a<18||a>120)return;
