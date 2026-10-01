@@ -341,7 +341,9 @@ body.rn-site-unlocked footer { display:none !important; }
 .rn-gate-actions .btn,
 #propertyChooseContinue,
 #rnGateSignIn,
-#rnGatePasswordToggle {
+#rnGatePasswordToggle,
+#rnLoginPhone,
+#rnLoginCountry {
   position: relative;
   z-index: 20;
   pointer-events: auto !important;
@@ -368,16 +370,28 @@ body.rn-site-unlocked footer { display:none !important; }
     <p class="rn-gate-welcome">Login to RumahNusa to begin your private home search and choose the type of home that is right for you.</p>
     <h2>Login to RumahNusa</h2>
 
-    <label for="rnLoginEmail" style="display:block;margin-top:12px;font-weight:700;">Email</label>
-    <input id="rnLoginEmail" type="email" autocomplete="email" placeholder="Enter your email" aria-label="Email" style="width:100%;box-sizing:border-box;padding:14px 52px 14px 12px;border:1px solid #8aa4bc;border-radius:10px;font:inherit;min-height:56px;">
+    <label for="rnLoginCountry" style="display:block;margin-top:12px;font-weight:700;">Country</label>
+    <select id="rnLoginCountry" aria-label="Country" style="width:100%;box-sizing:border-box;padding:14px 12px;border:1px solid #8aa4bc;border-radius:10px;font:inherit;min-height:56px;"></select>
+
+    <label for="rnLoginPhone" style="display:block;margin-top:12px;font-weight:700;">Phone number</label>
+    <div style="display:flex;align-items:center;border:1px solid #8aa4bc;border-radius:10px;background:white;overflow:hidden;">
+      <span id="rnLoginPhonePrefix" style="padding:14px 11px;font-weight:700;color:#075985;background:#f0f9ff;white-space:nowrap;">🇮🇩 +62</span>
+      <input id="rnLoginPhone" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="81234567890" aria-label="Phone number without country code" style="border:0;outline:0;flex:1;padding:14px 12px;font:inherit;min-height:56px;">
+    </div>
+    <small style="display:block;margin-top:6px;color:#627d98;">Choose your country, then enter your phone number without the country code.</small>
 
     <label for="rnLoginPassword" style="display:block;margin-top:12px;font-weight:700;">Password</label>
     <div class="rn-password-wrap">
       <input id="rnLoginPassword" type="password" autocomplete="current-password" placeholder="Enter your password" aria-label="Password">
       <button id="rnPasswordToggle" class="rn-password-eye" type="button" aria-label="Show password" aria-pressed="false">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
+        <svg class="rn-eye-open" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M2.2 12s3.4-5 9.8-5 9.8 5 9.8 5-3.4 5-9.8 5-9.8-5-9.8-5Z"></path>
           <circle cx="12" cy="12" r="2.7"></circle>
+        </svg>
+        <svg class="rn-eye-closed" viewBox="0 0 24 24" aria-hidden="true" hidden>
+          <path d="M3 3l18 18"></path>
+          <path d="M10.6 6.9A10.6 10.6 0 0 1 12 6.8c6.4 0 9.8 5.2 9.8 5.2a17.2 17.2 0 0 1-3.1 3.3"></path>
+          <path d="M6.1 8.3A17.6 17.6 0 0 0 2.2 12s3.4 5.2 9.8 5.2c1.2 0 2.3-.2 3.3-.6"></path>
         </svg>
       </button>
     </div>
@@ -869,7 +883,6 @@ body.rn-site-unlocked footer { display:none !important; }
   </div>
   <small style="color:#627d98;">Pilih your country. The flag and country code are added automatically; enter numbers only.</small>
 </div>
-          <div class="client-field"><label for="clientEmail">Email</label><input id="clientEmail" type="email" placeholder="anda@contoh.com" required></div>
           <div class="client-field"><label for="clientCity">Kota tempat tinggal saat ini</label><input id="clientCity" placeholder="Kota saat ini" required></div>
           <div class="client-field"><label for="clientMarital">Status keluarga</label><select id="clientMarital" required><option value="">Pilih</option><option>Lajang</option><option>Menikah</option><option>Tidak ingin menyebutkan</option></select></div>
           <div class="client-field"><label for="household">Berapa orang yang akan tinggal di sana?</label><input id="household" type="number" min="1" max="30" value="1" required></div>
@@ -1036,7 +1049,7 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
       return;
     }
     if (current === 3) {
-      const required = ['clientPhone','clientEmail','clientCity','clientMarital','household','clientCityWant'];
+      const required = ['clientPhone','clientCity','clientMarital','household','clientCityWant'];
       for (const id of required) {
         const el = document.getElementById(id);
         if (!el || !el.reportValidity()) return;
@@ -1168,7 +1181,7 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
       'Amount: $' + amount + '<br>' +
       'Kota pilihan: ' + v('clientCityWant') + '<br>' +
       'Rumahhold: ' + v('household') + ' · Kota saat ini: ' + v('clientCity') + '<br>' +
-      'Email: ' + v('clientEmail') + ' · Telepon: ' + v('clientPhone');
+      'Telepon: ' + v('clientPhone');
   }
 
   function addInboxMessage(text, sender) {
@@ -1329,17 +1342,42 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     return;
   }
 
-  const loginEmail=document.getElementById('rnLoginEmail');
+  const loginCountry=document.getElementById('rnLoginCountry');
+  const loginPhone=document.getElementById('rnLoginPhone');
+  const loginPhonePrefix=document.getElementById('rnLoginPhonePrefix');
   const loginPassword=document.getElementById('rnLoginPassword');
   const loginButton=document.getElementById('rnLoginButton');
   const passwordToggle=document.getElementById('rnPasswordToggle');
   const phoneGate=document.getElementById('rnPhoneGate');
 
-  passwordToggle.addEventListener('click',function(){
+  // Reuse the same country list already used by the customer phone form.
+  const customerCountry=document.getElementById('clientCountry');
+  if(customerCountry && loginCountry){
+    loginCountry.innerHTML=customerCountry.innerHTML;
+    loginCountry.value=customerCountry.value || 'ID';
+  }
+
+  function syncLoginCountry(){
+    if(!loginCountry||!loginPhonePrefix)return;
+    const option=loginCountry.options[loginCountry.selectedIndex];
+    const flag=option?.dataset.flag || '🌐';
+    const code=option?.dataset.code || '';
+    loginPhonePrefix.textContent=flag+' '+code;
+  }
+  loginCountry?.addEventListener('change',syncLoginCountry);
+  syncLoginCountry();
+
+  passwordToggle?.addEventListener('click',function(event){
+    event.preventDefault();
+    event.stopPropagation();
     const visible=loginPassword.type==='text';
     loginPassword.type=visible?'password':'text';
     passwordToggle.setAttribute('aria-label',visible?'Show password':'Hide password');
     passwordToggle.setAttribute('aria-pressed',String(!visible));
+    const openIcon=passwordToggle.querySelector('.rn-eye-open');
+    const closedIcon=passwordToggle.querySelector('.rn-eye-closed');
+    if(openIcon) openIcon.hidden=visible;
+    if(closedIcon) closedIcon.hidden=!visible;
   });
 
   async function finishPhoneLogin(user){
@@ -1368,16 +1406,21 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   }
 
   loginButton.addEventListener('click',async function(){
-    const email=loginEmail.value.trim();
+    const raw=loginPhone.value.replace(/[^0-9]/g,'');
     const password=loginPassword.value;
-    if(!email||!password){
-      status('Enter your email and password.');
+    const option=loginCountry.options[loginCountry.selectedIndex];
+    const code=(option?.dataset.code||'+62').replace(/[^0-9+]/g,'');
+    const digits=raw.replace(/^0+/,'');
+    const phone=code+' '+digits;
+    const phoneE164=code+' '+digits;
+    if(!digits||digits.length<5||!password){
+      status('Enter your phone number and password.');
       return;
     }
     loginButton.disabled=true;
     loginButton.textContent='Logging in…';
     try{
-      const {data,error}=await client.auth.signInWithPassword({email,password});
+      const {data,error}=await client.auth.signInWithPassword({phone:phoneE164.replace(' ',''),password});
       if(error) throw error;
       if(!data.user) throw new Error('Secure login session was not created.');
       await finishPhoneLogin(data.user);
@@ -1390,7 +1433,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   });
 
   loginPassword.addEventListener('keydown',e=>{if(e.key==='Enter')loginButton.click();});
-  loginEmail.addEventListener('keydown',e=>{if(e.key==='Enter')loginPassword.focus();});
+  loginPhone.addEventListener('keydown',e=>{if(e.key==='Enter')loginPassword.focus();});
 
   const authState=document.getElementById('rnPhoneGateMessage');
  || document.body;
@@ -1502,7 +1545,6 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       'NAMA: '+v('clientName'),
       'JENIS KELAMIN: '+v('clientJenis kelamin'),
       'USIA: '+v('clientUsia'),
-      'EMAIL: '+v('clientEmail'),
       'TELEPON: '+phone,
       'NEGARA NOMOR TELEPON: '+countryName,
       'KOTA TEMPAT TINGGAL SAAT INI: '+v('clientCity'),
@@ -1540,7 +1582,6 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     // Keep the customer's latest identity details in their Supabase profile.
     const {error:profileError}=await client.from('profiles').update({
       full_name:v('clientName'),
-      email:v('clientEmail'),
       phone:phone
     }).eq('id',state.user.id);
     if(profileError){status('Data pelanggan belum dapat disimpan: '+profileError.message);return;}
@@ -1602,9 +1643,9 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       const b=document.createElement('button');
       b.type='button';
       b.className='rn-agent-conv'+(state.agentSelected?.id===conv.id?' active':'');
-      const customerEmail=(conv.property_name||'').split(' | ')[0].trim() || 'Customer email not available';
-      b.innerHTML='<strong>'+esc(customerEmail)+'</strong><br><span style="font-size:12px;color:#627d98;">Tap to open customer conversation</span>';
-      b.setAttribute('aria-label','Open customer conversation for '+customerEmail);
+      const customerPhone=(conv.property_name||'').split(' | ')[0].trim() || 'Customer phone not available';
+      b.innerHTML='<strong>'+esc(customerPhone)+'</strong><br><span style="font-size:12px;color:#627d98;">Tap to open customer conversation</span>';
+      b.setAttribute('aria-label','Open customer conversation for '+customerPhone);
       b.addEventListener('click',()=>selectAgentConversation(conv));
       agentList.appendChild(b);
     });
@@ -1614,11 +1655,11 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     claimBtn.hidden=!!conv.agent_id;
     await loadConversationMessages(conv.id,agentThread);
     subscribeConversation(conv.id,agentThread);
-    const customerEmail=(conv.property_name||'').split(' | ')[0].trim();
-    if(customerEmail){
+    const customerPhone=(conv.property_name||'').split(' | ')[0].trim();
+    if(customerPhone){
       const heading=document.createElement('div');
       heading.className='rn-agent-toolbar';
-      heading.innerHTML='<strong>Customer email: '+esc(customerEmail)+'</strong>';
+      heading.innerHTML='<strong>Customer phone: '+esc(customerPhone)+'</strong>';
       agentThread.parentElement?.insertBefore(heading,agentThread);
       setTimeout(()=>heading.remove(),10000);
     }
