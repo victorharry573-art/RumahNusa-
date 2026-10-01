@@ -1347,10 +1347,24 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   const customerCountry=document.getElementById('clientCountry');
   function populateLoginCountries(){
     if(!loginCountry) return;
+
+    // Copy the complete country list as HTML so Android Chrome reliably
+    // renders every option when the customer opens the picker.
     if(customerCountry && customerCountry.options.length){
-      loginCountry.replaceChildren(...Array.from(customerCountry.options).map(o=>o.cloneNode(true)));
+      loginCountry.innerHTML = customerCountry.innerHTML;
     }
-    if(loginCountry.options.length && !loginCountry.value) loginCountry.value='ID';
+
+    // Safety fallback: the login picker must never be empty.
+    if(!loginCountry.options.length){
+      loginCountry.innerHTML =
+        '<option value="ID" data-flag="🇮🇩" data-code="+62">🇮🇩 Indonesia (+62)</option>' +
+        '<option value="MY" data-flag="🇲🇾" data-code="+60">🇲🇾 Malaysia (+60)</option>' +
+        '<option value="SG" data-flag="🇸🇬" data-code="+65">🇸🇬 Singapore (+65)</option>' +
+        '<option value="US" data-flag="🇺🇸" data-code="+1">🇺🇸 United States (+1)</option>' +
+        '<option value="GB" data-flag="🇬🇧" data-code="+44">🇬🇧 United Kingdom (+44)</option>';
+    }
+
+    loginCountry.value='ID';
     syncLoginCountry();
   }
 
