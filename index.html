@@ -1649,7 +1649,10 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     select.innerHTML=values.map(v=>'<option>'+v+'</option>').join('');
   }
 
-  function closeCategory(){
+  let categoryHistoryActive = false;
+
+  function closeCategory(fromHistory){
+    categoryHistoryActive = false;
     categoryGrid.classList.remove('rn-category-open');
     document.querySelectorAll('#propertyOptions .client-option').forEach(btn=>btn.classList.remove('selected'));
     collection.hidden=true;
@@ -1695,10 +1698,37 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   }
 
   document.querySelectorAll('#propertyOptions .client-option').forEach(btn=>{
-    btn.addEventListener('click',()=>renderCategory(btn.dataset.value));
+    btn.addEventListener('click',()=>{
+      const name=btn.dataset.value;
+      if(history.state?.rnCategory !== name){
+        history.pushState({rnCategory:name},'',location.href);
+      }
+      categoryHistoryActive=true;
+      renderCategory(name);
+    });
   });
 
-  chooseAnother?.addEventListener('click',closeCategory);
+  chooseAnother?.addEventListener('click',function(){
+    if(categoryHistoryActive){
+      history.back();
+    }else{
+      closeCategory(true);
+    }
+  });
+
+  if(!history.state || !history.state.rnRumahNusa){
+    history.replaceState(Object.assign({},history.state||{},{rnRumahNusa:true}),'',location.href);
+  }
+
+  window.addEventListener('popstate',function(event){
+    if(event.state && event.state.rnCategory){
+      categoryHistoryActive=true;
+      renderCategory(event.state.rnCategory);
+      return;
+    }
+    categoryHistoryActive=false;
+    closeCategory(true);
+  });
 
   purpose.addEventListener('change',()=>{
     const selectedCategory=document.querySelector('#propertyOptions .client-option.selected')?.dataset.value;
