@@ -690,7 +690,6 @@ body.rn-gate-active{margin:0;}
           <button type="button" class="client-option rn-home-category" data-value="Penthouse"><span class="rn-home-icon" aria-hidden="true">🌆</span><strong>Penthouse</strong><small>Large high-rise homes with city views.</small></button>
           <button type="button" class="client-option rn-home-category" data-value="Family Residence"><span class="rn-home-icon" aria-hidden="true">👨‍👩‍👧‍👦</span><strong>Family Residence</strong><small>Comfortable homes designed around family life.</small></button>
           <button type="button" class="client-option rn-home-category" data-value="Investment Property"><span class="rn-home-icon" aria-hidden="true">📈</span><strong>Investment Property</strong><small>Properties for long-term ownership and investment.</small></button>
-          <button type="button" class="client-option rn-home-category" data-value="Hotel"><span class="rn-home-icon" aria-hidden="true">🏨</span><strong>Hotel</strong><small>Hotel rooms, suites, pools and guest facilities.</small></button>
         </div>
         <div class="client-actions">
           <button class="btn secondary" type="button" data-back>Kembali</button>
@@ -708,7 +707,7 @@ body.rn-gate-active{margin:0;}
           <p class="rn-collection-note">You are viewing only this category. Choose your home, then continue to complete your details.</p>
           <div class="rn-category-actions">
             <button id="rnPropertyContinue" class="btn" type="button">Choose &amp; Continue</button>
-            <button id="rnChooseAnotherCategory" class="btn secondary rn-choose-another" type="button">Choose another category</button>
+            
           </div>
         </div>
 
@@ -2484,6 +2483,8 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
           state.property=btn.dataset.value||'';
           if(listings){continueBtn.hidden=true;continueBtn.disabled=true;}
           state.selectedHome='';
+          const note=document.querySelector('.rn-collection-note');
+          if(note)note.textContent='Select one beautiful home below. After you select it, Choose & Continue will appear.';
         },50);
       }
     });
@@ -2503,8 +2504,15 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       if(purpose){
         purpose.innerHTML=name==='Apartemen'?'<option value="">Choose one</option><option value="Beli">Buy</option><option value="Sewa">Rent</option>':'<option value="Beli">Buy</option>';
       }
-      const idr=document.getElementById('purchaseAmountIdrSection');
-      if(idr)idr.hidden=name==='Apartemen';
+      const usdSection=document.getElementById('purchaseAmountSection');
+      const idrSection=document.getElementById('purchaseAmountIdrSection');
+      const usd=document.getElementById('clientBudget');
+      const idr=document.getElementById('clientBudgetIdr');
+      const apartment=name==='Apartemen';
+      if(usdSection)usdSection.hidden=!apartment;
+      if(idrSection)idrSection.hidden=apartment;
+      if(usd)usd.required=apartment;
+      if(idr)idr.required=!apartment;
     }
     setInterval(refreshCategoryDetails,800);
 
@@ -2524,6 +2532,8 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 .rn-home-selected{outline:4px solid #0879bd;outline-offset:2px}
 .rn-category-actions{display:flex;justify-content:flex-end;min-height:56px}
 .rn-category-actions #rnPropertyContinue[hidden]{display:none!important}
+.rn-choose-another{display:none!important}
+#rnPropertyContinue{min-width:240px}
 .rn-private-document-box{display:flex;flex-direction:column;gap:12px;padding:18px;border:1px solid #d9e2ec;border-radius:14px;background:#fff}
 .client-form-step .client-actions{margin-top:20px}
 </style>
