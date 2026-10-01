@@ -450,7 +450,7 @@ body.rn-site-unlocked footer { display:none !important; }
 .rn-password-wrap input{width:100%;box-sizing:border-box;padding:14px 52px 14px 12px;border:1px solid #8aa4bc;border-radius:10px;font:inherit;min-height:56px}
 .rn-password-eye{position:absolute;right:8px;top:50%;transform:translateY(-50%);width:44px;height:44px;border:0;background:transparent;border-radius:50%;display:grid;place-items:center;cursor:pointer;touch-action:manipulation}
 .rn-password-eye svg{width:26px;height:26px;fill:none;stroke:#334e68;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}.rn-password-eye:focus-visible{outline:3px solid #7cc4e8;outline-offset:2px}
-.rn-password-eye:active{background:#eef4f8}.rn-gate-status{margin:10px 0 0;color:#486581;line-height:1.5}.rn-password-wrap{position:relative}.rn-password-wrap input{padding-right:54px !important}
+.rn-password-eye:active{background:#eef4f8}.rn-gate-status{margin:10px 0 0;color:#486581;line-height:1.5}.rn-password-wrap{position:relative}.rn-password-wrap input{padding-right:54px !important}.rn-password-eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:44px;height:44px;border:0;background:transparent;color:#486581;font-size:20px;cursor:pointer;border-radius:50%;display:flex;align-items:center;justify-content:center}.rn-password-eye:active{background:#eaf5fb}.rn-password-eye[aria-pressed="true"]{color:#0879bd}
 .rn-gate-welcome{font-size:16px;line-height:1.6;margin:10px 0;color:#486581}
 
 @media(max-width:700px){.rn-gate-grid{grid-template-columns:1fr}.rn-gate-grid .full{grid-column:auto}}
@@ -660,25 +660,36 @@ body.rn-gate-active{margin:0;}
       </div>
 
       <div id="rnGateIdentityStep" class="rn-gate-step">
-        <div class="rn-gate-field">
-          <label for="rnGateName">Your name</label>
-          <input id="rnGateName" type="text" autocomplete="name" placeholder="Enter your name">
-        </div>
-
-        <div id="rnGateGenderStep" hidden>
-          <label>Gender</label>
-          <div class="rn-gender-options">
-            <button type="button" class="rn-gender-option" data-gender="Female">Female</button>
-            <button type="button" class="rn-gender-option" data-gender="Male">Male</button>
+        <div id="rnGateLoginFields">
+          <label for="rnGateEmail">Email</label>
+          <input id="rnGateEmail" type="email" autocomplete="email" placeholder="Enter your email" required>
+          <label for="rnGatePassword">Password</label>
+          <div class="rn-password-wrap">
+            <input id="rnGatePassword" type="password" autocomplete="current-password" placeholder="Enter your password" required>
+            <button id="rnGatePasswordToggle" class="rn-password-eye" type="button" aria-label="Show password" aria-pressed="false">◉</button>
           </div>
+          <button id="rnGateLogin" class="btn" type="button">Login</button>
         </div>
 
-        <div id="rnGateAgeStep" hidden>
-          <label for="rnGateAge">Your age</label>
-          <input id="rnGateAge" type="number" min="18" max="120" inputmode="numeric" placeholder="18 or older">
+        <div id="rnGateIdentityFields" hidden>
+          <p><strong>Welcome back.</strong> Tell us a little about yourself before you choose your home.</p>
+          <div class="rn-gate-field">
+            <label for="rnGateName">Your name</label>
+            <input id="rnGateName" type="text" autocomplete="name" placeholder="Enter your name">
+          </div>
+          <div id="rnGateGenderStep">
+            <label>Gender</label>
+            <div class="rn-gender-options">
+              <button type="button" class="rn-gender-option" data-gender="Female">Female</button>
+              <button type="button" class="rn-gender-option" data-gender="Male">Male</button>
+            </div>
+          </div>
+          <div id="rnGateAgeStep">
+            <label for="rnGateAge">Your age</label>
+            <input id="rnGateAge" type="number" min="18" max="120" inputmode="numeric" placeholder="18 or older">
+          </div>
+          <button id="rnGateIdentityContinue" class="btn" type="button" disabled>Continue to RumahNusa</button>
         </div>
-
-        <button id="rnGateIdentityContinue" class="btn" type="button" disabled>Continue to RumahNusa</button>
         <p id="rnGateLoginStatus" class="rn-gate-status" aria-live="polite"></p>
       </div>
     </div>
@@ -867,37 +878,77 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
 
 <script>
 (function(){
-  const genderStep=document.getElementById('rnGateGenderStep');
-  const ageStep=document.getElementById('rnGateAgeStep');
+  const loginFields=document.getElementById('rnGateLoginFields');
+  const identityFields=document.getElementById('rnGateIdentityFields');
+  const email=document.getElementById('rnGateEmail');
+  const password=document.getElementById('rnGatePassword');
+  const login=document.getElementById('rnGateLogin');
+  const toggle=document.getElementById('rnGatePasswordToggle');
   const status=document.getElementById('rnGateLoginStatus');
   const name=document.getElementById('rnGateName');
   const age=document.getElementById('rnGateAge');
   const identityContinue=document.getElementById('rnGateIdentityContinue');
   const welcome=document.getElementById('rnWelcomeGate');
   const form=document.getElementById('clientProfilForm');
-  const genders=Array.from(document.querySelectorAll('#rnGateIdentityStep .rn-gender-option'));
+  const genders=Array.from(document.querySelectorAll('#rnGateIdentityFields .rn-gender-option'));
   let gender='';
-  if(!form||!name||!age||!identityContinue)return;
-  function valid(){
+  let authClient=null;
+  if(!form||!login||!email||!password)return;
+
+  toggle?.addEventListener('click',function(){
+    const showing=password.type==='text';
+    password.type=showing?'password':'text';
+    toggle.textContent=showing?'◉':'◉';
+    toggle.setAttribute('aria-label',showing?'Show password':'Hide password');
+    toggle.setAttribute('aria-pressed',String(!showing));
+  });
+
+  function waitForSupabase(){
+    if(window.supabase && window.RUMAHNUSA_SUPABASE_URL && window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY){
+      try{authClient=window.supabase.createClient(window.RUMAHNUSA_SUPABASE_URL,window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY);}catch(e){status.textContent='Login is temporarily unavailable.';}
+      return;
+    }
+    setTimeout(waitForSupabase,100);
+  }
+  waitForSupabase();
+
+  function validIdentity(){
     const a=Number(age.value);
     identityContinue.disabled=!(name.value.trim()&&gender&&a>=18&&a<=120);
   }
-  name.addEventListener('input',function(){ if(name.value.trim())genderStep.hidden=false; valid(); });
+  name.addEventListener('input',validIdentity);
+  age.addEventListener('input',validIdentity);
   genders.forEach(function(button){
     button.addEventListener('click',function(){
       gender=button.dataset.gender||'';
       genders.forEach(function(item){item.classList.toggle('selected',item===button);});
-      ageStep.hidden=false;
-      age.focus();
-      valid();
+      validIdentity();
     });
   });
-  age.addEventListener('input',valid);
-  identityContinue.addEventListener('click',function(){
+
+  login.addEventListener('click',async function(){
+    const e=email.value.trim(), p=password.value;
+    if(!e||!p){status.textContent='Enter your email and password.';return;}
+    if(!authClient){status.textContent='Please wait a moment and try Login again.';return;}
+    login.disabled=true;
+    status.textContent='Signing in...';
+    const {data,error}=await authClient.auth.signInWithPassword({email:e,password:p});
+    login.disabled=false;
+    if(error){status.textContent='Login failed. Please check your email and password.';return;}
+    window.__rnCustomerUser=data.user;
+    loginFields.hidden=true;
+    identityFields.hidden=false;
+    status.textContent='Login successful. Complete your details to continue.';
+    name.focus();
+  });
+
+  identityContinue.addEventListener('click',async function(){
     const a=Number(age.value);
     if(!name.value.trim()||!gender||a<18||a>120)return;
     window.__rnCustomerIdentity={name:name.value.trim(),gender:gender,age:a};
-    window.__rnCustomerNeedsAnonymousSession=true;
+    if(authClient && window.__rnCustomerUser){
+      await authClient.from('profiles').update({full_name:name.value.trim()}).eq('id',window.__rnCustomerUser.id);
+    }
     welcome.hidden=true;
     form.hidden=false;
     document.body.classList.remove('rn-gate-active');
@@ -1496,12 +1547,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   });
   client.auth.getSession().then(async({data})=>{
     if(data.session){await applyUser(data.session.user);return;}
-    const anon=await client.auth.signInAnonymously();
-    if(anon.error){
-      console.warn('Anonymous customer session unavailable:',anon.error.message);
-      return;
-    }
-    if(anon.data.user) await applyUser(anon.data.user);
+    // Customers must log in explicitly before accessing home categories.
   });
   client.auth.onAuthStateChange((_event,session)=>{if(session&&!state.user)applyUser(session.user);});
 })();
