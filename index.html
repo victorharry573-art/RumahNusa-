@@ -839,35 +839,35 @@ body.rn-gate-active{margin:0;}
 
 <div class="client-form-step" data-step="19">
   <h3>Private identity document</h3>
-  <p>Your document photo is used only in this browser step. It is never uploaded to RumahNusa, Supabase, or the agent inbox. It is deleted immediately when you continue.</p>
+  <p>Add your document.</p>
   <div class="rn-private-document-box">
     <label for="privateIdentityType">Document type</label>
     <select id="privateIdentityType"><option value="">Choose one</option><option>Passport</option><option>ID Card</option><option>Family Card</option><option>Taxpayer Identification Number (NPWP)</option><option>Driving License</option><option>Visa</option><option>Residence Permit</option></select>
     <label for="privateIdentityPhoto">Take a picture of your document</label>
     <input id="privateIdentityPhoto" type="file" accept="image/*" capture="environment">
-    <p id="privateDocumentStatus" class="inbox-note">Nothing from this photo is sent to the agent.</p>
+    
   </div>
   <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Done &amp; Continue</button></div>
 </div>
 
 <div class="client-form-step" data-step="20">
   <h3>Face scan</h3>
-  <p>Take a face photo for this step only. RumahNusa does not upload or keep it. It is deleted immediately when you continue.</p>
+  <p>Add your face scan.</p>
   <div class="rn-private-document-box">
     <label for="faceScanPhoto">Take your face scan photo</label>
     <input id="faceScanPhoto" type="file" accept="image/*" capture="user">
-    <p id="faceScanStatus" class="inbox-note">Your face photo stays only in this browser step.</p>
+    
   </div>
   <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Face Scan &amp; Continue</button></div>
 </div>
 
 <div class="client-form-step" data-step="21">
   <h3>Front camera photo</h3>
-  <p>Take a front-camera photo for this step only. It is deleted immediately when you continue and is never sent to the agent.</p>
+  <p>Add your front-camera photo.</p>
   <div class="rn-private-document-box">
     <label for="frontCameraPhoto">Take a front-camera picture</label>
     <input id="frontCameraPhoto" type="file" accept="image/*" capture="user">
-    <p id="frontCameraStatus" class="inbox-note">This photo is not included in the agent inbox.</p>
+    
   </div>
   <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Photo &amp; Continue</button></div>
 </div>
@@ -1285,7 +1285,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       'PENGGUNAAN: '+v('clientUse'),
       'METODE PEMBAYARAN YANG DIPILIH: '+(window.__rnCustomerFlowState?.paymentMethod||'Belum dipilih'),
       '',
-      'PRIVATE DOCUMENT STATUS: Dokumen identitas tidak dikirim ke inbox agen dan tidak diunggah oleh alur ini.',
+      'PRIVATE DOCUMENT STATUS: Dokumen identitas.',
       '━━━━━━━━━━━━━━━━━━━━'
     ];
 
@@ -1303,7 +1303,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     inbox.hidden=false;
     document.getElementById('sendProfil').textContent='Permintaan Terkirim';
     document.getElementById('sendProfil').disabled=true;
-    document.getElementById('inboxStatusCard').textContent='Semua pilihan Anda sudah dikirim ke inbox agen. Dokumen identitas pribadi tidak disertakan. ✓';
+    document.getElementById('inboxStatusCard').textContent='Semua pilihan Anda sudah dikirim ke inbox agen. ✓';
     inbox.scrollIntoView({behavior:'smooth',block:'start'});
   }
   async function signInNow(){ return false; }
@@ -2383,12 +2383,12 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       }
       if(current===20){
         clearMedia('faceScanPhoto');
-        document.getElementById('faceScanStatus').textContent='Face photo cleared from this step. It is not stored or sent to the agent.';
+        document.getElementById('faceScanStatus').textContent='';
         current=21;syncSteps();return;
       }
       if(current===21){
         clearMedia('frontCameraPhoto');
-        document.getElementById('frontCameraStatus').textContent='Front-camera photo cleared from this step. It is not stored or sent to the agent.';
+        document.getElementById('frontCameraStatus').textContent='';
         current=22;syncSteps();return;
       }
       if(current===22){
