@@ -1534,12 +1534,11 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   const customerCountry=document.getElementById('clientCountry');
   function populateLoginCountries(){
     if(!loginCountry) return;
-    // The complete country list is embedded directly in the login picker,
-    // so it is available immediately on Android without depending on another field.
+    // Keep the country selected by the customer. Never reset the picker to Indonesia.
+    // The complete country list is already embedded in the login picker.
     if(!loginCountry.options.length){
       loginCountry.innerHTML='<option value="ID" data-flag="🇮🇩" data-code="+62">🇮🇩 Indonesia (+62)</option>';
     }
-    loginCountry.value='ID';
     syncLoginCountry();
   }
 
@@ -1562,6 +1561,11 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   }
   // The full list is already embedded in the login picker.
   populateLoginCountries();
+  // Android/browser form restoration can restore the selected country after the
+  // first script pass. Re-sync the visible flag and dialing code after that.
+  setTimeout(syncLoginCountry,0);
+  setTimeout(syncLoginCountry,250);
+  window.addEventListener('pageshow',syncLoginCountry);
 
   // Password login has been removed. RumahNusa uses phone + SMS confirmation code.
 
