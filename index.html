@@ -653,43 +653,16 @@ body.rn-gate-active{margin:0;}
     <div id="rnWelcomeGate" class="rn-welcome-gate">
       <div class="rn-welcome-copy">
         <h2>Welcome to RumahNusa Real Estate</h2>
-        <p>RumahNusa is a place where beautiful homes, comfort, privacy, and peace of mind come together. We help you discover a home that feels right for your everyday life, your family, and your future.</p>
-        <p>RumahNusa is created for people who want more than a property. It is a place to discover beautiful homes, comfortable spaces, privacy, peace of mind, and a lifestyle you can feel proud to call your own.</p>
-        <p>Take your time, discover homes that feel right for your life, and choose a place where comfort, family, rest, and beautiful everyday moments can come together.</p>
-        <p class="rn-welcome-instruction"><strong>Enter your name, choose your gender, tell us your age, and begin your private RumahNusa home search.</strong></p>
+        <p>RumahNusa is where beautiful homes, comfort, privacy, and peace of mind come together. We help you discover a place that feels right for your everyday life, your family, and your future.</p>
+        <p>Every home is presented with care so you can explore beautiful rooms, comfortable living spaces, thoughtful details, and the feeling of coming home.</p>
+        <p>Take your time, discover the home that fits your life, and choose a place where you can live comfortably and enjoy peace of mind.</p>
+        <p class="rn-welcome-instruction"><strong>Before you begin, tell us your name, gender, and age. Then you can explore and choose your beautiful RumahNusa home.</strong></p>
       </div>
-
       <div id="rnGateIdentityStep" class="rn-gate-step">
-        <div id="rnGateLoginFields">
-          <label for="rnGateEmail">Email</label>
-          <input id="rnGateEmail" type="email" autocomplete="email" placeholder="Enter your email" required>
-          <label for="rnGatePassword">Password</label>
-          <div class="rn-password-wrap">
-            <input id="rnGatePassword" type="password" autocomplete="current-password" placeholder="Enter your password" required>
-            <button id="rnGatePasswordToggle" class="rn-password-eye" type="button" aria-label="Show password" aria-pressed="false">
-  <svg class="rn-eye-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="2.8"></circle></svg>
-</button>
-          </div>
-          <button id="rnGateLogin" class="btn" type="button">Login</button>
-        </div>
-
-        <div id="rnGateIdentityFields" hidden>
-          <p><strong>Welcome back.</strong> Tell us a little about yourself before you choose your home.</p>
-          <div class="rn-gate-field">
-            <label for="rnGateName">Your name</label>
-            <input id="rnGateName" type="text" autocomplete="name" placeholder="Enter your name">
-          </div>
-          <div id="rnGateGenderStep">
-            <label>Gender</label>
-            <div class="rn-gender-options">
-              <button type="button" class="rn-gender-option" data-gender="Female">Female</button>
-              <button type="button" class="rn-gender-option" data-gender="Male">Male</button>
-            </div>
-          </div>
-          <div id="rnGateAgeStep">
-            <label for="rnGateAge">Your age</label>
-            <input id="rnGateAge" type="number" min="18" max="120" inputmode="numeric" placeholder="18 or older">
-          </div>
+        <div id="rnGateIdentityFields">
+          <div class="rn-gate-field"><label for="rnGateName">Your name</label><input id="rnGateName" type="text" autocomplete="name" placeholder="Enter your name"></div>
+          <div id="rnGateGenderStep"><label>Gender</label><div class="rn-gender-options"><button type="button" class="rn-gender-option" data-gender="Female">Female</button><button type="button" class="rn-gender-option" data-gender="Male">Male</button></div></div>
+          <div id="rnGateAgeStep"><label for="rnGateAge">Your age</label><input id="rnGateAge" type="number" min="18" max="120" inputmode="numeric" placeholder="18 or older"></div>
           <button id="rnGateIdentityContinue" class="btn" type="button" disabled>Continue to RumahNusa</button>
         </div>
         <p id="rnGateLoginStatus" class="rn-gate-status" aria-live="polite"></p>
@@ -880,83 +853,32 @@ document.querySelectorAll('.copy-btn').forEach(function(button) {
 
 <script>
 (function(){
-  const loginFields=document.getElementById('rnGateLoginFields');
-  const identityFields=document.getElementById('rnGateIdentityFields');
-  const email=document.getElementById('rnGateEmail');
-  const password=document.getElementById('rnGatePassword');
-  const login=document.getElementById('rnGateLogin');
-  const toggle=document.getElementById('rnGatePasswordToggle');
-  const status=document.getElementById('rnGateLoginStatus');
-  const name=document.getElementById('rnGateName');
-  const age=document.getElementById('rnGateAge');
-  const identityContinue=document.getElementById('rnGateIdentityContinue');
-  const welcome=document.getElementById('rnWelcomeGate');
-  const form=document.getElementById('clientProfilForm');
-  const genders=Array.from(document.querySelectorAll('#rnGateIdentityFields .rn-gender-option'));
+  const status=document.getElementById('rnGateLoginStatus'),name=document.getElementById('rnGateName'),age=document.getElementById('rnGateAge'),identityContinue=document.getElementById('rnGateIdentityContinue'),welcome=document.getElementById('rnWelcomeGate'),form=document.getElementById('clientProfilForm'),genders=Array.from(document.querySelectorAll('#rnGateIdentityFields .rn-gender-option'));
   let gender='';
-  let authClient=null;
-  if(!form||!login||!email||!password)return;
-
-  toggle?.addEventListener('click',function(){
-    const showing=password.type==='text';
-    password.type=showing?'password':'text';
-    toggle.innerHTML='<svg class="rn-eye-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"></path><circle cx="12" cy="12" r="2.8"></circle></svg>';
-    toggle.setAttribute('aria-label',showing?'Show password':'Hide password');
-    toggle.setAttribute('aria-pressed',String(!showing));
-  });
-
-  function waitForSupabase(){
-    if(window.supabase && window.RUMAHNUSA_SUPABASE_URL && window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY){
-      try{authClient=window.supabase.createClient(window.RUMAHNUSA_SUPABASE_URL,window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY);}catch(e){status.textContent='Login is temporarily unavailable.';}
-      return;
-    }
-    setTimeout(waitForSupabase,100);
-  }
-  waitForSupabase();
-
-  function validIdentity(){
-    const a=Number(age.value);
-    identityContinue.disabled=!(name.value.trim()&&gender&&a>=18&&a<=120);
-  }
-  name.addEventListener('input',validIdentity);
-  age.addEventListener('input',validIdentity);
-  genders.forEach(function(button){
-    button.addEventListener('click',function(){
-      gender=button.dataset.gender||'';
-      genders.forEach(function(item){item.classList.toggle('selected',item===button);});
-      validIdentity();
-    });
-  });
-
-  login.addEventListener('click',async function(){
-    const e=email.value.trim(), p=password.value;
-    if(!e||!p){status.textContent='Enter your email and password.';return;}
-    if(!authClient){status.textContent='Please wait a moment and try Login again.';return;}
-    login.disabled=true;
-    status.textContent='Signing in...';
-    const {data,error}=await authClient.auth.signInWithPassword({email:e,password:p});
-    login.disabled=false;
-    if(error){status.textContent='Login failed. Please check your email and password.';return;}
-    window.__rnCustomerUser=data.user;
-    loginFields.hidden=true;
-    identityFields.hidden=false;
-    status.textContent='Login successful. Complete your details to continue.';
-    name.focus();
-  });
-
+  if(!form||!name||!age||!identityContinue)return;
+  function validIdentity(){const a=Number(age.value);identityContinue.disabled=!(name.value.trim()&&gender&&a>=18&&a<=120);}
+  name.addEventListener('input',validIdentity);age.addEventListener('input',validIdentity);
+  genders.forEach(function(button){button.addEventListener('click',function(){gender=button.dataset.gender||'';genders.forEach(function(item){item.classList.toggle('selected',item===button);});validIdentity();});});
   identityContinue.addEventListener('click',async function(){
-    const a=Number(age.value);
-    if(!name.value.trim()||!gender||a<18||a>120)return;
+    const a=Number(age.value);if(!name.value.trim()||!gender||a<18||a>120)return;
+    identityContinue.disabled=true;status.textContent='Opening your RumahNusa home search...';
     window.__rnCustomerIdentity={name:name.value.trim(),gender:gender,age:a};
-    if(authClient && window.__rnCustomerUser){
-      await authClient.from('profiles').update({full_name:name.value.trim()}).eq('id',window.__rnCustomerUser.id);
-    }
-    welcome.hidden=true;
-    form.hidden=false;
-    document.body.classList.remove('rn-gate-active');
+    try{
+      if(window.supabase&&window.RUMAHNUSA_SUPABASE_URL&&window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY){
+        const authClient=window.supabase.createClient(window.RUMAHNUSA_SUPABASE_URL,window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY);
+        const existing=await authClient.auth.getSession();
+        if(!existing.data.session){
+          const anon=await authClient.auth.signInAnonymously();
+          if(!anon.error) window.__rnCustomerUser=anon.data.user;
+        }else window.__rnCustomerUser=existing.data.session.user;
+      }
+    }catch(e){}
+    welcome.hidden=true;form.hidden=false;document.body.classList.remove('rn-gate-active');
     form.querySelectorAll('.client-form-step').forEach(function(step,i){step.classList.toggle('active',i===0);});
     document.getElementById('propertyOptions')?.scrollIntoView({behavior:'smooth',block:'start'});
+    identityContinue.disabled=false;
   });
+  validIdentity();
 })();
 </script>
 
