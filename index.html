@@ -1259,6 +1259,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       'PILIHAN PROPERTI',
       '━━━━━━━━━━━━━━━━━━━━',
       'JENIS PROPERTI: '+property,
+      'RUMAH / LISTING YANG DIPILIH: '+(window.__rnSelectedHome?.title||'Belum dipilih'),
       'TRANSAKSI: '+purpose,
       'KAMAR TIDUR / TIPE RUANG: '+rooms,
       'AMOUNT (USD): '+(isApartment?budgetUsd:'Tidak berlaku'),
@@ -1357,6 +1358,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   // Customer authentication is handled by the passwordless phone OTP gate at the top of the site.
   // No password fields or password-eye controls are used here.
 
+  window.__rnSubmitRequest=submitRequest;
   document.getElementById('sendProfil')?.addEventListener('click',submitRequest);
   document.getElementById('sendInboxMessage')?.addEventListener('click',async()=>{
     const box=document.getElementById('messageComposer'),body=box.value.trim();if(!body)return;
@@ -1721,319 +1723,546 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 })();
 </script>
 
+<style id="rn-sequential-flow-style">
+  #rnSequentialFlow{display:none;max-width:760px;margin:18px auto 0;padding:22px;background:#fff;border:1px solid #d9e2ec;border-radius:18px;box-shadow:0 8px 30px rgba(16,42,67,.08)}
+  #rnSequentialFlow .rn-flow-title{font-size:28px;margin-bottom:8px;color:#102a43}
+  #rnSequentialFlow .rn-flow-help{color:#627d98;margin-bottom:18px;line-height:1.6}
+  #rnSequentialFlow .rn-flow-card{border:1px solid #d9e2ec;border-radius:14px;padding:18px;background:#f8fbfd}
+  #rnSequentialFlow label{display:block;font-weight:700;margin-bottom:9px;color:#183b56}
+  #rnSequentialFlow input,#rnSequentialFlow select,#rnSequentialFlow textarea{width:100%;box-sizing:border-box;padding:14px 15px;border:1px solid #bcccdc;border-radius:10px;font:inherit;background:#fff}
+  #rnSequentialFlow textarea{min-height:120px;resize:vertical}
+  #rnSequentialFlow .rn-flow-actions{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-top:18px}
+  #rnSequentialFlow .rn-flow-actions .btn{min-height:50px}
+  #rnSequentialFlow .rn-flow-actions .rn-flow-continue{display:none}
+  #rnSequentialFlow .rn-flow-actions .rn-flow-continue.ready{display:inline-block}
+  #rnSequentialFlow .rn-home-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:14px;padding:2px 2px 12px;scrollbar-width:none}
+  #rnSequentialFlow .rn-home-track::-webkit-scrollbar{display:none}
+  #rnSequentialFlow .rn-home-slide{flex:0 0 100%;scroll-snap-align:center;border:1px solid #d9e2ec;border-radius:16px;overflow:hidden;background:#fff}
+  #rnSequentialFlow .rn-home-slide img{width:100%;height:220px;object-fit:cover;display:block}
+  #rnSequentialFlow .rn-home-slide-body{padding:16px}
+  #rnSequentialFlow .rn-home-slide-body h4{font-size:21px;margin:0 0 7px}
+  #rnSequentialFlow .rn-home-slide-body p{color:#627d98;margin:6px 0}
+  #rnSequentialFlow .rn-home-select{margin-top:12px;width:100%}
+  #rnSequentialFlow .rn-home-select.selected{background:#075985}
+  #rnSequentialFlow .rn-selected-home{display:none;color:#075985;font-weight:700;margin-top:10px}
+  #rnSequentialFlow .rn-selected-home.show{display:block}
+  #rnSequentialFlow .rn-camera-box{border:1px solid #d9e2ec;border-radius:14px;padding:12px;background:#f8fbfd}
+  #rnSequentialFlow video{width:100%;max-height:360px;object-fit:cover;border-radius:10px;background:#102a43;display:block}
+  #rnSequentialFlow canvas{display:block;width:100%;max-height:360px;object-fit:contain;border-radius:10px;background:#102a43;margin-top:10px}
+  #rnSequentialFlow .rn-camera-status{margin-top:10px;color:#486581;line-height:1.5}
+  #rnSequentialFlow .rn-privacy-note{margin-top:12px;padding:12px;border-radius:10px;background:#f1f8fc;color:#486581;font-size:14px;line-height:1.5}
+  #rnSequentialFlow .rn-step-count{font-size:13px;color:#627d98;margin-bottom:10px}
+  #rnSequentialFlow .rn-flow-complete{font-size:18px;font-weight:700;color:#075985}
+  @media(max-width:700px){
+    #rnSequentialFlow{margin:10px 0 0;padding:16px;border-radius:14px}
+    #rnSequentialFlow .rn-flow-title{font-size:24px}
+    #rnSequentialFlow .rn-home-slide img{height:200px}
+  }
+</style>
 
-+amount,
-      'Email: '+v('clientEmail'),
-      'Phone: '+v('clientPhone'),
-      'Current address: '+v('clientAddress'),
-      'Meeting: '+v('meetingDay')+' at '+v('meetingTime'),
-      'Family status: '+v('clientMarital'),
-      'Children: '+v('clientChildren'),
-      'Occupation: '+v('clientOccupation'),
-      'Reason for purchase: '+v('clientPurchaseReason'),
-      'Use: '+v('clientUse'),
-      'Current city: '+v('clientCity'),
-      'Preferred property city: '+v('clientCityWant'),
-      'Household size: '+v('household'),
-      'Payment method: '+(window.__rnCustomerFlowState?.paymentMethod||'Not selected')
-    ];
-    const box=document.getElementById('clientSummary');if(box)box.innerHTML=lines.join('<br>');
-  };
-})();
-</script>
 <script>
 (function(){
-  const collection=document.getElementById('rnCategoryCollection');
-  const title=document.getElementById('rnCategoryTitle');
-  const intro=document.getElementById('rnCategoryIntro');
-  const badge=document.getElementById('rnCategoryBadge');
-  const listings=document.getElementById('rnCategoryListings');
-  const confidence=document.getElementById('rnCategoryConfidence');
-  const choiceTitle=document.getElementById('rnChoiceTitle');
-  const choiceIntro=document.getElementById('rnChoiceIntro');
-  const purpose=document.getElementById('purpose');
-  const purposeNote=document.getElementById('purposeNote');
-  const rentalWrap=document.getElementById('rentalTermOptions');
-  const rooms=document.getElementById('rooms');
-  const layoutTitle=document.getElementById('layoutTitle');
-  const layoutDetails=document.getElementById('layoutDetails');
-  const selectionInfo=document.getElementById('rnSelectionInfo');
-  const propertyContinue=document.getElementById('rnPropertyContinue');
-  const categoryGrid=document.getElementById('propertyOptions');
-  const chooseAnother=document.getElementById('rnChooseAnotherCategory');
-  if(!collection||!purpose||!rooms||!categoryGrid) return;
+  const form=document.getElementById("clientProfilForm");
+  const categoryGrid=document.getElementById("propertyOptions");
+  if(!form||!categoryGrid)return;
 
-  const data={
-    'Apartemen':{
-      title:'Apartments for Your City Life',
-      badge:'APARTMENT',
-      intro:'Choose the apartment size that fits your life. Each apartment listing stays focused on apartments, their rooms, interiors, views, pool, lobby and shared facilities.',
-      confidence:'Imagine coming home to a beautiful apartment where the rooms, furniture, kitchen, bathrooms, views and shared facilities work together to give you a comfortable place to enjoy every day.',
-      buy:'Apartments are available to buy or rent. Rental terms are 1–5 years.',
-      rooms:['2 kamar tidur','3 kamar tidur','4 kamar tidur'],
-      listings:[
-        ['Luxury Apartment — 2 Bedrooms','Jakarta, Indonesia','$200,000+ to buy · Rent from $5,000/year','2 bedrooms · 1 very large bathroom/toilet · large parlor + kitchen · furnished · AC','https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85'],
-        ['Luxury Apartment — 3 Bedrooms','Jakarta, Indonesia','Contact RumahNusa for the selected apartment','3 bedrooms · 2 very large bathrooms/toilets · large parlor + kitchen · furnished · AC','https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1200&q=85'],
-        ['Luxury Apartment — 4 Bedrooms','Jakarta, Indonesia','Contact RumahNusa for the selected apartment','4 bedrooms · 3 bathrooms/toilets · 2 large parlors · integrated kitchen · furnished · AC','https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=85']
-      ]
-    },
-    'Hotel':{
-      title:'Hotels for Ownership',
-      badge:'HOTEL',
-      intro:'A hotel-only collection. Every listing here is a hotel property for purchase, with its guest rooms, suites, lobby, restaurants or kitchens, bathrooms, facilities, parking and surrounding spaces presented together.',
-      confidence:'Imagine owning a beautiful hotel property where guests can enjoy comfortable rooms, welcoming spaces and thoughtful facilities, while you have a complete property designed for long-term ownership.',
-      buy:'Hotels are sale-only. Hotel rentals are not available.',
-      rooms:['10 kamar tidur','20 kamar tidur','30 kamar tidur','40 kamar tidur','50 kamar tidur'],
-      listings:[
-        ['RumahNusa City Hotel — 10 Rooms','Jakarta, Indonesia','Contact RumahNusa for the selected hotel','10 guest rooms · reception/lobby · bathrooms/toilets · dining area · kitchen · furnished · parking','https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=85'],
-        ['RumahNusa Grand Hotel — 20 Rooms','Jakarta, Indonesia','Contact RumahNusa for the selected hotel','20 guest rooms · spacious lobby · guest bathrooms · dining area · kitchen · furnished spaces · parking','https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=85'],
-        ['RumahNusa Signature Hotel — 30 Rooms','Jakarta, Indonesia','Contact RumahNusa for the selected hotel','30 guest rooms · grand lobby · suites · bathrooms/toilets · dining and kitchen areas · furnished · parking','https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=85']
-      ]
-    },
-    'Hotel':{
-      title:'Hotels',
-      badge:'HOTEL',
-      intro:'A hotel-only collection. See only hotel rooms and suites, with their own comfort, services, dining, pool and guest facilities.',
-      confidence:'Choose a hotel when you want a comfortable stay with welcoming rooms, helpful facilities and a place to relax with peace of mind.',
-      buy:'Hotel stays are presented as accommodation options.',
-      rooms:['1 kamar','2 kamar','Suite'],
-      listings:[
-        ['RumahNusa City Hotel — Deluxe Room','Jakarta, Indonesia','Contact RumahNusa for the selected room','Deluxe room · private bathroom/toilet · furnished · AC · guest facilities','https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=1200&q=85'],
-        ['RumahNusa City Hotel — Family Suite','Jakarta, Indonesia','Contact RumahNusa for the selected suite','Family suite · bedrooms · bathrooms/toilets · living area · AC · hotel facilities','https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=85'],
-        ['RumahNusa Resort Hotel — Pool Suite','Bali, Indonesia','Contact RumahNusa for the selected suite','Pool suite · furnished room · bathroom/toilet · private outdoor space · resort facilities','https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=1200&q=85']
-      ]
-    },
-    'Separate Rumah':{
-      title:'Separate Houses',
-      badge:'SEPARATE HOUSE',
-      intro:'A private-house collection only. Every listing here is a separate house for sale, with its own rooms, bathrooms, kitchen, furniture, outdoor space and parking.',
-      confidence:'A separate house gives you the privacy of your own home, generous living areas, beautiful furnishings and room to enjoy peaceful everyday life with the people you love.',
-      buy:'Separate houses are sale-only.',
-      rooms:['4 kamar tidur','5 kamar tidur','6 kamar tidur','7 kamar tidur','8 kamar tidur','9 kamar tidur','10 kamar tidur','11 kamar tidur'],
-      listings:[
-        ['Private Family House — 4 Bedrooms','Bali, Indonesia','$350,000','4 bedrooms · 1 very large bathroom/toilet · very large parlor + kitchen · furniture · AC','https://images.unsplash.com/photo-1701502909888-6b11930e419d?auto=format&fit=crop&w=1200&q=85'],
-        ['Private Family House — 6 Bedrooms','Bali, Indonesia','Contact RumahNusa for the selected house','6 bedrooms · 3 very large bathrooms/toilets · 2 large parlors + kitchen · furniture · AC · private pool · parking','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85'],
-        ['Private Family House — 8 Bedrooms','Bali, Indonesia','Contact RumahNusa for the selected house','8 bedrooms · 4 large bathrooms/toilets · 3 large parlors + kitchen · furniture · AC · large pool · parking','https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=85'],
-        ['Private Family House — 11 Bedrooms','Bali, Indonesia','Contact RumahNusa for the selected house','11 bedrooms · 5 bathrooms/toilets · 4 kitchen areas · large parlors · furniture · AC · pool · parking','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=85']
-      ]
-    },
-    'Vila':{
-      title:'Villas',
-      badge:'VILLA',
-      intro:'A villa-only collection. Every listing focuses on the villa itself: beautiful rooms, furniture, bathrooms, toilets, kitchen, private outdoor space, pool and the city where it is located.',
-      confidence:'Picture yourself opening the door to a peaceful villa, enjoying beautiful furnished rooms, a welcoming kitchen, comfortable bathrooms and private outdoor space made for relaxing.',
-      buy:'Villas are presented as sale properties.',
-      rooms:['4 kamar tidur','5 kamar tidur','6 kamar tidur','7 kamar tidur','8 kamar tidur'],
-      listings:[
-        ['Villa with Private Pool — 4 Bedrooms','Bali, Indonesia','$550,000','4 bedrooms · 3 bathrooms/toilets · furnished parlor · kitchen · private pool · parking · outdoor space','https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=85'],
-        ['Garden Villa — 5 Bedrooms','Bali, Indonesia','Contact RumahNusa for the selected villa','5 bedrooms · furnished rooms · large bathrooms/toilets · kitchen · pool · parking · garden','https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=85'],
-        ['Private Pool Villa — 6 Bedrooms','Bali, Indonesia','Contact RumahNusa for the selected villa','6 bedrooms · furnished parlors · beautiful bathrooms/toilets · kitchen · pool · parking','https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=1200&q=85']
-      ]
-    },
-    'Neighborhood Rumah':{
-      title:'Neighborhood Homes',
-      badge:'NEIGHBORHOOD',
-      intro:'A neighborhood-only collection. See only neighborhood homes, their interiors, shared surroundings, parking, family spaces and the character of the neighborhood.',
-      confidence:'A neighborhood home is about feeling settled: beautiful rooms, comfortable parlors, a practical kitchen, spacious bathrooms and a welcoming environment where your family can enjoy everyday life.',
-      buy:'Neighborhood homes are sale-only.',
-      rooms:['4 kamar tidur','5 kamar tidur','6 kamar tidur','7 kamar tidur','8 kamar tidur','9 kamar tidur','10 kamar tidur','11 kamar tidur'],
-      listings:[
-        ['Neighborhood Home — 4 Bedrooms','Bali, Indonesia','Contact RumahNusa for the selected home','4 bedrooms · large bathroom/toilet · furnished parlor · kitchen · family parking · neighborhood setting','https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=85'],
-        ['Neighborhood Home — 7 Bedrooms','Bali, Indonesia','Contact RumahNusa for the selected home','7 bedrooms · 4 bathrooms/toilets · large parlors · kitchen · furniture · parking · family environment','https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85'],
-        ['Neighborhood Home — 10 Bedrooms','Bali, Indonesia','Contact RumahNusa for the selected home','10 bedrooms · 5 bathrooms/toilets · multiple kitchen areas · large parlors · furniture · parking','https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=85']
-      ]
-    },
-    'Townhouse':{
-      title:'Townhouses',
-      badge:'TOWNHOUSE',
-      intro:'A townhouse-only collection. Every listing stays focused on townhouse rooms, parlors, kitchens, bathrooms, toilets, furniture, parking and comfortable upstairs spaces where available.',
-      confidence:'A townhouse can bring together the comfort of a beautiful private home and the convenience of a connected residential setting, with welcoming rooms and enjoyable living spaces.',
-      buy:'Townhouses are presented as sale properties.',
-      rooms:['2 kamar tidur','3 kamar tidur','4 kamar tidur','5 kamar tidur'],
-      listings:[
-        ['Modern Townhouse — 2 Bedrooms','Jakarta, Indonesia','Contact RumahNusa for the selected townhouse','2 bedrooms · furnished parlor · kitchen · bathroom/toilet · parking','https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85'],
-        ['Family Townhouse — 3 Bedrooms','Jakarta, Indonesia','Contact RumahNusa for the selected townhouse','3 bedrooms · furnished parlors · kitchen · bathrooms/toilets · parking · comfortable upstairs area','https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1200&q=85'],
-        ['Large Townhouse — 5 Bedrooms','Jakarta, Indonesia','Contact RumahNusa for the selected townhouse','5 bedrooms · beautiful parlors · kitchen · bathrooms/toilets · furnished rooms · upstairs living area · parking','https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=85']
-      ]
-    },
-    'Penthouse':{
-      title:'Penthouses',
-      badge:'PENTHOUSE',
-      intro:'A penthouse-only collection. Every listing is presented as a penthouse with its own rooms, parlors, kitchen, bathrooms, toilets, furniture, lighting, views and private living atmosphere.',
-      confidence:'Step into a penthouse designed around space, light and comfort: beautiful bedrooms, elegant parlors, thoughtful lighting, a refined kitchen and bathrooms made for relaxing at the end of the day.',
-      buy:'Penthouses are presented as sale properties.',
-      rooms:['2 kamar tidur','3 kamar tidur','4 kamar tidur','5 kamar tidur'],
-      listings:[
-        ['Signature Penthouse — 2 Bedrooms','Jakarta, Indonesia','Contact RumahNusa for the selected penthouse','2 bedrooms · elegant parlor · designer-style lighting · kitchen · bathroom/toilet · furnished','https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85'],
-        ['Grand Penthouse — 4 Bedrooms','Jakarta, Indonesia','Contact RumahNusa for the selected penthouse','4 bedrooms · multiple parlors · beautiful lighting · kitchen · bathrooms/toilets · furnished rooms · city views','https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1200&q=85'],
-        ['Royal Penthouse — 5 Bedrooms','Jakarta, Indonesia','Contact RumahNusa for the selected penthouse','5 bedrooms · multiple parlor designs · premium lighting · kitchen · bathrooms/toilets · furnished · views','https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=85']
-      ]
-    },
-    'Family Residence':{
-      title:'Family Residences',
-      badge:'FAMILY RESIDENCE',
-      intro:'A family-residence-only collection. See family homes, furnished rooms, parlors, kitchens, bathrooms, toilets, family spaces and comfortable surroundings.',
-      confidence:'A family residence is designed around the people who make a house feel alive: comfortable bedrooms, beautiful furniture, welcoming parlors, practical kitchens and generous spaces for peaceful family life.',
-      buy:'Family residences are presented as sale properties.',
-      rooms:['3 kamar tidur','4 kamar tidur','5 kamar tidur','6 kamar tidur','7 kamar tidur'],
-      listings:[
-        ['Modern Family Residence — 3 Bedrooms','Bali, Indonesia','$350,000','3 bedrooms · 2 bathrooms/toilets · furnished parlor · kitchen · family living space · parking','https://images.unsplash.com/photo-1701502909888-6b11930e419d?auto=format&fit=crop&w=1200&q=85'],
-        ['Grand Family Residence — 5 Bedrooms','Bali, Indonesia','Contact RumahNusa for the selected residence','5 bedrooms · beautiful furnished rooms · bathrooms/toilets · kitchen · large parlor · family spaces · parking','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85'],
-        ['Large Family Residence — 7 Bedrooms','Bali, Indonesia','Contact RumahNusa for the selected residence','7 bedrooms · multiple furnished parlors · kitchen · bathrooms/toilets · family garden · parking','https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=85']
-      ]
-    },
-    'Investment Property':{
-      title:'Investment Properties',
-      badge:'INVESTMENT PROPERTY',
-      intro:'An investment-property-only collection. Every listing focuses on the property itself, its rooms, facilities, condition, location and ownership opportunity.',
-      confidence:'An investment property can give you a clear place to consider for long-term ownership, with the rooms, facilities and location presented together so you can understand what you are choosing.',
-      buy:'Investment properties are presented as sale properties.',
-      rooms:['2 kamar tidur','3 kamar tidur','4 kamar tidur','5 kamar tidur','6 kamar tidur'],
-      listings:[
-        ['Residential Investment — 2 Bedrooms','Jakarta, Indonesia','Contact RumahNusa for the selected property','2 bedrooms · furnished living area · kitchen · bathroom/toilet · parking · investment-focused property details','https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85'],
-        ['Residential Investment — 4 Bedrooms','Jakarta, Indonesia','Contact RumahNusa for the selected property','4 bedrooms · furnished rooms · parlors · kitchen · bathrooms/toilets · parking','https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=85'],
-        ['Large Investment Property — 6 Bedrooms','Jakarta, Indonesia','Contact RumahNusa for the selected property','6 bedrooms · multiple living spaces · kitchen · bathrooms/toilets · furnished · parking','https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=85']
-      ]
-    },
-    'Hotel':{
-      title:'Hotels & Suites',
-      badge:'HOTEL',
-      intro:'A hotel-only collection. Explore hotel rooms, suites, comfortable bathrooms, dining spaces, pools, parking and hospitality facilities.',
-      confidence:'Choose a hotel space where comfort, privacy and a peaceful stay come together, whether you are staying for a short visit, a business trip or a longer stay.',
-      buy:'Hotels are presented as hospitality properties. Contact RumahNusa for availability, room terms and pricing.',
-      rooms:['Hotel room','Deluxe room','Suite','Family suite'],
-      listings:[
-        ['RumahNusa City Hotel — Deluxe Room','Jakarta, Indonesia','Contact RumahNusa for availability','Deluxe room · private bathroom/toilet · furnished sleeping area · AC · hotel services · parking','https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=1200&q=85'],
-        ['RumahNusa Grand Suite','Jakarta, Indonesia','Contact RumahNusa for availability','Large suite · private bathroom/toilet · living area · furnished · AC · city view · hotel facilities','https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1200&q=85'],
-        ['RumahNusa Family Hotel Suite','Bali, Indonesia','Contact RumahNusa for availability','Family suite · multiple sleeping spaces · bathroom/toilet · furnished · AC · pool access · parking','https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=85']
-      ]
-    }
+  const flow=document.createElement("div");
+  flow.id="rnSequentialFlow";
+  flow.innerHTML=
+    "<div class=\"rn-step-count\" id=\"rnFlowCount\"></div>"+
+    "<h3 class=\"rn-flow-title\" id=\"rnFlowTitle\"></h3>"+
+    "<p class=\"rn-flow-help\" id=\"rnFlowHelp\"></p>"+
+    "<div id=\"rnFlowHost\"></div>";
+  form.parentElement.insertBefore(flow,form);
+
+  let active=false;
+  let step=0;
+  let selectedCategory="";
+  let homes=[];
+  let selectedHome=null;
+  let cameraStream=null;
+  let faceScanTimer=null;
+  let documentInput=null;
+  let frontCanvas=null;
+
+  const oldFieldIds={
+    purpose:"purpose", rentalTerm:"rentalTerm", rooms:"rooms",
+    usd:"clientBudget", idr:"clientBudgetIdr",
+    email:"clientEmail", phone:"clientPhone", address:"clientAddress",
+    meetingDay:"meetingDay", meetingTime:"meetingTime",
+    marital:"clientMarital", children:"clientChildren",
+    occupation:"clientOccupation", reason:"clientPurchaseReason",
+    use:"clientUse", city:"clientCity", cityWant:"clientCityWant",
+    household:"household"
   };
 
-  function setOptions(select,values){
-    select.innerHTML=values.map(v=>'<option>'+v+'</option>').join('');
-  };
-
-  function setOptions(select,values){
-    select.innerHTML=values.map(v=>'<option>'+v+'</option>').join('');
+  function setOld(id,value){
+    const el=document.getElementById(id);
+    if(el)el.value=value==null?"":value;
   }
-
-  let categoryHistoryActive = false;
-
-  function closeCategory(fromHistory){
-    categoryHistoryActive = false;
-    categoryGrid.classList.remove('rn-category-open');
-    document.querySelectorAll('#propertyOptions .client-option').forEach(btn=>btn.classList.remove('selected'));
-    collection.hidden=true;
-    categoryGrid.insertAdjacentElement('afterend',collection);
-    document.querySelector('.rn-home-welcome')?.scrollIntoView({behavior:'smooth',block:'start'});
+  function getOld(id){
+    const el=document.getElementById(id);
+    return el?el.value:"";
   }
-
-  function renderCategory(name){
-    const d=data[name]; if(!d)return;
-    window.__rnCustomerFlowState=window.__rnCustomerFlowState||{property:'',purpose:'Beli',rentalTerm:'',paymentMethod:''};
-    window.__rnCustomerFlowState.property=name;
-    window.__rnCustomerFlowState.purpose='Beli';
-    const selected=document.querySelector('#propertyOptions .client-option[data-value="'+CSS.escape(name)+'"]');
-    if(!selected)return;
-
-    document.querySelectorAll('#propertyOptions .client-option').forEach(btn=>btn.classList.toggle('selected',btn===selected));
-    categoryGrid.classList.add('rn-category-open');
-
-    // Put the selected category and its collection together. Other categories
-    // are temporarily hidden so the customer sees only the chosen property type.
-    selected.insertAdjacentElement('afterend',collection);
-    collection.hidden=false;
-
-    title.textContent=d.title;
-    intro.textContent=d.intro;
-    badge.textContent=d.badge;
-    confidence.textContent=d.confidence;
-    listings.innerHTML=d.listings.map(x=>'<article class="rn-listing"><img loading="lazy" src="'+x[4]+'" alt="'+x[0]+' interior and exterior"><div class="rn-listing-body"><h5>'+x[0]+'</h5><p>📍 '+x[1]+'</p><p class="rn-listing-price">'+x[2]+'</p><div class="rn-listing-specs">'+x[3].split(' · ').map(s=>'<span>'+s+'</span>').join('')+'</div><p>'+d.buy+'</p></div></article>').join('');
-    choiceTitle.textContent=d.title+' — choose your rooms and plan';
-    choiceIntro.textContent=d.intro;
-    setOptions(rooms,d.rooms);
-    purpose.innerHTML=d.buy.indexOf('rent')>=0
-      ? '<option value="Beli">Beli</option><option value="Sewa">Sewa</option>'
-      : '<option value="Beli">Beli</option>';
-    purpose.value='Beli';
-    purposeNote.textContent=name==='Apartemen'?'Apartments can be bought or rented for 1–5 years.':'SALE ONLY — This property category is permanently for sale. Rental is not available.';
-    if(propertyContinue) propertyContinue.hidden=false;
-    const idrSection=document.getElementById('purchaseAmountIdrSection');
-    const idrInput=document.getElementById('clientBudgetIdr');
-    if(idrSection){
-      idrSection.hidden=name==='Apartemen';
-      idrInput.required=name!=='Apartemen';
+  function cleanupCamera(){
+    if(faceScanTimer){clearTimeout(faceScanTimer);faceScanTimer=null;}
+    if(cameraStream){
+      cameraStream.getTracks().forEach(function(track){try{track.stop();}catch(e){}});
+      cameraStream=null;
     }
-    rentalWrap.hidden=!(name==='Apartemen' && purpose.value==='Sewa');
-    layoutTitle.textContent=d.title+' details';
-    layoutDetails.innerHTML=d.listings.map(x=>'<div class="house-layout"><strong>'+x[0]+'</strong><p>'+x[3]+'</p></div>').join('');
-    selectionInfo.innerHTML='<strong>'+d.title+'</strong> — '+d.buy+' Choose your rooms and purchase plan here. Your payment amount will be entered in the Amount section before you send the request to the RumahNusa agent.';
-    updateBudgetPreview();
+    const video=document.getElementById("rnFlowVideo");
+    if(video){
+      try{video.pause();}catch(e){}
+      try{video.srcObject=null;}catch(e){}
+    }
+  }
+  function clearFrontPhoto(){
+    if(frontCanvas){
+      try{
+        const ctx=frontCanvas.getContext("2d");
+        if(ctx)ctx.clearRect(0,0,frontCanvas.width,frontCanvas.height);
+      }catch(e){}
+      frontCanvas.width=0;
+      frontCanvas.height=0;
+      frontCanvas.remove();
+      frontCanvas=null;
+    }
+  }
+  function clearDocumentPhoto(){
+    if(documentInput){
+      try{documentInput.value="";}catch(e){}
+      try{
+        const replacement=documentInput.cloneNode(true);
+        documentInput.replaceWith(replacement);
+      }catch(e){}
+      documentInput=null;
+    }
+  }
+  function cleanupPrivateMedia(){
+    cleanupCamera();
+    clearFrontPhoto();
+    clearDocumentPhoto();
+  }
+  window.addEventListener("pagehide",cleanupPrivateMedia);
+  document.addEventListener("visibilitychange",function(){
+    if(document.hidden)cleanupPrivateMedia();
+  });
 
-    requestAnimationFrame(function(){
-      selected.scrollIntoView({behavior:'smooth',block:'start'});
+  function showFlow(){
+    active=true;
+    form.hidden=true;
+    flow.style.display="block";
+    document.getElementById("rnCategoryCollection")?.setAttribute("hidden","");
+    categoryGrid.style.display="none";
+    renderStep();
+    flow.scrollIntoView({behavior:"smooth",block:"start"});
+  }
+
+  function continueButton(onClick){
+    const actions=document.createElement("div");
+    actions.className="rn-flow-actions";
+    const btn=document.createElement("button");
+    btn.type="button";
+    btn.className="btn rn-flow-continue";
+    btn.textContent="Continue";
+    btn.addEventListener("click",onClick);
+    actions.appendChild(btn);
+    return {actions,btn};
+  }
+
+  function inputStep(title,help,label,type,placeholder,value,onValue){
+    const host=document.getElementById("rnFlowHost");
+    host.innerHTML="";
+    const card=document.createElement("div");card.className="rn-flow-card";
+    const lab=document.createElement("label");lab.textContent=label;
+    const input=document.createElement("input");
+    input.type=type;input.placeholder=placeholder||"";input.value=value||"";
+    if(type==="email")input.autocomplete="email";
+    if(type==="tel")input.autocomplete="tel";
+    if(type==="number")input.inputMode="numeric";
+    card.append(lab,input);
+    host.appendChild(card);
+    const a=continueButton(function(){onValue(input.value.trim());step++;renderStep();});
+    host.appendChild(a.actions);
+    function check(){a.btn.classList.toggle("ready",!!input.value.trim());}
+    input.addEventListener("input",check);check();
+    setTimeout(function(){input.focus();},50);
+  }
+
+  function selectStep(title,help,label,options,value,onValue){
+    const host=document.getElementById("rnFlowHost");
+    host.innerHTML="";
+    const card=document.createElement("div");card.className="rn-flow-card";
+    const lab=document.createElement("label");lab.textContent=label;
+    const select=document.createElement("select");
+    select.innerHTML="<option value=\"\">Choose</option>"+options.map(function(x){return "<option value=\""+String(x).replace(/"/g,"&quot;")+"\">"+x+"</option>";}).join("");
+    select.value=value||"";
+    card.append(lab,select);host.appendChild(card);
+    const a=continueButton(function(){onValue(select.value);step++;renderStep();});
+    host.appendChild(a.actions);
+    function check(){a.btn.classList.toggle("ready",!!select.value);}
+    select.addEventListener("change",check);check();
+  }
+
+  function textAreaStep(label,placeholder,value,onValue){
+    const host=document.getElementById("rnFlowHost");
+    host.innerHTML="";
+    const card=document.createElement("div");card.className="rn-flow-card";
+    const lab=document.createElement("label");lab.textContent=label;
+    const ta=document.createElement("textarea");ta.placeholder=placeholder||"";ta.value=value||"";
+    card.append(lab,ta);host.appendChild(card);
+    const a=continueButton(function(){onValue(ta.value.trim());step++;renderStep();});
+    host.appendChild(a.actions);
+    function check(){a.btn.classList.toggle("ready",!!ta.value.trim());}
+    ta.addEventListener("input",check);check();
+    setTimeout(function(){ta.focus();},50);
+  }
+
+  function buildHomesFromCurrentCategory(){
+    const cards=Array.from(document.querySelectorAll("#rnCategoryListings .rn-listing"));
+    homes=cards.map(function(card){
+      const img=card.querySelector("img");
+      const h=card.querySelector("h5");
+      const ps=Array.from(card.querySelectorAll("p"));
+      return {
+        title:h?h.textContent.trim():"Beautiful RumahNusa home",
+        location:ps[0]?ps[0].textContent.replace(/^📍\s*/,"").trim():"",
+        price:ps[1]?ps[1].textContent.trim():"",
+        details:ps.slice(2).map(function(p){return p.textContent.trim();}).filter(Boolean).join(" · "),
+        image:img?img.src:""
+      };
     });
   }
 
-  document.querySelectorAll('#propertyOptions .client-option').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      const name=btn.dataset.value;
-      if(history.state?.rnCategory !== name){
-        history.pushState({rnCategory:name},'',location.href);
-      }
-      categoryHistoryActive=true;
-      renderCategory(name);
+  function renderHomeStep(){
+    const host=document.getElementById("rnFlowHost");
+    host.innerHTML="";
+    const card=document.createElement("div");card.className="rn-flow-card";
+    const track=document.createElement("div");track.className="rn-home-track";
+    homes.forEach(function(home,index){
+      const slide=document.createElement("article");slide.className="rn-home-slide";
+      slide.innerHTML=
+        "<img src=\""+home.image+"\" alt=\""+home.title.replace(/"/g,"&quot;")+"\">"+
+        "<div class=\"rn-home-slide-body\">"+
+        "<h4>"+home.title+"</h4>"+
+        "<p>📍 "+home.location+"</p>"+
+        "<p>"+home.price+"</p>"+
+        "<p>"+home.details+"</p>"+
+        "<button type=\"button\" class=\"btn rn-home-select\">Select this beautiful home</button>"+
+        "</div>";
+      const select=slide.querySelector(".rn-home-select");
+      select.addEventListener("click",function(){
+        selectedHome=home;
+        window.__rnSelectedHome=home;
+        window.__rnPropertyName=(window.__rnCustomerIdentity?.name||"Customer")+" · "+selectedCategory+" · "+home.title;
+        track.querySelectorAll(".rn-home-select").forEach(function(b){b.classList.remove("selected");});
+        select.classList.add("selected");
+        select.textContent="Beautiful home selected";
+        selectedHomeMessage.classList.add("show");
+        continueBtn.classList.add("ready");
+      });
+      track.appendChild(slide);
     });
-  });
-
-  chooseAnother?.addEventListener('click',function(){
-    if(categoryHistoryActive){
-      history.back();
-    }else{
-      closeCategory(true);
-    }
-  });
-
-  if(!history.state || !history.state.rnRumahNusa){
-    history.replaceState(Object.assign({},history.state||{},{rnRumahNusa:true}),'',location.href);
+    card.appendChild(track);
+    const selectedHomeMessage=document.createElement("div");
+    selectedHomeMessage.className="rn-selected-home";
+    selectedHomeMessage.textContent="Your beautiful home is selected.";
+    card.appendChild(selectedHomeMessage);
+    const a=continueButton(function(){if(!selectedHome)return;step=2;renderStep();});
+    const continueBtn=a.btn;
+    a.actions.style.justifyContent="flex-end";
+    card.appendChild(a.actions);
+    host.appendChild(card);
   }
 
-  window.addEventListener('popstate',function(event){
-    if(event.state && event.state.rnCategory){
-      categoryHistoryActive=true;
-      renderCategory(event.state.rnCategory);
+  async function startFaceScan(){
+    const video=document.getElementById("rnFlowVideo");
+    const start=document.getElementById("rnFaceStart");
+    const status=document.getElementById("rnFaceStatus");
+    if(!video)return;
+    try{
+      cleanupCamera();
+      cameraStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"user"},audio:false});
+      video.srcObject=cameraStream;
+      await video.play();
+      start.disabled=true;
+      status.textContent="Face scan is running in your browser. No face image is being saved or uploaded.";
+      faceScanTimer=setTimeout(function(){
+        status.textContent="Face scan step completed. The camera will be closed when you continue.";
+        const c=document.querySelector("#rnFaceContinue");
+        if(c)c.classList.add("ready");
+      },2200);
+    }catch(e){
+      status.textContent="Camera access was not available. Please allow the front camera for this step.";
+    }
+  }
+
+  async function startFrontCamera(){
+    const video=document.getElementById("rnFlowVideo");
+    const start=document.getElementById("rnFrontStart");
+    const capture=document.getElementById("rnFrontCapture");
+    const status=document.getElementById("rnFrontStatus");
+    if(!video)return;
+    try{
+      cleanupCamera();
+      cameraStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"user"},audio:false});
+      video.srcObject=cameraStream;
+      await video.play();
+      start.disabled=true;
+      capture.disabled=false;
+      status.textContent="Front camera is ready. Take your picture. The picture stays only in this page memory until you continue.";
+    }catch(e){
+      status.textContent="Camera access was not available. Please allow the front camera for this step.";
+    }
+  }
+
+  function captureFrontCamera(){
+    const video=document.getElementById("rnFlowVideo");
+    const capture=document.getElementById("rnFrontCapture");
+    const status=document.getElementById("rnFrontStatus");
+    if(!video||!cameraStream)return;
+    clearFrontPhoto();
+    frontCanvas=document.createElement("canvas");
+    frontCanvas.width=video.videoWidth||640;
+    frontCanvas.height=video.videoHeight||480;
+    const ctx=frontCanvas.getContext("2d");
+    if(ctx)ctx.drawImage(video,0,0,frontCanvas.width,frontCanvas.height);
+    document.getElementById("rnFrontCameraBox").appendChild(frontCanvas);
+    capture.disabled=true;
+    status.textContent="Front-camera picture taken. It will be deleted from this page before the payment step.";
+    document.getElementById("rnFrontContinue")?.classList.add("ready");
+  }
+
+  function renderStep(){
+    cleanupCamera();
+    const title=document.getElementById("rnFlowTitle");
+    const help=document.getElementById("rnFlowHelp");
+    const count=document.getElementById("rnFlowCount");
+    count.textContent="Step "+(step+1)+" of 25";
+    title.textContent="";
+    help.textContent="";
+    if(step!==21)clearDocumentPhoto();
+    if(step!==23)clearFrontPhoto();
+
+    if(step===1){
+      title.textContent="Select a beautiful home";
+      help.textContent="You selected "+selectedCategory+". Swipe left or right to view one beautiful home at a time. Select the home you want.";
+      renderHomeStep();return;
+    }
+    if(step===2){
+      title.textContent="Purchase or rental plan";
+      help.textContent="Choose your plan for the selected home.";
+      selectStep(title,help,"Choose your purchase plan",selectedCategory==="Apartemen"?["Beli","Sewa"]:["Beli"],getOld("purpose"),function(v){setOld("purpose",v);window.__rnCustomerFlowState=window.__rnCustomerFlowState||{};window.__rnCustomerFlowState.purpose=v;if(v!=="Sewa")step++;renderStep();});
       return;
     }
-    categoryHistoryActive=false;
-    closeCategory(true);
+    if(step===3 && getOld("purpose")==="Sewa"){
+      title.textContent="Rental term";
+      help.textContent="Choose the rental term for this home.";
+      selectStep(title,help,"Choose rental term",["1 tahun","2 tahun","3 tahun"],getOld("rentalTerm"),function(v){setOld("rentalTerm",v);window.__rnCustomerFlowState.rentalTerm=v;step++;renderStep();});
+      return;
+    }
+    if(step===3 && getOld("purpose")!=="Sewa"){step++;renderStep();return;}
+    if(step===4){
+      title.textContent="Bedrooms";
+      help.textContent="Choose the number of bedrooms.";
+      const roomOptions=Array.from(document.querySelectorAll("#rooms option")).map(function(o){return o.textContent.trim();});
+      selectStep(title,help,"Number of bedrooms",roomOptions,getOld("rooms"),function(v){setOld("rooms",v);step++;renderStep();});return;
+    }
+    if(step===5){
+      title.textContent="Amount in USD";
+      help.textContent="Enter the amount you want the RumahNusa agent to see.";
+      inputStep(title,help,"Amount you want to pay (USD)","number","Example: 350000",getOld("clientBudget"),function(v){setOld("clientBudget",v);step++;renderStep();});return;
+    }
+    if(step===6){
+      title.textContent="Amount in Indonesian rupiah";
+      help.textContent="Enter the IDR amount you want the agent to see.";
+      inputStep(title,help,"Amount you want to pay (IDR / Rupiah)","number","Example: 500000000",getOld("clientBudgetIdr"),function(v){setOld("clientBudgetIdr",v);step++;renderStep();});return;
+    }
+    if(step===7){
+      title.textContent="Email";
+      help.textContent="Enter your email so RumahNusa can contact you.";
+      inputStep(title,help,"Email","email","Enter your email",getOld("clientEmail"),function(v){setOld("clientEmail",v);step++;renderStep();});return;
+    }
+    if(step===8){
+      title.textContent="Phone number";
+      help.textContent="Enter your phone number.";
+      inputStep(title,help,"Phone number","tel","Enter your phone number",getOld("clientPhone"),function(v){setOld("clientPhone",v);step++;renderStep();});return;
+    }
+    if(step===9){
+      title.textContent="Current address";
+      help.textContent="Enter the address where you live now.";
+      inputStep(title,help,"Current address","text","Enter the address where you live now",getOld("clientAddress"),function(v){setOld("clientAddress",v);step++;renderStep();});return;
+    }
+    if(step===10){
+      title.textContent="Meeting day";
+      help.textContent="Choose a day for the agent to meet you.";
+      selectStep(title,help,"When would you like the agent to meet you?",["Tomorrow","Next tomorrow"],getOld("meetingDay"),function(v){setOld("meetingDay",v);step++;renderStep();});return;
+    }
+    if(step===11){
+      title.textContent="Meeting time";
+      help.textContent="Choose your preferred meeting time.";
+      selectStep(title,help,"Choose your preferred meeting time",["09:00","10:00","11:00","13:00","14:00","15:00","16:00","17:00"],getOld("meetingTime"),function(v){setOld("meetingTime",v);step++;renderStep();});return;
+    }
+    if(step===12){
+      title.textContent="Family status";
+      help.textContent="Tell RumahNusa your family status.";
+      selectStep(title,help,"Are you married or single?",["Single","Married"],getOld("clientMarital"),function(v){setOld("clientMarital",v);step++;renderStep();});return;
+    }
+    if(step===13){
+      title.textContent="Children";
+      help.textContent="Tell RumahNusa whether you have children.";
+      selectStep(title,help,"Do you have children?",["Yes","No"],getOld("clientChildren"),function(v){setOld("clientChildren",v);step++;renderStep();});return;
+    }
+    if(step===14){
+      title.textContent="Occupation";
+      help.textContent="Choose the work category that describes you.";
+      const opts=Array.from(document.querySelectorAll("#clientOccupation option")).map(function(o){return o.value||o.textContent.trim();}).filter(Boolean).filter(function(x){return x!=="Choose your work";});
+      selectStep(title,help,"What do you do for a living?",opts,getOld("clientOccupation"),function(v){setOld("clientOccupation",v);step++;renderStep();});return;
+    }
+    if(step===15){
+      title.textContent="Reason for purchase";
+      help.textContent="Tell RumahNusa why you want this property.";
+      textAreaStep("Why do you want to buy this property?","Tell RumahNusa your reason",getOld("clientPurchaseReason"),function(v){setOld("clientPurchaseReason",v);step++;renderStep();});return;
+    }
+    if(step===16){
+      title.textContent="How you will use the property";
+      help.textContent="Choose how you plan to use the property.";
+      selectStep(title,help,"Will you use the property for business or living?",["Living home","Business","Both"],getOld("clientUse"),function(v){setOld("clientUse",v);step++;renderStep();});return;
+    }
+    if(step===17){
+      title.textContent="Current city";
+      help.textContent="Enter the city where you live now.";
+      inputStep(title,help,"Current city","text","City where you live now",getOld("clientCity"),function(v){setOld("clientCity",v);step++;renderStep();});return;
+    }
+    if(step===18){
+      title.textContent="Preferred property city";
+      help.textContent="Enter the city where you want the property. Public property listings will show only the general city, not an exact street address.";
+      inputStep(title,help,"Preferred property city","text","Example: Jakarta",getOld("clientCityWant"),function(v){setOld("clientCityWant",v);step++;renderStep();});return;
+    }
+    if(step===19){
+      title.textContent="Household size";
+      help.textContent="How many people will live there?";
+      inputStep(title,help,"How many people will live there?","number","1",getOld("household")||"1",function(v){setOld("household",v);step++;renderStep();});return;
+    }
+    if(step===20){
+      title.textContent="Choose your document type";
+      help.textContent="Choose the identity document you will photograph. The document itself is never uploaded to RumahNusa or sent to the agent.";
+      selectStep(title,help,"Document type",["Passport","ID Card","Family Card","Taxpayer Identification Number (NPWP)","Driving License","Visa","Residence Permit"],"",function(v){window.__rnPrivateDocumentType=v;step++;renderStep();});return;
+    }
+    if(step===21){
+      title.textContent="Take a picture of your document";
+      help.textContent="Take/select the document photo. It stays only in this browser step and is cleared immediately when you continue.";
+      const host=document.getElementById("rnFlowHost");
+      host.innerHTML="";
+      const card=document.createElement("div");card.className="rn-flow-card";
+      const lab=document.createElement("label");lab.textContent=(window.__rnPrivateDocumentType||"Document")+" photo";
+      documentInput=document.createElement("input");
+      documentInput.type="file";documentInput.accept="image/*";documentInput.capture="environment";documentInput.required=true;
+      card.append(lab,documentInput);
+      const note=document.createElement("div");note.className="rn-privacy-note";
+      note.textContent="Privacy: the site does not upload or save this photo. When you continue, the file input is cleared and the page releases the selected file.";
+      card.appendChild(note);host.appendChild(card);
+      const a=continueButton(function(){
+        if(!documentInput.files||!documentInput.files.length)return;
+        window.__rnPrivateDocumentSeen=true;
+        clearDocumentPhoto();
+        step++;renderStep();
+      });
+      host.appendChild(a.actions);
+      documentInput.addEventListener("change",function(){a.btn.classList.toggle("ready",!!documentInput.files.length);});
+      return;
+    }
+    if(step===22){
+      title.textContent="Face scan";
+      help.textContent="Use the front camera for a short browser-only face scan. No face image is uploaded or stored.";
+      const host=document.getElementById("rnFlowHost");host.innerHTML="";
+      const card=document.createElement("div");card.className="rn-flow-card";
+      const box=document.createElement("div");box.className="rn-camera-box";
+      const video=document.createElement("video");video.id="rnFlowVideo";video.autoplay=true;video.muted=true;video.playsInline=true;
+      const start=document.createElement("button");start.type="button";start.id="rnFaceStart";start.className="btn";start.textContent="Start face scan";
+      const status=document.createElement("p");status.id="rnFaceStatus";status.className="rn-camera-status";status.textContent="Tap Start face scan to begin.";
+      const privacy=document.createElement("div");privacy.className="rn-privacy-note";privacy.textContent="The camera stream is used only in this browser. No face photo is sent to RumahNusa, Supabase, or the agent inbox.";
+      box.append(video,start,status,privacy);card.appendChild(box);host.appendChild(card);
+      const a=continueButton(function(){cleanupCamera();step++;renderStep();});
+      a.btn.id="rnFaceContinue";host.appendChild(a.actions);
+      start.addEventListener("click",startFaceScan);return;
+    }
+    if(step===23){
+      title.textContent="Front-camera picture";
+      help.textContent="Take one front-camera picture. It is kept only in page memory until you continue, then it is deleted before payment.";
+      const host=document.getElementById("rnFlowHost");host.innerHTML="";
+      const card=document.createElement("div");card.className="rn-flow-card";card.id="rnFrontCameraBox";
+      const video=document.createElement("video");video.id="rnFlowVideo";video.autoplay=true;video.muted=true;video.playsInline=true;
+      const start=document.createElement("button");start.type="button";start.id="rnFrontStart";start.className="btn";start.textContent="Open front camera";
+      const capture=document.createElement("button");capture.type="button";capture.id="rnFrontCapture";capture.className="btn";capture.textContent="Take front-camera picture";capture.disabled=true;
+      const status=document.createElement("p");status.id="rnFrontStatus";status.className="rn-camera-status";status.textContent="Open the front camera first.";
+      const privacy=document.createElement("div");privacy.className="rn-privacy-note";privacy.textContent="This picture is never uploaded or sent to the agent. It is deleted from the page before the payment step.";
+      card.append(video,start,capture,status,privacy);host.appendChild(card);
+      const a=continueButton(function(){cleanupCamera();clearFrontPhoto();step++;renderStep();});
+      a.btn.id="rnFrontContinue";host.appendChild(a.actions);
+      start.addEventListener("click",startFrontCamera);
+      capture.addEventListener("click",captureFrontCamera);return;
+    }
+    if(step===24){
+      title.textContent="Payment method";
+      help.textContent="Choose how you intend to pay. No real payment is charged by this page until a real payment provider is connected.";
+      selectStep(title,help,"Select your payment method",["Bank transfer","Card","Other payment provider"],"",function(v){
+        window.__rnCustomerFlowState=window.__rnCustomerFlowState||{};
+        window.__rnCustomerFlowState.paymentMethod=v;
+        step++;renderStep();
+      });return;
+    }
+    if(step===25){
+      title.textContent="Ready to send your request";
+      help.textContent="Your selected home and the information you entered will be sent to the RumahNusa agent. Your document, face scan, and front-camera picture are not included.";
+      const host=document.getElementById("rnFlowHost");host.innerHTML="";
+      const card=document.createElement("div");card.className="rn-flow-card";
+      const msg=document.createElement("p");msg.className="rn-flow-complete";msg.textContent="Your private pictures have already been cleared. Only your request details will go to the agent inbox.";
+      const a=continueButton(async function(){
+        cleanupPrivateMedia();
+        if(typeof window.__rnSubmitRequest!=="function"){
+          msg.textContent="The request system is not ready yet. Please wait a moment and try again.";
+          return;
+        }
+        await window.__rnSubmitRequest();
+      });
+      a.btn.classList.add("ready");a.btn.textContent="Continue to Agent Inbox";
+      card.append(msg);host.append(card,a.actions);
+      return;
+    }
+  }
+
+  function categoryChosen(btn){
+    selectedCategory=btn.dataset.value||"";
+    window.__rnCustomerFlowState=window.__rnCustomerFlowState||{};
+    window.__rnCustomerFlowState.property=selectedCategory;
+    setTimeout(function(){
+      buildHomesFromCurrentCategory();
+      if(!homes.length){
+        homes=[{title:"Beautiful RumahNusa home",location:selectedCategory,price:"Contact RumahNusa",details:"Beautiful home details will be shown here.",image:""}];
+      }
+      showFlow();
+      step=1;
+      renderStep();
+    },30);
+  }
+
+  categoryGrid.querySelectorAll(".client-option").forEach(function(btn){
+    btn.addEventListener("click",function(){categoryChosen(btn);});
   });
 
-  purpose.addEventListener('change',()=>{
-    const selectedCategory=document.querySelector('#propertyOptions .client-option.selected')?.dataset.value;
-    const isApartment=selectedCategory==='Apartemen';
-    rentalWrap.hidden=!(isApartment && purpose.value==='Sewa');
+  const identityContinue=document.getElementById("rnGateIdentityContinue");
+  identityContinue?.addEventListener("click",function(){
+    setTimeout(function(){
+      if(!active){
+        // Keep the original gate's transition intact until the customer taps a home category.
+        flow.style.display="none";
+      }
+    },50);
   });
 
-  const originalNext=document.querySelector('.client-form-step[data-step="3"] .client-next');
-  if(originalNext) originalNext.addEventListener('click',()=>{
-    const selected=document.querySelector('#propertyOptions .client-option.selected');
-    if(selected) renderCategory(selected.dataset.value);
-  });
-})();</script>
-
-
-
-
-
-<script>
-(function(){
-  const send=document.getElementById('sendProfil');
-  if(!send)return;
-  window.__rnSendRequest=async function(){
-    send.click();
-  };
 })();
 </script>
+
 </body>
 </html>
