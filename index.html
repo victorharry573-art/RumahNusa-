@@ -1756,6 +1756,50 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   });
 })();
 </script>
+
+<!-- RUMAHNUSA_SWIPE_BACK_START -->
+<style>
+  .rn-swipe-hint{position:fixed;left:50%;bottom:86px;transform:translateX(-50%);z-index:999;background:rgba(20,38,56,.92);color:#fff;padding:9px 14px;border-radius:20px;font-size:13px;box-shadow:0 4px 14px rgba(0,0,0,.18);opacity:0;pointer-events:none;transition:opacity .25s}
+  .rn-swipe-hint.show{opacity:1}
+</style>
+<div id="rnSwipeHint" class="rn-swipe-hint" aria-live="polite">Swipe from the edge or use Android Back to go back</div>
+<script>
+(function(){
+  const state={stack:[],lastX:0,lastY:0,startTime:0};
+  const hint=document.getElementById('rnSwipeHint');
+  function currentView(){
+    const active=document.querySelector('.client-form-step.active');
+    const category=document.querySelector('#propertyOptions .client-option.selected');
+    const collection=document.getElementById('rnCategoryCollection');
+    return {step:active?.dataset.step||'',category:category?.dataset.value||'',collectionOpen:!!collection&&!collection.hidden};
+  }
+  function key(v){return JSON.stringify(v)}
+  function capture(){const v=currentView(); if(!state.stack.length||key(state.stack[state.stack.length-1])!==key(v)) state.stack.push(v); if(state.stack.length>20)state.stack.shift();}
+  function restore(v){
+    const steps=Array.from(document.querySelectorAll('.client-form-step'));
+    const badges=Array.from(document.querySelectorAll('.client-step'));
+    if(v.step!==''&&steps.length){const i=steps.findIndex(s=>s.dataset.step===v.step);if(i>=0){steps.forEach((s,n)=>s.classList.toggle('active',n===i));badges.forEach((b,n)=>b.classList.toggle('active',n===Math.min(i,badges.length-1)));}}
+    if(v.category){const opt=document.querySelector('#propertyOptions .client-option[data-value="'+CSS.escape(v.category)+'"]');if(opt){opt.click();}}
+    const collection=document.getElementById('rnCategoryCollection'); if(collection)collection.hidden=!v.collectionOpen;
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  function goBack(){
+    if(state.stack.length>1){state.stack.pop();restore(state.stack[state.stack.length-1]);return true;}
+    const active=document.querySelector('.client-form-step.active');
+    if(active&&active.dataset.step&&active.dataset.step!=='1'){const b=active.querySelector('[data-back]');if(b){b.click();return true;}}
+    return false;
+  }
+  document.addEventListener('touchstart',e=>{if(!e.touches[0])return;state.lastX=e.touches[0].clientX;state.lastY=e.touches[0].clientY;state.startTime=Date.now();},{passive:true});
+  document.addEventListener('touchend',e=>{if(!e.changedTouches[0])return;const x=e.changedTouches[0].clientX,y=e.changedTouches[0].clientY;const dx=x-state.lastX,dy=y-state.lastY;const edge=state.lastX<28||state.lastX>innerWidth-28; if(edge&&Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)&&Date.now()-state.startTime<900){if(dx>0)goBack();}}, {passive:true});
+  window.addEventListener('popstate',()=>goBack());
+  document.addEventListener('click',()=>setTimeout(capture,50),true);
+  setTimeout(capture,300);
+  window.addEventListener('load',()=>setTimeout(capture,300));
+  window.addEventListener('beforeunload',()=>{});
+  if(hint){hint.classList.add('show');setTimeout(()=>hint.classList.remove('show'),3500);}
+})();
+</script>
+<!-- RUMAHNUSA_SWIPE_BACK_END -->
 </body>
 <script>
 /* RumahNusa sequential customer experience — one choice/question at a time. */
