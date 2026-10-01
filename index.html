@@ -1870,28 +1870,71 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       listings.querySelectorAll('.rn-listing').forEach(card=>{
         if(card.dataset.rnHouseWired)return;
         card.dataset.rnHouseWired='1';
-        card.setAttribute('role','button');
-        card.setAttribute('tabindex','0');
-        card.addEventListener('click',function(event){
-          if(event.target.closest('input,select,button,label'))return;
-          setSelectedCard(card);
-        });
-        card.addEventListener('keydown',function(event){
-          if(event.key==='Enter'||event.key===' '){event.preventDefault();setSelectedCard(card);}
-        });
+
+        const body=card.querySelector('.rn-listing-body');
+        if(!body)return;
+
+        const title=card.querySelector('h5')?.textContent||'Selected RumahNusa home';
+        const specs=card.querySelector('.rn-listing-specs')?.textContent||'';
+        const location=card.querySelector('p')?.textContent?.replace(/^📍\\s*/,'')||'';
+
+        const detailButton=document.createElement('button');
+        detailButton.type='button';
+        detailButton.className='rn-view-inside';
+        detailButton.textContent='View inside';
+        detailButton.setAttribute('aria-expanded','false');
+
+        const details=document.createElement('div');
+        details.className='rn-home-inside';
+        details.hidden=true;
+        details.innerHTML='<strong>Inside '+esc(title)+'</strong><p>'+esc(location)+'</p><p>'+esc(specs)+'</p><p>Explore the rooms, parlor, kitchen, bathrooms, toilets, furniture, outdoor spaces, pool and parking described for this home.</p>';
+
+        const selectButton=document.createElement('button');
+        selectButton.type='button';
+        selectButton.className='rn-select-home';
+        selectButton.textContent='Select this home';
 
         const pricing=document.createElement('div');
         pricing.className='rn-house-price-picker';
-        pricing.innerHTML=
-          '<strong>Your price for this home</strong>'+
-          '<label>USD ($)<input class="rn-home-price-usd" type="number" min="1" step="1" inputmode="decimal" placeholder="Example: 350000"></label>'+
-          '<label>IDR (Rupiah)<input class="rn-home-price-idr" type="number" min="1" step="1" inputmode="numeric" placeholder="Example: 500000000"></label>'+
-          '<small>Enter either USD or IDR. You can choose one currency.</small>';
-        card.querySelector('.rn-listing-body')?.appendChild(pricing);
+        pricing.hidden=true;
+        pricing.innerHTML='<strong>Select your amount for this home</strong><label>USD ($)<input class="rn-home-price-usd" type="number" min="1" step="1" inputmode="decimal" placeholder="Example: 350000"></label><label>IDR (Rupiah)<input class="rn-home-price-idr" type="number" min="1" step="1" inputmode="numeric" placeholder="Example: 500000000"></label><small>Enter either USD or IDR.</small>';
+
+        body.appendChild(detailButton);
+        body.appendChild(details);
+        body.appendChild(selectButton);
+        body.appendChild(pricing);
+
+        function selectHome(){
+          setSelectedCard(card);
+          listings.querySelectorAll('.rn-home-inside').forEach(x=>{if(x!==details)x.hidden=true;});
+          listings.querySelectorAll('.rn-house-price-picker').forEach(x=>{if(x!==pricing)x.hidden=true;});
+          listings.querySelectorAll('.rn-select-home').forEach(x=>{if(x!==selectButton)x.textContent='Select this home';});
+          pricing.hidden=false;
+          selectButton.textContent='Home selected';
+          card.scrollIntoView({behavior:'smooth',block:'center'});
+        }
+
+        detailButton.addEventListener('click',function(){
+          details.hidden=!details.hidden;
+          detailButton.setAttribute('aria-expanded',String(!details.hidden));
+          detailButton.textContent=details.hidden?'View inside':'Hide inside';
+        });
+
+        selectButton.addEventListener('click',function(event){event.stopPropagation();selectHome();});
+
+        card.addEventListener('click',function(event){
+          if(event.target.closest('input,select,button,label'))return;
+          selectHome();
+        });
+        card.setAttribute('role','button');
+        card.setAttribute('tabindex','0');
+        card.addEventListener('keydown',function(event){
+          if(event.key==='Enter'||event.key===' '){event.preventDefault();selectHome();}
+        });
 
         pricing.querySelectorAll('input').forEach(input=>{
           input.addEventListener('input',function(){
-            if(!card.classList.contains('rn-home-selected'))setSelectedCard(card);
+            if(!card.classList.contains('rn-home-selected'))selectHome();
             if(input.classList.contains('rn-home-price-usd')){
               state.selectedHomePriceUSD=input.value;
               if(input.value)pricing.querySelector('.rn-home-price-idr').value='';
@@ -1954,6 +1997,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 })();
 </script>
 <style>
+.rn-view-inside,.rn-select-home{width:100%;margin-top:10px;padding:12px 14px;border-radius:10px;border:1px solid #bcccdc;background:#fff;color:#12344d;font-weight:700;cursor:pointer}.rn-select-home{background:#0879bd;color:#fff;border-color:#0879bd}.rn-home-inside{margin-top:10px;padding:14px;border:1px solid #d9e2ec;border-radius:12px;background:#fff}.rn-home-inside p{margin:7px 0}
 .rn-selection-hidden{display:none!important}
 .rn-category-actions{display:flex;justify-content:flex-end;min-height:48px}
 .rn-house-selected{outline:3px solid #0879bd;outline-offset:2px}
