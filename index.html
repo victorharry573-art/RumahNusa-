@@ -104,6 +104,61 @@ nav a {
   margin-bottom: 30px;
 }
 
+/* Stable mobile layout: keep the hero and all text inside the screen. */
+.hero > * { min-width: 0; }
+.agent-team-photo {
+  width: 100%;
+  max-width: 520px;
+  flex: 0 1 520px;
+  overflow: hidden;
+}
+.agent-team-photo img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+@media (max-width: 800px) {
+  .hero {
+    min-height: auto;
+    padding: 42px 20px 48px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 24px;
+    overflow: hidden;
+  }
+  .agent-team-photo,
+  .hero-content {
+    width: 100%;
+    max-width: 100%;
+    flex: none;
+  }
+  .hero h1 {
+    font-size: clamp(34px, 10vw, 46px);
+    line-height: 1.12;
+    overflow-wrap: anywhere;
+  }
+  .hero p {
+    font-size: 17px;
+    line-height: 1.55;
+  }
+  .hero small {
+    font-size: 12px;
+    letter-spacing: 2px;
+  }
+  .bilingual {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+}
+@media (max-width: 480px) {
+  .hero { padding-left: 16px; padding-right: 16px; }
+  .hero h1 { font-size: 34px; }
+  .hero p { font-size: 16px; }
+}
+
 .search-box {
   background: white;
   padding: 18px;
