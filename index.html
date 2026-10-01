@@ -1300,7 +1300,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     }).eq('id',state.user.id);
     if(profileError){status('Data pelanggan belum dapat disimpan: '+profileError.message);return;}
 
-    window.__rnPropertyName=(identity.name||'Customer')+' · '+property+' · '+purpose+' · '+rooms;
+    window.__rnPropertyName=(identity.name||'Customer')+' · '+property+' · '+(window.__rnSelectedHome?.title||'Selected home')+' · '+purpose+' · '+rooms;
     await sendCustomerMessage(requestMessage);
 
     inbox.hidden=false;
@@ -1857,9 +1857,6 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     clearDocumentPhoto();
   }
   window.addEventListener("pagehide",cleanupPrivateMedia);
-  document.addEventListener("visibilitychange",function(){
-    if(document.hidden)cleanupPrivateMedia();
-  });
 
   function showFlow(){
     active=true;
@@ -2051,7 +2048,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     const title=document.getElementById("rnFlowTitle");
     const help=document.getElementById("rnFlowHelp");
     const count=document.getElementById("rnFlowCount");
-    count.textContent="Step "+(step+1)+" of 25";
+    count.textContent="One step at a time";
     title.textContent="";
     help.textContent="";
     if(step!==21)clearDocumentPhoto();
