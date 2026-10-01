@@ -1624,10 +1624,60 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   });
 
   const houseModal=document.getElementById('rnHouseModal');
-  const closeHouseModal=()=>{if(houseModal){houseModal.hidden=true;document.body.style.overflow='';}};
-  document.getElementById('rnHouseModalClose')?.addEventListener('click',closeHouseModal);
-  houseModal?.addEventListener('click',e=>{if(e.target===houseModal)closeHouseModal();});
-  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeHouseModal();});
+  let houseModalHistoryOpen=false;
+
+  function closeHouseModal(useHistory){
+    if(!houseModal)return;
+    houseModal.hidden=true;
+    document.body.style.overflow='';
+    if(useHistory && houseModalHistoryOpen){
+      houseModalHistoryOpen=false;
+      if(history.state && history.state.rnHouseModal){
+        history.back();
+      }
+    }
+  }
+
+  document.getElementById('rnHouseModalClose')?.addEventListener('click',()=>closeHouseModal(true));
+  houseModal?.addEventListener('click',e=>{
+    if(e.target===houseModal)closeHouseModal(true);
+  });
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape')closeHouseModal(true);
+  });
+
+  /* Mobile back navigation: browser Back/edge-swipe closes the open house first. */
+  window.addEventListener('popstate',function(event){
+    if(houseModalHistoryOpen){
+      houseModalHistoryOpen=false;
+      if(houseModal){
+        houseModal.hidden=true;
+        document.body.style.overflow='';
+      }
+    }
+  });
+
+  /* Also support an intentional left/right edge swipe while viewing a house. */
+  let edgeSwipeStartX=0;
+  let edgeSwipeStartY=0;
+  let edgeSwipeTracking=false;
+  houseModal?.addEventListener('touchstart',function(e){
+    if(!e.touches.length)return;
+    const t=e.touches[0];
+    edgeSwipeTracking=(t.clientX<=28 || t.clientX>=window.innerWidth-28);
+    edgeSwipeStartX=t.clientX;
+    edgeSwipeStartY=t.clientY;
+  },{passive:true});
+  houseModal?.addEventListener('touchend',function(e){
+    if(!edgeSwipeTracking || !e.changedTouches.length)return;
+    const t=e.changedTouches[0];
+    const dx=t.clientX-edgeSwipeStartX;
+    const dy=Math.abs(t.clientY-edgeSwipeStartY);
+    edgeSwipeTracking=false;
+    if(Math.abs(dx)>=70 && dy<=90){
+      closeHouseModal(true);
+    }
+  },{passive:true});
 
   listings.addEventListener('click',e=>{
     const card=e.target.closest('.rn-listing');
@@ -1642,6 +1692,10 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     document.getElementById('rnHouseModalPrice').textContent=item[2];
     document.getElementById('rnHouseModalSpecs').innerHTML=item[3].split(' · ').map(s=>'<span style="display:inline-block;margin:4px;padding:7px 10px;background:#f3faff;border-radius:8px;">'+s+'</span>').join('');
     document.getElementById('rnHouseModalDescription').textContent=data[category].confidence;
+    if(!houseModalHistoryOpen){
+      history.pushState({rnHouseModal:true},'',location.href);
+      houseModalHistoryOpen=true;
+    }
     houseModal.hidden=false;
     document.body.style.overflow='hidden';
   });
