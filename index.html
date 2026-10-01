@@ -665,22 +665,12 @@ body.rn-gate-active{margin:0;}
         <p>RumahNusa is where beautiful homes, comfort, privacy, and peace of mind come together. We help you discover a place that feels right for your everyday life, your family, and your future.</p>
         <p>Every home is presented with care so you can explore beautiful rooms, comfortable living spaces, thoughtful details, and the feeling of coming home.</p>
         <p>Take your time, discover the home that fits your life, and choose a place where you can live comfortably and enjoy peace of mind.</p>
-        <p class="rn-welcome-instruction"><strong>Welcome to RumahNusa Real Estate — a place created for beautiful living, comfort, privacy, and peace of mind. Login with your email and password, then enter your name, gender, and age so RumahNusa can welcome you personally before you choose your beautiful home.</strong></p>
+        <p class="rn-welcome-instruction"><strong>Welcome to RumahNusa Real Estate — a place created for beautiful living, comfort, privacy, and peace of mind. Enter your name, choose whether you are a woman or man, enter your age, and tap Login to begin choosing your beautiful home.</strong></p>
       </div>
       <div id="rnGateIdentityStep" class="rn-gate-step">
         <div id="rnGateIdentityFields">
-          <div class="rn-gate-field"><label for="rnGateEmail">Email</label><input id="rnGateEmail" type="email" autocomplete="username" placeholder="Enter your email"></div>
-          <div class="rn-gate-field">
-            <label for="rnGatePassword">Password</label>
-            <div class="rn-password-wrap">
-              <input id="rnGatePassword" type="password" autocomplete="current-password" placeholder="Enter your password">
-              <button id="rnGatePasswordToggle" class="rn-password-eye" type="button" aria-label="Show password" aria-pressed="false">
-                <svg class="rn-eye-icon rn-eye-open" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.2 12s3.4-6 9.8-6 9.8 6 9.8 6-3.4 6-9.8 6-9.8-6-9.8-6Z"></path><circle cx="12" cy="12" r="2.7"></circle></svg>
-              </button>
-            </div>
-          </div>
           <div class="rn-gate-field"><label for="rnGateName">Your name</label><input id="rnGateName" type="text" autocomplete="name" placeholder="Enter your name"></div>
-          <div id="rnGateGenderStep"><label>Gender</label><div class="rn-gender-options"><button type="button" class="rn-gender-option" data-gender="Female">Female</button><button type="button" class="rn-gender-option" data-gender="Male">Male</button></div></div>
+          <div id="rnGateGenderStep"><label>Are you a woman or man?</label><div class="rn-gender-options"><button type="button" class="rn-gender-option" data-gender="Woman">Woman</button><button type="button" class="rn-gender-option" data-gender="Man">Man</button></div></div>
           <div id="rnGateAgeStep"><label for="rnGateAge">Your age</label><input id="rnGateAge" type="number" min="18" max="120" inputmode="numeric" placeholder="18 or older"></div>
           <button id="rnGateIdentityContinue" class="btn" type="button" disabled>Login</button>
         </div>
@@ -1238,7 +1228,6 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       await loadAgentConversations();
     }else{
       agentPanel.hidden=true;
-      authPanel.hidden=true;
       inbox.querySelector('.inbox-thread').hidden=false;
       const conv=await ensureCustomerConversation();
       if(conv){
@@ -1775,9 +1764,6 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     const form=document.getElementById('clientProfilForm');
     const gate=document.getElementById('rnWelcomeGate');
     const loginBtn=document.getElementById('rnGateIdentityContinue');
-    const email=document.getElementById('rnGateEmail');
-    const password=document.getElementById('rnGatePassword');
-    const passwordToggle=document.getElementById('rnGatePasswordToggle');
     const name=document.getElementById('rnGateName');
     const age=document.getElementById('rnGateAge');
     const status=document.getElementById('rnGateLoginStatus');
@@ -1790,25 +1776,14 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 
     function updateLogin(){
       const a=Number(age?.value);
-      loginBtn.disabled=!(email?.value.trim()&&password?.value.length>=6&&name?.value.trim()&&gender&&a>=18&&a<=120);
+      loginBtn.disabled=!(name?.value.trim()&&gender&&a>=18&&a<=120);
     }
-    passwordToggle?.addEventListener('click',function(event){
-      event.preventDefault();
-      event.stopPropagation();
-      const showing=password.type==='text';
-      password.type=showing?'password':'text';
-      passwordToggle.setAttribute('aria-pressed',String(!showing));
-      passwordToggle.setAttribute('aria-label',showing?'Show password':'Hide password');
-      passwordToggle.innerHTML=showing
-        ? '<svg class="rn-eye-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M2.2 12s3.4-6 9.8-6 9.8 6 9.8 6-3.4 6-9.8 6-9.8-6-9.8-6Z"></path><circle cx="12" cy="12" r="2.7"></circle></svg>'
-        : '<svg class="rn-eye-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m3 3 18 18"></path><path d="M10.6 5.2A10.8 10.8 0 0 1 12 5c6.4 0 9.8 7 9.8 7a18 18 0 0 1-3 3.7"></path><path d="M6.1 6.1C3.4 8.2 2.2 12 2.2 12s3.4 7 9.8 7c1.3 0 2.5-.2 3.5-.6"></path></svg>';
-    });
     genders.forEach(b=>b.addEventListener('click',()=>{
       gender=b.dataset.gender||'';
       genders.forEach(x=>x.classList.toggle('selected',x===b));
       updateLogin();
     }));
-    [email,password,name,age].forEach(x=>x?.addEventListener('input',updateLogin));
+    [name,age].forEach(x=>x?.addEventListener('input',updateLogin));
     updateLogin();
 
     function showDataStep(stepNumber){
@@ -1905,21 +1880,31 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
           return;
         }
         const db=window.supabase.createClient(window.RUMAHNUSA_SUPABASE_URL,window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY);
-        const {data,error}=await db.auth.signInWithPassword({email:email.value.trim(),password:password.value});
-        if(error||!data?.user){
-          status.textContent='Login failed. Please check your email and password.';
-          loginBtn.disabled=false;
-          return;
+        let sessionResult=await db.auth.getSession();
+        let user=sessionResult?.data?.session?.user||null;
+        if(!user){
+          const anonymous=await db.auth.signInAnonymously({
+            options:{data:{full_name:name.value.trim(),gender,age:a}}
+          });
+          if(anonymous.error||!anonymous.data?.user){
+            status.textContent='Login is temporarily unavailable. Please try again.';
+            loginBtn.disabled=false;
+            return;
+          }
+          user=anonymous.data.user;
+        }else{
+          await db.auth.updateUser({data:{full_name:name.value.trim(),gender,age:a}});
         }
-        window.__rnLoggedInUser=data.user;
+        window.__rnLoggedInUser=user;
+        window.__rnCustomerIdentity={name:name.value.trim(),gender,age:a};
         await db.from('profiles').upsert({
-          id:data.user.id,
+          id:user.id,
           full_name:name.value.trim(),
-          email:data.user.email||email.value.trim(),
+          email:'',
           role:'customer'
         },{onConflict:'id'});
       }catch(e){
-        status.textContent='Login failed. Please check your email and password.';
+        status.textContent='Login is temporarily unavailable. Please try again.';
         loginBtn.disabled=false;
         return;
       }
