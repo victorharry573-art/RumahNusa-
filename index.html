@@ -380,24 +380,14 @@ body.rn-site-unlocked footer { display:none !important; }
     </div>
     <small style="display:block;margin-top:6px;color:#627d98;">Choose your country, then enter your phone number without the country code.</small>
 
-    <label for="rnLoginPassword" style="display:block;margin-top:12px;font-weight:700;">Password</label>
-    <div class="rn-password-wrap">
-      <input id="rnLoginPassword" type="password" autocomplete="current-password" placeholder="Enter your password" aria-label="Password">
-      <button id="rnPasswordToggle" class="rn-password-eye" type="button" aria-label="Show password" aria-pressed="false">
-        <svg class="rn-eye-open" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M2.2 12s3.4-5 9.8-5 9.8 5 9.8 5-3.4 5-9.8 5-9.8-5-9.8-5Z"></path>
-          <circle cx="12" cy="12" r="2.7"></circle>
-        </svg>
-        <svg class="rn-eye-closed" viewBox="0 0 24 24" aria-hidden="true" hidden>
-          <path d="M3 3l18 18"></path>
-          <path d="M10.6 6.9A10.6 10.6 0 0 1 12 6.8c6.4 0 9.8 5.2 9.8 5.2a17.2 17.2 0 0 1-3.1 3.3"></path>
-          <path d="M6.1 8.3A17.6 17.6 0 0 0 2.2 12s3.4 5.2 9.8 5.2c1.2 0 2.3-.2 3.3-.6"></path>
-        </svg>
-      </button>
+    <div id="rnOtpSection" hidden style="margin-top:12px;">
+      <label for="rnLoginCode" style="display:block;font-weight:700;">Confirmation code</label>
+      <input id="rnLoginCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="Enter the 6-digit code" aria-label="Confirmation code" style="width:100%;box-sizing:border-box;padding:14px 12px;border:1px solid #8aa4bc;border-radius:10px;font:inherit;min-height:56px;">
+      <small style="display:block;margin-top:6px;color:#627d98;">Enter the 6-digit confirmation code sent to your phone.</small>
     </div>
 
     <div class="rn-gate-actions">
-      <button class="btn" id="rnLoginButton" type="button">Login</button>
+      <button class="btn" id="rnLoginButton" type="button">Send confirmation code</button>
     </div>
     <p id="rnPhoneGateMessage" class="rn-gate-status" aria-live="polite"></p>
   </div>
@@ -1345,17 +1335,23 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   const loginCountry=document.getElementById('rnLoginCountry');
   const loginPhone=document.getElementById('rnLoginPhone');
   const loginPhonePrefix=document.getElementById('rnLoginPhonePrefix');
-  const loginPassword=document.getElementById('rnLoginPassword');
+  const loginCode=document.getElementById('rnLoginCode');
+  const otpSection=document.getElementById('rnOtpSection');
   const loginButton=document.getElementById('rnLoginButton');
-  const passwordToggle=document.getElementById('rnPasswordToggle');
   const phoneGate=document.getElementById('rnPhoneGate');
+  let otpSent=false;
+  let pendingPhone='';
 
-  // Reuse the same country list already used by the customer phone form.
+  // Copy the working country list into the login selector.
   const customerCountry=document.getElementById('clientCountry');
-  if(customerCountry && loginCountry){
-    loginCountry.innerHTML=customerCountry.innerHTML;
-    loginCountry.value=customerCountry.value || 'ID';
+  function populateLoginCountries(){
+    if(customerCountry && loginCountry && customerCountry.options.length){
+      loginCountry.innerHTML=customerCountry.innerHTML;
+      loginCountry.value=customerCountry.value || 'ID';
+    }
   }
+  populateLoginCountries();
+  setTimeout(populateLoginCountries,0);
 
   function syncLoginCountry(){
     if(!loginCountry||!loginPhonePrefix)return;
@@ -1367,18 +1363,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   loginCountry?.addEventListener('change',syncLoginCountry);
   syncLoginCountry();
 
-  passwordToggle?.addEventListener('click',function(event){
-    event.preventDefault();
-    event.stopPropagation();
-    const visible=loginPassword.type==='text';
-    loginPassword.type=visible?'password':'text';
-    passwordToggle.setAttribute('aria-label',visible?'Show password':'Hide password');
-    passwordToggle.setAttribute('aria-pressed',String(!visible));
-    const openIcon=passwordToggle.querySelector('.rn-eye-open');
-    const closedIcon=passwordToggle.querySelector('.rn-eye-closed');
-    if(openIcon) openIcon.hidden=visible;
-    if(closedIcon) closedIcon.hidden=!visible;
-  });
+  // Password login has been removed. RumahNusa uses phone + SMS confirmation code.
 
   async function finishPhoneLogin(user){
     state.user=user;
@@ -1405,35 +1390,64 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     status('Login successful.');
   }
 
-  loginButton.addEventListener('click',async function(){
+  function selectedPhone(){
     const raw=loginPhone.value.replace(/[^0-9]/g,'');
-    const password=loginPassword.value;
     const option=loginCountry.options[loginCountry.selectedIndex];
     const code=(option?.dataset.code||'+62').replace(/[^0-9+]/g,'');
     const digits=raw.replace(/^0+/,'');
-    const phone=code+' '+digits;
-    const phoneE164=code+' '+digits;
-    if(!digits||digits.length<5||!password){
-      status('Enter your phone number and password.');
+    return digits && digits.length>=5 ? code+digits : '';
+  }
+
+  loginButton.addEventListener('click',async function(){
+    const phone=selectedPhone();
+    if(!phone){
+      status('Choose your country and enter your phone number.');
       return;
     }
+
     loginButton.disabled=true;
-    loginButton.textContent='Logging in…';
     try{
-      const {data,error}=await client.auth.signInWithPassword({phone:phoneE164.replace(' ',''),password});
-      if(error) throw error;
-      if(!data.user) throw new Error('Secure login session was not created.');
-      await finishPhoneLogin(data.user);
+      if(!otpSent){
+        loginButton.textContent='Sending code…';
+        const {error}=await client.auth.signInWithOtp({
+          phone,
+          options:{shouldCreateUser:true}
+        });
+        if(error) throw error;
+        pendingPhone=phone;
+        otpSent=true;
+        otpSection.hidden=false;
+        loginCode.focus();
+        loginButton.textContent='Confirm & Continue';
+        status('A 6-digit confirmation code has been sent to your phone.');
+      }else{
+        const token=loginCode.value.replace(/[^0-9]/g,'');
+        if(token.length!==6){
+          status('Enter the 6-digit confirmation code.');
+          return;
+        }
+        loginButton.textContent='Checking code…';
+        const {data,error}=await client.auth.verifyOtp({
+          phone:pendingPhone,
+          token,
+          type:'sms'
+        });
+        if(error) throw error;
+        if(!data.user) throw new Error('Secure login session was not created.');
+        await finishPhoneLogin(data.user);
+      }
     }catch(error){
-      status('Login failed: '+error.message);
+      status('Login could not continue: '+error.message);
     }finally{
       loginButton.disabled=false;
-      loginButton.textContent='Login';
+      if(!otpSent) loginButton.textContent='Send confirmation code';
+      else if(phoneGate.style.display!=='none') loginButton.textContent='Confirm & Continue';
     }
   });
 
-  loginPassword.addEventListener('keydown',e=>{if(e.key==='Enter')loginButton.click();});
-  loginPhone.addEventListener('keydown',e=>{if(e.key==='Enter')loginPassword.focus();});
+  loginPhone.addEventListener('keydown',e=>{if(e.key==='Enter')loginButton.click();});
+  loginCode?.addEventListener('keydown',e=>{if(e.key==='Enter')loginButton.click();});
+  loginCode?.addEventListener('input',()=>{loginCode.value=loginCode.value.replace(/[^0-9]/g,'').slice(0,6);});
 
   const authState=document.getElementById('rnPhoneGateMessage');
  || document.body;
