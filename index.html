@@ -1851,6 +1851,11 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       listings?.querySelectorAll('.rn-listing').forEach(x=>x.classList.remove('rn-home-selected'));
       card.classList.add('rn-home-selected');
       state.selectedHome=card.dataset.home||card.querySelector('h5')?.textContent||'';
+      window.__rnSelectedHome={
+        title:state.selectedHome,
+        location:card.querySelector('p')?.textContent?.replace(/^📍\s*/,'')||'',
+        details:card.querySelector('.rn-listing-specs')?.textContent||''
+      };
       state.selectedHomePriceUSD='';
       state.selectedHomePriceIDR='';
       const usd=card.querySelector('.rn-home-price-usd');
@@ -1915,6 +1920,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
         option.classList.add('selected');
         state.property=option.dataset.value||'';
         state.selectedHome='';
+        window.__rnSelectedHome=null;
         state.selectedHomePriceUSD='';
         state.selectedHomePriceIDR='';
         document.getElementById('clientBudget').value='';
