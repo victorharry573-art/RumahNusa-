@@ -2319,6 +2319,8 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       gate.hidden=true;
       form.hidden=false;
       document.body.classList.remove('rn-gate-active');
+      document.getElementById('client-profile')?.classList.remove('rn-login-locked');
+      document.getElementById('propertyOptions')?.classList.remove('rn-login-locked');
       form.querySelectorAll('.client-form-step').forEach((s,i)=>s.classList.toggle('active',i===0));
       window.scrollTo({top:0,behavior:'smooth'});
       login.disabled=false;
