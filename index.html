@@ -1614,6 +1614,8 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   }
 
   window.addEventListener('popstate',function(event){
+    /* A house-detail history entry is handled by the dedicated house-modal listener below. */
+    if(event.state && event.state.rnHouseModal) return;
     if(event.state && event.state.rnCategory){
       categoryHistoryActive=true;
       renderCategory(event.state.rnCategory);
