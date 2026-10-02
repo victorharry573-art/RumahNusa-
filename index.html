@@ -621,6 +621,10 @@ input:focus,select:focus,textarea:focus{border-color:var(--rn-red)!important;out
 .rn-search-suggestions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 .rn-search-suggestion{border:1px solid #fecaca;background:#fffafa;color:#3f3f46;border-radius:10px;padding:9px 11px;cursor:pointer;text-align:left}
 .rn-search-suggestion strong{color:#991b1b}
+.rn-search-suggestion{min-width:210px}
+.rn-search-suggestion strong{display:inline-block;margin-bottom:2px}
+.rn-search-suggestion small{color:#71717a}
+
 .rn-search-results{display:grid;gap:12px;margin-top:14px}
 .rn-search-category-result{display:flex;align-items:center;gap:14px;width:100%;padding:15px;border:1px solid #fecaca;border-radius:14px;background:#fffafa;color:#3f3f46;text-align:left;cursor:pointer}
 .rn-search-category-result:hover{border-color:#dc2626;background:#fff1f2}
@@ -1245,10 +1249,14 @@ header .lang-btn.active{color:#dc2626!important;background:#fff!important;border
     'Jakarta','South Jakarta','Central Jakarta','North Jakarta','West Jakarta','East Jakarta',
     'Bali','Denpasar','Badung','Ubud','Seminyak','Canggu','Kuta','Gianyar',
     'Surabaya','Bandung','Medan','Makassar','Palembang','Semarang','Yogyakarta',
-    'Tangerang','South Tangerang','Bekasi','Depok','Bogor','Batam','Malang',
-    'Solo','Surakarta','Balikpapan','Samarinda','Banjarmasin','Manado','Padang',
-    'Pekanbaru','Bandar Lampung','Pontianak','Mataram','Kupang','Jayapura',
-    'Banda Aceh','Jambi','Bengkulu','Serang','Cirebon','Tasikmalaya','Denpasar'
+    'Tangerang','Tangerang City','Tangerang Regency','South Tangerang','Tangerang Selatan',
+    'Cipondoh','Karawaci','Ciledug','Batuceper','Benda','Pinang','Serpong','BSD City',
+    'Alam Sutera','Gading Serpong','Lippo Village','Kelapa Dua','Curug','Legok','Cikupa',
+    'Bekasi','Depok','Bogor','Batam','Malang','Solo','Surakarta','Balikpapan','Samarinda',
+    'Banjarmasin','Manado','Padang','Pekanbaru','Bandar Lampung','Pontianak','Mataram',
+    'Kupang','Jayapura','Banda Aceh','Jambi','Bengkulu','Serang','Cirebon','Tasikmalaya',
+    'Bogor City','Bogor Regency','Bekasi City','Bekasi Regency','Bandung City','Bandung Regency',
+    'Surabaya City','Medan City','Makassar City','Semarang City','Yogyakarta City'
   ];
   let selectedType='All';
 
@@ -1369,13 +1377,29 @@ header .lang-btn.active{color:#dc2626!important;background:#fff!important;border
   function showSuggestions(q){
     const nq=normalize(q);
     if(!nq){suggestions.hidden=true;suggestions.innerHTML='';return;}
-    const placeMatches=places.filter(p=>normalize(p).includes(nq)).slice(0,8);
-    suggestions.hidden=!placeMatches.length;
-    suggestions.innerHTML=placeMatches.map(p=>'<button type="button" class="rn-search-suggestion" data-place="'+esc(p)+'">📍 <strong>'+esc(p)+'</strong><br><small>Search properties in this city/area</small></button>').join('');
+
+    // Keep offering progressively narrower Indonesian location choices while the
+    // customer types. We never invent a property; locations only become property
+    // results when RumahNusa actually has a listing there.
+    const locationMatches=places.filter(p=>normalize(p).includes(nq)).slice(0,12);
+    const inventoryLocations=inventory().map(r=>String(r.item[1]||'')).filter(Boolean);
+    const listingMatches=inventoryLocations.filter(p=>normalize(p).includes(nq)).slice(0,8);
+    const combined=[...new Set([...locationMatches,...listingMatches])].slice(0,12);
+
+    suggestions.hidden=!combined.length;
+    suggestions.innerHTML=combined.map(p=>{
+      const hasListing=inventory().some(r=>normalize(r.item[1]).includes(normalize(p)));
+      return '<button type="button" class="rn-search-suggestion" data-place="'+esc(p)+'">'+
+        '📍 <strong>'+esc(p)+'</strong><br><small>'+
+        (hasListing?'View RumahNusa properties in this location':'Location · continue typing to narrow the address')+
+        '</small></button>';
+    }).join('');
+
     suggestions.querySelectorAll('[data-place]').forEach(b=>b.addEventListener('click',()=>{
-      input.value=b.dataset.place;
+      const chosen=b.dataset.place||'';
+      input.value=chosen;
       suggestions.hidden=true;
-      render(input.value);
+      render(chosen);
       input.focus();
     }));
   }
