@@ -1651,6 +1651,11 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     /* Select the tapped card first, then open its collection. */
     document.querySelectorAll('#propertyOptions .client-option')
       .forEach(btn=>btn.classList.toggle('selected',btn===selected));
+    /* A category tap must always stay on the category screen. Never jump to
+       the phone/details steps just because an older saved step exists. */
+    if(typeof window.__rumahnusaShowCustomerStep==='function'){
+      window.__rumahnusaShowCustomerStep(1);
+    }
     categoryGrid.classList.add('rn-category-open');
     selected.insertAdjacentElement('afterend',collection);
     collection.hidden=false;
@@ -2500,6 +2505,9 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
         categoryOptions.forEach(x=>x.classList.remove('selected'));
         option.classList.add('selected');
         state.property=option.dataset.value||'';
+        if(typeof window.__rumahnusaShowCustomerStep==='function'){
+          window.__rumahnusaShowCustomerStep(1);
+        }
         state.selectedHome='';state.selectedHomePriceIDR='';state.selectedRoom='';
         window.__rnSelectedHome=null;
         saveCustomerFlow();
