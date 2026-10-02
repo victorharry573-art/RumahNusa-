@@ -1777,53 +1777,46 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   ];
 
   function buildPropertyGallery(item){
-    if(!rnGallery)return;
-    const isTargetVilla=item?.[0]==='Villa with Private Pool — 4 Bedrooms';
-    if(!isTargetVilla){
-      const fallback=item?.[4]||'';
-      rnGallery.innerHTML=Array.from({length:60},(_,i)=>'<button class="rn-gallery-item" type="button" data-gallery-index="'+i+'"><img loading="'+(i<6?'eager':'lazy')+'" src="'+fallback+'" alt="Property picture '+(i+1)+'"><span class="rn-gallery-label">Property picture '+(i+1)+'</span></button>').join('');
-      rnGalleryCount.textContent='60 pictures';
-      rnGallery.querySelectorAll('.rn-gallery-item').forEach((btn)=>btn.addEventListener('click',()=>{
-        const img=btn.querySelector('img');
-        rnGalleryLightbox.querySelector('img').src=img.src;
-        rnGalleryLightbox.querySelector('img').alt=img.alt;
-        rnGalleryLightbox.querySelector('.rn-gallery-caption').textContent=img.alt;
-        rnGalleryLightbox.hidden=false;
-      }));
-      return;
-    }
-
-    /* ONLY this villa: render each of the 60 views as its own picture.
-       The board is never shown as one image. Each tile is cropped to one labeled view. */
-    const rowPositions=['0%','12.3%','24.8%','37.5%','49.8%','61.4%','71.8%','81.2%','90.1%','99.2%'];
-    rnGallery.innerHTML=rnVillaGalleryLabels.map((label,i)=>{
-      const col=i%6, row=Math.floor(i/6);
-      const bgX=col===0?'0%':col===5?'100%':(col*20)+'%';
-      const bgY=rowPositions[row];
-      return `<button class="rn-gallery-item rn-villa-crop" type="button" data-gallery-index="${i}" aria-label="${label.replace(/"/g,'&quot;')}">
-        <span class="rn-villa-crop-image" style="background-image:url('${rnVillaGalleryImage}');background-position:${bgX} ${bgY}"></span>
-        <span class="rn-gallery-label">${i+1}. ${label}</span>
-      </button>`;
-    }).join('');
-    rnGalleryCount.textContent='60 separate pictures';
-
-    rnGallery.querySelectorAll('.rn-gallery-item').forEach((btn,i)=>{
-      btn.addEventListener('click',()=>{
-        const col=i%6, row=Math.floor(i/6);
-        const bgX=col===0?'0%':col===5?'100%':(col*20)+'%';
-        const bgY=rowPositions[row];
-        const lightboxImage=rnGalleryLightbox.querySelector('img');
-        lightboxImage.src=rnVillaGalleryImage;
-        lightboxImage.alt=rnVillaGalleryLabels[i];
-        lightboxImage.style.objectFit='contain';
-        lightboxImage.style.objectPosition=bgX+' '+bgY;
-        lightboxImage.style.transformOrigin=bgX+' '+bgY;
-        lightboxImage.style.transform='scale(3)';
-        rnGalleryLightbox.querySelector('.rn-gallery-caption').textContent=(i+1)+'. '+rnVillaGalleryLabels[i]+' — this particular villa';
-        rnGalleryLightbox.hidden=false;
-      });
-    });
+  if(!rnGallery)return;
+  const isTargetVilla=item?.[0]==='Villa with Private Pool — 4 Bedrooms';
+  if(!isTargetVilla){
+    const fallback=item?.[4]||'';
+    rnGallery.innerHTML=Array.from({length:60},(_,i)=>'<button class="rn-gallery-item" type="button"><img loading="'+(i<6?'eager':'lazy')+'" src="'+fallback+'" alt="Property picture '+(i+1)+'"><span class="rn-gallery-label">Property picture '+(i+1)+'</span></button>').join('');
+    rnGalleryCount.textContent='60 pictures';
+    rnGallery.querySelectorAll('.rn-gallery-item').forEach((btn)=>btn.addEventListener('click',()=>{
+      const img=btn.querySelector('img');
+      const lightboxImage=rnGalleryLightbox.querySelector('img');
+      lightboxImage.src=img.src;
+      lightboxImage.alt=img.alt;
+      lightboxImage.style.objectFit='contain';
+      lightboxImage.style.transform='none';
+      rnGalleryLightbox.querySelector('.rn-gallery-caption').textContent=img.alt;
+      rnGalleryLightbox.hidden=false;
+    }));
+    return;
   }
+
+  const rnVillaGalleryImages=Array.from({length:21},(_,i)=>'./assets/villa-gallery/villa-'+String(i+1).padStart(2,'0')+'.jpg');
+  const labels=rnVillaGalleryLabels.slice(0,21);
+  rnGallery.innerHTML=rnVillaGalleryImages.map((src,i)=>`<button class="rn-gallery-item" type="button" data-gallery-index="${i}" aria-label="${labels[i].replace(/"/g,'&quot;')}">
+    <img loading="${i<6?'eager':'lazy'}" src="${src}" alt="${i+1}. ${labels[i]} — this particular villa">
+    <span class="rn-gallery-label">${i+1}. ${labels[i]}</span>
+  </button>`).join('');
+  rnGalleryCount.textContent='21 separate pictures';
+
+  rnGallery.querySelectorAll('.rn-gallery-item').forEach((btn)=>{
+    btn.addEventListener('click',()=>{
+      const img=btn.querySelector('img');
+      const lightboxImage=rnGalleryLightbox.querySelector('img');
+      lightboxImage.src=img.src;
+      lightboxImage.alt=img.alt;
+      lightboxImage.style.objectFit='contain';
+      lightboxImage.style.objectPosition='center';
+      lightboxImage.style.transform='none';
+      rnGalleryLightbox.querySelector('.rn-gallery-caption').textContent=img.alt;
+      rnGalleryLightbox.hidden=false;
+    });
+  });
   rnGalleryLightbox.addEventListener('click',e=>{if(e.target===rnGalleryLightbox||e.target.closest('.rn-gallery-close'))rnGalleryLightbox.hidden=true});
 
   const houseModal=document.getElementById('rnHouseModal');
