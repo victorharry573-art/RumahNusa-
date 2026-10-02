@@ -2108,7 +2108,6 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 <!-- RUMAHNUSA_SWIPE_BACK_END -->
 </body>
 <script>
-<script>
 (function(){
   const radios=[...document.querySelectorAll('input[name="paymentCurrency"]')];
   const panels={
@@ -2645,6 +2644,58 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     if(event.pointerType==='mouse' && event.button!==0) return;
     event.preventDefault();
     event.stopPropagation();
+    open(button);
+  },true);
+})();
+</script>
+<script>
+/* FINAL CATEGORY FALLBACK: if an older handler throws, the tapped
+   category must still open visibly on the same screen. */
+(function(){
+  function forceOpen(button){
+    const collection=document.getElementById('rnCategoryCollection');
+    const grid=document.getElementById('propertyOptions');
+    if(!button||!collection||!grid)return;
+    grid.classList.add('rn-category-open');
+    grid.querySelectorAll('.rn-home-category').forEach(x=>x.classList.toggle('selected',x===button));
+    collection.hidden=false;
+    button.insertAdjacentElement('afterend',collection);
+    const title=document.getElementById('rnCategoryTitle');
+    const intro=document.getElementById('rnCategoryIntro');
+    const badge=document.getElementById('rnCategoryBadge');
+    if(title) title.textContent=(button.querySelector('strong')?.textContent||'Selected category')+' homes';
+    if(intro) intro.textContent='Homes in this category are now open below. Choose a home to continue.';
+    if(badge) badge.textContent=(button.querySelector('strong')?.textContent||'CATEGORY').toUpperCase();
+    collection.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  function open(button){
+    const name=button?.dataset?.value||'';
+    if(!name)return;
+    try{
+      if(typeof window.__rnOpenCategory==='function') window.__rnOpenCategory(name);
+      else forceOpen(button);
+    }catch(error){
+      console.warn('RumahNusa category renderer recovered from an error.',error);
+      forceOpen(button);
+    }
+    setTimeout(()=>{
+      const collection=document.getElementById('rnCategoryCollection');
+      const grid=document.getElementById('propertyOptions');
+      if(collection&&grid&&collection.hidden) forceOpen(button);
+    },80);
+  }
+  document.addEventListener('click',function(e){
+    const button=e.target?.closest?.('#propertyOptions .rn-home-category');
+    if(!button)return;
+    e.preventDefault();
+    e.stopPropagation();
+    open(button);
+  },true);
+  document.addEventListener('pointerup',function(e){
+    const button=e.target?.closest?.('#propertyOptions .rn-home-category');
+    if(!button)return;
+    e.preventDefault();
+    e.stopPropagation();
     open(button);
   },true);
 })();
