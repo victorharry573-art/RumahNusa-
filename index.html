@@ -179,7 +179,7 @@ nav a {
 }
 
 .rn-listing{cursor:pointer;transition:transform .18s,box-shadow .18s;border:2px solid transparent}.rn-listing:hover,.rn-listing:focus-within{transform:translateY(-3px);box-shadow:0 10px 28px rgba(16,42,67,.16);border-color:#1597e5}.rn-listing:active{transform:scale(.995)}
-#propertyContinueFloat{display:none!important}
+#propertyContinueFloat{display:none}
 .rn-house-modal{position:fixed;inset:0;z-index:2000;background:rgba(3,30,52,.74);display:flex;align-items:center;justify-content:center;padding:18px}.rn-house-modal[hidden]{display:none!important}.rn-house-modal-card{background:#fff;border-radius:18px;max-width:760px;width:100%;max-height:92vh;overflow:auto}.rn-house-modal-card img{display:block;width:100%;max-height:390px;object-fit:cover}.rn-house-modal-body{padding:22px}.rn-house-modal-body h3{font-size:28px;color:#075985}.rn-house-modal-body p{margin:8px 0;color:#486581}.rn-house-modal-close{float:right;margin:12px;border:0;background:#eef6ff;color:#075985;border-radius:50%;width:42px;height:42px;font-size:25px;cursor:pointer;position:relative;z-index:2}
 .rn-home-welcome{max-width:760px;margin:0 auto 24px;text-align:center}
 .rn-home-welcome h3{font-size:30px;margin-bottom:10px;color:#075985}
@@ -766,14 +766,22 @@ body.rn-gate-active{margin:0;}
 </div>
 
 <div class="client-form-step" data-step="6">
-  <h3>Your email</h3>
-  <div class="rn-one-choice"><label for="clientEmail">Email</label><input id="clientEmail" type="email" autocomplete="email" placeholder="Enter your email"></div>
+  <h3>Add your phone number</h3>
+  <p>Choose your country first, then enter your phone number.</p>
+  <div class="rn-one-choice">
+    <label for="clientCountry">Country</label>
+    <select id="clientCountry" required>
+      <option value="">Choose your country</option>
+    </select>
+    <label for="clientPhone" style="margin-top:12px;">Phone number</label>
+    <input id="clientPhone" type="tel" autocomplete="tel" inputmode="tel" placeholder="Enter your phone number" required>
+  </div>
   <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Continue</button></div>
 </div>
 
 <div class="client-form-step" data-step="7">
-  <h3>Your phone number</h3>
-  <div class="rn-one-choice"><label for="clientPhone">Phone number</label><input id="clientPhone" type="tel" autocomplete="tel" placeholder="Enter your phone number"></div>
+  <h3>Add your email</h3>
+  <div class="rn-one-choice"><label for="clientEmail">Email</label><input id="clientEmail" type="email" autocomplete="email" placeholder="Enter your email" required></div>
   <div class="client-actions"><button class="btn secondary" type="button" data-back>Back</button><button class="btn client-next" type="button">Continue</button></div>
 </div>
 
@@ -2001,7 +2009,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 })();
 </script>
 <script>
-/* RumahNusa sequential customer experience — one choice/question at a time. */
+/* RumahNusa customer flow: category selection first, then one detail question at a time. */
 (function(){
   function boot(){
     const form=document.getElementById('clientProfilForm');
@@ -2013,19 +2021,19 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     const genders=Array.from(document.querySelectorAll('#rnGateIdentityFields .rn-gender-option'));
     if(!form||!gate||!loginBtn)return;
 
-    let gender='';
-    const state=window.__rnCustomerFlowState||{property:'',purpose:'Beli',rentalTerm:'',paymentMethod:'',selectedHome:'',selectedHomePriceUSD:'',selectedHomePriceIDR:''};
+    const state=window.__rnCustomerFlowState||{
+      property:'',purpose:'Beli',rentalTerm:'',selectedHome:'',selectedHomePriceIDR:'',
+      selectedRoom:'',paymentMethod:''
+    };
     window.__rnCustomerFlowState=state;
+    let gender='';
 
     function updateLogin(){
       const a=Number(age?.value);
       loginBtn.disabled=!(name?.value.trim()&&gender&&a>=18&&a<=120);
     }
-    // Gender buttons are explicit touch targets. Use both pointer and click
-    // handlers so they respond reliably on Android touchscreens.
     function chooseGender(button){
-      if(!button) return;
-      gender=button.dataset.gender||'';
+      gender=button?.dataset.gender||'';
       genders.forEach(x=>{
         const selected=x===button;
         x.classList.toggle('selected',selected);
@@ -2033,48 +2041,63 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       });
       updateLogin();
     }
-    genders.forEach(function(button){
+    genders.forEach(button=>{
       button.style.pointerEvents='auto';
-      button.addEventListener('pointerdown',function(event){
-        event.preventDefault();
-        chooseGender(button);
-      });
-      button.addEventListener('click',function(event){
-        event.preventDefault();
-        chooseGender(button);
-      });
+      button.addEventListener('pointerdown',e=>{e.preventDefault();chooseGender(button);});
+      button.addEventListener('click',e=>{e.preventDefault();chooseGender(button);});
     });
     [name,age].forEach(x=>x?.addEventListener('input',updateLogin));
     updateLogin();
 
     function showDataStep(stepNumber){
       const steps=Array.from(form.querySelectorAll('.client-form-step'));
-      steps.forEach(step=>{
-        const number=Number(step.dataset.step);
-        step.classList.toggle('active',number===stepNumber);
-      });
-      form.querySelectorAll('.rn-selection-hidden').forEach(step=>step.classList.remove('active'));
+      steps.forEach(step=>step.classList.toggle('active',Number(step.dataset.step)===stepNumber));
       window.__rumahnusaCustomerStep=stepNumber;
-      window.scrollTo({top:document.getElementById('client-profile')?.offsetTop||0,behavior:'smooth'});
+      const panel=document.querySelector('.client-panel');
+      if(panel) panel.scrollIntoView({behavior:'smooth',block:'start'});
     }
     window.__rumahnusaShowCustomerStep=showDataStep;
 
-    function clearMedia(id){
-      const input=document.getElementById(id);
-      if(!input)return;
-      try{input.value='';}catch(e){}
+    const countryNames=[
+      "Afghanistan","Albania","Algeria","Andorra","Angola","Antigua and Barbuda","Argentina","Armenia","Australia","Austria",
+      "Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bhutan",
+      "Bolivia","Bosnia and Herzegovina","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso","Burundi","Cabo Verde","Cambodia",
+      "Cameroon","Canada","Central African Republic","Chad","Chile","China","Colombia","Comoros","Congo, Democratic Republic of the","Congo, Republic of the",
+      "Costa Rica","Cote d'Ivoire","Croatia","Cuba","Cyprus","Czechia","Denmark","Djibouti","Dominica","Dominican Republic",
+      "Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Eswatini","Ethiopia","Fiji","Finland",
+      "France","Gabon","Gambia","Georgia","Germany","Ghana","Greece","Grenada","Guatemala","Guinea",
+      "Guinea-Bissau","Guyana","Haiti","Honduras","Hungary","Iceland","India","Indonesia","Iran","Iraq",
+      "Ireland","Israel","Italy","Jamaica","Japan","Jordan","Kazakhstan","Kenya","Kiribati","Kuwait",
+      "Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg",
+      "Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico",
+      "Micronesia","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique","Myanmar","Namibia","Nauru",
+      "Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria","North Korea","North Macedonia","Norway","Oman",
+      "Pakistan","Palau","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal",
+      "Qatar","Romania","Russia","Rwanda","Saint Kitts and Nevis","Saint Lucia","Saint Vincent and the Grenadines","Samoa","San Marino","Sao Tome and Principe",
+      "Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia",
+      "South Africa","South Korea","South Sudan","Spain","Sri Lanka","Sudan","Suriname","Sweden","Switzerland","Syria",
+      "Taiwan","Tajikistan","Tanzania","Thailand","Timor-Leste","Togo","Tonga","Trinidad and Tobago","Tunisia","Turkey",
+      "Turkmenistan","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","Uruguay","Uzbekistan",
+      "Vanuatu","Vatican City","Venezuela","Vietnam","Yemen","Zambia","Zimbabwe"
+    ];
+    const countrySelect=document.getElementById('clientCountry');
+    if(countrySelect && countrySelect.options.length===1){
+      countryNames.forEach(country=>{
+        const option=document.createElement('option');
+        option.value=country; option.textContent=country; countrySelect.appendChild(option);
+      });
     }
 
     function validateCurrent(stepNumber){
       const requiredByStep={
-        6:'clientEmail',7:'clientPhone',8:'clientAddress',9:'meetingDay',
-        10:'meetingTime',11:'clientMarital',12:'clientChildren',13:'clientOccupation',
-        14:'clientPurchaseReason',15:'clientUse',16:'clientCity',17:'clientCityWant',18:'household'
+        6:['clientCountry','clientPhone'],7:['clientEmail'],8:['clientAddress'],9:['meetingDay'],
+        10:['meetingTime'],11:['clientMarital'],12:['clientChildren'],13:['clientOccupation'],
+        14:['clientPurchaseReason'],15:['clientUse'],16:['clientCity'],17:['clientCityWant'],18:['household']
       };
-      const id=requiredByStep[stepNumber];
-      if(id){
+      const ids=requiredByStep[stepNumber]||[];
+      for(const id of ids){
         const el=document.getElementById(id);
-        if(el&&!el.reportValidity())return false;
+        if(el&&!el.reportValidity()) return false;
       }
       if(stepNumber===19){
         const type=document.getElementById('privateIdentityType');
@@ -2092,16 +2115,14 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       if(stepNumber===22){
         const currency=document.querySelector('input[name="paymentCurrency"]:checked')?.value||'';
         if(!currency){document.getElementById('paymentStatus').textContent='Choose how you want to pay first.';return false;}
-        let country='', bank='';
+        let country='',bank='';
         if(currency==='USD'){
-          bank=document.getElementById('usdBank')?.value||'';
-          country='United States';
+          bank=document.getElementById('usdBank')?.value||''; country='United States';
           if(bank==='Other U.S. bank') bank=document.getElementById('usdBankOther')?.value.trim()||'';
         }else if(currency==='IDR'){
-          bank=document.getElementById('idrBank')?.value||'';
-          country='Indonesia';
+          bank=document.getElementById('idrBank')?.value||''; country='Indonesia';
           if(bank==='Other Indonesian bank') bank=document.getElementById('idrBankOther')?.value.trim()||'';
-        }else if(currency==='EUR'){
+        }else{
           country=document.getElementById('eurCountry')?.value||'';
           bank=document.getElementById('eurBank')?.value||'';
           if(bank==='Other euro-area bank') bank=document.getElementById('eurBankOther')?.value.trim()||'';
@@ -2109,9 +2130,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
         }
         if(!bank){document.getElementById('paymentStatus').textContent='Choose your bank.';return false;}
         state.paymentMethod=currency+' · '+country+' · '+bank;
-        window.__rnCustomerFlowState.paymentCurrency=currency;
-        window.__rnCustomerFlowState.paymentCountry=country;
-        window.__rnCustomerFlowState.paymentBank=bank;
+        state.paymentCurrency=currency; state.paymentCountry=country; state.paymentBank=bank;
       }
       return true;
     }
@@ -2119,14 +2138,12 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     function nextFrom(stepNumber){
       if(!validateCurrent(stepNumber))return;
       if(stepNumber>=6&&stepNumber<23){
-        if(stepNumber===19)clearMedia('privateIdentityPhoto');
-        if(stepNumber===20)clearMedia('faceScanPhoto');
-        if(stepNumber===21)clearMedia('frontCameraPhoto');
+        if(stepNumber===19) document.getElementById('privateIdentityPhoto').value='';
+        if(stepNumber===20) document.getElementById('faceScanPhoto').value='';
+        if(stepNumber===21) document.getElementById('frontCameraPhoto').value='';
         showDataStep(stepNumber+1);
       }
-      if(stepNumber===22){
-        window.buildSummary?.();
-      }
+      if(stepNumber===22) window.buildSummary?.();
     }
 
     form.addEventListener('click',function(event){
@@ -2134,8 +2151,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       if(back){
         event.preventDefault();
         const current=Number(window.__rumahnusaCustomerStep||1);
-        if(current>6)showDataStep(current-1);
-        else showDataStep(1);
+        showDataStep(current>6?current-1:1);
         return;
       }
       const nextButton=event.target.closest('.client-next');
@@ -2145,244 +2161,167 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       }
     });
 
-    // Gate: name, gender, and age are completed before the home categories appear.
-    // The Continue button must always open the RumahNusa home selector after valid identity
-    // details are entered. Supabase sign-in is attempted in the background, but a temporary
-    // auth configuration problem must never make the visible Continue button appear broken.
     loginBtn.addEventListener('click',async function(){
       const a=Number(age.value);
       if(!name.value.trim()||!gender||a<18||a>120)return;
-
       loginBtn.disabled=true;
       status.textContent='Welcome to RumahNusa…';
       window.__rnCustomerIdentity={name:name.value.trim(),gender,age:a};
-
       try{
         if(window.supabase&&window.RUMAHNUSA_SUPABASE_URL&&window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY){
           const db=window.supabase.createClient(window.RUMAHNUSA_SUPABASE_URL,window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY);
-          const sessionResult=await db.auth.getSession();
-          let user=sessionResult?.data?.session?.user||null;
-
+          let user=(await db.auth.getSession())?.data?.session?.user||null;
           if(!user){
-            const anonymous=await db.auth.signInAnonymously({
-              options:{data:{full_name:name.value.trim(),gender,age:a}}
-            });
+            const anonymous=await db.auth.signInAnonymously({options:{data:{full_name:name.value.trim(),gender,age:a}}});
             if(!anonymous.error&&anonymous.data?.user) user=anonymous.data.user;
           }else{
             await db.auth.updateUser({data:{full_name:name.value.trim(),gender,age:a}});
           }
-
           if(user){
             window.__rnLoggedInUser=user;
-            await db.from('profiles').upsert({
-              id:user.id,
-              full_name:name.value.trim(),
-              email:'',
-              role:'customer'
-            },{onConflict:'id'});
+            await db.from('profiles').upsert({id:user.id,full_name:name.value.trim(),email:'',role:'customer'},{onConflict:'id'});
           }
         }
-      }catch(e){
-        // Continue the customer experience even if authentication is temporarily unavailable.
-        console.warn('RumahNusa authentication will be completed when the inbox is used.',e);
-      }
-
+      }catch(e){ console.warn('RumahNusa authentication is continuing locally.',e); }
       status.textContent='Welcome to RumahNusa. Choose your beautiful home.';
-      gate.hidden=true;
-      form.hidden=false;
+      gate.hidden=true; form.hidden=false;
       document.getElementById('client-profile')?.classList.remove('rn-login-locked');
       document.body.classList.remove('rn-gate-active');
       showDataStep(1);
       loginBtn.disabled=false;
     });
 
-    // Only the selected category's listings are rendered. The fixed control appears
-    // only after both a home and at least one price have been selected.
-    const categoryOptions=document.querySelectorAll('#propertyOptions .client-option');
+    const categoryOptions=Array.from(document.querySelectorAll('#propertyOptions .client-option'));
     const listings=document.getElementById('rnCategoryListings');
     const collection=document.getElementById('rnCategoryCollection');
     const selectionPrompt=document.getElementById('rnSelectionPrompt');
     const fixedContinue=document.getElementById('propertyContinueFloat');
 
     function esc(value){
-      return String(value??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+      return String(value??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
     }
-
-    function selectedPriceReady(){
-      return !!state.selectedHome &&
-        (Number(state.selectedHomePriceUSD)>0 || Number(state.selectedHomePriceIDR)>0);
+    function priceIdr(card){
+      const existing=card.querySelector('.rn-listing-price-idr')?.textContent?.trim();
+      if(existing) return existing;
+      const title=card.querySelector('h5')?.textContent||'';
+      if(title.includes('Luxury Apartment — 2 Bedrooms')) return 'Rp 3.500.000.000+';
+      if(title.includes('Private Family House — 4 Bedrooms')) return 'Rp 350.000.000';
+      if(title.includes('Villa with Private Pool — 4 Bedrooms')) return 'Rp 550.000.000';
+      return 'Harga dalam Rupiah: Hubungi RumahNusa';
     }
 
     function syncContinue(){
       if(!fixedContinue)return;
-      const ready=!!state.selectedHome && !!state.property;
+      const ready=!!state.selectedHome&&!!state.property;
       fixedContinue.hidden=!ready;
       fixedContinue.disabled=!ready;
-      if(selectionPrompt){
-        selectionPrompt.textContent=ready
-          ? 'Your home is selected. Tap Continue on that home to continue step by step.'
-          : 'Choose a home to see its Continue button.';
-      }
+      fixedContinue.textContent='Continue';
+      if(selectionPrompt) selectionPrompt.textContent=ready
+        ? 'Home selected. Your Continue button is ready on the right side of your phone.'
+        : 'Open the rooms and details, then choose the home you want.';
     }
 
-    function setSelectedCard(card){
+    function selectHome(card,choice){
       listings?.querySelectorAll('.rn-listing').forEach(x=>x.classList.remove('rn-home-selected'));
       card.classList.add('rn-home-selected');
-      state.selectedHome=card.dataset.home||card.querySelector('h5')?.textContent||'';
-      window.__rnSelectedHome={
-        title:state.selectedHome,
-        location:card.querySelector('p')?.textContent?.replace(/^📍\s*/,'')||'',
-        details:card.querySelector('.rn-listing-specs')?.textContent||''
-      };
-      state.selectedHomePriceUSD='';
-      state.selectedHomePriceIDR='';
-      const usd=card.querySelector('.rn-home-price-usd');
-      const idr=card.querySelector('.rn-home-price-idr');
-      if(usd)usd.value='';
-      if(idr)idr.value='';
+      const title=card.querySelector('h5')?.textContent||'Selected RumahNusa home';
+      const location=card.querySelector('p')?.textContent?.replace(/^📍\s*/,'')||'';
+      const specs=card.querySelector('.rn-listing-specs')?.textContent||'';
+      const plan=choice.querySelector('.rn-card-plan')?.value||'Beli';
+      const room=choice.querySelector('.rn-card-room')?.value||'';
+      const rental=choice.querySelector('.rn-card-rental')?.value||'';
+      state.property=document.querySelector('#propertyOptions .client-option.selected')?.dataset.value||state.property;
+      state.selectedHome=title;
+      state.selectedRoom=room;
+      state.purpose=plan;
+      state.rentalTerm=plan==='Sewa'?rental:'Tidak berlaku';
+      state.selectedHomePriceIDR=priceIdr(card);
+      window.__rnSelectedHome={title,location,details:specs,displayedPriceIdr:state.selectedHomePriceIDR};
+      const budget=document.getElementById('clientBudgetIdr');
+      if(budget) budget.value=(state.selectedHomePriceIDR.match(/[0-9][0-9.]*/)?.[0]||'').replace(/\./g,'');
       syncContinue();
     }
 
     function wireListings(){
       if(!listings)return;
       listings.querySelectorAll('.rn-listing').forEach(card=>{
-        if(card.dataset.rnHouseWired)return;
-        card.dataset.rnHouseWired='1';
-
+        if(card.dataset.rnNewWired)return;
+        card.dataset.rnNewWired='1';
         const body=card.querySelector('.rn-listing-body');
         if(!body)return;
-
-        const title=card.querySelector('h5')?.textContent||'Selected RumahNusa home';
         const specs=card.querySelector('.rn-listing-specs')?.textContent||'';
-        const location=card.querySelector('p')?.textContent?.replace(/^📍\\s*/,'')||'';
-
-        const detailButton=document.createElement('button');
-        detailButton.type='button';
-        detailButton.className='rn-view-inside';
-        detailButton.textContent='View inside';
-        detailButton.setAttribute('aria-expanded','false');
-
+        const roomSource=Array.from(document.querySelectorAll('#rooms option')).filter(o=>o.value).map(o=>o.value);
+        const oldPrice=card.querySelector('.rn-listing-price');
+        const idr=priceIdr(card);
+        if(oldPrice){
+          oldPrice.textContent=idr;
+          oldPrice.classList.add('rn-listing-price-idr');
+        }
         const details=document.createElement('div');
-        details.className='rn-home-inside';
-        details.hidden=true;
-        details.innerHTML='<strong>Inside '+esc(title)+'</strong><p>'+esc(location)+'</p><p>'+esc(specs)+'</p><p>Explore the rooms, parlor, kitchen, bathrooms, toilets, furniture, outdoor spaces, pool and parking described for this home.</p>';
-
-        const selectButton=body.querySelector('.rn-listing-continue') || document.createElement('button');
-        if(!selectButton.parentElement) body.appendChild(selectButton);
-        selectButton.type='button';
-        selectButton.className='rn-listing-continue';
-        selectButton.textContent='Continue with this home';
-
-        const pricing=document.createElement('div');
-        pricing.className='rn-house-price-picker';
-        pricing.hidden=true;
-        pricing.innerHTML='<strong>Enter your amount in Rupiah</strong><label>Amount (Rupiah)<input class="rn-home-price-idr" type="number" min="1" step="1" inputmode="numeric" placeholder="Contoh: 500000000"></label><small>RumahNusa customers see prices and enter amounts in Rupiah only.</small>';
-
-        body.appendChild(detailButton);
+        details.className='rn-category-home-controls';
+        details.innerHTML=
+          '<div class="rn-control-title">Rooms and home details</div>'+
+          '<p>'+esc(specs)+'</p>'+
+          '<label>Bedrooms<select class="rn-card-room"><option value="">Choose bedrooms</option>'+
+          roomSource.map(x=>'<option value="'+esc(x)+'">'+esc(x)+'</option>').join('')+
+          '</select></label>'+
+          '<label>Purchase plan<select class="rn-card-plan"><option value="Beli">Buy</option>'+
+          (state.property==='Apartemen'?'<option value="Sewa">Rent</option>':'')+
+          '</select></label>'+
+          '<div class="rn-card-rental-wrap" hidden><label>Rental duration<select class="rn-card-rental"><option value="">Choose duration</option><option>1 year</option><option>2 years</option><option>3 years</option><option>4 years</option><option>5 years</option></select></label></div>'+
+          '<p class="rn-card-price"><strong>Amount in Rupiah:</strong> '+esc(idr)+'</p>'+
+          '<button type="button" class="rn-card-select">Choose this home</button>';
         body.appendChild(details);
-        if(!selectButton.parentElement) body.appendChild(selectButton);
-        body.appendChild(pricing);
 
-        function openHomeViewer(){
-          const viewer=document.getElementById('rnHomeViewer');
-          if(!viewer)return;
-          viewer.querySelector('[data-viewer-title]').textContent=title;
-          viewer.querySelector('[data-viewer-location]').textContent=location;
-          viewer.querySelector('[data-viewer-image]').src=card.querySelector('img')?.src||'';
-          viewer.querySelector('[data-viewer-image]').alt=title+' — RumahNusa property';
-          viewer.querySelector('[data-viewer-price]').textContent=card.querySelector('.rn-listing-price')?.textContent||'Contact RumahNusa';
-          viewer.querySelector('[data-viewer-specs]').innerHTML=Array.from(card.querySelectorAll('.rn-listing-specs span')).map(s=>'<div class="rn-home-viewer-chip">'+esc(s.textContent)+'</div>').join('');
-          if(!viewerHistoryOpen){
-            history.pushState({rnHomeViewer:true},'',location.href);
-            viewerHistoryOpen=true;
-          }
-          viewer.hidden=false;
-          document.body.style.overflow='hidden';
+        const room=details.querySelector('.rn-card-room');
+        const plan=details.querySelector('.rn-card-plan');
+        const rentalWrap=details.querySelector('.rn-card-rental-wrap');
+        const rental=details.querySelector('.rn-card-rental');
+        const choose=details.querySelector('.rn-card-select');
+
+        function updateRental(){
+          rentalWrap.hidden=!(plan.value==='Sewa'&&state.property==='Apartemen');
+          if(plan.value!=='Sewa') rental.value='';
         }
-
-        function selectHome(){
-          setSelectedCard(card);
-          window.__rnSelectedHome={
-            title:title,
-            location:location,
-            details:specs,
-            displayedPrice:card.querySelector('.rn-listing-price')?.textContent||'',
-            displayedPriceIdr:card.querySelector('.rn-listing-price-idr')?.textContent||''
-          };
-          card.classList.add('rn-home-selected');
-          if(typeof window.__rumahnusaShowCustomerStep==='function'){
-            window.__rumahnusaShowCustomerStep(2);
-          } else {
-            const step=document.querySelector('.client-form-step[data-step="2"]');
-            document.querySelectorAll('.client-form-step').forEach(x=>x.classList.remove('active'));
-            step?.classList.add('active');
-          }
-        }
-
-        detailButton.addEventListener('click',function(event){
-          event.stopPropagation();
-          openHomeViewer();
+        plan.addEventListener('change',updateRental);
+        room.addEventListener('change',()=>{});
+        rental.addEventListener('change',()=>{});
+        choose.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();selectHome(card,details);});
+        card.addEventListener('click',e=>{
+          if(e.target.closest('button,select,input,label'))return;
+          const inside=details;
+          inside.scrollIntoView({behavior:'smooth',block:'center'});
         });
-
-        selectButton.addEventListener('click',function(event){event.preventDefault();event.stopPropagation();selectHome();});
-
-        card.addEventListener('click',function(event){
-          if(event.target.closest('input,select,button,label'))return;
-          openHomeViewer();
-        });
-        card.setAttribute('role','button');
-        card.setAttribute('tabindex','0');
-        card.addEventListener('keydown',function(event){
-          if(event.key==='Enter'||event.key===' '){event.preventDefault();selectHome();}
-        });
-
-        pricing.querySelectorAll('input').forEach(input=>{
-          input.addEventListener('input',function(){
-            if(!card.classList.contains('rn-home-selected'))selectHome();
-            state.selectedHomePriceIDR=input.value;
-            document.getElementById('clientBudgetIdr').value=state.selectedHomePriceIDR||'';
-            syncContinue();
-          });
-        });
+        updateRental();
       });
       syncContinue();
     }
-
-    const listingObserver=new MutationObserver(wireListings);
-    if(listings)listingObserver.observe(listings,{childList:true,subtree:true});
-    wireListings();
 
     categoryOptions.forEach(option=>{
       option.addEventListener('click',function(){
         categoryOptions.forEach(x=>x.classList.remove('selected'));
         option.classList.add('selected');
         state.property=option.dataset.value||'';
-        state.selectedHome='';
+        state.selectedHome='';state.selectedHomePriceIDR='';state.selectedRoom='';
         window.__rnSelectedHome=null;
-        state.selectedHomePriceUSD='';
-        state.selectedHomePriceIDR='';
-        document.getElementById('clientBudget').value='';
-        document.getElementById('clientBudgetIdr').value='';
-        fixedContinue && (fixedContinue.hidden=true,fixedContinue.disabled=true);
-        setTimeout(wireListings,100);
+        if(fixedContinue){fixedContinue.hidden=true;fixedContinue.disabled=true;}
+        setTimeout(wireListings,150);
       });
     });
 
-    // Each listing now has its own Continue button, placed directly inside that home's card.
+    if(fixedContinue){
+      fixedContinue.addEventListener('click',function(e){
+        e.preventDefault();
+        if(!state.selectedHome||!state.property)return;
+        showDataStep(6);
+      });
+    }
 
-    document.getElementById('changeHouseCategory')?.addEventListener('click',function(){
-      state.selectedHome='';
-      state.selectedHomePriceUSD='';
-      state.selectedHomePriceIDR='';
-      showDataStep(1);
-      syncContinue();
-    });
-
-    // Start locked at the welcome gate; after login, only step 1 is visible.
     form.hidden=true;
     form.querySelectorAll('.rn-selection-hidden').forEach(step=>step.classList.remove('active'));
     window.__rumahnusaCustomerStep=1;
     syncContinue();
+    setTimeout(wireListings,300);
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
@@ -2439,4 +2378,16 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 .rn-home-viewer-note{padding:0 18px 18px;color:#627d98;font-size:13px;line-height:1.5}
 @media(max-width:520px){.rn-home-viewer-chips{grid-template-columns:1fr}.rn-home-viewer-title{font-size:17px}}
 .rn-home-viewer-back{border:0;background:rgba(255,255,255,.16);color:#fff;border-radius:10px;padding:9px 12px;font-weight:700;font-size:14px;cursor:pointer;touch-action:manipulation}.rn-home-viewer-back:active{transform:scale(.98)}</style>
-</html>
+</html><style>
+#propertyContinueFloat{display:none;position:fixed;right:14px;bottom:16px;z-index:10000;min-width:132px;padding:14px 20px;border:0;border-radius:999px;background:#0879bd;color:#fff;font-size:17px;font-weight:800;box-shadow:0 6px 20px rgba(0,0,0,.22);cursor:pointer;touch-action:manipulation}
+#propertyContinueFloat[hidden]{display:none!important}
+.rn-category-home-controls{margin-top:14px;padding:15px;border:1px solid #d9e2ec;border-radius:14px;background:#f8fbfd;display:grid;gap:10px}
+.rn-category-home-controls label{display:grid;gap:6px;font-weight:700;color:#12344d}
+.rn-category-home-controls select{width:100%;box-sizing:border-box;padding:12px;border:1px solid #bcccdc;border-radius:9px;background:#fff;font:inherit}
+.rn-control-title{font-size:17px;font-weight:800;color:#075985}
+.rn-card-price{margin:2px 0 0;color:#0f766e;font-size:16px}
+.rn-card-select{width:100%;min-height:50px;border:0;border-radius:11px;background:#0879bd;color:#fff;font-size:16px;font-weight:800;cursor:pointer;touch-action:manipulation}
+.rn-card-select:active{transform:scale(.98)}
+.rn-listing.rn-home-selected{outline:3px solid #0879bd;outline-offset:2px}
+@media(max-width:600px){#propertyContinueFloat{right:12px;bottom:14px;min-width:145px}}
+</style>
