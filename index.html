@@ -659,7 +659,7 @@ body.rn-gate-active{margin:0;}
   </div>
 </section>
 
-<div id="rnHouseModal" class="rn-house-modal" hidden role="dialog" aria-modal="true" aria-labelledby="rnHouseModalTitle"><div class="rn-house-modal-card"><button id="rnHouseModalClose" class="rn-house-modal-close" type="button" aria-label="Close">×</button><img id="rnHouseModalImage" src="" alt=""><div class="rn-house-modal-body"><h3 id="rnHouseModalTitle"></h3><p id="rnHouseModalLocation"></p><p id="rnHouseModalPrice"></p><div id="rnHouseModalSpecs"></div><p id="rnHouseModalDescription"></p></div></div></div>
+<div id="rnHouseModal" class="rn-house-modal" hidden role="dialog" aria-modal="true" aria-labelledby="rnHouseModalTitle"><div class="rn-house-modal-card"><button id="rnHouseModalClose" class="rn-house-modal-close" type="button" aria-label="Close">×</button><img id="rnHouseModalImage" src="" alt=""><div class="rn-house-modal-body"><h3 id="rnHouseModalTitle"></h3><p id="rnHouseModalLocation"></p><p id="rnHouseModalPrice"></p><div id="rnHouseModalSpecs"></div><p id="rnHouseModalDescription"></p><button id="rnHouseModalSelect" class="rn-select-home" type="button">Select this home</button></div></div></div>
 <section id="client-profile" class="client-area rn-login-locked">
   <div class="section-title">
     <h2 data-en="Welcome to RumahNusa Real Estate" data-id="Selamat Datang di RumahNusa Real Estate">Selamat Datang di RumahNusa Real Estate</h2>
@@ -1503,7 +1503,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       listings:[
         ['Villa with Private Pool — 4 Bedrooms','Bali, Indonesia','$550,000','4 bedrooms · 3 bathrooms/toilets · furnished parlor · kitchen · private pool · parking · outdoor space','https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=85'],
         ['Garden Villa — 5 Bedrooms','Bali, Indonesia','Contact RumahNusa for the selected villa','5 bedrooms · furnished rooms · large bathrooms/toilets · kitchen · pool · parking · garden','https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=85'],
-        ['Private Pool Villa — 6 Bedrooms','Bali, Indonesia','Contact RumahNusa for the selected villa','6 bedrooms · furnished parlors · beautiful bathrooms/toilets · kitchen · pool · parking','https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=1200&q=85']
+        ['Private Pool Villa — 6 Bedrooms','Bali, Indonesia','Rp 6.000.000.000','6 bedrooms · furnished parlors · beautiful bathrooms/toilets · kitchen · private pool · parking','https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=1200&q=85']
       ]
     },
     'Neighborhood Rumah':{
@@ -1725,6 +1725,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   });
 
   const houseModal=document.getElementById('rnHouseModal');
+  const houseModalSelect=document.getElementById('rnHouseModalSelect');
   let houseModalHistoryOpen=false;
 
   function closeHouseModal(useHistory){
@@ -1740,6 +1741,16 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   }
 
   document.getElementById('rnHouseModalClose')?.addEventListener('click',()=>closeHouseModal(true));
+  houseModalSelect?.addEventListener('click',function(e){
+    e.preventDefault();
+    const title=document.getElementById('rnHouseModalTitle')?.textContent||'';
+    const card=Array.from(document.querySelectorAll('#rnCategoryListings .rn-listing')).find(x=>(x.querySelector('h5')?.textContent||'')===title);
+    const selectButton=card?.querySelector('.rn-card-select');
+    if(selectButton){
+      selectButton.click();
+      closeHouseModal(true);
+    }
+  });
   houseModal?.addEventListener('click',e=>{
     if(e.target===houseModal)closeHouseModal(true);
   });
@@ -1781,6 +1792,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   },{passive:true});
 
   listings.addEventListener('click',e=>{
+    if(e.target.closest('button,select,input,label'))return;
     const card=e.target.closest('.rn-listing');
     if(!card)return;
     const category=document.querySelector('#propertyOptions .client-option.selected')?.dataset.value;
@@ -2249,6 +2261,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       if(title.includes('Luxury Apartment — 2 Bedrooms')) return 'Rp 3.500.000.000+';
       if(title.includes('Private Family House — 4 Bedrooms')) return 'Rp 350.000.000';
       if(title.includes('Villa with Private Pool — 4 Bedrooms')) return 'Rp 550.000.000';
+      if(title.includes('Private Pool Villa — 6 Bedrooms')) return 'Rp 6.000.000.000';
       return 'Harga dalam Rupiah: Hubungi RumahNusa';
     }
 
@@ -2312,7 +2325,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
           '</select></label>'+
           '<div class="rn-card-rental-wrap" hidden><label>Rental duration<select class="rn-card-rental"><option value="">Choose duration</option><option>1 year</option><option>2 years</option><option>3 years</option><option>4 years</option><option>5 years</option></select></label></div>'+
           '<p class="rn-card-price"><strong>Amount in Rupiah:</strong> '+esc(idr)+'</p>'+
-          '<button type="button" class="rn-card-select">Choose this home</button>';
+          '<button type="button" class="rn-card-select">Select this home</button>';
         body.appendChild(details);
 
         const room=details.querySelector('.rn-card-room');
@@ -2380,8 +2393,10 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 .rn-house-price-picker small{color:#486581}
 #propertyContinueFloat{
   position:fixed;
-  right:16px;
-  bottom:18px;
+  right:12px;
+  top:50%;
+  bottom:auto;
+  transform:translateY(-50%);
   z-index:10000;
   min-width:150px;
   padding:14px 18px;
@@ -2396,7 +2411,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 #propertyContinueFloat[hidden]{display:none!important}
 #propertyContinueFloat:disabled{opacity:.55}
 @media(max-width:600px){
-  #propertyContinueFloat{right:12px;bottom:14px;min-width:150px}
+  #propertyContinueFloat{right:10px;top:50%;bottom:auto;min-width:150px;transform:translateY(-50%)}
 }
 
 .rn-listing{cursor:pointer;touch-action:manipulation}
