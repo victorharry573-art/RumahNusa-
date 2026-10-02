@@ -665,6 +665,26 @@ header .lang-btn.active{color:#dc2626!important;background:#fff!important;border
 .rn-settings-card button,.rn-settings-card label{width:100%;box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 8px;border:0;border-top:1px solid #f4f4f5;background:#fff;color:#3f3f46;text-align:left;font:inherit;cursor:pointer}
 .rn-settings-card button:hover{background:#fff7f7;color:#b91c1c}.rn-settings-card button b{color:#dc2626}.rn-settings-card select{border:1px solid #fecaca;border-radius:8px;padding:6px;background:#fff;color:#3f3f46}.rn-settings-card input[type=checkbox],.rn-settings-card input[type=radio]{accent-color:#dc2626;width:20px;height:20px}
 .rn-settings-toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);z-index:16000;width:min(90vw,430px);padding:13px 16px;background:#991b1b;color:#fff;border-radius:12px;text-align:center;font-weight:700;box-shadow:0 8px 25px rgba(0,0,0,.2)}
+.rn-settings-panel{touch-action:pan-y;overscroll-behavior-x:none}
+.rn-settings-card button{min-height:48px;-webkit-tap-highlight-color:rgba(220,38,38,.12);touch-action:manipulation}
+.rn-settings-card label{min-height:48px}
+.rn-setting-detail{position:fixed;inset:0;background:#fff;z-index:17000;overflow:auto;padding:18px 14px 110px;overscroll-behavior-x:none}
+.rn-setting-detail[hidden]{display:none!important}
+.rn-detail-head{max-width:760px;margin:0 auto 18px;display:flex;align-items:center;gap:12px;position:sticky;top:0;background:#fff;padding:5px 0 14px;z-index:2;border-bottom:1px solid #fee2e2}
+.rn-detail-head span{font-size:10px;letter-spacing:1.8px;font-weight:800;color:#dc2626}
+.rn-detail-head h2{margin:2px 0;color:#991b1b;font-size:24px}
+.rn-detail-back{width:46px;height:46px;border:1px solid #fecaca;background:#fff1f2;color:#991b1b;border-radius:12px;font-size:34px;line-height:1;cursor:pointer;touch-action:manipulation}
+.rn-detail-body{max-width:760px;margin:auto}
+.rn-detail-card{border:1px solid #fecaca;border-radius:16px;padding:16px;background:#fff;box-shadow:0 4px 16px rgba(127,29,29,.07);margin-bottom:12px}
+.rn-detail-card h3{color:#991b1b;margin:0 0 8px}.rn-detail-card p{color:#52525b;line-height:1.55}
+.rn-detail-field{display:block;margin:12px 0}.rn-detail-field span{display:block;font-weight:700;color:#3f3f46;margin-bottom:6px}
+.rn-detail-field input,.rn-detail-field select,.rn-detail-field textarea{width:100%;box-sizing:border-box;border:1px solid #fca5a5;border-radius:10px;padding:12px;background:#fff;font:inherit;color:#27272a}
+.rn-detail-field textarea{min-height:110px;resize:vertical}
+.rn-detail-save{width:100%;border:0;border-radius:11px;background:#dc2626;color:#fff;padding:13px;font-weight:800;font-size:15px;cursor:pointer;touch-action:manipulation}
+.rn-detail-toggle{display:flex;justify-content:space-between;align-items:center;border:1px solid #fecaca;border-radius:11px;padding:12px;margin:8px 0}.rn-detail-toggle input{width:22px;height:22px;accent-color:#dc2626}
+.rn-swipe-hint{font-size:12px;color:#71717a;text-align:center;margin:14px 0}
+@media(max-width:650px){.rn-setting-detail{padding-left:12px;padding-right:12px}.rn-detail-head h2{font-size:21px}}
+
 @media(max-width:650px){.rn-settings-grid{grid-template-columns:1fr}.rn-settings-panel{padding-left:12px;padding-right:12px}.rn-settings-head h2{font-size:24px}}
 </style>
 </head>
@@ -1266,6 +1286,13 @@ header .lang-btn.active{color:#dc2626!important;background:#fff!important;border
     <div class="rn-settings-card"><h3>📄 About</h3><button data-setting="about">About RumahNusa <b>›</b></button><button data-setting="terms">Terms of service <b>›</b></button><button data-setting="privacyPolicy">Privacy policy <b>›</b></button><button data-setting="version">Version <b>1.0</b></button></div>
   </div>
   <div id="rnSettingsToast" class="rn-settings-toast" hidden></div>
+  <section id="rnSettingDetail" class="rn-setting-detail" hidden aria-label="Settings detail">
+    <div class="rn-detail-head">
+      <button type="button" id="rnSettingBack" class="rn-detail-back" aria-label="Go back">‹</button>
+      <div><span>RUMAHNUSA SETTINGS</span><h2 id="rnSettingDetailTitle">Settings</h2></div>
+    </div>
+    <div id="rnSettingDetailBody" class="rn-detail-body"></div>
+  </section>
 </section>
 <nav class="rn-bottom-nav" id="rnBottomNav" aria-label="RumahNusa quick navigation">
   <button type="button" data-rn-nav="home" class="active" aria-label="Home">
@@ -1490,7 +1517,28 @@ header .lang-btn.active{color:#dc2626!important;background:#fff!important;border
     setActive('settings');
     settingsPanel.scrollIntoView({behavior:'smooth',block:'start'});
   };
-  settingsClose?.addEventListener('click',()=>{settingsPanel.hidden=true;goTop();setActive('home')});
+
+  window.addEventListener('popstate',()=>{
+    if(detailOpen){detail.hidden=true;detailOpen=false;}
+  });
+  let rnEdgeStart=null;
+  document.addEventListener('touchstart',e=>{
+    if(!detailOpen)return;
+    const t=e.touches&&e.touches[0]; if(!t)return;
+    rnEdgeStart={x:t.clientX,y:t.clientY,time:Date.now()};
+  },{passive:true});
+  document.addEventListener('touchend',e=>{
+    if(!detailOpen||!rnEdgeStart)return;
+    const t=e.changedTouches&&e.changedTouches[0]; if(!t)return;
+    const dx=t.clientX-rnEdgeStart.x, dy=Math.abs(t.clientY-rnEdgeStart.y);
+    const edge=rnEdgeStart.x<=42 || rnEdgeStart.x>=window.innerWidth-42;
+    if(edge && Math.abs(dx)>70 && Math.abs(dx)>dy*1.25){ closeSettingDetail(); }
+    rnEdgeStart=null;
+  },{passive:true});
+  settingsClose?.addEventListener('click',()=>{
+    if(detailOpen){closeSettingDetail();return;}
+    settingsPanel.hidden=true;goTop();setActive('home');
+  });
   document.querySelectorAll('#rnSettingsPanel [data-pref]').forEach(el=>{
     const key='rnPref_'+el.dataset.pref;
     const saved=localStorage.getItem(key);
@@ -1506,11 +1554,99 @@ header .lang-btn.active{color:#dc2626!important;background:#fff!important;border
     settingsToast.textContent=target==='id'?'Bahasa Indonesia selected.':'English selected.';
     settingsToast.hidden=false;setTimeout(()=>settingsToast.hidden=true,1800);
   }));
-  document.querySelectorAll('#rnSettingsPanel [data-setting]').forEach(b=>b.addEventListener('click',()=>{
-    const key=b.dataset.setting;
-    const labels={profile:'Profile settings',name:'Edit your name',email:'Email address',phone:'Phone number',password:'Change password',security:'Login & security',city:'Preferred city / area',radius:'Search radius',recent:'Recently searched locations',clearSearch:'Search history cleared',locationPrivacy:'Location privacy',priceRange:'Preferred price range',savedProperties:'Saved properties',savedSearches:'Saved searches',savedLocations:'Saved locations',messages:'Messages',unread:'Unread messages',privacy:'Privacy settings',visibility:'Information visibility',exactLocation:'Exact property location stays private',data:'Data & account controls',activity:'Login activity',devices:'Other devices',help:'Help Center',support:'Contact support',report:'Report a problem',faq:'Frequently asked questions',about:'About RumahNusa',terms:'Terms of service',privacyPolicy:'Privacy policy',version:'RumahNusa version 1.0'};
-    settingsToast.textContent=labels[key]||'Settings saved.';
-    settingsToast.hidden=false;setTimeout(()=>settingsToast.hidden=true,2200);
+  const detail=document.getElementById('rnSettingDetail');
+  const detailTitle=document.getElementById('rnSettingDetailTitle');
+  const detailBody=document.getElementById('rnSettingDetailBody');
+  const detailBack=document.getElementById('rnSettingBack');
+  let detailOpen=false;
+
+  const detailDefinitions={
+    profile:['Profile','Manage your RumahNusa customer profile.','profile'],
+    name:['Edit name','Change the name shown on your RumahNusa account.','name'],
+    email:['Email address','Update the email address used for RumahNusa messages.','email'],
+    phone:['Phone number','Add or update the phone number used when an agent needs to contact you.','phone'],
+    password:['Change password','Update your account password securely.','password'],
+    security:['Login & security','Review account security options and sign-in protection.','security'],
+    city:['Preferred city / area','Choose the places you want RumahNusa to use for your property searches.','city'],
+    radius:['Search radius','Choose how far from your preferred location you want to search.','radius'],
+    recent:['Recently searched locations','Review locations you recently searched for.','recent'],
+    clearSearch:['Clear search history','Remove your saved search history from this device.','clearSearch'],
+    locationPrivacy:['Location privacy','Control how your location information is handled.','locationPrivacy'],
+    priceRange:['Preferred price range','Set the property price range you normally want to see.','priceRange'],
+    savedProperties:['Saved properties','Open the properties you saved to your wish list.','savedProperties'],
+    savedSearches:['Saved searches','Manage searches you want to keep and reuse.','savedSearches'],
+    savedLocations:['Saved locations','Manage cities and areas you saved.','savedLocations'],
+    messages:['Customer / agent messages','Open your private RumahNusa conversations with customers or agents.','messages'],
+    unread:['Unread messages','See messages that still need your attention.','unread'],
+    privacy:['Privacy settings','Choose what information RumahNusa displays publicly.','privacy'],
+    visibility:['Information visibility','Manage which profile information other people can see.','visibility'],
+    exactLocation:['Exact property location privacy','Exact street/property addresses are kept private and are shared by the agent when appropriate.','exactLocation'],
+    data:['Data & account controls','Manage your account data and account-related controls.','data'],
+    activity:['Login activity','Review recent sign-in activity for your account.','activity'],
+    devices:['Sign out of other devices','Manage other devices where your account is signed in.','devices'],
+    help:['Help Center','Find answers about searching, buying, renting and using RumahNusa.','help'],
+    support:['Contact support','Send a question or request to RumahNusa support.','support'],
+    report:['Report a problem','Tell RumahNusa about a problem you found on the website.','report'],
+    faq:['Frequently asked questions','Browse common RumahNusa questions.','faq'],
+    about:['About RumahNusa','Learn about RumahNusa and its property marketplace.','about'],
+    terms:['Terms of service','Review the terms that apply when using RumahNusa.','terms'],
+    privacyPolicy:['Privacy policy','Review how RumahNusa handles information and privacy.','privacyPolicy'],
+    version:['Version','RumahNusa website version information.','version']
+  };
+
+  function settingTemplate(key){
+    const d=detailDefinitions[key]||['Settings','Manage this RumahNusa setting.','generic'];
+    let body='<div class="rn-detail-card"><h3>'+d[0]+'</h3><p>'+d[1]+'</p>';
+    if(['profile','name'].includes(key)) body+='<label class="rn-detail-field"><span>Name</span><input id="rnDetailName" type="text" placeholder="Your name"></label><label class="rn-detail-field"><span>Display name</span><input id="rnDetailDisplay" type="text" placeholder="Name shown on RumahNusa"></label>';
+    else if(key==='email') body+='<label class="rn-detail-field"><span>Email address</span><input id="rnDetailEmail" type="email" placeholder="you@example.com"></label>';
+    else if(key==='phone') body+='<label class="rn-detail-field"><span>Phone number</span><input id="rnDetailPhone" type="tel" placeholder="+62 ..."></label>';
+    else if(key==='password') body+='<label class="rn-detail-field"><span>Current password</span><input type="password"></label><label class="rn-detail-field"><span>New password</span><input type="password"></label><label class="rn-detail-field"><span>Confirm new password</span><input type="password"></label>';
+    else if(key==='city') body+='<label class="rn-detail-field"><span>Preferred city or area</span><input id="rnDetailCity" type="search" placeholder="e.g. Jakarta, Tangerang, Bali"></label>';
+    else if(key==='radius') body+='<label class="rn-detail-field"><span>Search radius</span><select><option>5 km</option><option>10 km</option><option>25 km</option><option>50 km</option><option>100 km</option><option>Any distance</option></select>';
+    else if(key==='priceRange') body+='<label class="rn-detail-field"><span>Minimum price</span><input type="number" placeholder="0"></label><label class="rn-detail-field"><span>Maximum price</span><input type="number" placeholder="No maximum"></label>';
+    else if(key==='support'||key==='report') body+='<label class="rn-detail-field"><span>Your message</span><textarea placeholder="Tell RumahNusa what you need..."></textarea><label class="rn-detail-field"><span>Email for reply</span><input type="email" placeholder="you@example.com"></label>';
+    else if(key==='clearSearch') body+='<button type="button" class="rn-detail-save" id="rnDetailClearSearch">Clear search history</button>';
+    else if(key==='security') body+='<label class="rn-detail-toggle"><span>Two-step verification</span><input type="checkbox" data-pref="twoStepDetail"></label><label class="rn-detail-toggle"><span>Login notifications</span><input type="checkbox" data-pref="loginAlerts"></label>';
+    else if(key==='locationPrivacy'||key==='exactLocation') body+='<label class="rn-detail-toggle"><span>Keep exact property location private</span><input type="checkbox" checked disabled></label>';
+    else if(key==='privacy'||key==='visibility') body+='<label class="rn-detail-toggle"><span>Profile visible to other customers</span><input type="checkbox" checked></label><label class="rn-detail-toggle"><span>Show phone number publicly</span><input type="checkbox"></label>';
+    else if(key==='version') body+='<p><strong>RumahNusa 1.0</strong><br>Property marketplace for Indonesia.</p>';
+    else body+='<p>Your '+d[0].toLowerCase()+' area is ready. Use the controls here to manage this part of your RumahNusa account.</p>';
+    body+='<button type="button" class="rn-detail-save" id="rnDetailSave">Save changes</button></div><div class="rn-swipe-hint">Swipe from the left or right edge of your phone to go back.</div>';
+    return body;
+  }
+
+  function openSettingDetail(key){
+    const d=detailDefinitions[key]||['Settings','Manage this setting.','generic'];
+    detailTitle.textContent=d[0];
+    detailBody.innerHTML=settingTemplate(key);
+    detail.hidden=false;detailOpen=true;
+    history.pushState({rnSettingsDetail:true},'',location.href.split('#')[0]+'#settings-'+key);
+    detail.scrollTop=0;
+    const save=document.getElementById('rnDetailSave');
+    save?.addEventListener('click',()=>{
+      const fields=detailBody.querySelectorAll('input,select,textarea');
+      fields.forEach((el,idx)=>{if(el.id) localStorage.setItem('rnDetail_'+el.id,el.type==='checkbox'?(el.checked?'1':'0'):el.value)});
+      settingsToast.textContent='Changes saved.';
+      settingsToast.hidden=false;setTimeout(()=>settingsToast.hidden=true,1800);
+    });
+    document.getElementById('rnDetailClearSearch')?.addEventListener('click',()=>{
+      Object.keys(localStorage).filter(k=>k.toLowerCase().includes('search')).forEach(k=>localStorage.removeItem(k));
+      settingsToast.textContent='Search history cleared.';
+      settingsToast.hidden=false;setTimeout(()=>settingsToast.hidden=true,1800);
+    });
+    detailBody.querySelectorAll('input[id]').forEach(el=>{const v=localStorage.getItem('rnDetail_'+el.id);if(v!==null)el.value=v});
+  }
+  function closeSettingDetail(){
+    if(!detailOpen)return;
+    detail.hidden=true;detailOpen=false;
+    if(location.hash.startsWith('#settings-')) history.back();
+  }
+  detailBack?.addEventListener('click',closeSettingDetail);
+
+  document.querySelectorAll('#rnSettingsPanel [data-setting]').forEach(b=>b.addEventListener('click',(ev)=>{
+    ev.preventDefault();
+    openSettingDetail(b.dataset.setting);
+  }));
   }));
   document.querySelectorAll('#rnSettingsPanel [name="rnTheme"]').forEach(r=>r.addEventListener('change',()=>{
     localStorage.setItem('rnTheme',r.value);
