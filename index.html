@@ -2396,26 +2396,53 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 @media(max-width:520px){.rn-home-viewer-chips{grid-template-columns:1fr}.rn-home-viewer-title{font-size:17px}}
 .rn-home-viewer-back{border:0;background:rgba(255,255,255,.16);color:#fff;border-radius:10px;padding:9px 12px;font-weight:700;font-size:14px;cursor:pointer;touch-action:manipulation}.rn-home-viewer-back:active{transform:scale(.98)}</style>
 
+<style>
+/* Final mobile tap fix: every home category is a real, full-size touch target. */
+#propertyOptions .rn-home-category{
+  position:relative!important;
+  z-index:50!important;
+  pointer-events:auto!important;
+  touch-action:manipulation!important;
+  -webkit-tap-highlight-color:rgba(8,121,189,.18)!important;
+  user-select:none!important;
+  cursor:pointer!important;
+}
+#propertyOptions .rn-home-category:active{
+  transform:scale(.98)!important;
+}
+</style>
 <script>
-/* RumahNusa mobile category tap safeguard.
-   Handles taps even if an earlier category listener was interrupted.
-   A selected category opens immediately and keeps only that category visible. */
+/* RumahNusa mobile category tap fix.
+   Uses pointer events on each category button instead of a capture listener,
+   so Android taps are handled directly by the button and the normal category
+   renderer remains available for the rest of the flow. */
 (function(){
+  function open(button){
+    const name=button && button.dataset ? button.dataset.value : '';
+    if(!name) return;
+    button.dataset.rnLastPointerTap=String(Date.now());
+    if(typeof window.__rnOpenCategory==='function'){
+      window.__rnOpenCategory(name);
+    }else{
+      /* Let the original click listener handle it if the renderer is not ready yet. */
+    }
+  }
   function attach(){
     const grid=document.getElementById('propertyOptions');
-    if(!grid || grid.dataset.rnTapGuard==='1') return;
-    grid.dataset.rnTapGuard='1';
-    grid.addEventListener('click',function(event){
-      const button=event.target.closest('.rn-home-category');
-      if(!button || !grid.contains(button)) return;
-      event.preventDefault();
-      event.stopImmediatePropagation();
-      const name=button.dataset.value;
-      if(!name) return;
-      if(typeof window.__rnOpenCategory==='function'){
-        window.__rnOpenCategory(name);
-      }
-    },true);
+    if(!grid || grid.dataset.rnDirectTapFix==='1') return;
+    grid.dataset.rnDirectTapFix='1';
+    grid.querySelectorAll('.rn-home-category').forEach(button=>{
+      button.addEventListener('pointerup',function(event){
+        if(event.pointerType==='mouse' && event.button!==0) return;
+        event.preventDefault();
+        open(button);
+      },{passive:false});
+      button.addEventListener('click',function(){
+        const last=Number(button.dataset.rnLastPointerTap||0);
+        if(Date.now()-last<800) return;
+        open(button);
+      });
+    });
   }
   if(document.readyState==='loading'){
     document.addEventListener('DOMContentLoaded',attach,{once:true});
