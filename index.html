@@ -1660,6 +1660,10 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     });
   }
 
+  // Expose the category opener so the final mobile-safe click safeguard
+  // can use the same category renderer.
+  window.__rnOpenCategory = renderCategory;
+
   document.querySelectorAll('#propertyOptions .client-option').forEach(btn=>{
     btn.addEventListener('click',()=>{
       const name=btn.dataset.value;
@@ -2391,4 +2395,33 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 .rn-home-viewer-note{padding:0 18px 18px;color:#627d98;font-size:13px;line-height:1.5}
 @media(max-width:520px){.rn-home-viewer-chips{grid-template-columns:1fr}.rn-home-viewer-title{font-size:17px}}
 .rn-home-viewer-back{border:0;background:rgba(255,255,255,.16);color:#fff;border-radius:10px;padding:9px 12px;font-weight:700;font-size:14px;cursor:pointer;touch-action:manipulation}.rn-home-viewer-back:active{transform:scale(.98)}</style>
+
+<script>
+/* RumahNusa mobile category tap safeguard.
+   Handles taps even if an earlier category listener was interrupted.
+   A selected category opens immediately and keeps only that category visible. */
+(function(){
+  function attach(){
+    const grid=document.getElementById('propertyOptions');
+    if(!grid || grid.dataset.rnTapGuard==='1') return;
+    grid.dataset.rnTapGuard='1';
+    grid.addEventListener('click',function(event){
+      const button=event.target.closest('.rn-home-category');
+      if(!button || !grid.contains(button)) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      const name=button.dataset.value;
+      if(!name) return;
+      if(typeof window.__rnOpenCategory==='function'){
+        window.__rnOpenCategory(name);
+      }
+    },true);
+  }
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',attach,{once:true});
+  }else{
+    attach();
+  }
+})();
+</script>
 </html>
