@@ -1796,13 +1796,13 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     return;
   }
 
-  const rnVillaGalleryImages=Array.from({length:21},(_,i)=>'https://raw.githubusercontent.com/victorharry573-art/RumahNusa-/main/assets/villa-gallery/villa-'+String(i+1).padStart(2,'0')+'.jpg');
-  const labels=rnVillaGalleryLabels.slice(0,21);
+  const rnVillaGalleryImages=Array.from({length:10},(_,i)=>'https://raw.githubusercontent.com/victorharry573-art/RumahNusa-/main/assets/villa-gallery/villa-'+String(i+1).padStart(2,'0')+'.jpg?display=1');
+  const labels=rnVillaGalleryLabels.slice(0,10);
   rnGallery.innerHTML=rnVillaGalleryImages.map((src,i)=>`<button class="rn-gallery-item" type="button" data-gallery-index="${i}" aria-label="${labels[i].replace(/"/g,'&quot;')}">
-    <img loading="${i<21?'eager':'lazy'}" decoding="async" src="${src}" alt="${i+1}. ${labels[i]} — this particular villa" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=85';">
+    <img loading="eager" decoding="async" width="404" height="250" src="${src}" alt="${i+1}. ${labels[i]} — this particular villa" onerror="this.onerror=null;this.style.background='#eef3f6';">
     <span class="rn-gallery-label">${i+1}. ${labels[i]}</span>
-  </button>`).join('');
-  rnGalleryCount.textContent='21 separate pictures';
+  </button>` ).join('');
+  rnGalleryCount.textContent='10 separate pictures';
 
   rnGallery.querySelectorAll('.rn-gallery-item').forEach((btn)=>{
     btn.addEventListener('click',()=>{
