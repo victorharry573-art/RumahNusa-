@@ -2611,43 +2611,34 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 }
 </style>
 <script>
-/* RumahNusa mobile category tap fix.
-   Uses pointer events on each category button instead of a capture listener,
-   so Android taps are handled directly by the button and the normal category
-   renderer remains available for the rest of the flow. */
+/* Final direct category tap fix: capture Android touch/clicks before any
+   other page handler, then open the selected category immediately. */
 (function(){
   function open(button){
-    const name=button && button.dataset ? button.dataset.value : '';
+    const name=button?.dataset?.value||'';
     if(!name) return;
-    button.dataset.rnLastPointerTap=String(Date.now());
+    if(history.state?.rnCategory!==name){
+      history.pushState({rnCategory:name},'',location.href);
+    }
     if(typeof window.__rnOpenCategory==='function'){
       window.__rnOpenCategory(name);
-    }else{
-      /* Let the original click listener handle it if the renderer is not ready yet. */
     }
   }
-  function attach(){
-    const grid=document.getElementById('propertyOptions');
-    if(!grid || grid.dataset.rnDirectTapFix==='1') return;
-    grid.dataset.rnDirectTapFix='1';
-    grid.querySelectorAll('.rn-home-category').forEach(button=>{
-      button.addEventListener('pointerup',function(event){
-        if(event.pointerType==='mouse' && event.button!==0) return;
-        event.preventDefault();
-        open(button);
-      },{passive:false});
-      button.addEventListener('click',function(){
-        const last=Number(button.dataset.rnLastPointerTap||0);
-        if(Date.now()-last<800) return;
-        open(button);
-      });
-    });
-  }
-  if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded',attach,{once:true});
-  }else{
-    attach();
-  }
+  document.addEventListener('click',function(event){
+    const button=event.target?.closest?.('#propertyOptions .rn-home-category');
+    if(!button) return;
+    event.preventDefault();
+    event.stopPropagation();
+    open(button);
+  },true);
+  document.addEventListener('pointerup',function(event){
+    const button=event.target?.closest?.('#propertyOptions .rn-home-category');
+    if(!button) return;
+    if(event.pointerType==='mouse' && event.button!==0) return;
+    event.preventDefault();
+    event.stopPropagation();
+    open(button);
+  },true);
 })();
 </script>
 </html>
