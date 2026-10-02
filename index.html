@@ -1796,10 +1796,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     return;
   }
 
-  // Remove the low-resolution villa gallery until the original high-resolution photos are uploaded.
-  rnGallery.innerHTML='';
-  rnGalleryCount.textContent='';
-  rnGalleryLightbox.addEventListener('click',e=>{if(e.target===rnGalleryLightbox||e.target.closest('.rn-gallery-close'))rnGalleryLightbox.hidden=true});
+  // Use the exact clear house photo supplied for the RumahNusa gallery.\n  const rnHousePhoto='https://images.contentstack.io/v3/assets/blt8ede3f648df7664a/blt55abbf48945769fa/686c8d2edf067e5409fba475/Architectural-home.jpg';\n  rnGallery.innerHTML='<button class="rn-gallery-item" type="button"><img loading="eager" src="'+rnHousePhoto+'" alt="House exterior — clear original photo"><span class="rn-gallery-label">House Exterior</span></button>';\n  rnGalleryCount.textContent='1 clear picture';\n  rnGallery.querySelector('.rn-gallery-item')?.addEventListener('click',()=>{\n    const lightboxImage=rnGalleryLightbox.querySelector('img');\n    lightboxImage.src=rnHousePhoto;\n    lightboxImage.alt='House exterior — clear original photo';\n    lightboxImage.style.objectFit='contain';\n    lightboxImage.style.transform='none';\n    rnGalleryLightbox.querySelector('.rn-gallery-caption').textContent='House Exterior';\n    rnGalleryLightbox.hidden=false;\n  });\n  rnGalleryLightbox.addEventListener('click',e=>{if(e.target===rnGalleryLightbox||e.target.closest('.rn-gallery-close'))rnGalleryLightbox.hidden=true});
 
   const houseModal=document.getElementById('rnHouseModal');
   const houseModalSelect=document.getElementById('rnHouseModalSelect');
