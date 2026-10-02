@@ -653,6 +653,20 @@ header nav a{color:#fff!important}
 header .lang-btn{color:#fff!important;border-color:#fff!important;background:transparent!important}
 header .lang-btn.active{color:#dc2626!important;background:#fff!important;border-color:#fff!important}
 </style>
+<style id="rn-settings-style">
+.rn-settings-panel{background:#fff;min-height:100vh;border-top:1px solid #fee2e2;padding:22px 14px 105px}
+.rn-settings-panel[hidden]{display:none!important}
+.rn-settings-head{max-width:920px;margin:0 auto 18px;display:flex;justify-content:space-between;gap:15px}
+.rn-settings-head span{font-size:11px;letter-spacing:2px;font-weight:800;color:#dc2626}.rn-settings-head h2{margin:3px 0;color:#991b1b;font-size:28px}.rn-settings-head p{margin:0;color:#71717a}
+#rnSettingsClose{border:0;background:#fff1f2;color:#b91c1c;border-radius:50%;width:40px;height:40px;font-size:27px;cursor:pointer}
+.rn-settings-grid{max-width:920px;margin:auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.rn-settings-card{border:1px solid #fecaca;border-radius:15px;background:#fff;padding:12px;box-shadow:0 4px 15px rgba(127,29,29,.06)}
+.rn-settings-card h3{margin:3px 4px 9px;color:#991b1b;font-size:16px}
+.rn-settings-card button,.rn-settings-card label{width:100%;box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 8px;border:0;border-top:1px solid #f4f4f5;background:#fff;color:#3f3f46;text-align:left;font:inherit;cursor:pointer}
+.rn-settings-card button:hover{background:#fff7f7;color:#b91c1c}.rn-settings-card button b{color:#dc2626}.rn-settings-card select{border:1px solid #fecaca;border-radius:8px;padding:6px;background:#fff;color:#3f3f46}.rn-settings-card input[type=checkbox],.rn-settings-card input[type=radio]{accent-color:#dc2626;width:20px;height:20px}
+.rn-settings-toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);z-index:16000;width:min(90vw,430px);padding:13px 16px;background:#991b1b;color:#fff;border-radius:12px;text-align:center;font-weight:700;box-shadow:0 8px 25px rgba(0,0,0,.2)}
+@media(max-width:650px){.rn-settings-grid{grid-template-columns:1fr}.rn-settings-panel{padding-left:12px;padding-right:12px}.rn-settings-head h2{font-size:24px}}
+</style>
 </head>
 
 <body class="rn-gate-active">
@@ -1208,6 +1222,51 @@ header .lang-btn.active{color:#dc2626!important;background:#fff!important;border
   <p>© 2024 RumahNusa All rights reserved.</p>
 </footer>
 
+<section id="rnSettingsPanel" class="rn-settings-panel" hidden aria-label="RumahNusa Settings">
+  <div class="rn-settings-head">
+    <div><span>RUMAHNUSA</span><h2>Settings</h2><p>Manage your account, property preferences and app experience.</p></div>
+    <button type="button" id="rnSettingsClose" aria-label="Close settings">×</button>
+  </div>
+  <div class="rn-settings-grid">
+    <div class="rn-settings-card"><h3>👤 Account</h3>
+      <button data-setting="profile">Profile <b>›</b></button><button data-setting="name">Edit name <b>›</b></button>
+      <button data-setting="email">Email address <b>›</b></button><button data-setting="phone">Phone number <b>›</b></button>
+      <button data-setting="password">Change password <b>›</b></button><button data-setting="security">Login &amp; security <b>›</b></button>
+    </div>
+    <div class="rn-settings-card"><h3>🔔 Notifications</h3>
+      <label><span>New property alerts</span><input type="checkbox" data-pref="newProperty" checked></label>
+      <label><span>Price-change alerts</span><input type="checkbox" data-pref="priceChange" checked></label>
+      <label><span>Saved-location alerts</span><input type="checkbox" data-pref="locationAlert" checked></label>
+      <label><span>Agent messages</span><input type="checkbox" data-pref="messages" checked></label>
+      <label><span>Viewing reminders</span><input type="checkbox" data-pref="reminders" checked></label>
+    </div>
+    <div class="rn-settings-card"><h3>📍 Search &amp; Location</h3>
+      <button data-setting="city">Preferred city / area <b>›</b></button><button data-setting="radius">Search radius <b>›</b></button>
+      <button data-setting="recent">Recently searched locations <b>›</b></button><button data-setting="clearSearch">Clear search history <b>›</b></button>
+      <button data-setting="locationPrivacy">Location privacy <b>›</b></button>
+    </div>
+    <div class="rn-settings-card"><h3>🏠 Property Preferences</h3>
+      <label>Property type<select data-pref="propertyType"><option>House</option><option>Apartment</option><option>Villa</option><option>Hotel</option><option>Any</option></select></label>
+      <label>Bedrooms<select data-pref="bedrooms"><option>Any</option><option>1 bedroom</option><option>2 bedrooms</option><option>3 bedrooms</option><option>4 bedrooms</option><option>5+ bedrooms</option></select></label>
+      <label>Bathrooms<select data-pref="bathrooms"><option>Any</option><option>1+</option><option>2+</option><option>3+</option><option>4+</option></select></label>
+      <label>Furnished<select data-pref="furnished"><option>Any</option><option>Furnished</option><option>Unfurnished</option></select></label>
+      <label>Purpose<select data-pref="purpose"><option>Buy</option><option>Rent</option></select></label>
+      <button data-setting="priceRange">Preferred price range <b>›</b></button>
+    </div>
+    <div class="rn-settings-card"><h3>❤️ Wish List</h3>
+      <button data-setting="savedProperties">Saved properties <b>›</b></button><button data-setting="savedSearches">Saved searches <b>›</b></button>
+      <button data-setting="savedLocations">Saved locations <b>›</b></button><label><span>Wish-list price alerts</span><input type="checkbox" data-pref="wishAlerts" checked></label>
+    </div>
+    <div class="rn-settings-card"><h3>💬 Messages</h3><button data-setting="messages">Customer / agent messages <b>›</b></button><button data-setting="unread">Unread messages <b>›</b></button><label><span>Message notifications</span><input type="checkbox" data-pref="messageAlerts" checked></label></div>
+    <div class="rn-settings-card"><h3>🌐 Language</h3><button data-lang-choice="en">🇬🇧 English <b>✓</b></button><button data-lang-choice="id">🇮🇩 Bahasa Indonesia <b>✓</b></button></div>
+    <div class="rn-settings-card"><h3>🎨 Appearance</h3><label><span>Light mode</span><input type="radio" name="rnTheme" value="light" checked></label><label><span>Dark mode</span><input type="radio" name="rnTheme" value="dark"></label><label><span>System default</span><input type="radio" name="rnTheme" value="system"></label></div>
+    <div class="rn-settings-card"><h3>🔒 Privacy</h3><button data-setting="privacy">Privacy settings <b>›</b></button><button data-setting="visibility">Information visibility <b>›</b></button><button data-setting="exactLocation">Exact property location privacy <b>›</b></button><button data-setting="data">Data &amp; account controls <b>›</b></button></div>
+    <div class="rn-settings-card"><h3>🛡️ Security</h3><button data-setting="password">Change password <b>›</b></button><button data-setting="activity">Login activity <b>›</b></button><button data-setting="devices">Sign out of other devices <b>›</b></button><label><span>Two-step verification</span><input type="checkbox" data-pref="twoStep"></label></div>
+    <div class="rn-settings-card"><h3>📞 Help &amp; Support</h3><button data-setting="help">Help Center <b>›</b></button><button data-setting="support">Contact support <b>›</b></button><button data-setting="report">Report a problem <b>›</b></button><button data-setting="faq">Frequently asked questions <b>›</b></button></div>
+    <div class="rn-settings-card"><h3>📄 About</h3><button data-setting="about">About RumahNusa <b>›</b></button><button data-setting="terms">Terms of service <b>›</b></button><button data-setting="privacyPolicy">Privacy policy <b>›</b></button><button data-setting="version">Version <b>1.0</b></button></div>
+  </div>
+  <div id="rnSettingsToast" class="rn-settings-toast" hidden></div>
+</section>
 <nav class="rn-bottom-nav" id="rnBottomNav" aria-label="RumahNusa quick navigation">
   <button type="button" data-rn-nav="home" class="active" aria-label="Home">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9.5V21h13V9.5"/><path d="M9.5 21v-6h5v6"/></svg>
@@ -1422,6 +1481,42 @@ header .lang-btn.active{color:#dc2626!important;background:#fff!important;border
 <script>
 (function(){
   const nav=document.getElementById('rnBottomNav');
+  const settingsPanel=document.getElementById('rnSettingsPanel');
+  const settingsClose=document.getElementById('rnSettingsClose');
+  const settingsToast=document.getElementById('rnSettingsToast');
+  const showSettings=()=>{
+    if(!settingsPanel)return;
+    settingsPanel.hidden=false;
+    setActive('settings');
+    settingsPanel.scrollIntoView({behavior:'smooth',block:'start'});
+  };
+  settingsClose?.addEventListener('click',()=>{settingsPanel.hidden=true;goTop();setActive('home')});
+  document.querySelectorAll('#rnSettingsPanel [data-pref]').forEach(el=>{
+    const key='rnPref_'+el.dataset.pref;
+    const saved=localStorage.getItem(key);
+    if(saved!==null){
+      if(el.type==='checkbox'||el.type==='radio') el.checked=saved==='1';
+      else el.value=saved;
+    }
+    el.addEventListener('change',()=>localStorage.setItem(key,(el.type==='checkbox'||el.type==='radio')?(el.checked?'1':'0'):el.value));
+  });
+  document.querySelectorAll('#rnSettingsPanel [data-lang-choice]').forEach(b=>b.addEventListener('click',()=>{
+    const target=b.dataset.langChoice;
+    document.querySelector('.lang-btn[data-lang="'+target+'"]')?.click();
+    settingsToast.textContent=target==='id'?'Bahasa Indonesia selected.':'English selected.';
+    settingsToast.hidden=false;setTimeout(()=>settingsToast.hidden=true,1800);
+  }));
+  document.querySelectorAll('#rnSettingsPanel [data-setting]').forEach(b=>b.addEventListener('click',()=>{
+    const key=b.dataset.setting;
+    const labels={profile:'Profile settings',name:'Edit your name',email:'Email address',phone:'Phone number',password:'Change password',security:'Login & security',city:'Preferred city / area',radius:'Search radius',recent:'Recently searched locations',clearSearch:'Search history cleared',locationPrivacy:'Location privacy',priceRange:'Preferred price range',savedProperties:'Saved properties',savedSearches:'Saved searches',savedLocations:'Saved locations',messages:'Messages',unread:'Unread messages',privacy:'Privacy settings',visibility:'Information visibility',exactLocation:'Exact property location stays private',data:'Data & account controls',activity:'Login activity',devices:'Other devices',help:'Help Center',support:'Contact support',report:'Report a problem',faq:'Frequently asked questions',about:'About RumahNusa',terms:'Terms of service',privacyPolicy:'Privacy policy',version:'RumahNusa version 1.0'};
+    settingsToast.textContent=labels[key]||'Settings saved.';
+    settingsToast.hidden=false;setTimeout(()=>settingsToast.hidden=true,2200);
+  }));
+  document.querySelectorAll('#rnSettingsPanel [name="rnTheme"]').forEach(r=>r.addEventListener('change',()=>{
+    localStorage.setItem('rnTheme',r.value);
+    settingsToast.textContent=r.value==='dark'?'Dark mode selected.':'Light appearance selected.';
+    settingsToast.hidden=false;setTimeout(()=>settingsToast.hidden=true,1800);
+  }));
   if(!nav)return;
   const setActive=(name)=>{
     nav.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.rnNav===name));
@@ -1479,12 +1574,7 @@ header .lang-btn.active{color:#dc2626!important;background:#fff!important;border
       }
       return;
     }
-    if(name==='settings'){
-      setActive(name);
-      const lang=document.querySelector('.lang-switch');
-      if(lang){lang.scrollIntoView({behavior:'smooth',block:'center'});}
-      else window.alert('RumahNusa Settings');
-    }
+    if(name==='settings'){showSettings();return;}
   });
 })();
 </script>
