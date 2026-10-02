@@ -622,6 +622,13 @@ input:focus,select:focus,textarea:focus{border-color:var(--rn-red)!important;out
 .rn-search-suggestion{border:1px solid #fecaca;background:#fffafa;color:#3f3f46;border-radius:10px;padding:9px 11px;cursor:pointer;text-align:left}
 .rn-search-suggestion strong{color:#991b1b}
 .rn-search-results{display:grid;gap:12px;margin-top:14px}
+.rn-search-category-result{display:flex;align-items:center;gap:14px;width:100%;padding:15px;border:1px solid #fecaca;border-radius:14px;background:#fffafa;color:#3f3f46;text-align:left;cursor:pointer}
+.rn-search-category-result:hover{border-color:#dc2626;background:#fff1f2}
+.rn-search-category-icon{display:flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:12px;background:#fee2e2;font-size:25px;flex:none}
+.rn-search-category-result strong{display:block;color:#991b1b;font-size:17px;margin:2px 0}
+.rn-search-category-result small{display:block;color:#71717a;font-size:13px}
+.rn-search-subheading{font-size:12px;font-weight:800;letter-spacing:1px;color:#991b1b;margin-top:4px}
+
 .rn-search-result{display:grid;grid-template-columns:120px 1fr;gap:14px;padding:11px;border:1px solid #e4e4e7;border-radius:14px;background:#fff;box-shadow:0 4px 16px rgba(39,39,42,.06)}
 .rn-search-result img{width:120px;height:92px;object-fit:cover;border-radius:10px;background:#fff1f2}
 .rn-search-result h3{font-size:17px;color:#991b1b;margin:0 0 2px}
@@ -1267,16 +1274,81 @@ header .lang-btn.active{color:#dc2626!important;background:#fff!important;border
   }
 
   function render(q){
+    const nq=normalize(q);
+    const data=getData();
+    const categoryAliases={
+      'house':'Separate Rumah','houses':'Separate Rumah','separate house':'Separate Rumah','separate rumah':'Separate Rumah','rumah':'Separate Rumah',
+      'apartment':'Apartemen','apartments':'Apartemen','apartemen':'Apartemen',
+      'villa':'Vila','villas':'Vila','hotel':'Hotel','hotels':'Hotel'
+    };
+    const requestedCategory=categoryAliases[nq] || Object.keys(data).find(k=>normalize(k)===nq);
     const list=inventory().filter(r=>matches(r,q));
     clear.hidden=!q;
+
     if(!q){
       results.innerHTML='<div class="rn-search-empty">Start typing a city, area, house type, villa, apartment, hotel, number of rooms, or another property detail.</div>';
       return;
     }
+
+    // If the customer searches a category name, show the category immediately,
+    // even when the individual listings do not contain the typed category name.
+    if(requestedCategory && data[requestedCategory]){
+      const d=data[requestedCategory];
+      const count=Array.isArray(d.listings)?d.listings.length:0;
+      results.innerHTML=
+        '<button type="button" class="rn-search-category-result" data-search-category="'+esc(requestedCategory)+'">'+
+        '<span class="rn-search-category-icon">'+(requestedCategory==='Hotel'?'🏨':requestedCategory==='Vila'?'🏝️':requestedCategory==='Apartemen'?'🏢':'🏠')+'</span>'+
+        '<span><span class="rn-search-result-type">PROPERTY</span>'+
+        '<strong>'+esc(d.title||requestedCategory)+'</strong>'+
+        '<small>'+count+' listed properties · Tap to view '+esc((d.title||requestedCategory).toLowerCase())+'</small></span>'+
+        '</button>'+
+        (list.length ? '<div class="rn-search-subheading">Available matching properties</div>' : '');
+      if(list.length){
+        results.innerHTML+=list.map((r,i)=>{
+          const x=r.item;
+          return '<button type="button" class="rn-search-result" data-search-index="'+i+'" style="text-align:left">'+
+            '<img src="'+esc(x[4])+'" alt="'+esc(x[0])+'">'+
+            '<span><span class="rn-search-result-type">'+esc(typeLabel(r.type))+'</span>'+
+            '<h3>'+esc(x[0])+'</h3><p>📍 '+esc(x[1])+'</p><p><strong>'+esc(x[2])+'</strong></p><p>'+esc(x[3])+'</p></span></button>';
+        }).join('');
+      }
+      results.querySelector('[data-search-category]')?.addEventListener('click',()=>{
+        panel.hidden=true;
+        const btn=[...document.querySelectorAll('#propertyOptions .client-option')].find(x=>x.dataset.value===requestedCategory);
+        if(btn) btn.click();
+      });
+      results.querySelectorAll('.rn-search-result').forEach((b,i)=>{
+        b.addEventListener('click',()=>{
+          const rr=list[i];
+          panel.hidden=true;
+          const btn=[...document.querySelectorAll('#propertyOptions .client-option')].find(x=>x.dataset.value===rr.type);
+          if(btn){btn.click();setTimeout(()=>document.querySelector('#rnCategoryListings')?.scrollIntoView({behavior:'smooth',block:'start'}),350);}
+        });
+      });
+      return;
+    }
+
     if(!list.length){
+      // For a city/area search, show a location result instead of a dead end.
+      const city=places.find(p=>normalize(p)===nq || normalize(p).includes(nq));
+      if(city){
+        results.innerHTML=
+          '<button type="button" class="rn-search-category-result" data-search-place="'+esc(city)+'">'+
+          '<span class="rn-search-category-icon">📍</span><span><span class="rn-search-result-type">LOCATION</span>'+
+          '<strong>'+esc(city)+'</strong><small>Search all RumahNusa properties in this city/area</small></span></button>'+
+          '<div class="rn-search-empty">No property is listed in this location yet. More properties can be added here.</div>';
+        results.querySelector('[data-search-place]')?.addEventListener('click',()=>{
+          input.value=city;
+          selectedType='All';
+          document.querySelectorAll('.rn-search-chip').forEach(x=>x.classList.toggle('active',x.dataset.searchType==='All'));
+          render(city);
+        });
+        return;
+      }
       results.innerHTML='<div class="rn-search-empty"><strong>No matching property is currently listed.</strong><br>Try another city, area, property type or room requirement. Exact street addresses are shared privately by the agent, not published publicly.</div>';
       return;
     }
+
     results.innerHTML=list.map((r,i)=>{
       const x=r.item;
       return '<button type="button" class="rn-search-result" data-search-index="'+i+'" style="text-align:left">'+
@@ -1286,9 +1358,9 @@ header .lang-btn.active{color:#dc2626!important;background:#fff!important;border
     }).join('');
     results.querySelectorAll('.rn-search-result').forEach((b,i)=>{
       b.addEventListener('click',()=>{
-        const r=list[i];
+        const rr=list[i];
         panel.hidden=true;
-        const btn=[...document.querySelectorAll('#propertyOptions .client-option')].find(x=>x.dataset.value===r.type);
+        const btn=[...document.querySelectorAll('#propertyOptions .client-option')].find(x=>x.dataset.value===rr.type);
         if(btn){btn.click();setTimeout(()=>document.querySelector('#rnCategoryListings')?.scrollIntoView({behavior:'smooth',block:'start'}),350);}
       });
     });
