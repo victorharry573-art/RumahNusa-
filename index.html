@@ -733,6 +733,7 @@ body.rn-gate-active{margin:0;}
         <div class="client-options rn-home-category-grid" id="propertyOptions" aria-label="RumahNusa home categories">
           <button type="button" class="client-option rn-home-category" data-value="Apartemen"><span class="rn-home-icon" aria-hidden="true">🏢</span><strong>Apartment</strong><small>City apartments, rooms, views and shared facilities.</small></button>
           
+          <button type="button" class="client-option rn-home-category" data-value="Hotel"><span class="rn-home-icon" aria-hidden="true">🏨</span><strong>Hotel</strong><small>Hotels available for purchase, with guest rooms and facilities.</small></button>
           <button type="button" class="client-option rn-home-category" data-value="Separate Rumah"><span class="rn-home-icon" aria-hidden="true">🏠</span><strong>Separate Rumah</strong><small>Private houses with their own rooms and spaces.</small></button>
           <button type="button" class="client-option rn-home-category" data-value="Vila"><span class="rn-home-icon" aria-hidden="true">🏝️</span><strong>Villa</strong><small>Private villas, outdoor spaces and pools.</small></button>
           <button type="button" class="client-option rn-home-category" data-value="Neighborhood Rumah"><span class="rn-home-icon" aria-hidden="true">🏘️</span><strong>Neighborhood</strong><small>Homes within welcoming residential surroundings.</small></button>
@@ -1486,27 +1487,14 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     'Hotel':{
       title:'Hotels for Ownership',
       badge:'HOTEL',
-      intro:'A hotel-only collection. Every listing here is a hotel property for purchase, with its guest rooms, suites, lobby, restaurants or kitchens, bathrooms, facilities, parking and surrounding spaces presented together.',
-      confidence:'Imagine owning a beautiful hotel property where guests can enjoy comfortable rooms, welcoming spaces and thoughtful facilities, while you have a complete property designed for long-term ownership.',
+      intro:'A hotel-only collection. Every listing here is a hotel property for purchase, with guest rooms, suites, lobby, dining or kitchen areas, bathrooms, facilities, parking and surrounding spaces presented together.',
+      confidence:'Explore hotel properties that can be purchased as complete real-estate assets, with guest rooms, welcoming common spaces and facilities for the property owner.',
       buy:'Hotels are sale-only. Hotel rentals are not available.',
-      rooms:['10 kamar tidur','20 kamar tidur','30 kamar tidur','40 kamar tidur','50 kamar tidur'],
+      rooms:['10 rooms','20 rooms','30 rooms','40 rooms','50 rooms'],
       listings:[
         ['RumahNusa City Hotel — 10 Rooms','Jakarta, Indonesia','Contact RumahNusa for the selected hotel','10 guest rooms · reception/lobby · bathrooms/toilets · dining area · kitchen · furnished · parking','https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=85'],
         ['RumahNusa Grand Hotel — 20 Rooms','Jakarta, Indonesia','Contact RumahNusa for the selected hotel','20 guest rooms · spacious lobby · guest bathrooms · dining area · kitchen · furnished spaces · parking','https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=85'],
         ['RumahNusa Signature Hotel — 30 Rooms','Jakarta, Indonesia','Contact RumahNusa for the selected hotel','30 guest rooms · grand lobby · suites · bathrooms/toilets · dining and kitchen areas · furnished · parking','https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=85']
-      ]
-    },
-    'Hotel':{
-      title:'Hotels',
-      badge:'HOTEL',
-      intro:'A hotel-only collection. See only hotel rooms and suites, with their own comfort, services, dining, pool and guest facilities.',
-      confidence:'Choose a hotel when you want a comfortable stay with welcoming rooms, helpful facilities and a place to relax with peace of mind.',
-      buy:'Hotel stays are presented as accommodation options.',
-      rooms:['1 kamar','2 kamar','Suite'],
-      listings:[
-        ['RumahNusa City Hotel — Deluxe Room','Jakarta, Indonesia','Contact RumahNusa for the selected room','Deluxe room · private bathroom/toilet · furnished · AC · guest facilities','https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=1200&q=85'],
-        ['RumahNusa City Hotel — Family Suite','Jakarta, Indonesia','Contact RumahNusa for the selected suite','Family suite · bedrooms · bathrooms/toilets · living area · AC · hotel facilities','https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=85'],
-        ['RumahNusa Resort Hotel — Pool Suite','Bali, Indonesia','Contact RumahNusa for the selected suite','Pool suite · furnished room · bathroom/toilet · private outdoor space · resort facilities','https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=1200&q=85']
       ]
     },
     'Separate Rumah':{
