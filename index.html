@@ -1616,6 +1616,9 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     }
   };
 
+  /* Keep the category inventory available to the mobile fallback too. */
+  window.__rnCategoryDataMap=data;
+
   function setOptions(select,values){
     select.innerHTML=values.map(v=>'<option>'+v+'</option>').join('');
   };
@@ -2655,17 +2658,46 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   function forceOpen(button){
     const collection=document.getElementById('rnCategoryCollection');
     const grid=document.getElementById('propertyOptions');
+    const listings=document.getElementById('rnCategoryListings');
     if(!button||!collection||!grid)return;
+    const name=button.dataset.value||'';
+    const d=window.__rnCategoryDataMap?.[name];
     grid.classList.add('rn-category-open');
     grid.querySelectorAll('.rn-home-category').forEach(x=>x.classList.toggle('selected',x===button));
     collection.hidden=false;
     button.insertAdjacentElement('afterend',collection);
+
     const title=document.getElementById('rnCategoryTitle');
     const intro=document.getElementById('rnCategoryIntro');
     const badge=document.getElementById('rnCategoryBadge');
-    if(title) title.textContent=(button.querySelector('strong')?.textContent||'Selected category')+' homes';
-    if(intro) intro.textContent='Homes in this category are now open below. Choose a home to continue.';
-    if(badge) badge.textContent=(button.querySelector('strong')?.textContent||'CATEGORY').toUpperCase();
+    if(title) title.textContent=d?.title||((button.querySelector('strong')?.textContent||'Selected category')+' homes');
+    if(intro) intro.textContent=d?.intro||'Homes in this category are now open below. Choose a home to continue.';
+    if(badge) badge.textContent=d?.badge||(button.querySelector('strong')?.textContent||'CATEGORY').toUpperCase();
+
+    /* Populate the cards independently of the main renderer. This is the
+       important recovery path when the normal renderer was interrupted. */
+    if(listings && d?.listings?.length){
+      const rate=17900;
+      const idr=n=>'Rp '+Math.round(n).toLocaleString('id-ID');
+      const displayPrice=p=>{
+        const s=String(p||'');
+        const m=s.match(/\$([0-9][0-9,]*)/);
+        return m ? s+' · '+idr(Number(m[1].replace(/,/g,''))*rate) : s;
+      };
+      listings.innerHTML=d.listings.map(x=>
+        '<article class="rn-listing">'+
+        '<img loading="eager" src="'+x[4]+'" alt="'+x[0]+'">'+
+        '<div class="rn-listing-body">'+
+        '<h5>'+x[0]+'</h5>'+
+        '<p>📍 '+x[1]+'</p>'+
+        '<p class="rn-listing-price">'+displayPrice(x[2])+'</p>'+
+        '<div class="rn-listing-specs">'+String(x[3]).split(' · ').map(s=>'<span>'+s+'</span>').join('')+'</div>'+
+        '<p>'+String(d.buy||'')+'</p>'+
+        '<button type="button" class="rn-listing-continue">Continue with this home</button>'+
+        '</div></article>'
+      ).join('');
+    }
+
     collection.scrollIntoView({behavior:'smooth',block:'start'});
   }
   function open(button){
