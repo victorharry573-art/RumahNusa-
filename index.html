@@ -1647,7 +1647,6 @@ header .lang-btn.active{color:#dc2626!important;background:#fff!important;border
     ev.preventDefault();
     openSettingDetail(b.dataset.setting);
   }));
-  }));
   document.querySelectorAll('#rnSettingsPanel [name="rnTheme"]').forEach(r=>r.addEventListener('change',()=>{
     localStorage.setItem('rnTheme',r.value);
     settingsToast.textContent=r.value==='dark'?'Dark mode selected.':'Light appearance selected.';
