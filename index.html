@@ -1762,44 +1762,61 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   rnGalleryLightbox.innerHTML='<button class="rn-gallery-close" type="button" aria-label="Close picture">×</button><img src="" alt=""><div class="rn-gallery-caption"></div>';
   document.body.appendChild(rnGalleryLightbox);
 
-  const rnGallerySources=[
-    ['Main exterior','https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=85'],
-    ['Front entrance','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85'],
-    ['Back side','https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=85'],
-    ['Side view','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=85'],
-    ['Garden','https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=85'],
-    ['Swimming pool','https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=1200&q=85'],
-    ['Pool seating','https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=85'],
-    ['Living room','https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85'],
-    ['Large parlor','https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=85'],
-    ['Kitchen','https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1200&q=85'],
-    ['Bedroom 1','https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=85'],
-    ['Bedroom 2','https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=1200&q=85'],
-    ['Bedroom 3','https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=85'],
-    ['Bedroom 4','https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=85'],
-    ['Bathroom 1','https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=1200&q=85'],
-    ['Bathroom 2','https://images.unsplash.com/photo-1701502909888-6b11930e419d?auto=format&fit=crop&w=1200&q=85'],
-    ['Bathroom 3','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85'],
-    ['Parking','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=85'],
-    ['Balcony','https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=85'],
-    ['Outdoor space','https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=85']
+  const rnVillaGalleryImage='./assets/rumahnusa-villa-60-gallery.jpg';
+  const rnVillaGalleryLabels=[
+    'Front View','Back View','Right Side View','Left Side View','Private Pool','Parking Area',
+    'Basketball Game Area','Outdoor Space','Front Entrance','Back Patio','Aerial View','Upstairs Balcony',
+    'Living Room & Kitchen (1)','Living Room & Kitchen (2)','Dining Area','Kitchen (1)','Kitchen (2)','Large Fridge',
+    'Kitchen Appliances','Kitchen Sink','Living Room (TV)','Lounge Seating','Security Camera (Outside)','Stairs to Upstairs',
+    'Upstairs Hallway','Bedroom 1 (Master)','Bedroom 2','Bedroom 3','Bedroom 4','Bedroom 1 Balcony',
+    'Bedroom 2 View','Bedroom 3 View','Bedroom 4 View','Bathroom 1','Bathroom 2','Bathroom 3',
+    'Bathroom 1 (Shower)','Bathroom 2 (Shower)','Bathroom 3 (Shower)','Toilet (All Bathrooms)','Hot Water Heater','Bathroom Amenities',
+    'Wash Basin','Bathtub','Laundry Room','AC (Rooms & Living)','Private Fridge (Rooms)','Room TV (All Rooms)',
+    'Living Room TV (Large)','Outdoor Lounge','Garden Area','Pool at Night','Front View (Evening)','Back View (Sunset)',
+    'Right Side View (Night)','Left Side View (Night)','Upstairs Balcony (Night)','View from Upstairs','Basketball Court (Night)','Full View (Aerial)'
   ];
 
   function buildPropertyGallery(item){
     if(!rnGallery)return;
-    const sources=[...rnGallerySources];
-    if(item?.[4]) sources[0]=['Main property photo',item[4]];
-    const views=[];
-    for(let round=0;round<3;round++){
-      sources.forEach((s,i)=>views.push([s[0]+' · View '+(round+1),s[1]+'&gallery='+round+'-'+i]));
+    const isTargetVilla=item?.[0]==='Villa with Private Pool — 4 Bedrooms';
+    if(!isTargetVilla){
+      const fallback=item?.[4]||'';
+      rnGallery.innerHTML=Array.from({length:60},(_,i)=>'<button class="rn-gallery-item" type="button" data-gallery-index="'+i+'"><img loading="'+(i<6?'eager':'lazy')+'" src="'+fallback+'" alt="Property picture '+(i+1)+'"><span class="rn-gallery-label">Property picture '+(i+1)+'</span></button>').join('');
+      rnGalleryCount.textContent='60 pictures';
+      rnGallery.querySelectorAll('.rn-gallery-item').forEach((btn)=>btn.addEventListener('click',()=>{
+        const img=btn.querySelector('img');
+        rnGalleryLightbox.querySelector('img').src=img.src;
+        rnGalleryLightbox.querySelector('img').alt=img.alt;
+        rnGalleryLightbox.querySelector('.rn-gallery-caption').textContent=img.alt;
+        rnGalleryLightbox.hidden=false;
+      }));
+      return;
     }
-    rnGallery.innerHTML=views.map((v,i)=>'<button class="rn-gallery-item" type="button" data-gallery-index="'+i+'"><img loading="'+(i<6?'eager':'lazy')+'" src="'+v[1]+'" alt="'+v[0].replace(/"/g,'&quot;')+'"><span class="rn-gallery-label">'+v[0]+'</span></button>').join('');
-    rnGalleryCount.textContent=views.length+' pictures';
+
+    /* This listing uses ONLY the supplied RumahNusa villa gallery.
+       The source image is a 6-column × 10-row board, so each button crops exactly one of its 60 labeled views. */
+    rnGallery.innerHTML=rnVillaGalleryLabels.map((label,i)=>{
+      const col=i%6, row=Math.floor(i/6);
+      const x=col*20, y=row*(100/9);
+      const bgX=col===0?'0%':col===5?'100%':x+'%';
+      const bgY=row===0?'0%':row===9?'100%':y+'%';
+      return '<button class="rn-gallery-item rn-villa-crop" type="button" data-gallery-index="'+i+'" aria-label="'+label.replace(/"/g,'&quot;')+'">'+
+        '<span class="rn-villa-crop-image" style="background-image:url("'+rnVillaGalleryImage+'");background-position:'+bgX+' '+bgY+'"></span>'+
+        '<span class="rn-gallery-label">'+(i+1)+'. '+label+'</span></button>';
+    }).join('');
+    rnGalleryCount.textContent='60 pictures';
     rnGallery.querySelectorAll('.rn-gallery-item').forEach((btn,i)=>btn.addEventListener('click',()=>{
-      const img=btn.querySelector('img');
-      rnGalleryLightbox.querySelector('img').src=img.src;
-      rnGalleryLightbox.querySelector('img').alt=img.alt;
-      rnGalleryLightbox.querySelector('.rn-gallery-caption').textContent=img.alt;
+      const col=i%6, row=Math.floor(i/6);
+      const bgX=col===0?'0%':col===5?'100%':(col*20)+'%';
+      const bgY=row===0?'0%':row===9?'100%':(row*(100/9))+'%';
+      const light=rnGalleryLightbox.querySelector('img');
+      light.src=rnVillaGalleryImage;
+      light.alt=rnVillaGalleryLabels[i];
+      light.style.objectFit='contain';
+      light.style.objectPosition=bgX+' '+bgY;
+      light.style.transformOrigin=bgX+' '+bgY;
+      light.style.transform='scale(3)';
+      rnGalleryLightbox.querySelector('.rn-gallery-caption').textContent=(i+1)+'. '+rnVillaGalleryLabels[i]+' — this particular villa';
       rnGalleryLightbox.hidden=false;
     }));
   }
