@@ -659,7 +659,37 @@ body.rn-gate-active{margin:0;}
   </div>
 </section>
 
-<div id="rnHouseModal" class="rn-house-modal" hidden role="dialog" aria-modal="true" aria-labelledby="rnHouseModalTitle"><div class="rn-house-modal-card"><button id="rnHouseModalClose" class="rn-house-modal-close" type="button" aria-label="Close">×</button><img id="rnHouseModalImage" src="" alt=""><div class="rn-house-modal-body"><h3 id="rnHouseModalTitle"></h3><p id="rnHouseModalLocation"></p><p id="rnHouseModalPrice"></p><div id="rnHouseModalSpecs"></div><p id="rnHouseModalDescription"></p><button id="rnHouseModalSelect" class="rn-select-home" type="button">Select this home</button></div></div></div>
+<div id="rnHouseModal" class="rn-house-modal" hidden role="dialog" aria-modal="true" aria-labelledby="rnHouseModalTitle">
+  <div class="rn-house-modal-card">
+    <button id="rnHouseModalClose" class="rn-house-modal-close" type="button" aria-label="Close">×</button>
+    <img id="rnHouseModalImage" src="" alt="">
+    <div class="rn-house-modal-body">
+      <h3 id="rnHouseModalTitle"></h3>
+      <p id="rnHouseModalLocation"></p>
+      <p id="rnHouseModalPrice" class="rn-house-modal-price"></p>
+      <div id="rnHouseModalSpecs" class="rn-house-modal-specs"></div>
+      <div class="rn-property-gallery-head"><strong>Pictures</strong><span id="rnGalleryCount">60 pictures</span></div>
+      <div id="rnHouseGallery" class="rn-house-gallery" aria-label="Property picture gallery"></div>
+      <p id="rnHouseModalDescription"></p>
+      <button id="rnHouseModalSelect" class="rn-select-home" type="button">Select this home</button>
+    </div>
+  </div>
+</div>
+<style id="rn-property-gallery-style">
+.rn-house-modal-price{font-size:22px;font-weight:800;color:#075985;margin:10px 0 14px}
+.rn-property-gallery-head{display:flex;justify-content:space-between;align-items:center;margin:20px 0 10px;font-size:18px;color:#102a43}
+.rn-property-gallery-head span{font-size:13px;color:#627d98;font-weight:600}
+.rn-house-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:18px}
+.rn-gallery-item{border:0;padding:0;background:#f3f7fa;border-radius:12px;overflow:hidden;cursor:pointer;position:relative;text-align:left}
+.rn-gallery-item img{display:block;width:100%;height:135px;object-fit:cover}
+.rn-gallery-label{display:block;padding:7px 9px;font-size:12px;color:#243b53;background:#fff}
+.rn-gallery-lightbox{position:fixed;inset:0;background:rgba(0,0,0,.94);z-index:20000;display:flex;align-items:center;justify-content:center;padding:18px}
+.rn-gallery-lightbox[hidden]{display:none}
+.rn-gallery-lightbox img{max-width:100%;max-height:82vh;object-fit:contain;border-radius:10px}
+.rn-gallery-close{position:absolute;top:16px;right:16px;width:48px;height:48px;border:0;border-radius:50%;background:#fff;font-size:28px;cursor:pointer}
+.rn-gallery-caption{position:absolute;left:18px;right:18px;bottom:18px;color:#fff;text-align:center;font-size:15px}
+@media(max-width:600px){.rn-house-gallery{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.rn-gallery-item img{height:120px}}
+</style>
 <section id="client-profile" class="client-area rn-login-locked">
   <div class="section-title">
     <h2 data-en="Welcome to RumahNusa Real Estate" data-id="Selamat Datang di RumahNusa Real Estate">Selamat Datang di RumahNusa Real Estate</h2>
@@ -1501,7 +1531,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       buy:'Villas are presented as sale properties.',
       rooms:['4 kamar tidur','5 kamar tidur','6 kamar tidur','7 kamar tidur','8 kamar tidur'],
       listings:[
-        ['Villa with Private Pool — 4 Bedrooms','Bali, Indonesia','Rp 1,2 billion','4 bedrooms · 3 bathrooms/toilets · furnished parlor · kitchen · private pool · parking · outdoor space','https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=85'],
+        ['Villa with Private Pool — 4 Bedrooms','Bali, Indonesia','Rp 1,2 billion','4 bedrooms · 3 bathrooms/toilets · furnished parlor · kitchen · private pool · parking · outdoor space · AC · private fridge · beds · large chairs · large TV · security cameras in parlor/outside · hot-water heater','https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=85'],
         ['Garden Villa — 5 Bedrooms','Bali, Indonesia','Contact RumahNusa for the selected villa','5 bedrooms · furnished rooms · large bathrooms/toilets · kitchen · pool · parking · garden','https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=85'],
         ['Private Pool Villa — 6 Bedrooms','Bali, Indonesia','Rp 6.000.000.000','6 bedrooms · furnished parlors · beautiful bathrooms/toilets · kitchen · private pool · parking','https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=1200&q=85']
       ]
@@ -1724,6 +1754,57 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     closeCategory(true);
   });
 
+  const rnGallery=document.getElementById('rnHouseGallery');
+  const rnGalleryCount=document.getElementById('rnGalleryCount');
+  const rnGalleryLightbox=document.createElement('div');
+  rnGalleryLightbox.className='rn-gallery-lightbox';
+  rnGalleryLightbox.hidden=true;
+  rnGalleryLightbox.innerHTML='<button class="rn-gallery-close" type="button" aria-label="Close picture">×</button><img src="" alt=""><div class="rn-gallery-caption"></div>';
+  document.body.appendChild(rnGalleryLightbox);
+
+  const rnGallerySources=[
+    ['Main exterior','https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=85'],
+    ['Front entrance','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85'],
+    ['Back side','https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=85'],
+    ['Side view','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=85'],
+    ['Garden','https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=85'],
+    ['Swimming pool','https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=1200&q=85'],
+    ['Pool seating','https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=85'],
+    ['Living room','https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85'],
+    ['Large parlor','https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=85'],
+    ['Kitchen','https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1200&q=85'],
+    ['Bedroom 1','https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=85'],
+    ['Bedroom 2','https://images.unsplash.com/photo-1566665797739-1674de7a421a?auto=format&fit=crop&w=1200&q=85'],
+    ['Bedroom 3','https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=85'],
+    ['Bedroom 4','https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=85'],
+    ['Bathroom 1','https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=1200&q=85'],
+    ['Bathroom 2','https://images.unsplash.com/photo-1701502909888-6b11930e419d?auto=format&fit=crop&w=1200&q=85'],
+    ['Bathroom 3','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85'],
+    ['Parking','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=85'],
+    ['Balcony','https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=85'],
+    ['Outdoor space','https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=85']
+  ];
+
+  function buildPropertyGallery(item){
+    if(!rnGallery)return;
+    const sources=[...rnGallerySources];
+    if(item?.[4]) sources[0]=['Main property photo',item[4]];
+    const views=[];
+    for(let round=0;round<3;round++){
+      sources.forEach((s,i)=>views.push([s[0]+' · View '+(round+1),s[1]+'&gallery='+round+'-'+i]));
+    }
+    rnGallery.innerHTML=views.map((v,i)=>'<button class="rn-gallery-item" type="button" data-gallery-index="'+i+'"><img loading="'+(i<6?'eager':'lazy')+'" src="'+v[1]+'" alt="'+v[0].replace(/"/g,'&quot;')+'"><span class="rn-gallery-label">'+v[0]+'</span></button>').join('');
+    rnGalleryCount.textContent=views.length+' pictures';
+    rnGallery.querySelectorAll('.rn-gallery-item').forEach((btn,i)=>btn.addEventListener('click',()=>{
+      const img=btn.querySelector('img');
+      rnGalleryLightbox.querySelector('img').src=img.src;
+      rnGalleryLightbox.querySelector('img').alt=img.alt;
+      rnGalleryLightbox.querySelector('.rn-gallery-caption').textContent=img.alt;
+      rnGalleryLightbox.hidden=false;
+    }));
+  }
+  rnGalleryLightbox.addEventListener('click',e=>{if(e.target===rnGalleryLightbox||e.target.closest('.rn-gallery-close'))rnGalleryLightbox.hidden=true});
+
   const houseModal=document.getElementById('rnHouseModal');
   const houseModalSelect=document.getElementById('rnHouseModalSelect');
   let houseModalHistoryOpen=false;
@@ -1804,6 +1885,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     document.getElementById('rnHouseModalLocation').textContent='📍 '+item[1];
     document.getElementById('rnHouseModalPrice').textContent=item[2];
     document.getElementById('rnHouseModalSpecs').innerHTML=item[3].split(' · ').map(s=>'<span style="display:inline-block;margin:4px;padding:7px 10px;background:#f3faff;border-radius:8px;">'+s+'</span>').join('');
+    buildPropertyGallery(item);
     document.getElementById('rnHouseModalDescription').textContent=data[category].confidence;
     if(!houseModalHistoryOpen){
       history.pushState({rnHouseModal:true},'',location.href);
