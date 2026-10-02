@@ -681,7 +681,7 @@ body.rn-gate-active{margin:0;}
 .rn-property-gallery-head span{font-size:13px;color:#627d98;font-weight:600}
 .rn-house-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:18px}
 .rn-gallery-item{border:0;padding:0;background:#f3f7fa;border-radius:12px;overflow:hidden;cursor:pointer;position:relative;text-align:left}
-.rn-gallery-item img{display:block;width:100%;height:135px;object-fit:cover}.rn-villa-crop-image{display:block;width:100%;aspect-ratio:1.61/1;background-size:600% 1000%;background-repeat:no-repeat;background-color:#eef3f6;background-origin:border-box}
+.rn-gallery-item img{display:block;width:100%;height:135px;object-fit:cover;background:#eef3f6}.rn-villa-crop-image{display:block;width:100%;aspect-ratio:1.61/1;background-size:600% 1000%;background-repeat:no-repeat;background-color:#eef3f6;background-origin:border-box}
 .rn-gallery-label{display:block;padding:7px 9px;font-size:12px;color:#243b53;background:#fff}
 .rn-gallery-lightbox{position:fixed;inset:0;background:rgba(0,0,0,.94);z-index:20000;display:flex;align-items:center;justify-content:center;padding:18px}
 .rn-gallery-lightbox[hidden]{display:none}
@@ -1796,10 +1796,10 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     return;
   }
 
-  const rnVillaGalleryImages=Array.from({length:21},(_,i)=>'./assets/villa-gallery/villa-'+String(i+1).padStart(2,'0')+'.jpg');
+  const rnVillaGalleryImages=Array.from({length:21},(_,i)=>'https://raw.githubusercontent.com/victorharry573-art/RumahNusa-/main/assets/villa-gallery/villa-'+String(i+1).padStart(2,'0')+'.jpg');
   const labels=rnVillaGalleryLabels.slice(0,21);
   rnGallery.innerHTML=rnVillaGalleryImages.map((src,i)=>`<button class="rn-gallery-item" type="button" data-gallery-index="${i}" aria-label="${labels[i].replace(/"/g,'&quot;')}">
-    <img loading="${i<6?'eager':'lazy'}" src="${src}" alt="${i+1}. ${labels[i]} — this particular villa">
+    <img loading="${i<21?'eager':'lazy'}" decoding="async" src="${src}" alt="${i+1}. ${labels[i]} — this particular villa" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=85';">
     <span class="rn-gallery-label">${i+1}. ${labels[i]}</span>
   </button>`).join('');
   rnGalleryCount.textContent='21 separate pictures';
