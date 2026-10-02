@@ -1606,54 +1606,79 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   }
 
   function renderCategory(name){
-    const d=data[name]; if(!d)return;
-    window.__rnCustomerFlowState=window.__rnCustomerFlowState||{property:'',purpose:'Beli',rentalTerm:'',paymentMethod:''};
+    const d=data[name];
+    if(!d)return;
+
+    window.__rnCustomerFlowState=window.__rnCustomerFlowState||{
+      property:'',purpose:'Beli',rentalTerm:'',paymentMethod:''
+    };
     window.__rnCustomerFlowState.property=name;
     window.__rnCustomerFlowState.purpose='Beli';
+
     const selected=document.querySelector('#propertyOptions .client-option[data-value="'+CSS.escape(name)+'"]');
-    if(!selected)return;
+    if(!selected || !categoryGrid || !collection || !listings)return;
 
-    document.querySelectorAll('#propertyOptions .client-option').forEach(btn=>btn.classList.toggle('selected',btn===selected));
+    /* Select the tapped card first, then open its collection. */
+    document.querySelectorAll('#propertyOptions .client-option')
+      .forEach(btn=>btn.classList.toggle('selected',btn===selected));
     categoryGrid.classList.add('rn-category-open');
-
-    // Put the selected category and its collection together. Other categories
-    // are temporarily hidden so the customer sees only the chosen property type.
     selected.insertAdjacentElement('afterend',collection);
     collection.hidden=false;
 
-    title.textContent=d.title;
-    intro.textContent=d.intro;
-    badge.textContent=d.badge;
-    confidence.textContent=d.confidence;
+    /* These are the elements that actually exist in the current page. */
+    if(title) title.textContent=d.title;
+    if(intro) intro.textContent=d.intro;
+    if(badge) badge.textContent=d.badge;
+    if(confidence) confidence.textContent=d.confidence;
+
     const usdToIdrRate=17900;
     const formatIdr=n=>'Rp '+Math.round(n).toLocaleString('id-ID');
     const addIdrPrice=price=>{
       const m=String(price||'').match(/\$([0-9][0-9,]*)/);
       if(!m)return String(price||'');
-      const usd=Number(m[1].replace(/,/g,''));
-      return formatIdr(usd*usdToIdrRate);
+      return formatIdr(Number(m[1].replace(/,/g,''))*usdToIdrRate);
     };
-    listings.innerHTML=d.listings.map(x=>'<article class="rn-listing"><img loading="lazy" src="'+x[4]+'" alt="'+x[0]+' interior and exterior"><div class="rn-listing-body"><h5>'+x[0]+'</h5><p>📍 '+x[1]+'</p><p class="rn-listing-price">'+addIdrPrice(x[2])+'</p>+'<div class="rn-listing-specs">'+x[3].split(' · ').map(s=>'<span>'+s+'</span>').join('')+'</div><p>'+d.buy+'</p><button type="button" class="rn-listing-continue">Continue with this home</button></div></article>').join('');
-    choiceTitle.textContent=d.title+' — choose your rooms and plan';
-    choiceIntro.textContent=d.intro;
-    setOptions(rooms,d.rooms);
-    purpose.innerHTML=d.buy.indexOf('rent')>=0
-      ? '<option value="Beli">Beli</option><option value="Sewa">Sewa</option>'
-      : '<option value="Beli">Beli</option>';
-    purpose.value='Beli';
-    purposeNote.textContent=name==='Apartemen'?'Apartments can be bought or rented for 1–5 years.':'SALE ONLY — This property category is permanently for sale. Rental is not available.';
-    if(propertyContinue) propertyContinue.hidden=false;
-    const idrSection=document.getElementById('purchaseAmountIdrSection');
-    const idrInput=document.getElementById('clientBudgetIdr');
-    if(idrSection){
-      idrSection.hidden=name==='Apartemen';
-      idrInput.required=name!=='Apartemen';
+
+    listings.innerHTML=d.listings.map(x=>
+      '<article class="rn-listing">'+
+      '<img loading="lazy" src="'+x[4]+'" alt="'+x[0]+' interior and exterior">'+
+      '<div class="rn-listing-body">'+
+      '<h5>'+x[0]+'</h5>'+
+      '<p>📍 '+x[1]+'</p>'+
+      '<p class="rn-listing-price">'+addIdrPrice(x[2])+'</p>'+
+      '<div class="rn-listing-specs">'+x[3].split(' · ').map(s=>'<span>'+s+'</span>').join('')+'</div>'+
+      '<p>'+d.buy+'</p>'+
+      '<button type="button" class="rn-listing-continue">Continue with this home</button>'+
+      '</div></article>'
+    ).join('');
+
+    /* The old page had removed these optional step elements. Never let their
+       absence stop the category from opening. */
+    if(choiceTitle) choiceTitle.textContent=d.title+' — choose your rooms and plan';
+    if(choiceIntro) choiceIntro.textContent=d.intro;
+    if(purpose){
+      purpose.innerHTML=d.buy.toLowerCase().includes('rent')
+        ? '<option value="Beli">Beli</option><option value="Sewa">Sewa</option>'
+        : '<option value="Beli">Beli</option>';
+      purpose.value='Beli';
     }
-    rentalWrap.hidden=!(name==='Apartemen' && purpose.value==='Sewa');
-    layoutTitle.textContent=d.title+' details';
-    layoutDetails.innerHTML=d.listings.map(x=>'<div class="house-layout"><strong>'+x[0]+'</strong><p>'+x[3]+'</p></div>').join('');
-    selectionInfo.innerHTML='<strong>'+d.title+'</strong> — '+d.buy+' Choose your rooms and purchase plan here. Your payment amount will be entered in the Amount section before you send the request to the RumahNusa agent.';
-    updateBudgetPreview();
+    if(purposeNote){
+      purposeNote.textContent=name==='Apartemen'
+        ? 'Apartments can be bought or rented for 1–5 years.'
+        : 'SALE ONLY — This property category is permanently for sale. Rental is not available.';
+    }
+    if(rooms) setOptions(rooms,d.rooms);
+    if(rentalWrap) rentalWrap.hidden=!(name==='Apartemen' && purpose?.value==='Sewa');
+    if(propertyContinue) propertyContinue.hidden=false;
+    if(layoutTitle) layoutTitle.textContent=d.title+' details';
+    if(layoutDetails) layoutDetails.innerHTML=d.listings.map(x=>'<div class="house-layout"><strong>'+x[0]+'</strong><p>'+x[3]+'</p></div>').join('');
+    if(selectionInfo) selectionInfo.innerHTML='<strong>'+d.title+'</strong> — '+d.buy+' Choose your rooms and purchase plan here.';
+    
+    window.__rnCategoryOpen=name;
+    window.__rnCategoryData=d;
+
+    /* Wire the newly-created listing cards without relying on the old flow. */
+    if(typeof window.__rnWireListings==='function') window.__rnWireListings();
 
     requestAnimationFrame(function(){
       selected.scrollIntoView({behavior:'smooth',block:'start'});
