@@ -1800,7 +1800,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       const x=col*20, y=row*(100/9);
       const bgX=col===0?'0%':col===5?'100%':x+'%';
       const bgY=row===0?'0%':row===9?'100%':y+'%';
-      return \`<button class="rn-gallery-item rn-villa-crop" type="button" data-gallery-index="${i}" aria-label="${label.replace(/"/g,'&quot;')}"><span class="rn-villa-crop-image" style="background-image:url('${rnVillaGalleryImage}');background-position:${bgX} ${bgY}"></span><span class="rn-gallery-label">${i+1}. ${label}</span></button>\`;
+      return `<button class="rn-gallery-item rn-villa-crop" type="button" data-gallery-index="${i}" aria-label="${label.replace(/"/g,'&quot;')}"><span class="rn-villa-crop-image" style="background-image:url('${rnVillaGalleryImage}');background-position:${bgX} ${bgY}"></span><span class="rn-gallery-label">${i+1}. ${label}</span></button>`;
     }).join('');
     rnGalleryCount.textContent='60 pictures';
     rnGallery.querySelectorAll('.rn-gallery-item').forEach((btn,i)=>btn.addEventListener('click',()=>{
