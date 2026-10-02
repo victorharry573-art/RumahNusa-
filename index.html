@@ -1796,32 +1796,9 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     return;
   }
 
-  const rnVillaGalleryNumbers=[1,5,6,13,15,16,18,19,20,21];
-  const rnVillaGalleryImages=rnVillaGalleryNumbers.map(n=>'https://victorharry573-art.github.io/RumahNusa-/assets/villa-gallery/villa-'+String(n).padStart(2,'0')+'.jpg?v=6').concat([
-    'https://victorharry573-art.github.io/RumahNusa-/assets/villa-gallery/villa-main-interior.webp?v=1'
-  ]);
-  const labels=rnVillaGalleryNumbers.map(n=>rnVillaGalleryLabels[n-1]).concat(['Main Interior — Living Room & Kitchen']);
-  rnGallery.innerHTML=rnVillaGalleryImages.map((src,i)=>`<button class="rn-gallery-item" type="button" data-gallery-index="${i}" aria-label="${labels[i].replace(/"/g,'&quot;')}">
-    <img loading="eager" decoding="async" src="${src}" alt="${i+1}. ${labels[i]} — this particular villa" onerror="this.onerror=null;this.style.display='none';">
-    <span class="rn-gallery-label">${i+1}. ${labels[i]}</span>
-  </button>`).join('');
-  rnGalleryCount.textContent='10 separate pictures';
-
-  rnGallery.querySelectorAll('.rn-gallery-item').forEach((btn)=>{
-    btn.addEventListener('click',()=>{
-      const img=btn.querySelector('img');
-      const lightboxImage=rnGalleryLightbox.querySelector('img');
-      lightboxImage.src=img.src;
-      lightboxImage.alt=img.alt;
-      lightboxImage.style.objectFit='contain';
-      lightboxImage.style.objectPosition='center';
-      lightboxImage.style.transform='none';
-      rnGalleryLightbox.querySelector('.rn-gallery-caption').textContent=img.alt;
-      rnGalleryLightbox.hidden=false;
-    });
-  });
-}
-
+  // Remove the low-resolution villa gallery until the original high-resolution photos are uploaded.
+  rnGallery.innerHTML='';
+  rnGalleryCount.textContent='';
   rnGalleryLightbox.addEventListener('click',e=>{if(e.target===rnGalleryLightbox||e.target.closest('.rn-gallery-close'))rnGalleryLightbox.hidden=true});
 
   const houseModal=document.getElementById('rnHouseModal');
