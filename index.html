@@ -505,6 +505,19 @@ body.rn-gate-active{margin:0;}
 .rn-gate-step button.btn{width:100%;min-height:50px;}
 .rn-gate-step button:disabled{opacity:.5;cursor:not-allowed;}
 </style>
+<style>
+#propertyContinueFloat{display:block;position:fixed;right:14px;bottom:16px;z-index:10000;min-width:132px;padding:14px 20px;border:0;border-radius:999px;background:#0879bd;color:#fff;font-size:17px;font-weight:800;box-shadow:0 6px 20px rgba(0,0,0,.22);cursor:pointer;touch-action:manipulation}
+#propertyContinueFloat[hidden]{display:none!important}
+.rn-category-home-controls{margin-top:14px;padding:15px;border:1px solid #d9e2ec;border-radius:14px;background:#f8fbfd;display:grid;gap:10px}
+.rn-category-home-controls label{display:grid;gap:6px;font-weight:700;color:#12344d}
+.rn-category-home-controls select{width:100%;box-sizing:border-box;padding:12px;border:1px solid #bcccdc;border-radius:9px;background:#fff;font:inherit}
+.rn-control-title{font-size:17px;font-weight:800;color:#075985}
+.rn-card-price{margin:2px 0 0;color:#0f766e;font-size:16px}
+.rn-card-select{width:100%;min-height:50px;border:0;border-radius:11px;background:#0879bd;color:#fff;font-size:16px;font-weight:800;cursor:pointer;touch-action:manipulation}
+.rn-card-select:active{transform:scale(.98)}
+.rn-listing.rn-home-selected{outline:3px solid #0879bd;outline-offset:2px}
+@media(max-width:600px){#propertyContinueFloat{right:12px;bottom:14px;min-width:145px}}
+</style>
 </head>
 
 <body class="rn-gate-active">
@@ -2378,16 +2391,4 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 .rn-home-viewer-note{padding:0 18px 18px;color:#627d98;font-size:13px;line-height:1.5}
 @media(max-width:520px){.rn-home-viewer-chips{grid-template-columns:1fr}.rn-home-viewer-title{font-size:17px}}
 .rn-home-viewer-back{border:0;background:rgba(255,255,255,.16);color:#fff;border-radius:10px;padding:9px 12px;font-weight:700;font-size:14px;cursor:pointer;touch-action:manipulation}.rn-home-viewer-back:active{transform:scale(.98)}</style>
-</html><style>
-#propertyContinueFloat{display:none;position:fixed;right:14px;bottom:16px;z-index:10000;min-width:132px;padding:14px 20px;border:0;border-radius:999px;background:#0879bd;color:#fff;font-size:17px;font-weight:800;box-shadow:0 6px 20px rgba(0,0,0,.22);cursor:pointer;touch-action:manipulation}
-#propertyContinueFloat[hidden]{display:none!important}
-.rn-category-home-controls{margin-top:14px;padding:15px;border:1px solid #d9e2ec;border-radius:14px;background:#f8fbfd;display:grid;gap:10px}
-.rn-category-home-controls label{display:grid;gap:6px;font-weight:700;color:#12344d}
-.rn-category-home-controls select{width:100%;box-sizing:border-box;padding:12px;border:1px solid #bcccdc;border-radius:9px;background:#fff;font:inherit}
-.rn-control-title{font-size:17px;font-weight:800;color:#075985}
-.rn-card-price{margin:2px 0 0;color:#0f766e;font-size:16px}
-.rn-card-select{width:100%;min-height:50px;border:0;border-radius:11px;background:#0879bd;color:#fff;font-size:16px;font-weight:800;cursor:pointer;touch-action:manipulation}
-.rn-card-select:active{transform:scale(.98)}
-.rn-listing.rn-home-selected{outline:3px solid #0879bd;outline-offset:2px}
-@media(max-width:600px){#propertyContinueFloat{right:12px;bottom:14px;min-width:145px}}
-</style>
+</html>
