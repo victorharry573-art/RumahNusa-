@@ -2178,7 +2178,57 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       selectedRoom:'',paymentMethod:''
     };
     window.__rnCustomerFlowState=state;
+    const RN_CUSTOMER_STORAGE_KEY='rumahnusa_customer_flow_v2';
     let gender='';
+
+    function saveCustomerFlow(){
+      try{
+        const values={};
+        form.querySelectorAll('input,select,textarea').forEach(el=>{
+          if(!el.id || el.type==='file') return;
+          if(el.type==='radio' || el.type==='checkbox') values[el.id]={checked:el.checked,value:el.value};
+          else values[el.id]=el.value;
+        });
+        localStorage.setItem(RN_CUSTOMER_STORAGE_KEY,JSON.stringify({
+          identity:window.__rnCustomerIdentity||null,
+          state:{...state},
+          step:Number(window.__rumahnusaCustomerStep||1),
+          values,
+          savedAt:Date.now()
+        }));
+      }catch(e){ console.warn('RumahNusa local progress could not be saved.',e); }
+    }
+
+    function restoreCustomerFlow(){
+      try{
+        const raw=localStorage.getItem(RN_CUSTOMER_STORAGE_KEY);
+        if(!raw)return false;
+        const saved=JSON.parse(raw);
+        if(!saved || !saved.identity)return false;
+        window.__rnCustomerIdentity=saved.identity;
+        if(saved.state) Object.assign(state,saved.state);
+        if(saved.values){
+          Object.entries(saved.values).forEach(([id,val])=>{
+            const el=document.getElementById(id);
+            if(!el || el.type==='file')return;
+            if(el.type==='radio' || el.type==='checkbox') el.checked=!!val.checked;
+            else el.value=val;
+          });
+        }
+        gender=saved.identity.gender||'';
+        genders.forEach(x=>{
+          const selected=x.dataset.gender===gender;
+          x.classList.toggle('selected',selected);
+          x.setAttribute('aria-pressed',selected?'true':'false');
+        });
+        if(name) name.value=saved.identity.name||'';
+        if(age) age.value=saved.identity.age||'';
+        return true;
+      }catch(e){
+        console.warn('RumahNusa saved progress could not be restored.',e);
+        return false;
+      }
+    }
 
     function updateLogin(){
       const a=Number(age?.value);
@@ -2202,9 +2252,11 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     updateLogin();
 
     function showDataStep(stepNumber){
+      const safeStep=Math.max(1,Math.min(23,Number(stepNumber)||1));
       const steps=Array.from(form.querySelectorAll('.client-form-step'));
-      steps.forEach(step=>step.classList.toggle('active',Number(step.dataset.step)===stepNumber));
-      window.__rumahnusaCustomerStep=stepNumber;
+      steps.forEach(step=>step.classList.toggle('active',Number(step.dataset.step)===safeStep));
+      window.__rumahnusaCustomerStep=safeStep;
+      saveCustomerFlow();
       const panel=document.querySelector('.client-panel');
       if(panel) panel.scrollIntoView({behavior:'smooth',block:'start'});
     }
@@ -2239,6 +2291,19 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
         option.value=country; option.textContent=country; countrySelect.appendChild(option);
       });
     }
+
+    const hasSavedCustomer=restoreCustomerFlow();
+    if(hasSavedCustomer){
+      document.getElementById('rnGateName')?.setAttribute('value',window.__rnCustomerIdentity?.name||'');
+      document.getElementById('rnGateAge')?.setAttribute('value',String(window.__rnCustomerIdentity?.age||''));
+    }
+    updateLogin();
+
+    form.querySelectorAll('input,select,textarea').forEach(el=>{
+      if(el.type==='file') return;
+      el.addEventListener('input',saveCustomerFlow);
+      el.addEventListener('change',saveCustomerFlow);
+    });
 
     function validateCurrent(stepNumber){
       const requiredByStep={
@@ -2319,6 +2384,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       loginBtn.disabled=true;
       status.textContent='Welcome to RumahNusa…';
       window.__rnCustomerIdentity={name:name.value.trim(),gender,age:a};
+      saveCustomerFlow();
       try{
         if(window.supabase&&window.RUMAHNUSA_SUPABASE_URL&&window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY){
           const db=window.supabase.createClient(window.RUMAHNUSA_SUPABASE_URL,window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY);
@@ -2340,6 +2406,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       document.getElementById('client-profile')?.classList.remove('rn-login-locked');
       document.body.classList.remove('rn-gate-active');
       showDataStep(1);
+      saveCustomerFlow();
       loginBtn.disabled=false;
     });
 
@@ -2393,6 +2460,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       const budget=document.getElementById('clientBudgetIdr');
       if(budget) budget.value=(state.selectedHomePriceIDR.match(/[0-9][0-9.]*/)?.[0]||'').replace(/\./g,'');
       syncContinue();
+      saveCustomerFlow();
     }
 
     function wireListings(){
@@ -2457,6 +2525,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
         state.property=option.dataset.value||'';
         state.selectedHome='';state.selectedHomePriceIDR='';state.selectedRoom='';
         window.__rnSelectedHome=null;
+        saveCustomerFlow();
         if(fixedContinue){fixedContinue.hidden=true;fixedContinue.disabled=true;}
         setTimeout(wireListings,150);
       });
@@ -2470,11 +2539,26 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       });
     }
 
-    form.hidden=true;
-    form.querySelectorAll('.rn-selection-hidden').forEach(step=>step.classList.remove('active'));
-    window.__rumahnusaCustomerStep=1;
+    const initialSavedStep=hasSavedCustomer ? Number((()=>{try{return JSON.parse(localStorage.getItem(RN_CUSTOMER_STORAGE_KEY)||'{}').step||1}catch(e){return 1}})()) : 1;
+    if(hasSavedCustomer){
+      gate.hidden=true;
+      form.hidden=false;
+      document.getElementById('client-profile')?.classList.remove('rn-login-locked');
+      document.body.classList.remove('rn-gate-active');
+      form.querySelectorAll('.rn-selection-hidden').forEach(step=>step.classList.remove('active'));
+      showDataStep(initialSavedStep);
+      // Restore the selected category and rebuild its listing controls after refresh.
+      if(state.property){
+        const selected=categoryOptions.find(x=>x.dataset.value===state.property);
+        if(selected) selected.classList.add('selected');
+      }
+    }else{
+      form.hidden=true;
+      form.querySelectorAll('.rn-selection-hidden').forEach(step=>step.classList.remove('active'));
+      window.__rumahnusaCustomerStep=1;
+    }
     syncContinue();
-    setTimeout(wireListings,300);
+    setTimeout(()=>{wireListings(); if(hasSavedCustomer) saveCustomerFlow();},300);
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
 })();
