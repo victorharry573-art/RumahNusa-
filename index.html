@@ -681,14 +681,14 @@ body.rn-gate-active{margin:0;}
 .rn-property-gallery-head span{font-size:13px;color:#627d98;font-weight:600}
 .rn-house-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:18px}
 .rn-gallery-item{border:0;padding:0;background:#f3f7fa;border-radius:12px;overflow:hidden;cursor:pointer;position:relative;text-align:left}
-.rn-gallery-item img{display:block;width:100%;height:360px;object-fit:contain;object-position:center;background:#eef3f6}.rn-villa-crop-image{display:block;width:100%;aspect-ratio:1.61/1;background-size:600% 1000%;background-repeat:no-repeat;background-color:#eef3f6;background-origin:border-box}
+.rn-gallery-item img{display:block;width:100%;height:360px;object-fit:contain;object-position:center;background:#eef3f6}.rn-gallery-single-clear{grid-template-columns:1fr!important}.rn-gallery-single-clear .rn-gallery-item img{height:min(560px,62vh);object-fit:contain}.rn-villa-crop-image{display:block;width:100%;aspect-ratio:1.61/1;background-size:600% 1000%;background-repeat:no-repeat;background-color:#eef3f6;background-origin:border-box}
 .rn-gallery-label{display:block;padding:7px 9px;font-size:12px;color:#243b53;background:#fff}
 .rn-gallery-lightbox{position:fixed;inset:0;background:rgba(0,0,0,.94);z-index:20000;display:flex;align-items:center;justify-content:center;padding:18px}
 .rn-gallery-lightbox[hidden]{display:none}
 .rn-gallery-lightbox img{display:block;width:min(98vw,1500px);height:auto;max-width:98vw;max-height:90vh;object-fit:contain;object-position:center;border-radius:10px}
 .rn-gallery-close{position:absolute;top:16px;right:16px;width:48px;height:48px;border:0;border-radius:50%;background:#fff;font-size:28px;cursor:pointer}
 .rn-gallery-caption{position:absolute;left:18px;right:18px;bottom:18px;color:#fff;text-align:center;font-size:15px}
-@media(max-width:600px){.rn-house-gallery{grid-template-columns:repeat(1,minmax(0,1fr));gap:12px}.rn-gallery-item img{height:210px}.rn-villa-crop-image{aspect-ratio:1.61/1}}
+@media(max-width:600px){.rn-house-gallery{grid-template-columns:repeat(1,minmax(0,1fr));gap:12px}.rn-gallery-item img{height:210px}.rn-gallery-single-clear .rn-gallery-item img{height:320px}.rn-villa-crop-image{aspect-ratio:1.61/1}}
 </style>
 <section id="client-profile" class="client-area rn-login-locked">
   <div class="section-title">
