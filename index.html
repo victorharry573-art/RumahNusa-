@@ -1682,14 +1682,15 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       return formatIdr(Number(m[1].replace(/,/g,''))*usdToIdrRate);
     };
 
-    listings.innerHTML=d.listings.map(x=>
+    const categoryListings=(Array.isArray(d.listings)&&d.listings.length)?d.listings:(name==='Vila'?(window.__rnVillaFallbackListings||[]):[]);
+    listings.innerHTML=categoryListings.map(x=>
       '<article class="rn-listing">'+
       '<img loading="lazy" src="'+x[4]+'" alt="'+x[0]+' interior and exterior">'+
       '<div class="rn-listing-body">'+
       '<h5>'+x[0]+'</h5>'+
       '<p>📍 '+x[1]+'</p>'+
       '<p class="rn-listing-price">'+addIdrPrice(x[2])+'</p>'+
-      '<div class="rn-listing-specs">'+x[3].split(' · ').map(s=>'<span>'+s+'</span>').join('')+'</div>'+
+      '<div class="rn-listing-specs">'+String(x[3]||'').split(' · ').map(s=>'<span>'+s+'</span>').join('')+'</div>'+
       '<p>'+d.buy+'</p>'+
       '<button type="button" class="rn-listing-continue">Continue with this home</button>'+
       '</div></article>'
