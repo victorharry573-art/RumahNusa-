@@ -601,6 +601,35 @@ nav a{color:#3f3f46}
 .rn-card-price{color:var(--rn-dark-red)}
 input:focus,select:focus,textarea:focus{border-color:var(--rn-red)!important;outline-color:var(--rn-red)}
 </style>
+<style id="rn-global-search-style">
+.rn-search-panel{position:relative;z-index:900;background:#fff;border-bottom:1px solid #fecaca;box-shadow:0 8px 24px rgba(127,29,29,.12)}
+.rn-search-panel[hidden]{display:none!important}
+.rn-search-panel-inner{width:min(100%,900px);margin:0 auto;padding:18px 18px 24px}
+.rn-search-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.rn-search-heading span{font-size:11px;font-weight:800;letter-spacing:2px;color:#dc2626}
+.rn-search-heading h2{font-size:25px;color:#991b1b;margin:3px 0}
+.rn-search-heading p{color:#52525b;font-size:14px;margin:0}
+#rnSearchClose{border:0;background:#fff1f2;color:#b91c1c;border-radius:50%;width:38px;height:38px;font-size:26px;line-height:1;cursor:pointer}
+.rn-search-input-wrap{display:flex;align-items:center;gap:9px;margin-top:16px;border:2px solid #fca5a5;border-radius:13px;background:#fff;padding:3px 8px 3px 12px}
+.rn-search-input-wrap:focus-within{border-color:#dc2626;box-shadow:0 0 0 3px #fee2e2}
+.rn-search-input-wrap svg{width:23px;height:23px;fill:none;stroke:#dc2626;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+#rnGlobalSearchInput{border:0!important;outline:0!important;box-shadow:none!important;width:100%;padding:12px 4px;font-size:16px;background:#fff}
+#rnSearchClear{border:0;background:#fff1f2;color:#b91c1c;border-radius:8px;padding:8px 10px;font-weight:700}
+.rn-search-filters{display:flex;gap:8px;overflow-x:auto;padding:12px 0 4px}
+.rn-search-chip{border:1px solid #fecaca;background:#fff;color:#52525b;border-radius:999px;padding:8px 13px;font-weight:700;white-space:nowrap;cursor:pointer}
+.rn-search-chip.active{background:#dc2626;color:#fff;border-color:#dc2626}
+.rn-search-suggestions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.rn-search-suggestion{border:1px solid #fecaca;background:#fffafa;color:#3f3f46;border-radius:10px;padding:9px 11px;cursor:pointer;text-align:left}
+.rn-search-suggestion strong{color:#991b1b}
+.rn-search-results{display:grid;gap:12px;margin-top:14px}
+.rn-search-result{display:grid;grid-template-columns:120px 1fr;gap:14px;padding:11px;border:1px solid #e4e4e7;border-radius:14px;background:#fff;box-shadow:0 4px 16px rgba(39,39,42,.06)}
+.rn-search-result img{width:120px;height:92px;object-fit:cover;border-radius:10px;background:#fff1f2}
+.rn-search-result h3{font-size:17px;color:#991b1b;margin:0 0 2px}
+.rn-search-result p{margin:3px 0;color:#52525b;font-size:13px}
+.rn-search-result .rn-search-result-type{display:inline-block;color:#dc2626;font-weight:800;font-size:11px;letter-spacing:.8px}
+.rn-search-empty{padding:18px;border:1px dashed #fca5a5;border-radius:13px;background:#fffafa;color:#52525b;text-align:center}
+@media(max-width:600px){.rn-search-panel-inner{padding:15px 13px 20px}.rn-search-heading h2{font-size:22px}.rn-search-result{grid-template-columns:92px 1fr}.rn-search-result img{width:92px;height:78px}.rn-search-result h3{font-size:15px}}
+</style>
 <style id="rn-red-white-top-header">
 /* Red header matching the RumahNusa red-and-white design */
 header{
@@ -630,6 +659,34 @@ header .lang-btn.active{color:#dc2626!important;background:#fff!important;border
     <button class="lang-btn" type="button" data-lang="id">ID</button>
   </div>
 </header>
+<section id="rnSearchPanel" class="rn-search-panel" hidden aria-label="RumahNusa property search">
+  <div class="rn-search-panel-inner">
+    <div class="rn-search-heading">
+      <div>
+        <span>RUMAHNUSA SEARCH</span>
+        <h2>Search for a property</h2>
+        <p>Search by city, area, property type, rooms or any property detail.</p>
+      </div>
+      <button type="button" id="rnSearchClose" aria-label="Close search">×</button>
+    </div>
+    <div class="rn-search-input-wrap">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
+      <input id="rnGlobalSearchInput" type="search" autocomplete="off" placeholder="Search city, area, villa, apartment, hotel, house, rooms..." aria-label="Search RumahNusa properties">
+      <button type="button" id="rnSearchClear" hidden>Clear</button>
+    </div>
+    <div id="rnSearchSuggestions" class="rn-search-suggestions" hidden></div>
+    <div class="rn-search-filters" aria-label="Property type filters">
+      <button type="button" class="rn-search-chip active" data-search-type="All">All</button>
+      <button type="button" class="rn-search-chip" data-search-type="Separate Rumah">House</button>
+      <button type="button" class="rn-search-chip" data-search-type="Apartemen">Apartment</button>
+      <button type="button" class="rn-search-chip" data-search-type="Vila">Villa</button>
+      <button type="button" class="rn-search-chip" data-search-type="Hotel">Hotel</button>
+      <button type="button" class="rn-search-chip" data-search-type="Luxury">Luxury</button>
+    </div>
+    <div id="rnSearchResults" class="rn-search-results"></div>
+  </div>
+</section>
+
 
 
 
@@ -1167,6 +1224,105 @@ header .lang-btn.active{color:#dc2626!important;background:#fff!important;border
   </button>
 </nav>
 
+<script id="rn-global-search-engine">
+(function(){
+  const panel=document.getElementById('rnSearchPanel');
+  const input=document.getElementById('rnGlobalSearchInput');
+  const results=document.getElementById('rnSearchResults');
+  const suggestions=document.getElementById('rnSearchSuggestions');
+  const clear=document.getElementById('rnSearchClear');
+  const close=document.getElementById('rnSearchClose');
+  if(!panel||!input||!results)return;
+
+  const places=[
+    'Jakarta','South Jakarta','Central Jakarta','North Jakarta','West Jakarta','East Jakarta',
+    'Bali','Denpasar','Badung','Ubud','Seminyak','Canggu','Kuta','Gianyar',
+    'Surabaya','Bandung','Medan','Makassar','Palembang','Semarang','Yogyakarta',
+    'Tangerang','South Tangerang','Bekasi','Depok','Bogor','Batam','Malang',
+    'Solo','Surakarta','Balikpapan','Samarinda','Banjarmasin','Manado','Padang',
+    'Pekanbaru','Bandar Lampung','Pontianak','Mataram','Kupang','Jayapura',
+    'Banda Aceh','Jambi','Bengkulu','Serang','Cirebon','Tasikmalaya','Denpasar'
+  ];
+  let selectedType='All';
+
+  const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  const getData=()=>window.__rnAllCategoryData||{};
+  const typeLabel=k=>k==='Separate Rumah'?'HOUSE':k==='Apartemen'?'APARTMENT':k==='Vila'?'VILLA':k==='Hotel'?'HOTEL':k.toUpperCase();
+  const normalize=s=>String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  const inventory=()=>{
+    const all=[];
+    Object.entries(getData()).forEach(([type,d])=>{
+      (Array.isArray(d.listings)?d.listings:[]).forEach(x=>all.push({type,data:d,item:x}));
+    });
+    return all;
+  };
+
+  function matches(r,q){
+    if(selectedType!=='All' && selectedType!=='Luxury'){
+      if(r.type!==selectedType)return false;
+    }
+    const text=normalize([r.type,r.item[0],r.item[1],r.item[2],r.item[3]].join(' '));
+    if(selectedType==='Luxury' && !text.includes('luxury'))return false;
+    return !q || text.includes(normalize(q));
+  }
+
+  function render(q){
+    const list=inventory().filter(r=>matches(r,q));
+    clear.hidden=!q;
+    if(!q){
+      results.innerHTML='<div class="rn-search-empty">Start typing a city, area, house type, villa, apartment, hotel, number of rooms, or another property detail.</div>';
+      return;
+    }
+    if(!list.length){
+      results.innerHTML='<div class="rn-search-empty"><strong>No matching property is currently listed.</strong><br>Try another city, area, property type or room requirement. Exact street addresses are shared privately by the agent, not published publicly.</div>';
+      return;
+    }
+    results.innerHTML=list.map((r,i)=>{
+      const x=r.item;
+      return '<button type="button" class="rn-search-result" data-search-index="'+i+'" style="text-align:left">'+
+        '<img src="'+esc(x[4])+'" alt="'+esc(x[0])+'">'+
+        '<span><span class="rn-search-result-type">'+esc(typeLabel(r.type))+'</span>'+
+        '<h3>'+esc(x[0])+'</h3><p>📍 '+esc(x[1])+'</p><p><strong>'+esc(x[2])+'</strong></p><p>'+esc(x[3])+'</p></span></button>';
+    }).join('');
+    results.querySelectorAll('.rn-search-result').forEach((b,i)=>{
+      b.addEventListener('click',()=>{
+        const r=list[i];
+        panel.hidden=true;
+        const btn=[...document.querySelectorAll('#propertyOptions .client-option')].find(x=>x.dataset.value===r.type);
+        if(btn){btn.click();setTimeout(()=>document.querySelector('#rnCategoryListings')?.scrollIntoView({behavior:'smooth',block:'start'}),350);}
+      });
+    });
+  }
+
+  function showSuggestions(q){
+    const nq=normalize(q);
+    if(!nq){suggestions.hidden=true;suggestions.innerHTML='';return;}
+    const placeMatches=places.filter(p=>normalize(p).includes(nq)).slice(0,8);
+    suggestions.hidden=!placeMatches.length;
+    suggestions.innerHTML=placeMatches.map(p=>'<button type="button" class="rn-search-suggestion" data-place="'+esc(p)+'">📍 <strong>'+esc(p)+'</strong><br><small>Search properties in this city/area</small></button>').join('');
+    suggestions.querySelectorAll('[data-place]').forEach(b=>b.addEventListener('click',()=>{
+      input.value=b.dataset.place;
+      suggestions.hidden=true;
+      render(input.value);
+      input.focus();
+    }));
+  }
+
+  window.__rnRunGlobalSearch=render;
+  input.addEventListener('input',()=>{showSuggestions(input.value);render(input.value)});
+  clear.addEventListener('click',()=>{input.value='';showSuggestions('');render('');input.focus()});
+  close.addEventListener('click',()=>{panel.hidden=true});
+  document.querySelectorAll('.rn-search-chip').forEach(chip=>{
+    chip.addEventListener('click',()=>{
+      selectedType=chip.dataset.searchType||'All';
+      document.querySelectorAll('.rn-search-chip').forEach(c=>c.classList.toggle('active',c===chip));
+      render(input.value);
+    });
+  });
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!panel.hidden)panel.hidden=true});
+  render('');
+})();
+</script>
 <script>
 (function(){
   const nav=document.getElementById('rnBottomNav');
@@ -1184,7 +1340,18 @@ header .lang-btn.active{color:#dc2626!important;background:#fff!important;border
     if(!b)return;
     const name=b.dataset.rnNav;
     if(name==='home'){setActive(name);goTop();return;}
-    if(name==='search'){goTo('#properties','search');return;}
+    if(name==='search'){
+      setActive(name);
+      const panel=document.getElementById('rnSearchPanel');
+      const input=document.getElementById('rnGlobalSearchInput');
+      if(panel){
+        panel.hidden=false;
+        panel.scrollIntoView({behavior:'smooth',block:'start'});
+        setTimeout(()=>input?.focus(),220);
+      }
+      if(typeof window.__rnRunGlobalSearch==='function') window.__rnRunGlobalSearch('');
+      return;
+    }
     if(name==='buy'){
       const form=document.getElementById('clientProfilForm');
       const gate=document.getElementById('rnWelcomeGate');
@@ -1777,6 +1944,9 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     ['Garden Villa — 5 Bedrooms','Bali, Indonesia','Contact RumahNusa for the selected villa','5 bedrooms · furnished rooms · large bathrooms/toilets · kitchen · pool · parking · garden','https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=85'],
     ['Private Pool Villa — 6 Bedrooms','Bali, Indonesia','Rp 6.000.000.000','6 bedrooms · furnished parlors · beautiful bathrooms/toilets · kitchen · private pool · parking','https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=1200&q=85']
   ];
+
+  /* Make the complete property inventory available to the global search. */
+  window.__rnAllCategoryData=data;
 
   function setOptions(select,values){
     select.innerHTML=values.map(v=>'<option>'+v+'</option>').join('');
