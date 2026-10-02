@@ -178,6 +178,62 @@ nav a {
   min-width: 0;
 }
 
+/* RumahNusa mobile-style bottom navigation */
+.rn-bottom-nav{
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  z-index:15000;
+  display:grid;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:0;
+  padding:7px 4px max(7px,env(safe-area-inset-bottom));
+  background:rgba(255,255,255,.98);
+  border-top:1px solid #d9e2ec;
+  box-shadow:0 -5px 20px rgba(16,42,67,.12);
+  backdrop-filter:blur(10px);
+}
+.rn-bottom-nav button{
+  appearance:none;
+  border:0;
+  background:transparent;
+  color:#486581;
+  min-width:0;
+  min-height:62px;
+  padding:5px 2px 3px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+  font:inherit;
+  font-size:11px;
+  font-weight:700;
+  cursor:pointer;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+}
+.rn-bottom-nav button svg{
+  width:25px;
+  height:25px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.9;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.rn-bottom-nav button.active{color:#e64b4b}
+.rn-bottom-nav button:active{transform:scale(.94)}
+body{padding-bottom:82px}
+@media(min-width:801px){
+  .rn-bottom-nav{max-width:760px;left:50%;right:auto;transform:translateX(-50%);width:100%;border:1px solid #d9e2ec;border-bottom:0;border-radius:18px 18px 0 0}
+}
+@media(max-width:420px){
+  .rn-bottom-nav button{font-size:10px;min-height:58px}
+  .rn-bottom-nav button svg{width:23px;height:23px}
+}
+
 .rn-listing{cursor:pointer;transition:transform .18s,box-shadow .18s;border:2px solid transparent}.rn-listing:hover,.rn-listing:focus-within{transform:translateY(-3px);box-shadow:0 10px 28px rgba(16,42,67,.16);border-color:#1597e5}.rn-listing:active{transform:scale(.995)}
 #propertyContinueFloat{display:none}
 .rn-house-modal{position:fixed;inset:0;z-index:2000;background:rgba(3,30,52,.74);display:flex;align-items:center;justify-content:center;padding:18px}.rn-house-modal[hidden]{display:none!important}.rn-house-modal-card{background:#fff;border-radius:18px;max-width:760px;width:100%;max-height:92vh;overflow:auto}.rn-house-modal-card img{display:block;width:100%;max-height:390px;object-fit:cover}.rn-house-modal-body{padding:22px}.rn-house-modal-body h3{font-size:28px;color:#075985}.rn-house-modal-body p{margin:8px 0;color:#486581}.rn-house-modal-close{float:right;margin:12px;border:0;background:#eef6ff;color:#075985;border-radius:50%;width:42px;height:42px;font-size:25px;cursor:pointer;position:relative;z-index:2}
@@ -1045,7 +1101,91 @@ body.rn-gate-active{margin:0;}
   <p>© 2024 RumahNusa All rights reserved.</p>
 </footer>
 
+<nav class="rn-bottom-nav" id="rnBottomNav" aria-label="RumahNusa quick navigation">
+  <button type="button" data-rn-nav="home" class="active" aria-label="Home">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9.5V21h13V9.5"/><path d="M9.5 21v-6h5v6"/></svg>
+    <span>Home</span>
+  </button>
+  <button type="button" data-rn-nav="search" aria-label="Search">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
+    <span>Search</span>
+  </button>
+  <button type="button" data-rn-nav="buy" aria-label="Buy">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 4l9 6.5"/><path d="M5 10v10h14V10"/><path d="M9 20v-5h6v5"/></svg>
+    <span>Buy</span>
+  </button>
+  <button type="button" data-rn-nav="promote" aria-label="Promote">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13v-2l11-5v12L4 13Z"/><path d="M15 9.5h4.5A1.5 1.5 0 0 1 21 11v2a1.5 1.5 0 0 1-1.5 1.5H15"/><path d="m7 14.5 1 5H5l-1-6.5"/></svg>
+    <span>Promote</span>
+  </button>
+  <button type="button" data-rn-nav="wishlist" aria-label="Wish list">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 8.8c0 5.5-8.8 11-8.8 11s-8.8-5.5-8.8-11A4.8 4.8 0 0 1 12 6.4a4.8 4.8 0 0 1 8.8 2.4Z"/></svg>
+    <span>Wish list</span>
+  </button>
+  <button type="button" data-rn-nav="settings" aria-label="Settings">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-1.8 1.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5v.2h-2.6v-.2a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1-1.8-1.8.1-.1A1.7 1.7 0 0 0 8 15a1.7 1.7 0 0 0-1.5-1H6v-2.6h.5a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1 1.8-1.8.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.5v-.2h2.6v.2a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1 1.8 1.8-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.5 1h.2V14h-.2a1.7 1.7 0 0 0-1.5 1Z"/></svg>
+    <span>Settings</span>
+  </button>
+</nav>
 
+<script>
+(function(){
+  const nav=document.getElementById('rnBottomNav');
+  if(!nav)return;
+  const setActive=(name)=>{
+    nav.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.rnNav===name));
+  };
+  const goTop=()=>window.scrollTo({top:0,behavior:'smooth'});
+  const goTo=(selector,name)=>{
+    const el=document.querySelector(selector);
+    if(el){setActive(name);el.scrollIntoView({behavior:'smooth',block:'start'});}
+  };
+  nav.addEventListener('click',e=>{
+    const b=e.target.closest('button[data-rn-nav]');
+    if(!b)return;
+    const name=b.dataset.rnNav;
+    if(name==='home'){setActive(name);goTop();return;}
+    if(name==='search'){goTo('#properties','search');return;}
+    if(name==='buy'){
+      const form=document.getElementById('clientProfilForm');
+      const gate=document.getElementById('rnWelcomeGate');
+      if(form){
+        form.hidden=false;
+        if(gate)gate.hidden=true;
+        if(typeof window.__rumahnusaShowCustomerStep==='function')window.__rumahnusaShowCustomerStep(1);
+        setActive(name);
+        form.scrollIntoView({behavior:'smooth',block:'start'});
+      }else goTo('#properties',name);
+      return;
+    }
+    if(name==='promote'){
+      const cta=document.querySelector('#contact')||document.querySelector('.cta');
+      if(cta){setActive(name);cta.scrollIntoView({behavior:'smooth',block:'start'});}
+      return;
+    }
+    if(name==='wishlist'){
+      setActive(name);
+      const msg=document.getElementById('rnWishlistMessage');
+      if(msg){msg.hidden=false;msg.scrollIntoView({behavior:'smooth',block:'center'});}
+      else{
+        const p=document.createElement('div');
+        p.id='rnWishlistMessage';
+        p.textContent='Your Wish list is ready. Select a property and add it to your Wish list.';
+        p.style.cssText='position:fixed;left:50%;bottom:92px;transform:translateX(-50%);z-index:16000;background:#fff;padding:14px 18px;border:1px solid #d9e2ec;border-radius:14px;box-shadow:0 8px 30px rgba(16,42,67,.18);color:#183b56;font-weight:700;width:min(90vw,430px);text-align:center';
+        document.body.appendChild(p);
+        setTimeout(()=>p.remove(),2800);
+      }
+      return;
+    }
+    if(name==='settings'){
+      setActive(name);
+      const lang=document.querySelector('.lang-switch');
+      if(lang){lang.scrollIntoView({behavior:'smooth',block:'center'});}
+      else window.alert('RumahNusa Settings');
+    }
+  });
+})();
+</script>
 
 <script>
 document.querySelectorAll('.copy-btn').forEach(function(button) {
