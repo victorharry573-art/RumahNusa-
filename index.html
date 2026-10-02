@@ -681,14 +681,14 @@ body.rn-gate-active{margin:0;}
 .rn-property-gallery-head span{font-size:13px;color:#627d98;font-weight:600}
 .rn-house-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:18px}
 .rn-gallery-item{border:0;padding:0;background:#f3f7fa;border-radius:12px;overflow:hidden;cursor:pointer;position:relative;text-align:left}
-.rn-gallery-item img{display:block;width:100%;aspect-ratio:316/250;height:auto;object-fit:cover;object-position:right center;background:#eef3f6}.rn-villa-crop-image{display:block;width:100%;aspect-ratio:1.61/1;background-size:600% 1000%;background-repeat:no-repeat;background-color:#eef3f6;background-origin:border-box}
+.rn-gallery-item img{display:block;width:100%;height:210px;object-fit:cover;object-position:center;background:#eef3f6}.rn-villa-crop-image{display:block;width:100%;aspect-ratio:1.61/1;background-size:600% 1000%;background-repeat:no-repeat;background-color:#eef3f6;background-origin:border-box}
 .rn-gallery-label{display:block;padding:7px 9px;font-size:12px;color:#243b53;background:#fff}
 .rn-gallery-lightbox{position:fixed;inset:0;background:rgba(0,0,0,.94);z-index:20000;display:flex;align-items:center;justify-content:center;padding:18px}
 .rn-gallery-lightbox[hidden]{display:none}
-.rn-gallery-lightbox img{display:block;width:min(92vw,1200px);aspect-ratio:316/250;height:auto;max-width:92vw;max-height:82vh;object-fit:cover;object-position:right center;border-radius:10px}
+.rn-gallery-lightbox img{display:block;width:min(96vw,1400px);height:auto;max-width:96vw;max-height:86vh;object-fit:contain;object-position:center;border-radius:10px}
 .rn-gallery-close{position:absolute;top:16px;right:16px;width:48px;height:48px;border:0;border-radius:50%;background:#fff;font-size:28px;cursor:pointer}
 .rn-gallery-caption{position:absolute;left:18px;right:18px;bottom:18px;color:#fff;text-align:center;font-size:15px}
-@media(max-width:600px){.rn-house-gallery{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.rn-gallery-item img{height:120px}.rn-villa-crop-image{aspect-ratio:1.61/1}}
+@media(max-width:600px){.rn-house-gallery{grid-template-columns:repeat(1,minmax(0,1fr));gap:12px}.rn-gallery-item img{height:210px}.rn-villa-crop-image{aspect-ratio:1.61/1}}
 </style>
 <section id="client-profile" class="client-area rn-login-locked">
   <div class="section-title">
@@ -1797,8 +1797,10 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   }
 
   const rnVillaGalleryNumbers=[1,5,6,13,15,16,18,19,20,21];
-  const rnVillaGalleryImages=rnVillaGalleryNumbers.map(n=>'https://victorharry573-art.github.io/RumahNusa-/assets/villa-gallery/villa-'+String(n).padStart(2,'0')+'.jpg?v=6');
-  const labels=rnVillaGalleryNumbers.map(n=>rnVillaGalleryLabels[n-1]);
+  const rnVillaGalleryImages=rnVillaGalleryNumbers.map(n=>'https://victorharry573-art.github.io/RumahNusa-/assets/villa-gallery/villa-'+String(n).padStart(2,'0')+'.jpg?v=6').concat([
+    'https://victorharry573-art.github.io/RumahNusa-/assets/villa-gallery/villa-main-interior.webp?v=1'
+  ]);
+  const labels=rnVillaGalleryNumbers.map(n=>rnVillaGalleryLabels[n-1]).concat(['Main Interior — Living Room & Kitchen']);
   rnGallery.innerHTML=rnVillaGalleryImages.map((src,i)=>`<button class="rn-gallery-item" type="button" data-gallery-index="${i}" aria-label="${labels[i].replace(/"/g,'&quot;')}">
     <img loading="eager" decoding="async" src="${src}" alt="${i+1}. ${labels[i]} — this particular villa" onerror="this.onerror=null;this.style.display='none';">
     <span class="rn-gallery-label">${i+1}. ${labels[i]}</span>
