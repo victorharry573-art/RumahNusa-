@@ -1618,6 +1618,11 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 
   /* Keep the category inventory available to the mobile fallback too. */
   window.__rnCategoryDataMap=data;
+  window.__rnVillaFallbackListings=[
+    ['Villa with Private Pool — 4 Bedrooms','Bali, Indonesia','Rp 1,2 billion','4 bedrooms · 3 bathrooms/toilets · furnished parlor · kitchen · private pool · parking · outdoor space · AC · private fridge · beds · large chairs · large TV · security cameras in parlor/outside · hot-water heater','https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=85'],
+    ['Garden Villa — 5 Bedrooms','Bali, Indonesia','Contact RumahNusa for the selected villa','5 bedrooms · furnished rooms · large bathrooms/toilets · kitchen · pool · parking · garden','https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=85'],
+    ['Private Pool Villa — 6 Bedrooms','Bali, Indonesia','Rp 6.000.000.000','6 bedrooms · furnished parlors · beautiful bathrooms/toilets · kitchen · private pool · parking','https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=1200&q=85']
+  ];
 
   function setOptions(select,values){
     select.innerHTML=values.map(v=>'<option>'+v+'</option>').join('');
@@ -2661,7 +2666,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     const listings=document.getElementById('rnCategoryListings');
     if(!button||!collection||!grid)return;
     const name=button.dataset.value||'';
-    const d=window.__rnCategoryDataMap?.[name];
+    const d=window.__rnCategoryDataMap?.[name] || (name==='Vila' ? {title:'Villas',badge:'VILLA',intro:'Villa homes available in Bali.',buy:'Villas are presented as sale properties.',listings:window.__rnVillaFallbackListings||[]} : null);
     grid.classList.add('rn-category-open');
     grid.querySelectorAll('.rn-home-category').forEach(x=>x.classList.toggle('selected',x===button));
     collection.hidden=false;
