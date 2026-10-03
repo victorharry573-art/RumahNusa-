@@ -3361,11 +3361,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     if(listings && d?.listings?.length){
       const rate=17900;
       const idr=n=>'Rp '+Math.round(n).toLocaleString('id-ID');
-      const displayPrice=p=>{
-        const s=String(p||'');
-        const m=s.match(/\$([0-9][0-9,]*)/);
-        return m ? s+' · '+idr(Number(m[1].replace(/,/g,''))*rate) : s;
-      };
+      const displayPrice=p=>'Price will be added later when this property is ready.';
       listings.innerHTML=d.listings.map(x=>
         '<article class="rn-listing">'+
         '<img loading="eager" src="'+x[4]+'" alt="'+x[0]+'">'+
