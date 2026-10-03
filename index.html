@@ -920,12 +920,20 @@ header .lang-btn.active{color:#dc2626!important;background:#fff!important;border
 
     <form id="clientProfilForm" hidden>
       <div class="client-form-step active" data-step="1">
-        <h3>Choose your home category</h3>
-        <p>Tap a home category and its homes will open immediately. You will see only that category until you choose another one.</p>
+        <h3>Buy — Choose a Property Type</h3>
+        <p>Choose one property category. Houses, villas, hotels and the other complete-property categories are for purchase only. Apartments are handled separately because apartments can be bought or rented.</p>
         <div class="rn-home-welcome">
           <h3>Welcome to RumahNusa Real Estate</h3>
           <p>Welcome to a place where beautiful homes, comfort, privacy, and peace of mind come together. RumahNusa helps you discover a home that can feel right for your everyday life, your family, and your future.</p>
-          <p class="rn-home-prompt">Choose your beautiful home category. Tap once and that category will open immediately, with only those homes shown.</p>
+          <p class="rn-home-prompt">Choose one category below. Tap once to open only that category. No prices are shown until the properties are ready and their final Rupiah amounts are confirmed.</p>
+          <div class="rn-buy-overview">
+            <div class="rn-buy-overview-head"><span>🏠</span><div><strong>RumahNusa Buy</strong><small>Explore complete properties beautifully, one category at a time.</small></div></div>
+            <div class="rn-buy-rules">
+              <div><b>Complete property</b><span>House, Villa, Hotel, Neighborhood, Townhouse, Penthouse, Family Residence and Investment Property are sold as one complete property.</span></div>
+              <div><b>Pictures, not room selection</b><span>The number of rooms is shown with the property, and all available inside and outside pictures will appear when the property is created.</span></div>
+              <div><b>Apartment is separate</b><span>Apartment customers can buy or rent an apartment/room. Rental terms will be 1–5 years.</span></div>
+            </div>
+          </div>
         </div>
         <div class="client-options rn-home-category-grid" id="propertyOptions" aria-label="RumahNusa home categories">
           <button type="button" class="client-option rn-home-category" data-value="Apartemen"><span class="rn-home-icon" aria-hidden="true">🏢</span><strong>Apartment</strong><small>City apartments, rooms, views and shared facilities.</small></button>
@@ -952,7 +960,7 @@ header .lang-btn.active{color:#dc2626!important;background:#fff!important;border
           </div>
           <div id="rnCategoryListings" class="rn-listing-grid"></div>
           <div id="rnCategoryConfidence" class="rn-confidence"></div>
-          <p class="rn-collection-note">You are viewing only this category. Choose your home, then continue to complete your details.</p>
+          <p class="rn-collection-note">You are viewing only this category. Complete-property categories are Buy only. Apartment has separate Buy and Rent options. Prices will be added later in Rupiah when the properties are ready.</p>
           <div class="rn-category-actions" aria-live="polite">
             <p id="rnSelectionPrompt">Select one home and enter your price to continue.</p>
           </div>
@@ -2258,6 +2266,18 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     },
   };
 
+  /* RumahNusa purchase rules: all non-apartment categories are complete properties and Buy only. */
+  const rnCompleteBuyOnlyCategories=['Hotel','Separate Rumah','Vila','Neighborhood Rumah','Townhouse','Penthouse','Family Residence','Investment Property'];
+  rnCompleteBuyOnlyCategories.forEach(function(k){
+    if(data[k]){
+      data[k].rooms=[];
+      data[k].buy='BUY ONLY — This is one complete property. The property rooms are included; customers do not choose individual rooms.';
+    }
+  });
+  if(data['Apartemen']){
+    data['Apartemen'].buy='APARTMENT — Buy an apartment/room or rent an apartment/room for 1–5 years. Whole-building purchase can also be listed when available.';
+  }
+
   /* Keep the category inventory available to the mobile fallback and villa cards. */
   window.__rnCategoryDataMap=data;
   window.__rnVillaFallbackListings=[
@@ -2334,7 +2354,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
       '<div class="rn-listing-body">'+
       '<h5>'+x[0]+'</h5>'+
       '<p>📍 '+x[1]+'</p>'+
-      '<p class="rn-listing-price">'+addIdrPrice(x[2])+'</p>'+
+      '<p class="rn-listing-price rn-price-pending">Price will be added later when this property is ready.</p>'+
       '<div class="rn-listing-specs">'+String(x[3]||'').split(' · ').map(s=>'<span>'+s+'</span>').join('')+'</div>'+
       '<p>'+d.buy+'</p>'+
       '<button type="button" class="rn-listing-continue">Continue with this home</button>'+
@@ -3115,18 +3135,22 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
         }
         const details=document.createElement('div');
         details.className='rn-category-home-controls';
-        details.innerHTML=
-          '<div class="rn-control-title">Rooms and home details</div>'+
-          '<p>'+esc(specs)+'</p>'+
-          '<label>Bedrooms<select class="rn-card-room"><option value="">Choose bedrooms</option>'+
-          roomSource.map(x=>'<option value="'+esc(x)+'">'+esc(x)+'</option>').join('')+
-          '</select></label>'+
-          '<label>Purchase plan<select class="rn-card-plan"><option value="Beli">Buy</option>'+
-          (state.property==='Apartemen'?'<option value="Sewa">Rent</option>':'')+
-          '</select></label>'+
-          '<div class="rn-card-rental-wrap" hidden><label>Rental duration<select class="rn-card-rental"><option value="">Choose duration</option><option>1 year</option><option>2 years</option><option>3 years</option><option>4 years</option><option>5 years</option></select></label></div>'+
-          '<p class="rn-card-price"><strong>Amount in Rupiah:</strong> '+esc(idr)+'</p>'+
-          '<button type="button" class="rn-card-select">Select this home</button>';
+        const isApartment=state.property==='Apartemen';
+        details.innerHTML=isApartment
+          ? '<div class="rn-control-title">Apartment options</div>'+
+            '<p>'+esc(specs)+'</p>'+
+            '<label>Apartment/room size<select class="rn-card-room"><option value="">Choose apartment room option</option>'+
+            roomSource.map(x=>'<option value="'+esc(x)+'">'+esc(x)+'</option>').join('')+
+            '</select></label>'+
+            '<label>Purchase or rental<select class="rn-card-plan"><option value="Beli">Buy</option><option value="Sewa">Rent</option></select></label>'+
+            '<div class="rn-card-rental-wrap" hidden><label>Rental duration<select class="rn-card-rental"><option value="">Choose duration</option><option>1 year</option><option>2 years</option><option>3 years</option><option>4 years</option><option>5 years</option></select></label></div>'+
+            '<p class="rn-card-price rn-price-pending"><strong>Price:</strong> Will be shown when this apartment is ready.</p>'+
+            '<button type="button" class="rn-card-select">Select this apartment</button>'
+          : '<div class="rn-control-title">Complete property · Buy only</div>'+
+            '<p>'+esc(specs)+'</p>'+
+            '<p class="rn-complete-property-note"><strong>Rooms included:</strong> '+esc(specs.match(/^[^·]*/)?.[0]||'Rooms are part of the property')+'</p>'+
+            '<p class="rn-price-pending">Price will be added later when this property is ready.</p>'+
+            '<button type="button" class="rn-card-select">Select this property</button>';
         body.appendChild(details);
 
         const room=details.querySelector('.rn-card-room');
@@ -3255,6 +3279,13 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 .rn-home-viewer-note{padding:0 18px 18px;color:#71717a;font-size:13px;line-height:1.5}
 @media(max-width:520px){.rn-home-viewer-chips{grid-template-columns:1fr}.rn-home-viewer-title{font-size:17px}}
 .rn-home-viewer-back{border:0;background:rgba(255,255,255,.16);color:#fff;border-radius:10px;padding:9px 12px;font-weight:700;font-size:14px;cursor:pointer;touch-action:manipulation}.rn-home-viewer-back:active{transform:scale(.98)}</style>
+<style id="rn-buy-section-polish">
+.rn-buy-overview{margin:20px 0 22px;padding:20px;border:1px solid #fecaca;border-radius:20px;background:linear-gradient(180deg,#fff,#fff7f7);box-shadow:0 10px 30px rgba(153,27,27,.08)}
+.rn-buy-overview-head{display:flex;align-items:center;gap:13px;color:#991b1b}.rn-buy-overview-head>span{font-size:34px}.rn-buy-overview-head strong{display:block;font-size:21px}.rn-buy-overview-head small{display:block;color:#71717a;margin-top:2px}
+.rn-buy-rules{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:16px}.rn-buy-rules>div{padding:14px;border-radius:14px;background:#fff;border:1px solid #f1f1f1}.rn-buy-rules b{display:block;color:#991b1b;margin-bottom:4px}.rn-buy-rules span{display:block;color:#52525b;font-size:13px;line-height:1.5}
+.rn-price-pending{color:#71717a!important;font-weight:600!important;font-size:14px!important}.rn-complete-property-note{background:#fff7f7;padding:10px 12px;border-radius:10px;color:#52525b}.rn-category-head{background:linear-gradient(135deg,#fff1f2,#fff);padding:18px;border-radius:16px;border:1px solid #fecaca;margin-bottom:16px}.rn-category-head h4{color:#991b1b;font-size:23px}.rn-category-badge{background:#dc2626!important;color:#fff!important;padding:6px 10px;border-radius:999px;font-weight:800}
+@media(max-width:700px){.rn-buy-rules{grid-template-columns:1fr}.rn-buy-overview{padding:16px}.rn-buy-overview-head strong{font-size:19px}}
+</style>
 
 <style>
 /* Final mobile tap fix: every home category is a real, full-size touch target. */
