@@ -958,6 +958,7 @@ header .lang-btn.active{color:#dc2626!important;background:#fff!important;border
             </div>
             <span id="rnCategoryBadge" class="rn-category-badge"></span>
           </div>
+          <div id="rnCategoryBuyChoices" class="rn-buy-choice-strip" aria-live="polite"></div>
           <div id="rnCategoryListings" class="rn-listing-grid"></div>
           <div id="rnCategoryConfidence" class="rn-confidence"></div>
           <p class="rn-collection-note">You are viewing only this category. Complete-property categories are Buy only. Apartment has separate Buy and Rent options. Prices will be added later in Rupiah when the properties are ready.</p>
@@ -2131,7 +2132,15 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   const badge=document.getElementById('rnCategoryBadge');
   const listings=document.getElementById('rnCategoryListings');
   const confidence=document.getElementById('rnCategoryConfidence');
-  const choiceTitle=document.getElementById('rnChoiceTitle');
+  const buyChoices=document.getElementById('rnCategoryBuyChoices');
+  function renderBuyChoices(name){
+    if(!buyChoices)return;
+    const apartment=name==='Apartemen';
+    buyChoices.innerHTML=apartment
+      ? '<div class="rn-buy-choice apartment"><strong>🏢 Apartment — Buy or Rent</strong><span>Choose an apartment or room to buy, or rent for 1, 2, 3, 4, or 5 years. A whole apartment building can also be listed for purchase when available.</span></div><div class="rn-buy-choice"><strong>Apartment rooms</strong><span>Apartment listings can show available room/apartment sizes, bedrooms, bathrooms, kitchen, parlor, balcony, pool, parking and other facilities.</span></div><div class="rn-buy-choice"><strong>Property pictures</strong><span>When real properties are ready, their available interior and exterior pictures can be shown with the listing.</span></div>'
+      : '<div class="rn-buy-choice"><strong>🏠 Complete property</strong><span>This category is sold as one complete property. Bedrooms, bathrooms, kitchen, parlor, outdoor spaces, parking and other features belong to the property.</span></div><div class="rn-buy-choice"><strong>Buy only</strong><span>Hotels, separate houses, villas, neighborhoods, townhouses, penthouses, family residences and investment properties are purchase-only categories.</span></div><div class="rn-buy-choice"><strong>Property details</strong><span>When properties are ready, available rooms and inside and outside pictures can be shown as part of the complete property.</span></div>';
+  }
+const choiceTitle=document.getElementById('rnChoiceTitle');
   const choiceIntro=document.getElementById('rnChoiceIntro');
   const purpose=document.getElementById('purpose');
   const purposeNote=document.getElementById('purposeNote');
@@ -2309,6 +2318,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   }
 
   function renderCategory(name){
+    renderBuyChoices(name);
     const d=data[name];
     if(!d)return;
 
@@ -3128,10 +3138,9 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
         const specs=card.querySelector('.rn-listing-specs')?.textContent||'';
         const roomSource=Array.from(document.querySelectorAll('#rooms option')).filter(o=>o.value).map(o=>o.value);
         const oldPrice=card.querySelector('.rn-listing-price');
-        const idr=priceIdr(card);
         if(oldPrice){
-          oldPrice.textContent=idr;
-          oldPrice.classList.add('rn-listing-price-idr');
+          oldPrice.textContent='Price will be added later when this property is ready.';
+          oldPrice.classList.add('rn-price-pending');
         }
         const details=document.createElement('div');
         details.className='rn-category-home-controls';
@@ -3280,6 +3289,12 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
 @media(max-width:520px){.rn-home-viewer-chips{grid-template-columns:1fr}.rn-home-viewer-title{font-size:17px}}
 .rn-home-viewer-back{border:0;background:rgba(255,255,255,.16);color:#fff;border-radius:10px;padding:9px 12px;font-weight:700;font-size:14px;cursor:pointer;touch-action:manipulation}.rn-home-viewer-back:active{transform:scale(.98)}</style>
 <style id="rn-buy-section-polish">
+.rn-buy-choice-strip{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:0 0 18px}
+.rn-buy-choice{padding:14px;border:1px solid #fecaca;border-radius:14px;background:#fff}
+.rn-buy-choice strong{display:block;color:#991b1b;font-size:15px;margin-bottom:4px}
+.rn-buy-choice span{display:block;color:#52525b;font-size:13px;line-height:1.5}
+.rn-buy-choice.apartment{grid-column:1/-1;background:linear-gradient(135deg,#fff1f2,#fff)}
+@media(max-width:600px){.rn-buy-choice-strip{grid-template-columns:1fr}.rn-buy-choice.apartment{grid-column:auto}}
 .rn-buy-overview{margin:20px 0 22px;padding:20px;border:1px solid #fecaca;border-radius:20px;background:linear-gradient(180deg,#fff,#fff7f7);box-shadow:0 10px 30px rgba(153,27,27,.08)}
 .rn-buy-overview-head{display:flex;align-items:center;gap:13px;color:#991b1b}.rn-buy-overview-head>span{font-size:34px}.rn-buy-overview-head strong{display:block;font-size:21px}.rn-buy-overview-head small{display:block;color:#71717a;margin-top:2px}
 .rn-buy-rules{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:16px}.rn-buy-rules>div{padding:14px;border-radius:14px;background:#fff;border:1px solid #f1f1f1}.rn-buy-rules b{display:block;color:#991b1b;margin-bottom:4px}.rn-buy-rules span{display:block;color:#52525b;font-size:13px;line-height:1.5}
