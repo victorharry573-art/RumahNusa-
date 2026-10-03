@@ -940,6 +940,7 @@ header .lang-btn.active{color:#dc2626!important;background:#fff!important;border
           
           <button type="button" class="client-option rn-home-category" data-value="Hotel"><span class="rn-home-icon" aria-hidden="true">🏨</span><strong>Hotel</strong><small>Hotels available for purchase, with guest rooms and facilities.</small></button>
           <button type="button" class="client-option rn-home-category" data-value="Separate Rumah"><span class="rn-home-icon" aria-hidden="true">🏠</span><strong>Separate Rumah</strong><small>Private houses with their own rooms and spaces.</small></button>
+          <button type="button" class="client-option rn-home-category" data-value="Gablefront House"><span class="rn-home-icon" aria-hidden="true">🏡</span><strong>Gablefront House</strong><small>Front-gabled homes with distinctive rooflines and welcoming living spaces.</small></button>
           <button type="button" class="client-option rn-home-category" data-value="Vila"><span class="rn-home-icon" aria-hidden="true">🏝️</span><strong>Villa</strong><small>Private villas, outdoor spaces and pools.</small></button>
           <button type="button" class="client-option rn-home-category" data-value="Neighborhood Rumah"><span class="rn-home-icon" aria-hidden="true">🏘️</span><strong>Neighborhood</strong><small>Homes within welcoming residential surroundings.</small></button>
           <button type="button" class="client-option rn-home-category" data-value="Townhouse"><span class="rn-home-icon" aria-hidden="true">🏙️</span><strong>Townhouse</strong><small>Connected homes with comfortable living spaces.</small></button>
@@ -2181,6 +2182,17 @@ const choiceTitle=document.getElementById('rnChoiceTitle');
         ['RumahNusa Signature Hotel — 30 Rooms','Jakarta, Indonesia','Contact RumahNusa for the selected hotel','30 guest rooms · grand lobby · suites · bathrooms/toilets · dining and kitchen areas · furnished · parking','https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=85']
       ]
     },
+    'Gablefront House':{
+      title:'Gablefront Houses',
+      badge:'GABLEFRONT HOUSE',
+      intro:'A house style with the gable facing the street or entrance, giving the home a distinctive front-facing roofline and welcoming character.',
+      confidence:'Explore beautiful Gablefront homes with comfortable bedrooms, bathrooms, kitchens, parlors and outdoor spaces.',
+      buy:'Gablefront houses are presented as sale properties.',
+      rooms:[],
+      listings:[
+        ['Gablefront Family House — 4 Bedrooms','Indonesia','Price will be added later when this property is ready.','4 bedrooms · bathrooms/toilets · furnished parlor · kitchen · outdoor space · parking','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85']
+      ]
+    },
     'Separate Rumah':{
       title:'Separate Houses',
       badge:'SEPARATE HOUSE',
@@ -2276,7 +2288,7 @@ const choiceTitle=document.getElementById('rnChoiceTitle');
   };
 
   /* RumahNusa purchase rules: all non-apartment categories are complete properties and Buy only. */
-  const rnCompleteBuyOnlyCategories=['Hotel','Separate Rumah','Vila','Neighborhood Rumah','Townhouse','Penthouse','Family Residence','Investment Property'];
+  const rnCompleteBuyOnlyCategories=['Hotel','Separate Rumah','Gablefront House','Vila','Neighborhood Rumah','Townhouse','Penthouse','Family Residence','Investment Property'];
   rnCompleteBuyOnlyCategories.forEach(function(k){
     if(data[k]){
       data[k].rooms=[];
