@@ -905,7 +905,7 @@ header .lang-btn.active{color:#dc2626!important;background:#fff!important;border
         <p>RumahNusa is where beautiful homes, comfort, privacy, and peace of mind come together. We help you discover a place that feels right for your everyday life, your family, and your future.</p>
         <p>Every home is presented with care so you can explore beautiful rooms, comfortable living spaces, thoughtful details, and the feeling of coming home.</p>
         <p>Take your time, discover the home that fits your life, and choose a place where you can live comfortably and enjoy peace of mind.</p>
-        <p class="rn-welcome-instruction"><strong>Welcome to RumahNusa Real Estate — a place created for beautiful living, comfort, privacy, and peace of mind. Enter your name, choose whether you are female or male, enter your age, and tap Continue to RumahNusa to begin choosing your beautiful home.</strong></p>
+        <p class="rn-welcome-instruction"><strong>Welcome to RumahNusa Real Estate — a place built for beautiful living, comfort, privacy, and peace of mind. Enter your name, choose whether you are female or male, enter your age, and tap Continue to RumahNusa to begin choosing your beautiful home.</strong></p>
       </div>
       <div id="rnGateIdentityStep" class="rn-gate-step">
         <div id="rnGateIdentityFields">
@@ -929,8 +929,8 @@ header .lang-btn.active{color:#dc2626!important;background:#fff!important;border
           <div class="rn-buy-overview">
             <div class="rn-buy-overview-head"><span>🏠</span><div><strong>RumahNusa Buy</strong><small>Explore complete properties beautifully, one category at a time.</small></div></div>
             <div class="rn-buy-rules">
-              <div><b>Beautiful Living</b><span>Discover beautiful spaces created for comfort, elegance, privacy, and peaceful everyday living.</span></div>
-              <div><b>Find Your Place</b><span>Explore carefully presented properties and imagine the life you could create at RumahNusa.</span></div>
+              <div><b>Beautiful Living</b><span>Discover beautiful spaces built for comfort, elegance, privacy, and peaceful everyday living.</span></div>
+              <div><b>Find Your Place</b><span>Explore carefully presented properties and imagine the life you could build at RumahNusa.</span></div>
               <div><b>RumahNusa</b><span>A welcoming place to discover distinctive homes, exceptional spaces, and inspiring places to live.</span></div>
             </div>
           </div>
@@ -1869,11 +1869,11 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     const {data,error}=await client.from('profiles').select('*').eq('id',user.id).maybeSingle();
     if(error) throw error;
     if(data) return data;
-    const {data:created,error:createError}=await client.from('profiles').insert({
+    const {data:built,error:createError}=await client.from('profiles').insert({
       id:user.id,email:'',full_name:user.user_metadata?.full_name||'',phone:user.phone||user.user_metadata?.phone||'',role:'customer'
     }).select('*').single();
     if(createError) throw createError;
-    return created;
+    return built;
   }
   async function stopChannel(){
     if(state.channel){await client.removeChannel(state.channel);state.channel=null;}
@@ -2386,7 +2386,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
     window.__rnCategoryOpen=name;
     window.__rnCategoryData=d;
 
-    /* Wire the newly-created listing cards without relying on the old flow. */
+    /* Wire the newly-built listing cards without relying on the old flow. */
     if(typeof window.__rnWireListings==='function') window.__rnWireListings();
 
     requestAnimationFrame(function(){
