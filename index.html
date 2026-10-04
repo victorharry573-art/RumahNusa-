@@ -826,6 +826,15 @@ body.rn-search-only>#rnSearchPanel .rn-search-panel-inner{
   setTimeout(enforce,100);setTimeout(enforce,500);setTimeout(enforce,1200);
 })();
 </script>
+
+<!-- RUMAHNUSA_IDENTITY_CLEAN_BASELINE -->
+<style>
+/* Clean baseline: the browser owns normal scrolling and native input tapping on the welcome screen. */
+body.rn-gate-active{overflow:auto!important;height:auto!important;min-height:100vh!important;position:static!important;touch-action:auto!important}
+body.rn-gate-active #client-profile{height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;position:relative!important}
+body.rn-gate-active #rnWelcomeGate{height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;position:relative!important}
+body.rn-gate-active #rnGateName{pointer-events:auto!important;touch-action:auto!important;position:relative!important;z-index:2!important}
+</style>
 </head>
 
 <body class="rn-gate-active">
