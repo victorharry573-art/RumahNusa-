@@ -780,6 +780,13 @@ body.rn-search-only>#rnSearchPanel .rn-search-panel-inner{
   padding-bottom:100px!important;
 }
 </style>
+
+<style id="rn-identity-tap-fix">
+#rnGateIdentityFields{position:relative;z-index:40;pointer-events:auto!important}
+#rnGateName,#rnGateAge{position:relative;z-index:50;pointer-events:auto!important;touch-action:manipulation!important;-webkit-user-select:text!important;user-select:text!important}
+#rnGateIdentityFields .rn-gender-option{position:relative;z-index:50;pointer-events:auto!important;touch-action:manipulation!important}
+#rnGateIdentityContinue{position:relative;z-index:50;pointer-events:auto!important;touch-action:manipulation!important;opacity:1!important}
+</style>
 </head>
 
 <body class="rn-gate-active">
