@@ -808,6 +808,12 @@ body.rn-search-only>#rnSearchPanel .rn-search-panel-inner{
       </div>
     </div>
 
+    <div class="rn-search-section-head rn-cities-top">
+      <h3>Explore cities</h3>
+      <span>Tap a city</span>
+    </div>
+    <div id="rnSearchCities" class="rn-city-rail" aria-label="RumahNusa cities"></div>
+
     <div class="rn-search-card">
       <div class="rn-search-input-wrap">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
@@ -817,12 +823,6 @@ body.rn-search-only>#rnSearchPanel .rn-search-panel-inner{
     </div>
 
     <div id="rnSearchSuggestions" class="rn-search-suggestions" hidden></div>
-
-    <div class="rn-search-section-head">
-      <h3>Explore cities</h3>
-      <span>Tap a city</span>
-    </div>
-    <div id="rnSearchCities" class="rn-city-rail" aria-label="RumahNusa cities"></div>
 
     <div id="rnSearchRecentWrap" hidden>
       <div class="rn-search-section-head">
@@ -3364,12 +3364,14 @@ body.rn-search-only>#rnBottomNav{display:grid!important;z-index:30000!important}
 .rn-search-section-head span{font-size:12px;color:#71717a}
 .rn-city-rail,.rn-recent-rail{display:flex;gap:12px;overflow-x:auto;padding:0 16px 8px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
 .rn-city-rail::-webkit-scrollbar,.rn-recent-rail::-webkit-scrollbar{display:none}
-.rn-city-card{flex:0 0 142px;scroll-snap-align:start;border:0;padding:0;background:#fff;border-radius:15px;overflow:hidden;box-shadow:0 4px 13px rgba(39,39,42,.10);cursor:pointer;touch-action:manipulation;text-align:left}
+.rn-city-card{flex:0 0 158px;scroll-snap-align:start;border:1px solid #fecaca;padding:0;background:#fff;border-radius:15px;overflow:hidden;box-shadow:0 4px 13px rgba(39,39,42,.10);cursor:pointer;touch-action:manipulation;text-align:left}
 .rn-city-card:active,.rn-recent-card:active,.rn-search-home-card:active{transform:scale(.975)}
-.rn-city-card img{display:block;width:100%;height:94px;object-fit:cover;background:#e4e4e7}
-.rn-city-card-body{padding:9px 10px 11px}
-.rn-city-card-body strong{display:block;font-size:15px;color:#18181b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rn-city-card-body small{display:block;color:#71717a;font-size:11px;margin-top:2px}
+.rn-city-card img{display:block;width:100%;height:104px;object-fit:cover;background:#e4e4e7}
+.rn-city-card-body{padding:10px 11px 12px}
+.rn-city-card-body strong{display:block;font-size:16px;color:#991b1b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rn-city-card-body small{display:block;color:#71717a;font-size:11px;margin-top:3px}
+.rn-cities-top{margin-top:2px}
+.rn-search-card{position:relative;z-index:2;margin-top:14px}
 .rn-recent-card{flex:0 0 310px;display:flex;gap:10px;align-items:center;border:0;background:#fff;border-radius:15px;padding:9px;box-shadow:0 4px 13px rgba(39,39,42,.10);cursor:pointer;text-align:left;touch-action:manipulation}
 .rn-recent-card img{width:68px;height:58px;border-radius:10px;object-fit:cover;flex:none}
 .rn-recent-card strong{display:block;color:#18181b;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -3396,12 +3398,12 @@ body.rn-search-only>#rnBottomNav{display:grid!important;z-index:30000!important}
   .rn-search-hero-copy h2{font-size:29px}
   .rn-search-results{grid-template-columns:repeat(2,minmax(0,1fr))}
   .rn-search-home-card img{height:145px}
-  .rn-city-card{flex-basis:138px}
+  .rn-city-card{flex-basis:158px}
 }
 @media(max-width:390px){
   .rn-search-results{grid-template-columns:1fr}
   .rn-search-home-card img{height:190px}
-  .rn-city-card{flex-basis:132px}
+  .rn-city-card{flex-basis:150px}
 }
 </style>
 </html>
@@ -3462,7 +3464,17 @@ body.rn-search-only #rnSearchPanel .rn-search-panel-inner{min-height:100dvh!impo
   const inventory=()=>Object.entries(window.__rnAllCategoryData||{}).flatMap(([type,d])=>
     (Array.isArray(d?.listings)?d.listings:[]).map(item=>({type,item}))
   );
-  const cityImage=(city,i)=>'https://loremflickr.com/640/360/'+encodeURIComponent(city+',Indonesia')+'?lock='+(i+101);
+  const cityImageMap={
+    'Jakarta':'https://images.unsplash.com/photo-1555899434-94d1368aa7af?auto=format&fit=crop&w=900&q=85',
+    'Bali':'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=900&q=85',
+    'Surabaya':'https://images.unsplash.com/photo-1584810359583-96fc3447be0b?auto=format&fit=crop&w=900&q=85',
+    'Bandung':'https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=900&q=85',
+    'Medan':'https://images.unsplash.com/photo-1531058020387-3be344556be6?auto=format&fit=crop&w=900&q=85',
+    'Semarang':'https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=900&q=85',
+    'Yogyakarta':'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?auto=format&fit=crop&w=900&q=85',
+    'Makassar':'https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=900&q=85'
+  };
+  const cityImage=(city,i)=>cityImageMap[city]||'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=85';
   function homesForCity(city){
     const n=norm(city);
     const base=n==='bali'?'bali':n==='jakarta'?'jakarta':n;
@@ -3490,11 +3502,15 @@ body.rn-search-only #rnSearchPanel .rn-search-panel-inner{min-height:100dvh!impo
   }
   function renderCityRail(){
     const inv=inventory();
-    cityRail.innerHTML=cities.map((city,i)=>{
+    const activeCities=cities
+      .filter(city=>homesForCity(city).length>0)
+      .sort((a,b)=>homesForCity(b).length-homesForCity(a).length);
+    const cityList=activeCities.length?activeCities:cities;
+    cityRail.innerHTML=cityList.map((city,i)=>{
       const count=homesForCity(city).length;
       return '<button type="button" class="rn-city-card" data-city="'+esc(city)+'">'+
         '<img loading="lazy" src="'+cityImage(city,i)+'" alt="'+esc(city)+'">'+
-        '<div class="rn-city-card-body"><strong>'+esc(city)+'</strong><small>'+ (count?count+' homes':'RumahNusa city') +'</small></div>'+
+        '<div class="rn-city-card-body"><strong>'+esc(city)+'</strong><small>'+ (count?count+' '+(count===1?'property':'properties'):'Explore') +'</small></div>'+
       '</button>';
     }).join('');
     cityRail.querySelectorAll('[data-city]').forEach(b=>b.addEventListener('click',()=>showCity(b.dataset.city)));
