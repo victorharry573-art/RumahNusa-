@@ -2949,11 +2949,31 @@ body.rn-search-only .rn-search-city-head h3{
     }
     genders.forEach(button=>{
       button.style.pointerEvents='auto';
-      button.addEventListener('pointerdown',e=>{e.preventDefault();chooseGender(button);});
-      button.addEventListener('click',e=>{e.preventDefault();chooseGender(button);});
+      button.style.touchAction='manipulation';
+      button.addEventListener('pointerup',()=>chooseGender(button),{passive:true});
+      button.addEventListener('click',()=>chooseGender(button));
+      button.addEventListener('touchend',()=>chooseGender(button),{passive:true});
     });
-    [name,age].forEach(x=>x?.addEventListener('input',updateLogin));
+    [name,age].forEach(x=>{
+      if(!x)return;
+      x.style.pointerEvents='auto';
+      x.style.touchAction='manipulation';
+      x.addEventListener('input',updateLogin);
+      x.addEventListener('change',updateLogin);
+      x.addEventListener('focus',()=>x.style.pointerEvents='auto');
+    });
+    loginBtn.style.pointerEvents='auto';
+    loginBtn.style.touchAction='manipulation';
     updateLogin();
+
+    /* Mobile touch fallback: keep the identity fields and gender choices tappable
+       even when an older overlay or cached layout interferes with pointer events. */
+    document.addEventListener('touchend',function(event){
+      const genderButton=event.target.closest?.('#rnGateIdentityFields .rn-gender-option');
+      if(genderButton){ event.preventDefault(); chooseGender(genderButton); return; }
+      const field=event.target.closest?.('#rnGateName,#rnGateAge');
+      if(field){ field.focus(); }
+    },{passive:false});
 
     function showDataStep(stepNumber){
       const safeStep=Math.max(1,Math.min(18,Number(stepNumber)||1));
