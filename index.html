@@ -1255,7 +1255,7 @@ body.rn-search-only>#rnSearchPanel .rn-search-panel-inner{
     clear.hidden=!q;
 
     if(!q){
-      results.innerHTML='<div class="rn-search-empty">Start typing a city, area, house type, villa, apartment, hotel, number of rooms, or another property detail.</div>';
+      results.innerHTML='';
       return;
     }
 
@@ -1317,7 +1317,7 @@ body.rn-search-only>#rnSearchPanel .rn-search-panel-inner{
           '<button type="button" class="rn-search-category-result" data-search-place="'+esc(city)+'">'+
           '<span class="rn-search-category-icon">📍</span><span><span class="rn-search-result-type">LOCATION</span>'+
           '<strong>'+esc(city)+'</strong><small>Search all RumahNusa properties in this city/area</small></span></button>'+
-          '<div class="rn-search-empty">No property is listed in this location yet. More properties can be added here.</div>';
+          '<div class="rn-search-empty">No properties are listed in this location yet.</div>';
         results.querySelector('[data-search-place]')?.addEventListener('click',()=>{
           input.value=city;
           selectedType='All';
@@ -1326,7 +1326,7 @@ body.rn-search-only>#rnSearchPanel .rn-search-panel-inner{
         });
         return;
       }
-      results.innerHTML='<div class="rn-search-empty"><strong>No matching property is currently listed.</strong><br>Try another city, area, property type or room requirement. Exact street addresses are shared privately by the agent, not published publicly.</div>';
+      results.innerHTML='<div class="rn-search-empty"><strong>No matching property is currently listed.</strong></div>';
       return;
     }
 
@@ -3519,7 +3519,7 @@ body.rn-search-only #rnSearchPanel .rn-search-panel-inner{min-height:100dvh!impo
   }
   function renderRecommendations(){
     const inv=inventory();
-    if(!inv.length){results.innerHTML='<div class="rn-search-empty">RumahNusa homes will appear here as properties are built and added to the property collection.</div>';return}
+    if(!inv.length){results.innerHTML='';return}
     results.innerHTML=inv.slice(0,20).map((r,i)=>{
       const x=r.item;
       return '<button type="button" class="rn-search-home-card" data-recommend="'+i+'">'+
@@ -3549,11 +3549,11 @@ body.rn-search-only #rnSearchPanel .rn-search-panel-inner{min-height:100dvh!impo
     const homes=homesForCity(city);
     results.className='rn-search-results';
     results.innerHTML='<div class="rn-search-city-view"><button type="button" class="rn-search-back" data-search-back>← All cities</button>'+
-      '<div class="rn-search-city-head"><h3>'+esc(city)+'</h3><p>'+ (homes.length?homes.length+' RumahNusa homes and properties in this city.':'RumahNusa is ready for homes in this city. Homes will appear here as they are built and added.') +'</p></div></div>'+
+      '<div class="rn-search-city-head"><h3>'+esc(city)+'</h3><p>'+ (homes.length?homes.length+' RumahNusa homes and properties in this city.':'No homes are listed in this city yet.') +'</p></div></div>'+
       (homes.length?homes.map((r,i)=>{
         const x=r.item;
         return '<button type="button" class="rn-search-home-card" data-city-home="'+i+'"><img loading="lazy" src="'+esc(x[4])+'" alt="'+esc(x[0])+'"><div class="rn-search-home-card-body"><span class="rn-search-result-type">'+esc(typeLabel(r.type))+'</span><h4>'+esc(x[0])+'</h4><p>📍 '+esc(x[1])+'</p><p>'+esc(x[3])+'</p></div></button>';
-      }).join(''):'<div class="rn-search-empty">No home is listed in '+esc(city)+' yet. When a RumahNusa home is built in this city, it will appear here automatically.</div>');
+      }).join(''):'<div class="rn-search-empty">No homes are listed in '+esc(city)+' yet.</div>');
     results.querySelector('[data-search-back]')?.addEventListener('click',showStart);
     results.querySelectorAll('[data-city-home]').forEach((b,i)=>b.addEventListener('click',()=>showHome(homes[i],city)));
     window.scrollTo(0,0);
