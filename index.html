@@ -2829,6 +2829,86 @@ body.rn-search-only .rn-search-city-head h3{
   mo.observe(panel,{childList:true,subtree:true,characterData:true});
 })();
 </script>
+
+<style id="rn-identity-touch-fix">
+/* Keep the first identity fields directly tappable on phones. */
+body.rn-gate-active #client-profile,
+body.rn-gate-active #rnWelcomeGate,
+body.rn-gate-active #rnGateIdentityStep,
+body.rn-gate-active #rnGateIdentityFields{
+  position:relative!important;
+  z-index:50000!important;
+  pointer-events:auto!important;
+}
+body.rn-gate-active #rnGateName,
+body.rn-gate-active #rnGateAge{
+  position:relative!important;
+  z-index:50001!important;
+  pointer-events:auto!important;
+  touch-action:manipulation!important;
+  -webkit-user-select:text!important;
+  user-select:text!important;
+  cursor:text!important;
+}
+body.rn-gate-active #rnGateGenderStep,
+body.rn-gate-active #rnGateGenderStep .rn-gender-options,
+body.rn-gate-active #rnGateGenderStep .rn-gender-option{
+  position:relative!important;
+  z-index:50001!important;
+  pointer-events:auto!important;
+  touch-action:manipulation!important;
+}
+body.rn-gate-active #rnGateGenderStep .rn-gender-option{
+  min-height:54px!important;
+}
+</style>
+<script id="rn-identity-touch-fix-engine">
+(function(){
+  function wireIdentityFields(){
+    const name=document.getElementById('rnGateName');
+    const age=document.getElementById('rnGateAge');
+    const continueBtn=document.getElementById('rnGateIdentityContinue');
+    const genderButtons=Array.from(document.querySelectorAll('#rnGateGenderStep .rn-gender-option'));
+    if(!name||!age)return false;
+
+    const updateContinue=()=>{
+      const gender=genderButtons.find(b=>b.getAttribute('aria-pressed')==='true')?.dataset.gender||'';
+      if(continueBtn) continueBtn.disabled=!(name.value.trim() && gender && Number(age.value)>=18);
+    };
+
+    if(!name.dataset.rnTouchReady){
+      name.dataset.rnTouchReady='1';
+      name.addEventListener('input',updateContinue);
+      name.addEventListener('focus',()=>name.select?.());
+    }
+    if(!age.dataset.rnTouchReady){
+      age.dataset.rnTouchReady='1';
+      age.addEventListener('input',updateContinue);
+      age.addEventListener('focus',()=>age.select?.());
+    }
+    genderButtons.forEach(btn=>{
+      if(btn.dataset.rnTouchReady)return;
+      btn.dataset.rnTouchReady='1';
+      btn.addEventListener('click',()=>{
+        genderButtons.forEach(b=>{
+          const selected=b===btn;
+          b.classList.toggle('selected',selected);
+          b.setAttribute('aria-pressed',selected?'true':'false');
+        });
+        window.__rnGateGender=btn.dataset.gender||'';
+        updateContinue();
+      });
+    });
+    updateContinue();
+    return true;
+  }
+  wireIdentityFields();
+  document.addEventListener('DOMContentLoaded',wireIdentityFields,{once:true});
+  setTimeout(wireIdentityFields,300);
+  setTimeout(wireIdentityFields,1000);
+})();
+</script>
+
 </body>
 <script>
 (function(){
