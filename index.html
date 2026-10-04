@@ -3109,36 +3109,60 @@ body.rn-gate-active #rnGateAge{
 })();
 </script>
 
-<style id="rn-name-capture-focus-fix">
-/* Emergency mobile fix: capture taps on the visible name field even if another layer is sitting above it. */
-body.rn-gate-active #rnGateName{
+
+
+<style id="rn-identity-isolation-final">
+/* Final mobile identity screen: remove every possible invisible touch blocker. */
+html,body{min-height:100%!important;}
+body.rn-gate-active{
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  height:auto!important;
+  min-height:100dvh!important;
+  position:static!important;
+  touch-action:pan-y!important;
+}
+body.rn-gate-active #client-profile,
+body.rn-gate-active #rnWelcomeGate,
+body.rn-gate-active #rnGateIdentityStep,
+body.rn-gate-active #rnGateIdentityFields{
   pointer-events:auto!important;
+  touch-action:auto!important;
   position:relative!important;
-  z-index:999999!important;
+}
+body.rn-gate-active #rnGateName{
+  display:block!important;
+  width:100%!important;
+  min-height:56px!important;
+  position:relative!important;
+  z-index:2147483647!important;
+  pointer-events:auto!important;
+  touch-action:auto!important;
+  user-select:text!important;
+  -webkit-user-select:text!important;
+  cursor:text!important;
 }
 </style>
-<script id="rn-name-capture-focus-fix-engine">
+<script id="rn-identity-isolation-final-engine">
 (function(){
-  function inside(el,x,y){
-    if(!el||el.hidden)return false;
-    const r=el.getBoundingClientRect();
-    return x>=r.left&&x<=r.right&&y>=r.top&&y<=r.bottom;
-  }
-  function focusName(x,y){
+  function activate(){
+    const body=document.body;
+    const gate=document.getElementById('rnWelcomeGate');
     const name=document.getElementById('rnGateName');
-    if(!name||!document.body.classList.contains('rn-gate-active'))return;
-    if(!inside(name,x,y))return;
-    try{
-      name.focus({preventScroll:true});
-      const n=name.value.length;
-      name.setSelectionRange(n,n);
-      setTimeout(()=>{try{name.scrollIntoView({behavior:'auto',block:'center',inline:'nearest'});}catch(e){}},50);
-    }catch(e){try{name.focus();}catch(_){}}
+    if(!body||!gate||!name)return;
+    if(body.classList.contains('rn-gate-active')){
+      body.style.overflowY='auto';
+      body.style.overflowX='hidden';
+      body.style.height='auto';
+      body.style.touchAction='pan-y';
+      gate.style.pointerEvents='auto';
+      name.style.pointerEvents='auto';
+    }
   }
-  document.addEventListener('pointerdown',function(e){focusName(e.clientX,e.clientY)},true);
-  document.addEventListener('touchstart',function(e){
-    const t=e.touches&&e.touches[0]; if(t)focusName(t.clientX,t.clientY);
-  },{capture:true,passive:true});
+  activate();
+  document.addEventListener('DOMContentLoaded',activate,{once:true});
+  setTimeout(activate,100);
+  setTimeout(activate,500);
 })();
 </script>
 </body>
