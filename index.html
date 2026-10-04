@@ -4177,3 +4177,112 @@ body.rn-search-only .rn-search-section-head{padding-left:0!important;padding-rig
   observer.observe(results,{childList:true,subtree:true,characterData:true});
 })();
 </script>
+
+<style id="rn-mobile-identity-scroll-fix">
+/* Keep the welcome identity flow fully usable on phones. */
+html,body{min-height:100%}
+body.rn-gate-active{
+  min-height:100dvh!important;
+  height:auto!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  -webkit-overflow-scrolling:touch!important;
+}
+body.rn-gate-active #client-profile{
+  display:block!important;
+  min-height:100dvh!important;
+  height:auto!important;
+  overflow:visible!important;
+  position:relative!important;
+  z-index:1!important;
+}
+body.rn-gate-active #rnWelcomeGate{
+  min-height:100dvh!important;
+  overflow:visible!important;
+  position:relative!important;
+  z-index:2!important;
+}
+body.rn-gate-active #rnGateIdentityStep,
+body.rn-gate-active #rnGateIdentityFields{
+  position:relative!important;
+  z-index:10!important;
+  pointer-events:auto!important;
+}
+body.rn-gate-active #rnGateName,
+body.rn-gate-active #rnGateAge{
+  position:relative!important;
+  z-index:20!important;
+  pointer-events:auto!important;
+  touch-action:auto!important;
+  -webkit-user-select:text!important;
+  user-select:text!important;
+}
+body.rn-gate-active #rnGateName:focus,
+body.rn-gate-active #rnGateAge:focus{
+  outline:2px solid #dc2626!important;
+  outline-offset:2px!important;
+}
+</style>
+<script id="rn-mobile-identity-scroll-fix-engine">
+(function(){
+  function bootIdentityTouch(){
+    const name=document.getElementById('rnGateName');
+    const genderStep=document.getElementById('rnGateGenderStep');
+    const ageStep=document.getElementById('rnGateAgeStep');
+    const age=document.getElementById('rnGateAge');
+    const continueBtn=document.getElementById('rnGateIdentityContinue');
+    const genders=Array.from(document.querySelectorAll('#rnGateGenderStep .rn-gender-option'));
+    if(!name||!genderStep||!ageStep||!age||!continueBtn)return false;
+
+    const bringIntoView=(el,delay)=>{
+      if(!el||el.hidden)return;
+      setTimeout(()=>{
+        try{el.scrollIntoView({behavior:'smooth',block:'center',inline:'nearest'});}catch(e){}
+      },delay||80);
+    };
+
+    if(!name.dataset.rnScrollFix){
+      name.dataset.rnScrollFix='1';
+      name.addEventListener('focus',()=>bringIntoView(name,80));
+      name.addEventListener('click',()=>bringIntoView(name,80));
+      name.addEventListener('input',()=>{
+        if(!genderStep.hidden)bringIntoView(genderStep,120);
+      });
+    }
+
+    if(!age.dataset.rnScrollFix){
+      age.dataset.rnScrollFix='1';
+      age.addEventListener('focus',()=>bringIntoView(age,80));
+      age.addEventListener('click',()=>bringIntoView(age,80));
+      age.addEventListener('input',()=>{
+        const n=Number(age.value);
+        if(n>=18&&n<=120)bringIntoView(continueBtn,120);
+      });
+    }
+
+    genders.forEach(btn=>{
+      if(btn.dataset.rnScrollFix)return;
+      btn.dataset.rnScrollFix='1';
+      btn.addEventListener('click',()=>{
+        setTimeout(()=>bringIntoView(ageStep,120),120);
+      });
+    });
+
+    if(!continueBtn.dataset.rnScrollFix){
+      continueBtn.dataset.rnScrollFix='1';
+      continueBtn.addEventListener('click',()=>setTimeout(()=>{
+        const form=document.getElementById('clientProfilForm');
+        if(form&&!form.hidden)form.scrollIntoView({behavior:'smooth',block:'start'});
+      },180));
+    }
+
+    return true;
+  }
+
+  bootIdentityTouch();
+  document.addEventListener('DOMContentLoaded',bootIdentityTouch,{once:true});
+  setTimeout(bootIdentityTouch,200);
+  setTimeout(bootIdentityTouch,800);
+})();
+</script>
+\n
