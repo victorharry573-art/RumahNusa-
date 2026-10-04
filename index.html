@@ -3108,6 +3108,41 @@ body.rn-gate-active #rnGateAge{
   setTimeout(wire,200);
 })();
 </script>
+
+<style id="rn-gate-hard-scroll-fix">
+body.rn-gate-active{overflow:hidden!important;height:100dvh!important;}
+body.rn-gate-active #client-profile{display:block!important;height:100dvh!important;min-height:100dvh!important;max-height:100dvh!important;overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior-y:auto!important;touch-action:pan-y!important;}
+body.rn-gate-active #rnWelcomeGate{height:auto!important;min-height:0!important;overflow:visible!important;}
+body.rn-gate-active #rnGateName{pointer-events:auto!important;touch-action:auto!important;}
+</style>
+<script id="rn-gate-hard-scroll-fix-engine">
+(function(){
+ function install(){
+  const box=document.getElementById('client-profile');
+  if(!box||box.dataset.rnHardScroll)return;
+  box.dataset.rnHardScroll='1';
+  let lastY=0, active=false;
+  box.addEventListener('touchstart',function(e){
+   if(!e.touches[0])return;
+   const t=e.target;
+   if(t && (t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.tagName==='SELECT'||t.closest('button,a'))){active=false;return;}
+   lastY=e.touches[0].clientY; active=true;
+  },{passive:true});
+  box.addEventListener('touchmove',function(e){
+   if(!active||!e.touches[0])return;
+   const y=e.touches[0].clientY, dy=lastY-y;
+   if(Math.abs(dy)<1)return;
+   e.preventDefault();
+   box.scrollTop += dy;
+   lastY=y;
+  },{passive:false});
+  box.addEventListener('touchend',function(){active=false;},{passive:true});
+ }
+ install();
+ document.addEventListener('DOMContentLoaded',install,{once:true});
+ setTimeout(install,300);
+})();
+</script>
 </body>
 <script>
 (function(){
