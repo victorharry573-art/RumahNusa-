@@ -686,6 +686,21 @@ header .lang-btn.active{color:#dc2626!important;background:#fff!important;border
 @media(max-width:650px){.rn-setting-detail{padding-left:12px;padding-right:12px}.rn-detail-head h2{font-size:21px}}
 
 @media(max-width:650px){.rn-settings-grid{grid-template-columns:1fr}.rn-settings-panel{padding-left:12px;padding-right:12px}.rn-settings-head h2{font-size:24px}}
+<style id="rn-search-standalone-style">
+body.rn-search-only{overflow:hidden}
+body.rn-search-only>header,
+body.rn-search-only>section:not(#rnSearchPanel),
+body.rn-search-only>footer,
+body.rn-search-only>.hero,
+body.rn-search-only>#rnSettingsPanel,
+body.rn-search-only>#rnSettingDetail,
+body.rn-search-only>#rnWelcomeGate,
+body.rn-search-only>#clientProfilForm,
+body.rn-search-only>#rnSwipeHint{display:none!important}
+body.rn-search-only>#rnSearchPanel{display:block!important;position:fixed!important;inset:0!important;width:100%!important;height:calc(100vh - 76px)!important;overflow:auto!important;z-index:19000!important;background:#fff!important;border:0!important;box-shadow:none!important}
+body.rn-search-only>#rnSearchPanel .rn-search-panel-inner{min-height:100%;box-sizing:border-box;padding:20px 16px 100px}
+body.rn-search-only>#rnBottomNav{display:flex!important;z-index:19500!important}
+</style>
 </style>
 </head>
 
@@ -1174,7 +1189,7 @@ header .lang-btn.active{color:#dc2626!important;background:#fff!important;border
         }).join('');
       }
       results.querySelector('[data-search-category]')?.addEventListener('click',()=>{
-        panel.hidden=true;
+        panel.hidden=true;document.body.classList.remove('rn-search-only');
         const btn=[...document.querySelectorAll('#propertyOptions .client-option')].find(x=>x.dataset.value===requestedCategory);
         if(btn) btn.click();
       });
@@ -1220,7 +1235,7 @@ header .lang-btn.active{color:#dc2626!important;background:#fff!important;border
     results.querySelectorAll('.rn-search-result').forEach((b,i)=>{
       b.addEventListener('click',()=>{
         const rr=list[i];
-        panel.hidden=true;
+        panel.hidden=true;document.body.classList.remove('rn-search-only');
         const btn=[...document.querySelectorAll('#propertyOptions .client-option')].find(x=>x.dataset.value===rr.type);
         if(btn){btn.click();setTimeout(()=>document.querySelector('#rnCategoryListings')?.scrollIntoView({behavior:'smooth',block:'start'}),350);}
       });
@@ -1260,7 +1275,7 @@ header .lang-btn.active{color:#dc2626!important;background:#fff!important;border
   window.__rnRunGlobalSearch=render;
   input.addEventListener('input',()=>{showSuggestions(input.value);render(input.value)});
   clear.addEventListener('click',()=>{input.value='';showSuggestions('');render('');input.focus()});
-  close.addEventListener('click',()=>{panel.hidden=true});
+  close.addEventListener('click',()=>{panel.hidden=true;document.body.classList.remove('rn-search-only');document.querySelector('[data-rn-nav="home"]')?.click()});
   document.querySelectorAll('.rn-search-chip').forEach(chip=>{
     chip.addEventListener('click',()=>{
       selectedType=chip.dataset.searchType||'All';
@@ -1268,7 +1283,7 @@ header .lang-btn.active{color:#dc2626!important;background:#fff!important;border
       render(input.value);
     });
   });
-  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!panel.hidden)panel.hidden=true});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!panel.hidden){panel.hidden=true;document.body.classList.remove('rn-search-only');document.querySelector('[data-rn-nav="home"]')?.click()}});
   render('');
 })();
 </script>
@@ -1432,8 +1447,10 @@ header .lang-btn.active{color:#dc2626!important;background:#fff!important;border
     const b=e.target.closest('button[data-rn-nav]');
     if(!b)return;
     const name=b.dataset.rnNav;
-    if(name==='home'){setActive(name);goTop();return;}
+    if(name!=='search') document.body.classList.remove('rn-search-only');
+    if(name==='home'){document.body.classList.remove('rn-search-only');document.getElementById('rnSearchPanel')?.setAttribute('hidden','');setActive(name);goTop();return;}
     if(name==='search'){
+      document.body.classList.add('rn-search-only');
       setActive(name);
       const panel=document.getElementById('rnSearchPanel');
       const input=document.getElementById('rnGlobalSearchInput');
