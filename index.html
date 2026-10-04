@@ -3967,6 +3967,8 @@ body.rn-search-only #rnSearchPanel .rn-search-panel-inner{min-height:100dvh!impo
     results.querySelectorAll('[data-city-home]').forEach((b,i)=>b.addEventListener('click',()=>showHome(homes[i],city)));
     window.scrollTo(0,0);
   }
+  window.__rnSearchShowCity=showCity;
+
   function showHome(r,city){
     showOnly();
     const x=r.item;
@@ -4137,29 +4139,34 @@ body.rn-search-only .rn-search-section-head{padding-left:0!important;padding-rig
   });
 
   function renderCities(){
-    const inv=inventory();
     const known=[...new Set(baseCities)];
     const fromListings=[];
-    inv.forEach(r=>{
+    inventory().forEach(r=>{
       const loc=String(r.item&&r.item[1]||'').replace(/,\s*Indonesia.*$/i,'').trim();
       if(loc)fromListings.push(loc);
     });
-    const cities=[...new Set([...fromListings,...known])].filter(city=>homesForCity(city).length>0);
-    cities.sort((a,b)=>homesForCity(b).length-homesForCity(a).length);
+    // Show the city choices first. A city remains visible even before its first listing is added.
+    const cities=[...new Set([...known,...fromListings])];
     cityRail.innerHTML=cities.map((city,i)=>{
-      const count=homesForCity(city).length;
       const image=cityImageMap[city]||fallback;
-      return '<button type="button" class="rn-city-card" data-rn-city="'+esc(city)+'">'+
+      return '<button type="button" class="rn-city-card" data-rn-city="'+esc(city)+'" aria-label="'+esc(city)+'">'+
         '<img loading="lazy" src="'+esc(image)+'" alt="'+esc(city)+'" onerror="this.onerror=null;this.src=\''+fallback+'\'">'+
-        '<div class="rn-city-card-body"><strong>'+esc(city)+'</strong><small>'+count+' '+(count===1?'property':'properties')+'</small></div>'+
+        '<div class="rn-city-card-body"><strong>'+esc(city)+'</strong></div>'+
       '</button>';
     }).join('');
-    cityRail.querySelectorAll('[data-rn-city]').forEach(b=>b.addEventListener('click',()=>{
-      const city=b.getAttribute('data-rn-city');
-      const input=document.getElementById('rnGlobalSearchInput');
-      if(input){input.value=city;input.dispatchEvent(new Event('input',{bubbles:true}));input.focus();}
-      window.scrollTo({top:0,behavior:'smooth'});
-    }));
+    const openCity=city=>{
+      if(typeof window.__rnSearchShowCity==='function'){
+        window.__rnSearchShowCity(city);
+      }
+    };
+    cityRail.querySelectorAll('[data-rn-city]').forEach(b=>{
+      b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openCity(b.getAttribute('data-rn-city'));});
+      b.addEventListener('pointerup',e=>{
+        if(e.pointerType==='mouse'&&e.button!==0)return;
+        e.preventDefault();e.stopPropagation();openCity(b.getAttribute('data-rn-city'));
+      });
+      b.addEventListener('touchend',e=>{e.preventDefault();openCity(b.getAttribute('data-rn-city'));},{passive:false});
+    });
   }
 
   renderCities();
