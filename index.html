@@ -2697,6 +2697,138 @@ const choiceTitle=document.getElementById('rnChoiceTitle');
 })();
 </script>
 <!-- RUMAHNUSA_SWIPE_BACK_END -->
+
+<style id="rn-search-clean-city-cards-final">
+/* Final search layout: search first, then clean city cards with only the city name. */
+body.rn-search-only .rn-search-hero{display:none!important}
+body.rn-search-only .rn-search-panel-inner{padding-top:18px!important}
+body.rn-search-only .rn-search-card{order:1!important;margin-top:0!important}
+body.rn-search-only .rn-cities-top{order:2!important;margin-top:22px!important}
+body.rn-search-only .rn-cities-top small,
+body.rn-search-only .rn-cities-top span{display:none!important}
+body.rn-search-only .rn-city-rail{order:3!important}
+body.rn-search-only #rnSearchRecentWrap{order:4!important}
+body.rn-search-only .rn-recommend-head{order:5!important}
+body.rn-search-only #rnSearchResults{order:6!important}
+
+body.rn-search-only .rn-city-card{
+  position:relative!important;
+  display:block!important;
+  flex:0 0 170px!important;
+  min-width:170px!important;
+  padding:0!important;
+  overflow:hidden!important;
+  border:1px solid #f1caca!important;
+  border-radius:18px!important;
+  background:#fff!important;
+  box-shadow:0 5px 16px rgba(16,42,67,.10)!important;
+  text-align:left!important;
+}
+body.rn-search-only .rn-city-card img{
+  display:block!important;
+  width:100%!important;
+  height:118px!important;
+  object-fit:cover!important;
+  object-position:center!important;
+  margin:0!important;
+}
+body.rn-search-only .rn-city-card-body{
+  display:block!important;
+  padding:12px 12px 14px!important;
+}
+body.rn-search-only .rn-city-card-body strong{
+  display:block!important;
+  color:#991b1b!important;
+  font-size:17px!important;
+  line-height:1.2!important;
+  font-weight:800!important;
+}
+body.rn-search-only .rn-city-card-body small{
+  display:none!important;
+}
+body.rn-search-only .rn-city-card:active{
+  transform:scale(.98)!important;
+}
+body.rn-search-only .rn-search-panel-inner{
+  display:flex!important;
+  flex-direction:column!important;
+}
+body.rn-search-only .rn-search-card input{
+  font-size:16px!important;
+}
+body.rn-search-only .rn-search-empty{
+  display:none!important;
+}
+body.rn-search-only .rn-search-city-head p{
+  display:none!important;
+}
+body.rn-search-only .rn-search-city-head h3{
+  color:#991b1b!important;
+}
+@media(max-width:600px){
+  body.rn-search-only .rn-search-panel-inner{padding:16px 14px 100px!important}
+  body.rn-search-only .rn-city-rail{gap:12px!important;overflow-x:auto!important}
+  body.rn-search-only .rn-city-card{flex-basis:164px!important;min-width:164px!important}
+  body.rn-search-only .rn-city-card img{height:112px!important}
+}
+</style>
+<script id="rn-search-clean-city-cards-final-engine">
+(function(){
+  const panel=document.getElementById('rnSearchPanel');
+  if(!panel)return;
+  const inner=panel.querySelector('.rn-search-panel-inner');
+  const searchCard=panel.querySelector('.rn-search-card');
+  const cityHead=panel.querySelector('.rn-cities-top');
+  const cityRail=panel.querySelector('#rnSearchCities');
+  const recent=panel.querySelector('#rnSearchRecentWrap');
+  const recommend=panel.querySelector('.rn-recommend-head');
+  const results=panel.querySelector('#rnSearchResults');
+  if(!inner||!searchCard||!cityHead||!cityRail)return;
+
+  function arrange(){
+    inner.insertBefore(searchCard,cityHead);
+    if(cityHead)inner.insertBefore(cityHead,cityRail);
+    if(cityRail)inner.insertBefore(cityRail,recent||recommend||results);
+  }
+
+  function cleanCards(){
+    cityRail.querySelectorAll('.rn-city-card').forEach(card=>{
+      const body=card.querySelector('.rn-city-card-body');
+      const strong=body?.querySelector('strong');
+      const small=body?.querySelector('small');
+      if(small)small.remove();
+      if(strong){
+        const city=strong.textContent.trim();
+        card.setAttribute('aria-label',city);
+        card.setAttribute('title',city);
+      }
+    });
+  }
+
+  function cleanEmptyCopy(){
+    panel.querySelectorAll('.rn-search-results,.rn-search-empty').forEach(el=>{
+      const t=el.textContent.toLowerCase();
+      if(t.includes('will appear here')||t.includes('built and added')||t.includes('properties are built')){
+        el.innerHTML='';
+      }
+    });
+  }
+
+  arrange();
+  cleanCards();
+  cleanEmptyCopy();
+  setTimeout(()=>{arrange();cleanCards();cleanEmptyCopy()},250);
+  setTimeout(()=>{arrange();cleanCards();cleanEmptyCopy()},1000);
+  setTimeout(()=>{arrange();cleanCards();cleanEmptyCopy()},2200);
+
+  const mo=new MutationObserver(()=>{
+    arrange();
+    cleanCards();
+    cleanEmptyCopy();
+  });
+  mo.observe(panel,{childList:true,subtree:true,characterData:true});
+})();
+</script>
 </body>
 <script>
 (function(){
