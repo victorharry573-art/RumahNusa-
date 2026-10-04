@@ -640,6 +640,11 @@ input:focus,select:focus,textarea:focus{border-color:var(--rn-red)!important;out
 .rn-search-result .rn-search-result-type{display:inline-block;color:#dc2626;font-weight:800;font-size:11px;letter-spacing:.8px}
 .rn-search-empty{padding:18px;border:1px dashed #fca5a5;border-radius:13px;background:#fffafa;color:#52525b;text-align:center}
 @media(max-width:600px){.rn-search-panel-inner{padding:15px 13px 20px}.rn-search-heading h2{font-size:22px}.rn-search-result{grid-template-columns:92px 1fr}.rn-search-result img{width:92px;height:78px}.rn-search-result h3{font-size:15px}}
+ .rn-search-result-detail{padding:14px;border:1px solid #fecaca;border-radius:16px;background:#fff;box-shadow:0 6px 22px rgba(127,29,29,.08)}
+.rn-search-result-detail img{display:block;width:100%;max-height:420px;object-fit:contain;border-radius:12px;background:#fff1f2;margin-bottom:14px}
+.rn-search-result-detail h3{font-size:22px;color:#991b1b;margin:6px 0}
+.rn-search-result-detail p{color:#52525b;line-height:1.55;margin:7px 0}
+.rn-search-private-note{padding:11px;border-radius:10px;background:#fff7f7;color:#7f1d1d!important;font-size:13px}
 </style>
 <style id="rn-red-white-top-header">
 /* Red header matching the RumahNusa red-and-white design */
@@ -686,6 +691,7 @@ header .lang-btn.active{color:#dc2626!important;background:#fff!important;border
 @media(max-width:650px){.rn-setting-detail{padding-left:12px;padding-right:12px}.rn-detail-head h2{font-size:21px}}
 
 @media(max-width:650px){.rn-settings-grid{grid-template-columns:1fr}.rn-settings-panel{padding-left:12px;padding-right:12px}.rn-settings-head h2{font-size:24px}}
+</style>
 <style id="rn-search-standalone-style">
 body.rn-search-only{overflow:hidden}
 body.rn-search-only>header,
@@ -699,7 +705,7 @@ body.rn-search-only>#clientProfilForm,
 body.rn-search-only>#rnSwipeHint{display:none!important}
 body.rn-search-only>#rnSearchPanel{display:block!important;position:fixed!important;inset:0!important;width:100%!important;height:calc(100vh - 76px)!important;overflow:auto!important;z-index:19000!important;background:#fff!important;border:0!important;box-shadow:none!important}
 body.rn-search-only>#rnSearchPanel .rn-search-panel-inner{min-height:100%;box-sizing:border-box;padding:20px 16px 100px}
-body.rn-search-only>#rnBottomNav{display:flex!important;z-index:19500!important}
+body.rn-search-only>#rnBottomNav{display:none!important}
 </style>
 </style>
 </head>
@@ -1189,16 +1195,28 @@ body.rn-search-only>#rnBottomNav{display:flex!important;z-index:19500!important}
         }).join('');
       }
       results.querySelector('[data-search-category]')?.addEventListener('click',()=>{
-        panel.hidden=true;document.body.classList.remove('rn-search-only');
-        const btn=[...document.querySelectorAll('#propertyOptions .client-option')].find(x=>x.dataset.value===requestedCategory);
-        if(btn) btn.click();
+        input.value=requestedCategory;
+        suggestions.hidden=true;
+        selectedType='All';
+        document.querySelectorAll('.rn-search-chip').forEach(x=>x.classList.toggle('active',x.dataset.searchType==='All'));
+        render(requestedCategory);
+        input.focus();
       });
       results.querySelectorAll('.rn-search-result').forEach((b,i)=>{
         b.addEventListener('click',()=>{
           const rr=list[i];
-          panel.hidden=true;
-          const btn=[...document.querySelectorAll('#propertyOptions .client-option')].find(x=>x.dataset.value===rr.type);
-          if(btn){btn.click();setTimeout(()=>document.querySelector('#rnCategoryListings')?.scrollIntoView({behavior:'smooth',block:'start'}),350);}
+          const x=rr.item;
+          results.innerHTML=
+            '<div class="rn-search-result-detail">'+
+              '<img src="'+esc(x[4])+'" alt="'+esc(x[0])+'">'+
+              '<span class="rn-search-result-type">'+esc(typeLabel(rr.type))+'</span>'+
+              '<h3>'+esc(x[0])+'</h3>'+
+              '<p>📍 '+esc(x[1])+'</p>'+
+              '<p><strong>'+esc(x[2])+'</strong></p>'+
+              '<p>'+esc(x[3])+'</p>'+
+              '<p class="rn-search-private-note">The public search shows the city and Indonesia. Exact street/property location is shared privately by the agent.</p>'+
+            '</div>';
+          window.scrollTo({top:0,behavior:'smooth'});
         });
       });
       return;
@@ -1235,9 +1253,18 @@ body.rn-search-only>#rnBottomNav{display:flex!important;z-index:19500!important}
     results.querySelectorAll('.rn-search-result').forEach((b,i)=>{
       b.addEventListener('click',()=>{
         const rr=list[i];
-        panel.hidden=true;document.body.classList.remove('rn-search-only');
-        const btn=[...document.querySelectorAll('#propertyOptions .client-option')].find(x=>x.dataset.value===rr.type);
-        if(btn){btn.click();setTimeout(()=>document.querySelector('#rnCategoryListings')?.scrollIntoView({behavior:'smooth',block:'start'}),350);}
+        const x=rr.item;
+        results.innerHTML=
+          '<div class="rn-search-result-detail">'+
+            '<img src="'+esc(x[4])+'" alt="'+esc(x[0])+'">'+
+            '<span class="rn-search-result-type">'+esc(typeLabel(rr.type))+'</span>'+
+            '<h3>'+esc(x[0])+'</h3>'+
+            '<p>📍 '+esc(x[1])+'</p>'+
+            '<p><strong>'+esc(x[2])+'</strong></p>'+
+            '<p>'+esc(x[3])+'</p>'+
+            '<p class="rn-search-private-note">The public search shows the city and Indonesia. Exact street/property location is shared privately by the agent.</p>'+
+          '</div>';
+        window.scrollTo({top:0,behavior:'smooth'});
       });
     });
   }
