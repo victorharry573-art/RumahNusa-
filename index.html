@@ -754,6 +754,32 @@ body.rn-settings-only #rnSettingDetail{
   z-index:19500!important;
 }
 </style>
+
+<style id="rn-bottom-nav-all-pages-fix">
+/* The six main areas always keep the quick navigation available. */
+body.rn-search-only>#rnBottomNav,
+body.rn-settings-only>#rnBottomNav,
+body.rn-buy-only>#rnBottomNav,
+body.rn-promote-only>#rnBottomNav,
+body.rn-wishlist-only>#rnBottomNav{
+  display:grid!important;
+  position:fixed!important;
+  left:0!important;
+  right:0!important;
+  bottom:0!important;
+  z-index:30000!important;
+  visibility:visible!important;
+  opacity:1!important;
+  pointer-events:auto!important;
+}
+body.rn-search-only>#rnSearchPanel{
+  height:calc(100vh - 76px)!important;
+  padding-bottom:0!important;
+}
+body.rn-search-only>#rnSearchPanel .rn-search-panel-inner{
+  padding-bottom:100px!important;
+}
+</style>
 </head>
 
 <body class="rn-gate-active">
