@@ -3681,3 +3681,106 @@ body.rn-settings-only>#rnSwipeHint{display:none!important}
 body.rn-settings-only>#rnSettingsPanel{display:block!important}
 body.rn-settings-only>#rnBottomNav{display:grid!important;z-index:20000!important}
 </style>
+
+<style id="rn-search-city-layout-final">
+/* Search stays focused: search field first, then the cities that have RumahNusa listings. */
+body.rn-search-only .rn-search-hero{display:none!important}
+body.rn-search-only .rn-search-panel-inner{padding-top:18px!important}
+body.rn-search-only .rn-search-card{margin-top:0!important}
+body.rn-search-only .rn-cities-top{margin-top:18px!important}
+body.rn-search-only .rn-city-rail{padding-left:0!important;padding-right:0!important}
+body.rn-search-only .rn-city-card{flex-basis:170px!important;border-radius:17px!important}
+body.rn-search-only .rn-city-card img{height:112px!important}
+body.rn-search-only .rn-search-results{padding-left:0!important;padding-right:0!important}
+body.rn-search-only .rn-search-section-head{padding-left:0!important;padding-right:0!important}
+@media(max-width:600px){
+  body.rn-search-only .rn-search-panel-inner{padding:16px 14px 100px!important}
+  body.rn-search-only .rn-city-card{flex-basis:164px!important}
+}
+</style>
+<script id="rn-search-city-layout-final-engine">
+(function(){
+  const panel=document.getElementById('rnSearchPanel');
+  if(!panel)return;
+  const inner=panel.querySelector('.rn-search-panel-inner');
+  const searchCard=panel.querySelector('.rn-search-card');
+  const cityHead=panel.querySelector('.rn-cities-top');
+  const cityRail=panel.querySelector('#rnSearchCities');
+  const suggestions=panel.querySelector('#rnSearchSuggestions');
+  const recent=panel.querySelector('#rnSearchRecentWrap');
+  const recommendHead=panel.querySelector('.rn-recommend-head');
+  const results=panel.querySelector('#rnSearchResults');
+  if(!inner||!searchCard||!cityHead||!cityRail)return;
+
+  /* Keep the search box at the top, followed immediately by city choices. */
+  inner.insertBefore(searchCard,cityHead);
+  if(suggestions) inner.insertBefore(suggestions,cityHead);
+  inner.insertBefore(cityHead,cityRail);
+  inner.insertBefore(cityRail,recent||recommendHead||results);
+
+  /* The city rail is driven from actual RumahNusa inventory. */
+  const baseCities=['Jakarta','Bali','Surabaya','Bandung','Medan','Semarang','Yogyakarta','Makassar','Palembang','Denpasar','Padang','Pekanbaru','Bandar Lampung','Jambi','Bengkulu','Serang','Pontianak','Banjarmasin','Samarinda','Manado','Mataram','Kupang','Jayapura','Batam','Malang','Solo','Bogor','Bekasi','Depok','Tangerang','South Jakarta','Central Jakarta','North Jakarta','West Jakarta','East Jakarta','South Tangerang','BSD City','Alam Sutera','Cipondoh','Karawaci','Ciledug','Serpong','Gading Serpong','Ubud','Seminyak','Canggu','Kuta','Gianyar'];
+
+  const norm=s=>String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+  const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  const inventory=()=>Object.entries(window.__rnAllCategoryData||{}).flatMap(([type,d])=>
+    (Array.isArray(d&&d.listings)?d.listings:[]).map(item=>({type,item}))
+  );
+  const cityImageMap={
+    'Jakarta':'https://images.unsplash.com/photo-1555899434-94d1368aa7af?auto=format&fit=crop&w=900&q=85',
+    'Bali':'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=900&q=85',
+    'Surabaya':'https://images.unsplash.com/photo-1584810359583-96fc3447be0b?auto=format&fit=crop&w=900&q=85',
+    'Bandung':'https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=900&q=85',
+    'Medan':'https://images.unsplash.com/photo-1531058020387-3be344556be6?auto=format&fit=crop&w=900&q=85',
+    'Semarang':'https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=900&q=85',
+    'Yogyakarta':'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?auto=format&fit=crop&w=900&q=85',
+    'Makassar':'https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=900&q=85'
+  };
+  const fallback='https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=85';
+  const homesForCity=city=>inventory().filter(r=>{
+    const loc=norm(r.item&&r.item[1]);
+    const n=norm(city);
+    return loc.includes(n)||n.includes(loc);
+  });
+
+  function renderCities(){
+    const inv=inventory();
+    const known=[...new Set(baseCities)];
+    const fromListings=[];
+    inv.forEach(r=>{
+      const loc=String(r.item&&r.item[1]||'').replace(/,\s*Indonesia.*$/i,'').trim();
+      if(loc)fromListings.push(loc);
+    });
+    const cities=[...new Set([...fromListings,...known])].filter(city=>homesForCity(city).length>0);
+    cities.sort((a,b)=>homesForCity(b).length-homesForCity(a).length);
+    cityRail.innerHTML=cities.map((city,i)=>{
+      const count=homesForCity(city).length;
+      const image=cityImageMap[city]||fallback;
+      return '<button type="button" class="rn-city-card" data-rn-city="'+esc(city)+'">'+
+        '<img loading="lazy" src="'+esc(image)+'" alt="'+esc(city)+'" onerror="this.onerror=null;this.src=\''+fallback+'\'">'+
+        '<div class="rn-city-card-body"><strong>'+esc(city)+'</strong><small>'+count+' '+(count===1?'property':'properties')+'</small></div>'+
+      '</button>';
+    }).join('');
+    cityRail.querySelectorAll('[data-rn-city]').forEach(b=>b.addEventListener('click',()=>{
+      const city=b.getAttribute('data-rn-city');
+      const input=document.getElementById('rnGlobalSearchInput');
+      if(input){input.value=city;input.dispatchEvent(new Event('input',{bubbles:true}));input.focus();}
+      window.scrollTo({top:0,behavior:'smooth'});
+    }));
+  }
+
+  renderCities();
+  setTimeout(renderCities,700);
+  setTimeout(renderCities,1800);
+
+  /* If there are no recommendations yet, leave the area empty rather than showing instructional text. */
+  const observer=new MutationObserver(()=>{
+    if(!results)return;
+    const txt=results.textContent.trim().toLowerCase();
+    if(/properties are built|will appear here|homes will appear|built and added/.test(txt)){
+      results.innerHTML='';
+    }
+  });
+  observer.observe(results,{childList:true,subtree:true,characterData:true});
+})();
+</script>
