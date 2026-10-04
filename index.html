@@ -3601,7 +3601,13 @@ body.rn-search-only #rnSearchPanel .rn-search-panel-inner{min-height:100dvh!impo
         inv.slice(0,30).map((r,i)=>{const x=r.item;return '<button type="button" class="rn-search-home-card" data-search-home="'+i+'"><img loading="lazy" src="'+esc(x[4])+'" alt="'+esc(x[0])+'"><div class="rn-search-home-card-body"><span class="rn-search-result-type">'+esc(typeLabel(r.type))+'</span><h4>'+esc(x[0])+'</h4><p>📍 '+esc(x[1])+'</p><p>'+esc(x[3])+'</p></div></button>'}).join('');
       results.querySelectorAll('[data-search-home]').forEach((b,i)=>b.addEventListener('click',()=>showHome(inv[i],inv[i].item[1])));
     }else{
-      results.innerHTML='<div class="rn-search-empty">No matching RumahNusa property yet. Try another city, property type, or detail.</div>';
+      /* Any Indonesian city or area can still be opened even before a home is listed there. */
+      const typed=String(q||'').trim();
+      results.innerHTML='<div class="rn-search-city-view"><div class="rn-search-city-head"><h3>Location</h3><p>Open this city or area and see its RumahNusa homes.</p></div></div>'+
+        '<button type="button" class="rn-city-card" style="grid-column:1/-1;width:100%;flex-basis:auto;display:flex;align-items:center;padding:10px" data-search-city-typed="'+esc(typed)+'">'+
+        '<img loading="lazy" style="width:110px;height:78px;border-radius:10px;flex:none" src="'+cityImage(typed,77)+'" alt="'+esc(typed)+'">'+
+        '<div class="rn-city-card-body"><strong>'+esc(typed)+'</strong><small>Tap to open this city or area</small></div></button>';
+      results.querySelector('[data-search-city-typed]')?.addEventListener('click',()=>showCity(typed));
     }
   }
   function openSearch(){
