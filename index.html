@@ -2955,6 +2955,107 @@ body.rn-gate-active #rnGateGenderStep .rn-gender-option{
 })();
 </script>
 
+
+<style id="rn-identity-working-final">
+/* Final mobile identity flow: each field responds immediately to touch and reveals the next field. */
+body.rn-gate-active #rnGateIdentityFields,
+body.rn-gate-active #rnGateIdentityFields .rn-gate-field,
+body.rn-gate-active #rnGateName,
+body.rn-gate-active #rnGateAge,
+body.rn-gate-active #rnGateGenderStep,
+body.rn-gate-active #rnGateGenderStep .rn-gender-options,
+body.rn-gate-active #rnGateGenderStep .rn-gender-option,
+body.rn-gate-active #rnGateIdentityContinue{
+  pointer-events:auto!important;
+  touch-action:manipulation!important;
+}
+body.rn-gate-active #rnGateName,
+body.rn-gate-active #rnGateAge{
+  display:block!important;
+  width:100%!important;
+  min-height:54px!important;
+  box-sizing:border-box!important;
+  position:relative!important;
+  z-index:60000!important;
+  -webkit-user-select:text!important;
+  user-select:text!important;
+}
+body.rn-gate-active #rnGateGenderStep,
+body.rn-gate-active #rnGateAgeStep,
+body.rn-gate-active #rnGateIdentityContinue{
+  position:relative!important;
+  z-index:60000!important;
+}
+body.rn-gate-active #rnGateGenderStep[hidden],
+body.rn-gate-active #rnGateAgeStep[hidden],
+body.rn-gate-active #rnGateIdentityContinue[hidden]{display:none!important}
+body.rn-gate-active #rnGateIdentityContinue:not([hidden]):not(:disabled){
+  display:block!important;
+  width:100%!important;
+  min-height:54px!important;
+}
+</style>
+<script id="rn-identity-working-final-engine">
+(function(){
+  function wire(){
+    const name=document.getElementById('rnGateName');
+    const genderStep=document.getElementById('rnGateGenderStep');
+    const ageStep=document.getElementById('rnGateAgeStep');
+    const age=document.getElementById('rnGateAge');
+    const continueBtn=document.getElementById('rnGateIdentityContinue');
+    const genderButtons=Array.from(document.querySelectorAll('#rnGateGenderStep .rn-gender-option'));
+    if(!name||!genderStep||!ageStep||!age||!continueBtn)return false;
+
+    function sync(){
+      const hasName=!!name.value.trim();
+      const genderSelected=genderButtons.some(b=>b.getAttribute('aria-pressed')==='true');
+      const n=Number(age.value);
+      const validAge=Number.isFinite(n)&&n>=18&&n<=120;
+      genderStep.hidden=!hasName;
+      ageStep.hidden=!(hasName&&genderSelected);
+      continueBtn.hidden=!(hasName&&genderSelected&&validAge);
+      continueBtn.disabled=!(hasName&&genderSelected&&validAge);
+    }
+
+    if(!name.dataset.rnWorkingFinal){
+      name.dataset.rnWorkingFinal='1';
+      name.addEventListener('pointerdown',function(){ setTimeout(()=>name.focus(),0); },{passive:true});
+      name.addEventListener('touchstart',function(){ setTimeout(()=>name.focus(),0); },{passive:true});
+      name.addEventListener('input',sync);
+      name.addEventListener('change',sync);
+    }
+    if(!age.dataset.rnWorkingFinal){
+      age.dataset.rnWorkingFinal='1';
+      age.addEventListener('pointerdown',function(){ setTimeout(()=>age.focus(),0); },{passive:true});
+      age.addEventListener('touchstart',function(){ setTimeout(()=>age.focus(),0); },{passive:true});
+      age.addEventListener('input',sync);
+      age.addEventListener('change',sync);
+    }
+    genderButtons.forEach(btn=>{
+      if(btn.dataset.rnWorkingFinal)return;
+      btn.dataset.rnWorkingFinal='1';
+      btn.addEventListener('click',function(){
+        genderButtons.forEach(b=>{
+          const selected=b===btn;
+          b.setAttribute('aria-pressed',selected?'true':'false');
+          b.classList.toggle('selected',selected);
+        });
+        sync();
+        setTimeout(()=>age.focus(),80);
+      });
+      btn.addEventListener('pointerdown',function(){btn.style.transform='scale(.98)';setTimeout(()=>btn.style.transform='',120)},{passive:true});
+    });
+    sync();
+    return true;
+  }
+
+  if(wire()){}
+  document.addEventListener('DOMContentLoaded',wire,{once:true});
+  setTimeout(wire,100);
+  setTimeout(wire,500);
+  setTimeout(wire,1200);
+})();
+</script>
 </body>
 <script>
 (function(){
