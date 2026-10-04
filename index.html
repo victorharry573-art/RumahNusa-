@@ -706,6 +706,7 @@ body.rn-search-only>#rnSwipeHint{display:none!important}
 body.rn-search-only>#rnSearchPanel{display:block!important;position:fixed!important;inset:0!important;width:100%!important;height:calc(100vh - 76px)!important;overflow:auto!important;z-index:19000!important;background:#fff!important;border:0!important;box-shadow:none!important}
 body.rn-search-only>#rnSearchPanel .rn-search-panel-inner{min-height:100%;box-sizing:border-box;padding:20px 16px 100px}
 body.rn-search-only>#rnBottomNav{display:grid!important;z-index:20000!important}
+</style>
 <style id="rn-settings-standalone-style">
 body.rn-settings-only{overflow:hidden}
 body.rn-settings-only>header,
@@ -719,7 +720,6 @@ body.rn-settings-only>#rnSettingDetail,
 body.rn-settings-only>#rnSwipeHint{display:none!important}
 body.rn-settings-only>#rnSettingsPanel{display:block!important;position:fixed!important;inset:0 0 76px 0!important;width:100%!important;height:auto!important;overflow:auto!important;z-index:19000!important;background:#fff!important;border:0!important;box-shadow:none!important}
 body.rn-settings-only>#rnSettingsPanel .rn-settings-panel{min-height:100%;box-sizing:border-box}
-</style>
 </style>
 <style id="rn-settings-navigation-fix">
 body.rn-settings-only{overflow:hidden!important}
@@ -4238,6 +4238,12 @@ body.rn-search-only .rn-search-section-head{padding-left:0!important;padding-rig
 </script>
 
 <style id="rn-mobile-identity-scroll-fix">
+/* Reliable phone scrolling: make the welcome area its own native scroll surface. */
+body.rn-gate-active{overflow:hidden!important;height:100dvh!important;min-height:100dvh!important;}
+body.rn-gate-active #client-profile{height:100dvh!important;min-height:100dvh!important;max-height:none!important;overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important;touch-action:pan-y!important;position:relative!important;}
+body.rn-gate-active #rnWelcomeGate{min-height:calc(100dvh + 1px)!important;height:auto!important;overflow:visible!important;touch-action:pan-y!important;}
+body.rn-gate-active .client-panel{height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;}
+
 /* Keep the welcome identity flow fully usable on phones. */
 html,body{min-height:100%}
 body.rn-gate-active{
