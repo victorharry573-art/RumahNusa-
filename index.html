@@ -706,6 +706,20 @@ body.rn-search-only>#rnSwipeHint{display:none!important}
 body.rn-search-only>#rnSearchPanel{display:block!important;position:fixed!important;inset:0!important;width:100%!important;height:calc(100vh - 76px)!important;overflow:auto!important;z-index:19000!important;background:#fff!important;border:0!important;box-shadow:none!important}
 body.rn-search-only>#rnSearchPanel .rn-search-panel-inner{min-height:100%;box-sizing:border-box;padding:20px 16px 100px}
 body.rn-search-only>#rnBottomNav{display:none!important}
+<style id="rn-settings-standalone-style">
+body.rn-settings-only{overflow:hidden}
+body.rn-settings-only>header,
+body.rn-settings-only>section:not(#rnSettingsPanel),
+body.rn-settings-only>footer,
+body.rn-settings-only>.hero,
+body.rn-settings-only>#rnSearchPanel,
+body.rn-settings-only>#rnWelcomeGate,
+body.rn-settings-only>#clientProfilForm,
+body.rn-settings-only>#rnSettingDetail,
+body.rn-settings-only>#rnSwipeHint{display:none!important}
+body.rn-settings-only>#rnSettingsPanel{display:block!important;position:fixed!important;inset:0 0 76px 0!important;width:100%!important;height:auto!important;overflow:auto!important;z-index:19000!important;background:#fff!important;border:0!important;box-shadow:none!important}
+body.rn-settings-only>#rnSettingsPanel .rn-settings-panel{min-height:100%;box-sizing:border-box}
+</style>
 </style>
 </head>
 
@@ -1320,9 +1334,11 @@ body.rn-search-only>#rnBottomNav{display:none!important}
   const settingsToast=document.getElementById('rnSettingsToast');
   const showSettings=()=>{
     if(!settingsPanel)return;
+    document.body.classList.remove('rn-search-only');
     settingsPanel.hidden=false;
+    document.body.classList.add('rn-settings-only');
     setActive('settings');
-    settingsPanel.scrollIntoView({behavior:'smooth',block:'start'});
+    settingsPanel.scrollTop=0;
   };
 
   window.addEventListener('popstate',()=>{
@@ -1344,7 +1360,7 @@ body.rn-search-only>#rnBottomNav{display:none!important}
   },{passive:true});
   settingsClose?.addEventListener('click',()=>{
     if(detailOpen){closeSettingDetail();return;}
-    settingsPanel.hidden=true;goTop();setActive('home');
+    settingsPanel.hidden=true;document.body.classList.remove('rn-settings-only');goTop();setActive('home');
   });
   document.querySelectorAll('#rnSettingsPanel [data-pref]').forEach(el=>{
     const key='rnPref_'+el.dataset.pref;
