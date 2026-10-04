@@ -732,7 +732,6 @@ body.rn-search-only>#rnBottomNav{display:none!important}
         <h2>Search for a property</h2>
         <p>Search by city, area, property type, rooms or any property detail.</p>
       </div>
-      <button type="button" id="rnSearchClose" aria-label="Close search">×</button>
     </div>
     <div class="rn-search-input-wrap">
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
@@ -3276,6 +3275,27 @@ body.rn-search-only #rnSearchPanel .rn-search-panel-inner{min-height:100dvh!impo
   const nav=document.getElementById('rnBottomNav');
   if(!panel||!input||!results)return;
 
+  let searchView='start', searchCity='', searchHome=null, searchEdgeStart=null;
+  function searchGoBack(){
+    if(searchView==='property' && searchCity && searchHome){ showCity(searchCity); return; }
+    if(searchView==='city'){ showSearchStart(); return; }
+    panel.hidden=true; document.body.classList.remove('rn-search-only');
+    if(nav)nav.style.display='';
+    document.querySelector('#rnBottomNav [data-rn-nav="home"]')?.click();
+  }
+  document.addEventListener('touchstart',e=>{
+    if(!document.body.classList.contains('rn-search-only')) return;
+    const t=e.touches&&e.touches[0]; if(!t)return;
+    if(t.clientX<=34 || t.clientX>=window.innerWidth-34) searchEdgeStart={x:t.clientX,y:t.clientY};
+  },{passive:true});
+  document.addEventListener('touchend',e=>{
+    if(!document.body.classList.contains('rn-search-only')||!searchEdgeStart)return;
+    const t=e.changedTouches&&e.changedTouches[0]; if(!t){searchEdgeStart=null;return;}
+    const dx=t.clientX-searchEdgeStart.x, dy=Math.abs(t.clientY-searchEdgeStart.y);
+    if(Math.abs(dx)>70 && Math.abs(dx)>dy*1.25) searchGoBack();
+    searchEdgeStart=null;
+  },{passive:true});
+
   const places=[
     'Jakarta','South Jakarta','Central Jakarta','North Jakarta','West Jakarta','East Jakarta',
     'Bali','Denpasar','Badung','Ubud','Seminyak','Canggu','Kuta','Gianyar',
@@ -3314,6 +3334,7 @@ body.rn-search-only #rnSearchPanel .rn-search-panel-inner{min-height:100dvh!impo
     if(nav)nav.style.display='none';
   }
   function showSearchStart(){
+    searchView='start'; searchCity=''; searchHome=null;
     showSearchOnly();
     suggestions.hidden=true;
     results.innerHTML='<div class="rn-search-empty">Search for a city or area in Indonesia. Then tap the city you want to open its property page.</div>';
@@ -3321,13 +3342,14 @@ body.rn-search-only #rnSearchPanel .rn-search-panel-inner{min-height:100dvh!impo
   }
 
   function showCity(city){
+    searchView='city'; searchCity=city; searchHome=null;
     showSearchOnly();
     input.value=city;
     suggestions.hidden=true;
     const homes=cityHomes(city);
     results.innerHTML=
       '<div class="rn-search-city-head">'+
-        '<button type="button" class="rn-search-back" data-search-back>‹ Back to search</button>'+
+        ''+
         '<h3>'+esc(city)+'</h3>'+
         '<p>Homes and properties available in this city or area.</p>'+
       '</div>'+
@@ -3340,17 +3362,17 @@ body.rn-search-only #rnSearchPanel .rn-search-panel-inner{min-height:100dvh!impo
               '<h4>'+esc(x[0])+'</h4><p>📍 '+esc(x[1])+'</p><p>'+esc(x[3])+'</p></div></button>';
           }).join('')+'</div>'
         : '<div class="rn-search-empty-city"><strong>No property is listed in '+esc(city)+' yet.</strong><br>When RumahNusa has homes in this city, they will appear here. You can search another Indonesian city or area.</div>');
-    results.querySelector('[data-search-back]')?.addEventListener('click',()=>showSearchStart());
     results.querySelectorAll('[data-home-index]').forEach((b,i)=>b.addEventListener('click',()=>showHome(homes[i],city)));
     window.scrollTo(0,0);
   }
 
   function showHome(r,city){
+    searchView='property'; searchCity=city; searchHome=r;
     showSearchOnly();
     const x=r.item;
     results.innerHTML=
       '<div class="rn-search-city-head">'+
-        '<button type="button" class="rn-search-back" data-search-back>‹ Back to '+esc(city)+'</button>'+
+        ''+
         '<h3>Property details</h3><p>Explore this property inside the RumahNusa search.</p>'+
       '</div>'+
       '<div class="rn-search-detail-card">'+
@@ -3362,7 +3384,6 @@ body.rn-search-only #rnSearchPanel .rn-search-panel-inner{min-height:100dvh!impo
         '<p>'+esc(x[3])+'</p>'+
         '<p>The public listing shows the city and Indonesia. Exact street/property location remains private and can be shared by the agent when appropriate.</p>'+
       '</div>';
-    results.querySelector('[data-search-back]')?.addEventListener('click',()=>showCity(city));
     window.scrollTo(0,0);
   }
 
@@ -3414,12 +3435,8 @@ body.rn-search-only #rnSearchPanel .rn-search-panel-inner{min-height:100dvh!impo
 
   input.addEventListener('input',()=>{showSuggestions(input.value);renderTyping(input.value)});
   clear?.addEventListener('click',()=>{input.value='';showSuggestions('');showSearchStart();input.focus()});
-  close?.addEventListener('click',()=>{
-    panel.hidden=true;
-    document.body.classList.remove('rn-search-only');
-    if(nav)nav.style.display='';
-    document.querySelector('#rnBottomNav [data-rn-nav="home"]')?.click();
-  });
   window.__rnOpenStandaloneSearch=openSearch;
 })();
 </script>
+
+<style id="rn-search-no-close">#rnSearchClose{display:none!important}</style>
