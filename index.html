@@ -3113,7 +3113,7 @@ body.rn-gate-active #rnGateAge{
 body.rn-gate-active{overflow:hidden!important;height:100dvh!important;}
 body.rn-gate-active #client-profile{display:block!important;position:fixed!important;inset:0!important;width:100%!important;height:100dvh!important;min-height:100dvh!important;max-height:100dvh!important;overflow-y:scroll!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior-y:contain!important;touch-action:pan-y!important;z-index:50000!important;}
 body.rn-gate-active #rnWelcomeGate{height:auto!important;min-height:0!important;overflow:visible!important;}
-body.rn-gate-active #rnGateName{pointer-events:auto!important;touch-action:auto!important;}
+body.rn-gate-active #rnGateName{pointer-events:auto!important;touch-action:pan-y!important;}
 </style>
 <script id="rn-gate-hard-scroll-fix-engine">
 (function(){
@@ -3121,22 +3121,31 @@ body.rn-gate-active #rnGateName{pointer-events:auto!important;touch-action:auto!
   const box=document.getElementById('client-profile');
   if(!box||box.dataset.rnHardScroll)return;
   box.dataset.rnHardScroll='1';
-  let lastY=0, active=false;
+  let lastY=0, active=false, moved=false, startTarget=null;
   box.addEventListener('touchstart',function(e){
    if(!e.touches[0])return;
    const t=e.target;
-   if(t && (t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.tagName==='SELECT'||t.closest('button,a'))){active=false;return;}
-   lastY=e.touches[0].clientY; active=true;
+   if(t && t.closest('button,a')){active=false;return;}
+   lastY=e.touches[0].clientY;
+   startTarget=t;
+   moved=false;
+   active=true;
   },{passive:true});
   box.addEventListener('touchmove',function(e){
    if(!active||!e.touches[0])return;
    const y=e.touches[0].clientY, dy=lastY-y;
    if(Math.abs(dy)<1)return;
+   moved=true;
    e.preventDefault();
    box.scrollTop += dy;
    lastY=y;
   },{passive:false});
-  box.addEventListener('touchend',function(){active=false;},{passive:true});
+  box.addEventListener('touchend',function(){
+   if(startTarget && !moved && startTarget.closest('#rnGateName')){
+    try{startTarget.closest('#rnGateName').focus();}catch(err){}
+   }
+   active=false;
+  },{passive:true});
  }
  install();
  document.addEventListener('DOMContentLoaded',install,{once:true});
