@@ -235,6 +235,2803 @@ body{padding-bottom:82px}
 }
 
 .rn-listing{cursor:pointer;transition:transform .18s,box-shadow .18s;border:2px solid transparent}.rn-listing:hover,.rn-listing:focus-within{transform:translateY(-3px);box-shadow:0 10px 28px rgba(16,42,67,.16);border-color:#dc2626}.rn-listing:active{transform:scale(.995)}
+#propertyContinueFloat{display:none}
+.rn-house-modal{position:fixed;inset:0;z-index:2000;background:rgba(3,30,52,.74);display:flex;align-items:center;justify-content:center;padding:18px}.rn-house-modal[hidden]{display:none!important}.rn-house-modal-card{background:#fff;border-radius:18px;max-width:760px;width:100%;max-height:92vh;overflow:auto}.rn-house-modal-card img{display:block;width:100%;max-height:390px;object-fit:cover}.rn-house-modal-body{padding:22px}.rn-house-modal-body h3{font-size:28px;color:#b91c1c}.rn-house-modal-body p{margin:8px 0;color:#52525b}.rn-house-modal-close{float:right;margin:12px;border:0;background:#fff1f2;color:#b91c1c;border-radius:50%;width:42px;height:42px;font-size:25px;cursor:pointer;position:relative;z-index:2}
+.rn-home-welcome{max-width:760px;margin:0 auto 24px;text-align:center}
+.rn-home-welcome h3{font-size:30px;margin-bottom:10px;color:#b91c1c}
+.rn-home-welcome p{color:#52525b;margin:8px 0}
+.rn-home-prompt{font-weight:700;color:#3f3f46!important}
+.rn-home-category-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:22px}
+.rn-home-category{min-height:142px!important;padding:18px 12px!important;border:1px solid #e4e4e7!important;border-radius:14px!important;background:#fff!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;text-align:center!important;transition:transform .15s,border-color .15s,box-shadow .15s!important}
+.rn-home-category:hover,.rn-home-category:focus-visible{transform:translateY(-2px);border-color:#dc2626!important;box-shadow:0 6px 18px rgba(16,42,67,.12)}
+.rn-home-category.selected{border-color:#dc2626!important;background:#fff5f5!important;box-shadow:0 0 0 2px rgba(21,151,229,.12)}
+.rn-home-category-grid.rn-category-open{display:block!important}
+.rn-home-category-grid.rn-category-open .rn-home-category:not(.selected){display:none!important}
+.rn-home-category-grid.rn-category-open .rn-home-category.selected{display:flex!important;width:100%;min-height:132px!important;margin-bottom:14px}
+.rn-category-collection{width:100%;box-sizing:border-box;margin-top:0;padding:18px 0 4px}.rn-category-actions{display:grid;gap:10px;margin-top:18px}.rn-private-document-box,.rn-payment-box{border:1px solid #e4e4e7;border-radius:14px;padding:18px;background:#fff}.rn-private-document-box select,.rn-private-document-box input{width:100%;box-sizing:border-box;padding:13px;margin-top:8px;border:1px solid #d4d4d8;border-radius:10px}.rn-payment-box{display:grid;gap:12px}.rn-payment-box label{display:block;padding:14px;border:1px solid #e4e4e7;border-radius:10px;cursor:pointer}.rn-payment-box input{margin-right:10px}
+.rn-choose-another{margin-top:18px;width:100%;min-height:48px}
+.rn-home-icon{font-size:38px;line-height:1;margin-bottom:10px}
+.rn-home-category strong{font-size:16px;color:#3f3f46}
+.rn-home-category small{display:block;color:#71717a;font-size:12px;line-height:1.4;margin-top:5px}
+@media(max-width:700px){.rn-home-category-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.rn-home-category{min-height:132px!important;padding:14px 8px!important}.rn-home-welcome h3{font-size:25px}}
+@media(max-width:420px){.rn-home-category-grid{grid-template-columns:1fr 1fr}.rn-home-category small{font-size:11px}}
+
+.btn {
+  background: #dc2626;
+  color: white;
+  border: none;
+  padding: 14px 22px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+section {
+  padding: 65px 7%;
+}
+
+.section-title {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.section-title h2 {
+  font-size: 34px;
+  margin-bottom: 8px;
+}
+
+.section-title p {
+  color: #71717a;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+
+.card {
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 5px 20px rgba(16,42,67,.1);
+  transition: .2s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.concept-listing .concept-visual-card {
+  min-height: 220px;
+  height: 220px;
+  padding: 18px 12px 10px;
+}
+.concept-listing .tower { width: 28px; height: 150px; }
+.concept-listing .tower:nth-child(2), .concept-listing .tower:nth-child(4), .concept-listing .tower:nth-child(6) { height: 175px; }
+.concept-listing .tower:nth-child(4) { width: 34px; }
+@media (max-width: 800px) {
+  .concept-listing .concept-visual-card { min-height: 190px; height: 190px; }
+  .concept-listing .tower { width: 24px; height: 125px; }
+  .concept-listing .tower:nth-child(2), .concept-listing .tower:nth-child(4), .concept-listing .tower:nth-child(6) { height: 145px; }
+  .concept-listing .tower:nth-child(4) { width: 28px; }
+}
+
+.concept-card {
+  margin-top: 28px;
+  background: white;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 5px 20px rgba(16,42,67,.1);
+  border: 1px solid #e4e4e7;
+}
+.concept-visual {
+  min-height: 250px;
+  padding: 28px 20px 18px;
+  background: linear-gradient(180deg,#450a0a,#991b1b 70%,#fee2e2 70%);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 9px;
+}
+.tower {
+  width: 42px;
+  height: 190px;
+  border-radius: 6px 6px 2px 2px;
+  background: linear-gradient(90deg,#fee2e2,#fca5a5,#fee2e2);
+  border: 2px solid rgba(255,255,255,.75);
+  box-shadow: 0 8px 18px rgba(3,30,52,.28);
+  position: relative;
+  overflow: hidden;
+}
+.tower:nth-child(2), .tower:nth-child(4), .tower:nth-child(6) { height: 210px; }
+.tower:nth-child(4) { width: 50px; }
+.tower::after {
+  content: "";
+  position: absolute;
+  inset: 10px 7px;
+  background: repeating-linear-gradient(to bottom, rgba(255,255,255,.9) 0 5px, rgba(14,116,144,.35) 5px 10px);
+  opacity: .9;
+}
+.concept-content { padding: 24px; }
+.concept-content h3 { margin: 10px 0 6px; font-size: 25px; }
+.concept-label {
+  display: inline-block;
+  background: #fee2e2;
+  color: #b91c1c;
+  padding: 6px 11px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+}
+.concept-description { color: #71717a; margin-top: 10px; }
+.concept-features { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 18px; }
+.concept-feature { background: #ffffff; padding: 12px; border-radius: 10px; text-align: center; color: #3f3f46; font-weight: 600; }
+@media (max-width: 800px) {
+  .concept-visual { gap: 5px; }
+  .tower { width: 31px; height: 155px; }
+  .tower:nth-child(2), .tower:nth-child(4), .tower:nth-child(6) { height: 175px; }
+  .tower:nth-child(4) { width: 36px; }
+  .concept-features { grid-template-columns: 1fr; }
+}
+
+.card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+.card-content {
+  padding: 20px;
+}
+
+.tag {
+  display: inline-block;
+  background: #fee2e2;
+  color: #b91c1c;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.card h3 {
+  margin: 12px 0 5px;
+}
+
+.location {
+  color: #71717a;
+  font-size: 14px;
+}
+
+.price {
+  color: #b91c1c;
+  font-size: 22px;
+  font-weight: bold;
+  margin-top: 12px;
+}
+
+.features {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid #e4e4e7;
+  margin-top: 15px;
+  padding-top: 12px;
+  color: #71717a;
+  font-size: 13px;
+}
+
+.copy-btn {
+  margin-top: 16px;
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid #dc2626;
+  border-radius: 8px;
+  background: white;
+  color: #b91c1c;
+  font-weight: bold;
+  cursor: pointer;
+}
+.copy-btn:active { transform: translateY(1px); }
+
+.about {
+  background: white;
+  text-align: center;
+}
+
+.about-box {
+  max-width: 800px;
+  margin: auto;
+}
+
+.about h2 {
+  font-size: 35px;
+  margin-bottom: 15px;
+}
+
+.cta {
+  background: linear-gradient(135deg,#b91c1c,#dc2626);
+  color: white;
+  text-align: center;
+  padding: 55px 7%;
+}
+
+.cta h2 {
+  font-size: 34px;
+  margin-bottom: 12px;
+}
+
+.cta .btn {
+  background: white;
+  color: #b91c1c;
+  margin-top: 20px;
+}
+
+
+/* RumahNusa customer access gate: no property listings are shown before sign-in and identity details. */
+body.rn-site-locked #properties,
+body.rn-site-locked .hero,
+body.rn-site-locked #about,
+body.rn-site-locked #contact,
+body.rn-site-locked footer,
+body.rn-site-locked #client-profile { display:none !important; }
+body.rn-site-unlocked #properties,
+body.rn-site-unlocked .hero,
+body.rn-site-unlocked #about,
+body.rn-site-unlocked #contact,
+body.rn-site-unlocked footer { display:none !important; }
+
+.rn-customer-gate {
+  max-width: 920px;
+  margin: 30px auto;
+  padding: 28px;
+  background: white;
+  border-radius: 18px;
+  box-shadow: 0 5px 20px rgba(16,42,67,.08);
+}
+/* Login controls must remain directly tappable on mobile. */
+.rn-gate-actions .btn,
+#propertyChooseContinue,
+#rnGateSignIn,
+#rnGatePasswordToggle,
+#rnLoginPhone,
+#rnLoginCountry {
+  position: relative;
+  z-index: 20;
+  pointer-events: auto !important;
+  touch-action: manipulation;
+}
+
+.rn-customer-gate h2 { color:#27272a; margin-bottom:8px; }
+.rn-customer-gate p { color:#71717a; }
+.rn-gate-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.rn-password-wrap{position:relative}
+.rn-password-wrap input{width:100%;box-sizing:border-box;padding:14px 52px 14px 12px;border:1px solid #a1a1aa;border-radius:10px;font:inherit;min-height:56px}
+.rn-password-wrap{position:relative}
+.rn-password-wrap input{width:100%;box-sizing:border-box;padding:14px 56px 14px 12px;border:1px solid #a1a1aa;border-radius:10px;font:inherit;min-height:56px}
+.rn-password-eye{position:absolute;right:5px;top:50%;transform:translateY(-50%);width:46px;height:46px;padding:0;margin:0;border:0;background:transparent;color:#52525b;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:manipulation;pointer-events:auto;z-index:30;-webkit-tap-highlight-color:transparent}
+.rn-password-eye svg{width:25px;height:25px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.rn-password-eye:active{background:#fff1f2}
+.rn-password-eye[aria-pressed="true"]{color:#dc2626}
+.rn-password-eye:focus-visible{outline:3px solid #fca5a5;outline-offset:2px}
+.rn-gate-status{margin:10px 0 0;color:#52525b;line-height:1.5}
+.rn-gate-welcome{font-size:16px;line-height:1.6;margin:10px 0;color:#52525b}
+
+@media(max-width:700px){.rn-gate-grid{grid-template-columns:1fr}.rn-gate-grid .full{grid-column:auto}}
+</style><style>
+body.rn-gate-active > *:not(#client-profile){display:none !important;}
+body.rn-gate-active{margin:0;}
+.rn-welcome-gate{width:100%;max-width:720px;margin:0 auto;padding:48px 22px 80px;text-align:center;overflow:visible;}
+.rn-welcome-gate, .client-panel, #clientProfilForm, #propertyOptions, #rnCategoryCollection {
+  max-width: 100%;
+  min-width: 0;
+}
+.rn-home-category-grid {
+  width: 100%;
+}
+.rn-listing-grid {
+  width: 100%;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+.rn-listing-grid > * {
+  min-width: 0;
+}
+.rn-listing-grid img {
+  width: 100%;
+  height: 240px;
+  object-fit: cover;
+  display: block;
+}
+@media (max-width: 800px) {
+  .rn-listing-grid { grid-template-columns: 1fr; }
+  .rn-listing-grid img { height: 220px; }
+}
+.rn-welcome-copy h2{font-size:clamp(30px,6vw,48px);margin-bottom:18px;}
+.rn-welcome-copy p{font-size:17px;line-height:1.75;color:#52525b;margin:12px auto;max-width:650px;}
+.rn-welcome-instruction{margin-top:28px !important;color:#27272a !important;}
+.rn-gate-step{max-width:520px;margin:28px auto 0;padding:24px;border:1px solid #e4e4e7;border-radius:18px;background:#fff;box-shadow:0 8px 30px rgba(16,42,67,.08);}
+.rn-gate-step label{display:block;font-weight:700;margin-bottom:10px;text-align:left;}
+.rn-gate-step input{width:100%;box-sizing:border-box;padding:14px 16px;border:1px solid #d4d4d8;border-radius:10px;font-size:16px;margin-bottom:12px;}
+.rn-gender-options{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;}
+.rn-gender-option{min-height:50px;border:1px solid #d4d4d8;border-radius:10px;background:#fff;font-weight:700;cursor:pointer;}.rn-gender-option{position:relative;z-index:20;touch-action:manipulation;-webkit-tap-highlight-color:rgba(8,121,189,.15);user-select:none;}
+.rn-gender-option.selected{border-color:#dc2626;background:#fff1f2;}
+.rn-gate-step button.btn{width:100%;min-height:50px;}
+.rn-gate-step button:disabled{opacity:.5;cursor:not-allowed;}
+</style>
+<style>
+#propertyContinueFloat{display:block;position:fixed;right:14px;bottom:16px;z-index:10000;min-width:132px;padding:14px 20px;border:0;border-radius:999px;background:#dc2626;color:#fff;font-size:17px;font-weight:800;box-shadow:0 6px 20px rgba(0,0,0,.22);cursor:pointer;touch-action:manipulation}
+#propertyContinueFloat[hidden]{display:none!important}
+.rn-category-home-controls{margin-top:14px;padding:15px;border:1px solid #e4e4e7;border-radius:14px;background:#fffafa;display:grid;gap:10px}
+.rn-category-home-controls label{display:grid;gap:6px;font-weight:700;color:#450a0a}
+.rn-category-home-controls select{width:100%;box-sizing:border-box;padding:12px;border:1px solid #d4d4d8;border-radius:9px;background:#fff;font:inherit}
+.rn-control-title{font-size:17px;font-weight:800;color:#b91c1c}
+.rn-card-price{margin:2px 0 0;color:#991b1b;font-size:16px}
+.rn-card-select{width:100%;min-height:50px;border:0;border-radius:11px;background:#dc2626;color:#fff;font-size:16px;font-weight:800;cursor:pointer;touch-action:manipulation}
+.rn-card-select:active{transform:scale(.98)}
+.rn-listing.rn-home-selected{outline:3px solid #dc2626;outline-offset:2px}
+@media(max-width:600px){#propertyContinueFloat{right:12px;bottom:14px;min-width:145px}}
+</style>
+
+<style id="rn-red-white-theme">
+/* RumahNusa red-and-white visual theme */
+:root{
+  --rn-red:#dc2626;
+  --rn-dark-red:#991b1b;
+  --rn-light-red:#fff1f2;
+  --rn-white:#fff;
+}
+body{background:#fff;color:#27272a}
+a{color:var(--rn-dark-red)}
+button,.btn{accent-color:var(--rn-red)}
+header{background:#fff}
+.logo{color:var(--rn-dark-red)}
+.logo span{color:var(--rn-red)}
+nav a{color:#3f3f46}
+.lang-btn.active{color:var(--rn-red);border-color:var(--rn-red)}
+.rn-bottom-nav{background:rgba(255,255,255,.98);border-top-color:#e4e4e7}
+.rn-bottom-nav button.active{color:var(--rn-red)}
+.rn-home-category:hover,.rn-home-category:focus-visible{border-color:var(--rn-red)!important}
+.rn-home-category.selected{border-color:var(--rn-red)!important;background:var(--rn-light-red)!important}
+.rn-card-select,.client-next,.btn{background:var(--rn-red)!important}
+.rn-card-select:hover,.client-next:hover,.btn:hover{background:var(--rn-dark-red)!important}
+.rn-category-badge{background:var(--rn-light-red);color:var(--rn-dark-red)}
+.rn-card-price{color:var(--rn-dark-red)}
+input:focus,select:focus,textarea:focus{border-color:var(--rn-red)!important;outline-color:var(--rn-red)}
+</style>
+<style id="rn-global-search-style">
+.rn-search-panel{position:relative;z-index:900;background:#fff;border-bottom:1px solid #fecaca;box-shadow:0 8px 24px rgba(127,29,29,.12)}
+.rn-search-panel[hidden]{display:none!important}
+.rn-search-panel-inner{width:min(100%,900px);margin:0 auto;padding:18px 18px 24px}
+.rn-search-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.rn-search-heading span{font-size:11px;font-weight:800;letter-spacing:2px;color:#dc2626}
+.rn-search-heading h2{font-size:25px;color:#991b1b;margin:3px 0}
+.rn-search-heading p{color:#52525b;font-size:14px;margin:0}
+#rnSearchClose{border:0;background:#fff1f2;color:#b91c1c;border-radius:50%;width:38px;height:38px;font-size:26px;line-height:1;cursor:pointer}
+.rn-search-input-wrap{display:flex;align-items:center;gap:9px;margin-top:16px;border:2px solid #fca5a5;border-radius:13px;background:#fff;padding:3px 8px 3px 12px}
+.rn-search-input-wrap:focus-within{border-color:#dc2626;box-shadow:0 0 0 3px #fee2e2}
+.rn-search-input-wrap svg{width:23px;height:23px;fill:none;stroke:#dc2626;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+#rnGlobalSearchInput{border:0!important;outline:0!important;box-shadow:none!important;width:100%;padding:12px 4px;font-size:16px;background:#fff}
+#rnSearchClear{border:0;background:#fff1f2;color:#b91c1c;border-radius:8px;padding:8px 10px;font-weight:700}
+.rn-search-filters{display:flex;gap:8px;overflow-x:auto;padding:12px 0 4px}
+.rn-search-chip{border:1px solid #fecaca;background:#fff;color:#52525b;border-radius:999px;padding:8px 13px;font-weight:700;white-space:nowrap;cursor:pointer}
+.rn-search-chip.active{background:#dc2626;color:#fff;border-color:#dc2626}
+.rn-search-suggestions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.rn-search-suggestion{border:1px solid #fecaca;background:#fffafa;color:#3f3f46;border-radius:10px;padding:9px 11px;cursor:pointer;text-align:left}
+.rn-search-suggestion strong{color:#991b1b}
+.rn-search-suggestion{min-width:210px}
+.rn-search-suggestion strong{display:inline-block;margin-bottom:2px}
+.rn-search-suggestion small{color:#71717a}
+
+.rn-search-results{display:grid;gap:12px;margin-top:14px}
+.rn-search-category-result{display:flex;align-items:center;gap:14px;width:100%;padding:15px;border:1px solid #fecaca;border-radius:14px;background:#fffafa;color:#3f3f46;text-align:left;cursor:pointer}
+.rn-search-category-result:hover{border-color:#dc2626;background:#fff1f2}
+.rn-search-category-icon{display:flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:12px;background:#fee2e2;font-size:25px;flex:none}
+.rn-search-category-result strong{display:block;color:#991b1b;font-size:17px;margin:2px 0}
+.rn-search-category-result small{display:block;color:#71717a;font-size:13px}
+.rn-search-subheading{font-size:12px;font-weight:800;letter-spacing:1px;color:#991b1b;margin-top:4px}
+
+.rn-search-result{display:grid;grid-template-columns:120px 1fr;gap:14px;padding:11px;border:1px solid #e4e4e7;border-radius:14px;background:#fff;box-shadow:0 4px 16px rgba(39,39,42,.06)}
+.rn-search-result img{width:120px;height:92px;object-fit:cover;border-radius:10px;background:#fff1f2}
+.rn-search-result h3{font-size:17px;color:#991b1b;margin:0 0 2px}
+.rn-search-result p{margin:3px 0;color:#52525b;font-size:13px}
+.rn-search-result .rn-search-result-type{display:inline-block;color:#dc2626;font-weight:800;font-size:11px;letter-spacing:.8px}
+.rn-search-empty{padding:18px;border:1px dashed #fca5a5;border-radius:13px;background:#fffafa;color:#52525b;text-align:center}
+@media(max-width:600px){.rn-search-panel-inner{padding:15px 13px 20px}.rn-search-heading h2{font-size:22px}.rn-search-result{grid-template-columns:92px 1fr}.rn-search-result img{width:92px;height:78px}.rn-search-result h3{font-size:15px}}
+</style>
+<style id="rn-red-white-top-header">
+/* Red header matching the RumahNusa red-and-white design */
+header{
+  background:#dc2626!important;
+  color:#fff!important;
+  box-shadow:0 2px 12px rgba(127,29,29,.28)!important;
+}
+header .logo,header .logo span{color:#fff!important}
+header nav a{color:#fff!important}
+header .lang-btn{color:#fff!important;border-color:#fff!important;background:transparent!important}
+header .lang-btn.active{color:#dc2626!important;background:#fff!important;border-color:#fff!important}
+</style>
+<style id="rn-settings-style">
+.rn-settings-panel{background:#fff;min-height:100vh;border-top:1px solid #fee2e2;padding:22px 14px 105px}
+.rn-settings-panel[hidden]{display:none!important}
+.rn-settings-head{max-width:920px;margin:0 auto 18px;display:flex;justify-content:space-between;gap:15px}
+.rn-settings-head span{font-size:11px;letter-spacing:2px;font-weight:800;color:#dc2626}.rn-settings-head h2{margin:3px 0;color:#991b1b;font-size:28px}.rn-settings-head p{margin:0;color:#71717a}
+#rnSettingsClose{border:0;background:#fff1f2;color:#b91c1c;border-radius:50%;width:40px;height:40px;font-size:27px;cursor:pointer}
+.rn-settings-grid{max-width:920px;margin:auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.rn-settings-card{border:1px solid #fecaca;border-radius:15px;background:#fff;padding:12px;box-shadow:0 4px 15px rgba(127,29,29,.06)}
+.rn-settings-card h3{margin:3px 4px 9px;color:#991b1b;font-size:16px}
+.rn-settings-card button,.rn-settings-card label{width:100%;box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 8px;border:0;border-top:1px solid #f4f4f5;background:#fff;color:#3f3f46;text-align:left;font:inherit;cursor:pointer}
+.rn-settings-card button:hover{background:#fff7f7;color:#b91c1c}.rn-settings-card button b{color:#dc2626}.rn-settings-card select{border:1px solid #fecaca;border-radius:8px;padding:6px;background:#fff;color:#3f3f46}.rn-settings-card input[type=checkbox],.rn-settings-card input[type=radio]{accent-color:#dc2626;width:20px;height:20px}
+.rn-settings-toast{position:fixed;left:50%;bottom:92px;transform:translateX(-50%);z-index:16000;width:min(90vw,430px);padding:13px 16px;background:#991b1b;color:#fff;border-radius:12px;text-align:center;font-weight:700;box-shadow:0 8px 25px rgba(0,0,0,.2)}
+.rn-settings-panel{touch-action:pan-y;overscroll-behavior-x:none}
+.rn-settings-card button{min-height:48px;-webkit-tap-highlight-color:rgba(220,38,38,.12);touch-action:manipulation}
+.rn-settings-card label{min-height:48px}
+.rn-setting-detail{position:fixed;inset:0;background:#fff;z-index:17000;overflow:auto;padding:18px 14px 110px;overscroll-behavior-x:none}
+.rn-setting-detail[hidden]{display:none!important}
+.rn-detail-head{max-width:760px;margin:0 auto 18px;display:flex;align-items:center;gap:12px;position:sticky;top:0;background:#fff;padding:5px 0 14px;z-index:2;border-bottom:1px solid #fee2e2}
+.rn-detail-head span{font-size:10px;letter-spacing:1.8px;font-weight:800;color:#dc2626}
+.rn-detail-head h2{margin:2px 0;color:#991b1b;font-size:24px}
+.rn-detail-back{width:46px;height:46px;border:1px solid #fecaca;background:#fff1f2;color:#991b1b;border-radius:12px;font-size:34px;line-height:1;cursor:pointer;touch-action:manipulation}
+.rn-detail-body{max-width:760px;margin:auto}
+.rn-detail-card{border:1px solid #fecaca;border-radius:16px;padding:16px;background:#fff;box-shadow:0 4px 16px rgba(127,29,29,.07);margin-bottom:12px}
+.rn-detail-card h3{color:#991b1b;margin:0 0 8px}.rn-detail-card p{color:#52525b;line-height:1.55}
+.rn-detail-field{display:block;margin:12px 0}.rn-detail-field span{display:block;font-weight:700;color:#3f3f46;margin-bottom:6px}
+.rn-detail-field input,.rn-detail-field select,.rn-detail-field textarea{width:100%;box-sizing:border-box;border:1px solid #fca5a5;border-radius:10px;padding:12px;background:#fff;font:inherit;color:#27272a}
+.rn-detail-field textarea{min-height:110px;resize:vertical}
+.rn-detail-save{width:100%;border:0;border-radius:11px;background:#dc2626;color:#fff;padding:13px;font-weight:800;font-size:15px;cursor:pointer;touch-action:manipulation}
+.rn-detail-toggle{display:flex;justify-content:space-between;align-items:center;border:1px solid #fecaca;border-radius:11px;padding:12px;margin:8px 0}.rn-detail-toggle input{width:22px;height:22px;accent-color:#dc2626}
+.rn-swipe-hint{font-size:12px;color:#71717a;text-align:center;margin:14px 0}
+@media(max-width:650px){.rn-setting-detail{padding-left:12px;padding-right:12px}.rn-detail-head h2{font-size:21px}}
+
+@media(max-width:650px){.rn-settings-grid{grid-template-columns:1fr}.rn-settings-panel{padding-left:12px;padding-right:12px}.rn-settings-head h2{font-size:24px}}
+</style>
+</head>
+
+<body class="rn-gate-active">
+<header>
+  <div class="logo">Rumah<span>Nusa</span></div>
+
+  <nav>
+    <a href="#">Rumah</a>
+    <a href="#properties">Properti</a>
+    <a href="#about">Tentang Kami</a>
+    <a href="#contact">Kontak</a>
+  </nav>
+  <div class="lang-switch" aria-label="Language">
+    <button class="lang-btn active" type="button" data-lang="en">EN</button>
+    <button class="lang-btn" type="button" data-lang="id">ID</button>
+  </div>
+</header>
+<section id="rnSearchPanel" class="rn-search-panel" hidden aria-label="RumahNusa property search">
+  <div class="rn-search-panel-inner">
+    <div class="rn-search-heading">
+      <div>
+        <span>RUMAHNUSA SEARCH</span>
+        <h2>Search for a property</h2>
+        <p>Search by city, area, property type, rooms or any property detail.</p>
+      </div>
+      <button type="button" id="rnSearchClose" aria-label="Close search">×</button>
+    </div>
+    <div class="rn-search-input-wrap">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
+      <input id="rnGlobalSearchInput" type="search" autocomplete="off" placeholder="Search city, area, villa, apartment, hotel, house, rooms..." aria-label="Search RumahNusa properties">
+      <button type="button" id="rnSearchClear" hidden>Clear</button>
+    </div>
+    <div id="rnSearchSuggestions" class="rn-search-suggestions" hidden></div>
+    <div class="rn-search-filters" aria-label="Property type filters">
+      <button type="button" class="rn-search-chip active" data-search-type="All">All</button>
+      <button type="button" class="rn-search-chip" data-search-type="Separate Rumah">House</button>
+      <button type="button" class="rn-search-chip" data-search-type="Apartemen">Apartment</button>
+      <button type="button" class="rn-search-chip" data-search-type="Vila">Villa</button>
+      <button type="button" class="rn-search-chip" data-search-type="Hotel">Hotel</button>
+      <button type="button" class="rn-search-chip" data-search-type="Luxury">Luxury</button>
+    </div>
+    <div id="rnSearchResults" class="rn-search-results"></div>
+  </div>
+</section>
+
+
+
+
+
+<section class="hero">
+  <div class="agent-team-photo" aria-label="Three professional property agents promoting RumahNusa, two women wearing hijabs and one man">
+    <div class="promo-house promo-house-one" aria-hidden="true"></div>
+    <div class="promo-house promo-house-two" aria-hidden="true"></div>
+    <img src="https://iwcpf.teraju.nusakapital.com/dashboard/images/slides/login_bg-min.jpg" alt="Three professional property agents, two women wearing hijabs and one man, promoting homes">
+    <div class="promo-house promo-house-three" aria-hidden="true"></div>
+  </div>
+  <div class="agent-team-caption" data-en="Meet the RumahNusa team — here to help you find your home." data-id="Temui tim RumahNusa — siap membantu Anda menemukan rumah.">Temui tim RumahNusa — siap membantu Anda menemukan rumah.</div>
+  <div class="hero-content">
+    <small data-en="FIND YOUR DREAM HOME" data-id="TEMUKAN RUMAH IMPIAN ANDA">FIND YOUR DREAM HOME</small>
+
+    <h1>
+      Welcome to <span>RumahNusa</span>
+      Real Estate
+    </h1>
+
+    <p data-en="Discover beautiful homes, apartments and properties available for purchase." data-id="Temukan rumah, apartemen, dan properti indah untuk dibeli dan dimiliki.">Discover beautiful homes, apartments and properties available for purchase.</p>
+    <div class="bilingual"><strong data-en="RumahNusa is more than a property search." data-id="RumahNusa lebih dari sekadar pencarian properti.">RumahNusa is more than a property search.</strong><span class="id" data-en="We care about how you live, how you feel, and the comfort your home brings every day." data-id="Kami peduli pada cara Anda hidup, perasaan Anda, dan kenyamanan yang diberikan rumah Anda setiap hari.">We care about how you live, how you feel, and the comfort your home brings every day.</span></div>
+
+    </div></div></section>
+
+<section id="properties" hidden>
+
+  <div class="section-title">
+    <h2 data-en="Featured Properti" data-id="Properti Pilihan">Featured Properti</h2>
+    <p data-en="Beautiful spaces selected for comfort, warmth, and a life you can be proud to call home." data-id="Ruang indah yang dipilih untuk kenyamanan, kehangatan, dan kehidupan yang membuat Anda bangga menyebutnya rumah.">Beautiful spaces selected for comfort, warmth, and a life you can be proud to call home.</p>
+  </div>
+
+  <div class="cards">
+
+    <div class="card concept-listing">
+      <div class="concept-visual concept-visual-card" aria-label="One modern residential tower with 20 stories in Jakarta">
+        <div class="tower" style="width:72px;height:178px;"></div>
+        <div class="tower" style="width:88px;height:210px;"></div>
+        <div class="tower" style="width:72px;height:188px;"></div>
+      </div>
+      <div class="card-content">
+        <span class="tag">NEW RESIDENCE</span>
+        <h3>RumahNusa 20 — Grand Jakarta Residence</h3>
+        <p class="location">📍 Jakarta, Indonesia</p>
+        <p class="price">20 Stories · Full-Service Residence</p>
+        <div class="features">
+          <span>🏢 20 Floors</span>
+          <span>🛗 Elevators</span>
+          <span>🏊 Pool</span>
+        </div>
+        <p class="location" style="margin-top:12px;">Modern 20-story residential building with a spacious lobby, furnished apartments, large parlors, kitchens, bathrooms, elevators, swimming pool, parking and landscaped outdoor areas.</p>
+        <button class="copy-btn" type="button" data-copy="RumahNusa 20 — Grand Jakarta Residence | Jakarta, Indonesia | 20 Stories | Full-Service Residence | Lobby | Elevators | Swimming Pool | Parking">Salin Detail</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1701502909888-6b11930e419d?fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=60&w=3000>
+
+      <div class="card-content">
+        <span class="tag">DIJUAL</span>
+        <h3>Modern Family Rumah</h3>
+        <p class="location">📍 Bali, Indonesia</p>
+        <p class="price">Rp 6.265.000.000</p>
+
+        <div class="features">
+          <span>🛏 3 Beds</span>
+          <span>🛁 2 Baths</span>
+          <span>📐 180 m²</span>
+        </div>
+        <button class="copy-btn" type="button" data-copy="Modern Family Rumah | Bali, Indonesia | For Sale | $350,000 | 3 Beds | 2 Baths | 180 m²">Salin Detail</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=900&q=80">
+
+      <div class="card-content">
+        <span class="tag">DIJUAL</span>
+        <h3>Luxury Apartemen — 2 Kamar</h3>
+        <p class="location">📍 Jakarta, Indonesia</p>
+        <p class="price">Untuk Pembelian</p>
+        <p class="location">Apartemen 2 kamar dengan 1 kamar mandi sangat besar dan toilet di dalamnya. Dapur menyatu dengan parlor yang sangat besar, indah, lengkap dengan furnitur dan AC. Kedua kamar tidur juga memiliki AC dan furnitur.</p>
+        <div class="features">
+          <span>🛏 2 Kamar</span>
+          <span>🛁 1 Kamar Mandi Besar</span>
+          <span>❄️ AC</span>
+        </div>
+        <button class="copy-btn" type="button" data-copy="Luxury Apartemen 2 Kamar | Jakarta, Indonesia | DIJUAL | 2 Kamar Tidur | 1 Kamar Mandi Sangat Besar dengan Toilet di Dalam | Dapur di Parlor Besar | Furnitur Lengkap | AC di Parlor dan Kedua Kamar">Salin Detail</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=900&q=80">
+
+      <div class="card-content">
+        <span class="tag">DIJUAL</span>
+        <h3>Vila with Private Pool</h3>
+        <p class="location">📍 Bali, Indonesia</p>
+        <p class="price">Rp 9.845.000.000</p>
+
+        <div class="features">
+          <span>🛏 4 Beds</span>
+          <span>🛁 3 Baths</span>
+          <span>📐 250 m²</span>
+        </div>
+        <button class="copy-btn" type="button" data-copy="Vila with Private Pool | Bali, Indonesia | For Sale | $550,000 | 4 Beds | 3 Baths | 250 m²">Salin Detail</button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+
+
+<section id="rnWelcomeCustomer" class="client-area">
+  <div class="rn-welcome-copy">
+    <h2>Welcome to RumahNusa Real Estate</h2>
+    <p>Welcome to RumahNusa — where comfort, beauty, privacy, and peace of mind come together.</p>
+    <p>A home is more than rooms and walls. It is a place to rest, enjoy your family, build your future, and feel comfortable every day.</p>
+    <p>Log in to begin your private RumahNusa home search. Once you are signed in, you can choose the beautiful home category that fits your life and explore that category with confidence, comfort, and peace of mind.</p>
+  </div>
+</section>
+
+<div id="rnHouseModal" class="rn-house-modal" hidden role="dialog" aria-modal="true" aria-labelledby="rnHouseModalTitle">
+  <div class="rn-house-modal-card">
+    <button id="rnHouseModalClose" class="rn-house-modal-close" type="button" aria-label="Close">×</button>
+    <img id="rnHouseModalImage" src="" alt="">
+    <div class="rn-house-modal-body">
+      <h3 id="rnHouseModalTitle"></h3>
+      <p id="rnHouseModalLocation"></p>
+      <p id="rnHouseModalPrice" class="rn-house-modal-price"></p>
+      <div id="rnHouseModalSpecs" class="rn-house-modal-specs"></div>
+      <div class="rn-property-gallery-head"><strong>Pictures</strong><span id="rnGalleryCount">60 pictures</span></div>
+      <div id="rnHouseGallery" class="rn-house-gallery" aria-label="Property picture gallery"></div>
+      <p id="rnHouseModalDescription"></p>
+    </div>
+  </div>
+</div>
+<style id="rn-property-gallery-style">
+.rn-house-modal-price{font-size:22px;font-weight:800;color:#b91c1c;margin:10px 0 14px}
+.rn-property-gallery-head{display:flex;justify-content:space-between;align-items:center;margin:20px 0 10px;font-size:18px;color:#27272a}
+.rn-property-gallery-head span{font-size:13px;color:#71717a;font-weight:600}
+.rn-house-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:18px}
+.rn-gallery-item{border:0;padding:0;background:#f3f7fa;border-radius:12px;overflow:hidden;cursor:pointer;position:relative;text-align:left}
+.rn-gallery-item img{display:block;width:100%;height:360px;object-fit:contain;object-position:center;background:#fafafa}.rn-gallery-single-clear{grid-template-columns:1fr!important}.rn-gallery-single-clear .rn-gallery-item img{height:min(560px,62vh);object-fit:contain}.rn-villa-crop-image{display:block;width:100%;aspect-ratio:1.61/1;background-size:600% 1000%;background-repeat:no-repeat;background-color:#fafafa;background-origin:border-box}
+.rn-gallery-label{display:block;padding:7px 9px;font-size:12px;color:#3f3f46;background:#fff}
+.rn-gallery-lightbox{position:fixed;inset:0;background:rgba(0,0,0,.94);z-index:20000;display:flex;align-items:center;justify-content:center;padding:18px}
+.rn-gallery-lightbox[hidden]{display:none}
+.rn-gallery-lightbox img{display:block;width:min(98vw,1500px);height:auto;max-width:98vw;max-height:90vh;object-fit:contain;object-position:center;border-radius:10px}
+.rn-gallery-close{position:absolute;top:16px;right:16px;width:48px;height:48px;border:0;border-radius:50%;background:#fff;font-size:28px;cursor:pointer}
+.rn-gallery-caption{position:absolute;left:18px;right:18px;bottom:18px;color:#fff;text-align:center;font-size:15px}
+@media(max-width:600px){.rn-house-gallery{grid-template-columns:repeat(1,minmax(0,1fr));gap:12px}.rn-gallery-item img{height:210px}.rn-gallery-single-clear .rn-gallery-item img{height:320px}.rn-villa-crop-image{aspect-ratio:1.61/1}}
+</style>
+<section id="client-profile" class="client-area rn-login-locked">
+  <div class="section-title">
+    <h2 data-en="Welcome to RumahNusa Real Estate" data-id="Selamat Datang di RumahNusa Real Estate">Selamat Datang di RumahNusa Real Estate</h2>
+    <p data-en="Welcome to RumahNusa Real Estate. Discover beautiful, comfortable homes designed for peaceful everyday living, thoughtful spaces, and a place you can truly feel at home." data-id="Selamat datang di RumahNusa Real Estate. Temukan hunian yang indah dan nyaman untuk kehidupan yang tenang, ruang yang bermakna, dan tempat yang benar-benar terasa seperti rumah.">Welcome to RumahNusa Real Estate. Discover beautiful, comfortable homes designed for peaceful everyday living, thoughtful spaces, and a place you can truly feel at home.</p>
+  </div>
+  <div class="client-panel">
+    <div class="section-title">
+      <h2>Temukan Rumah yang Membawa Ketenangan</h2>
+      <p>RumahNusa hadir untuk membantu Anda menemukan hunian yang indah, nyaman, dan sesuai dengan kehidupan yang Anda bayangkan. Jelajahi pilihan rumah dengan tenang, lihat ruang-ruangnya, bayangkan kehidupan di dalamnya, dan pilih tempat yang membuat Anda merasa nyaman serta memiliki ketenangan pikiran.</p>
+    </div>
+
+
+    <div id="rnWelcomeGate" class="rn-welcome-gate">
+      <div class="rn-welcome-copy">
+        <h2>Welcome to RumahNusa Real Estate</h2>
+        <p>RumahNusa is where beautiful homes, comfort, privacy, and peace of mind come together. We help you discover a place that feels right for your everyday life, your family, and your future.</p>
+        <p>Every home is presented with care so you can explore beautiful rooms, comfortable living spaces, thoughtful details, and the feeling of coming home.</p>
+        <p>Take your time, discover the home that fits your life, and choose a place where you can live comfortably and enjoy peace of mind.</p>
+        <p class="rn-welcome-instruction"><strong>Welcome to RumahNusa Real Estate — a place built for beautiful living, comfort, privacy, and peace of mind. Enter your name, choose whether you are female or male, enter your age, and tap Continue to RumahNusa to begin choosing your beautiful home.</strong></p>
+      </div>
+      <div id="rnGateIdentityStep" class="rn-gate-step">
+        <div id="rnGateIdentityFields">
+          <div class="rn-gate-field"><label for="rnGateName">Your name</label><input id="rnGateName" type="text" autocomplete="name" placeholder="Enter your name"></div>
+          <div id="rnGateGenderStep"><label>Select your gender</label><div class="rn-gender-options" role="group" aria-label="Gender"><button type="button" class="rn-gender-option" data-gender="Female" aria-pressed="false">Female</button><button type="button" class="rn-gender-option" data-gender="Male" aria-pressed="false">Male</button></div></div>
+          <div id="rnGateAgeStep"><label for="rnGateAge">Your age</label><input id="rnGateAge" type="number" min="18" max="120" inputmode="numeric" placeholder="18 or older"></div>
+          <button id="rnGateIdentityContinue" class="btn" type="button" disabled>Continue to RumahNusa</button>
+        </div>
+        <p id="rnGateLoginStatus" class="rn-gate-status" aria-live="polite"></p>
+      </div>
+    </div>
+
+    <form id="clientProfilForm" hidden>
+      <div class="client-form-step active" data-step="1">
+        <h3>Buy — Choose a Property Type</h3>
+        <p>Choose one property category. Houses, villas, hotels and the other complete-property categories are for purchase only. Apartments are handled separately because apartments can be bought or rented.</p>
+        <div class="rn-home-welcome">
+          <h3>Welcome to RumahNusa Real Estate</h3>
+          <p>Welcome to a place where beautiful homes, comfort, privacy, and peace of mind come together. RumahNusa helps you discover a home that can feel right for your everyday life, your family, and your future.</p>
+          <p class="rn-home-prompt">Choose one category below. Tap once to open only that category. No prices are shown until the properties are ready and their final Rupiah amounts are confirmed.</p>
+          <div class="rn-buy-overview">
+            <div class="rn-buy-overview-head"><span>🏠</span><div><strong>RumahNusa Buy</strong><small>Explore complete properties beautifully, one category at a time.</small></div></div>
+            <div class="rn-buy-rules">
+              <div><b>Beautiful Living</b><span>Discover beautiful spaces built for comfort, elegance, privacy, and peaceful everyday living.</span></div>
+              <div><b>Find Your Place</b><span>Explore carefully presented properties and imagine the life you could build at RumahNusa.</span></div>
+              <div><b>RumahNusa</b><span>A welcoming place to discover distinctive homes, exceptional spaces, and inspiring places to live.</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="client-options rn-home-category-grid" id="propertyOptions" aria-label="RumahNusa home categories">
+          <button type="button" class="client-option rn-home-category" data-value="Apartemen"><span class="rn-home-icon" aria-hidden="true">🏢</span><strong>Apartment</strong><small>City apartments, rooms, views and shared facilities.</small></button>
+          
+          <button type="button" class="client-option rn-home-category" data-value="Hotel"><span class="rn-home-icon" aria-hidden="true">🏨</span><strong>Hotel</strong><small>Hotels available for purchase, with guest rooms and facilities.</small></button>
+          <button type="button" class="client-option rn-home-category" data-value="Separate Rumah"><span class="rn-home-icon" aria-hidden="true">🏠</span><strong>Separate Rumah</strong><small>Private houses with their own rooms and spaces.</small></button>
+          <button type="button" class="client-option rn-home-category" data-value="Mansion"><span class="rn-home-icon" aria-hidden="true">🏛️</span><strong>Mansion</strong><small>Beautiful grand homes with elegant rooms, gardens, pools and generous living spaces.</small></button>
+          <button type="button" class="client-option rn-home-category" data-value="Vila"><span class="rn-home-icon" aria-hidden="true">🏝️</span><strong>Villa</strong><small>Private villas, outdoor spaces and pools.</small></button>
+          <button type="button" class="client-option rn-home-category" data-value="Neighborhood Rumah"><span class="rn-home-icon" aria-hidden="true">🏘️</span><strong>Neighborhood</strong><small>Homes within welcoming residential surroundings.</small></button>
+          <button type="button" class="client-option rn-home-category" data-value="Townhouse"><span class="rn-home-icon" aria-hidden="true">🏙️</span><strong>Townhouse</strong><small>Connected homes with comfortable living spaces.</small></button>
+          <button type="button" class="client-option rn-home-category" data-value="Penthouse"><span class="rn-home-icon" aria-hidden="true">🌆</span><strong>Penthouse</strong><small>Large high-rise homes with city views.</small></button>
+          <button type="button" class="client-option rn-home-category" data-value="Family Residence"><span class="rn-home-icon" aria-hidden="true">👨‍👩‍👧‍👦</span><strong>Family Residence</strong><small>Comfortable homes designed around family life.</small></button>
+          <button type="button" class="client-option rn-home-category" data-value="Investment Property"><span class="rn-home-icon" aria-hidden="true">📈</span><strong>Investment Property</strong><small>Properties for long-term ownership and investment.</small></button>
+        </div>
+        <div id="rnCategoryCollection" class="rn-category-collection" hidden aria-live="polite">
+          <div class="rn-category-head">
+            <div>
+              <h4 id="rnCategoryTitle">Available homes in your selected category</h4>
+              <p id="rnCategoryIntro"></p>
+            </div>
+            <span id="rnCategoryBadge" class="rn-category-badge"></span>
+          </div>
+          <div id="rnCategoryBuyChoices" class="rn-buy-choice-strip" aria-live="polite"></div>
+          <div id="rnCategoryListings" class="rn-listing-grid"></div>
+          <div id="rnCategoryConfidence" class="rn-confidence"></div>
+          <p class="rn-collection-note">You are viewing only this category. Complete-property categories are Buy only. Apartment has separate Buy and Rent options. Prices will be added later in Rupiah when the properties are ready.</p>
+        </div>
+
+      </div>
+
+
+</form>
+
+    <div id="clientKotak Masuk" class="client-inbox" hidden>
+      <h3>RumahNusa Kotak Masuk</h3>
+      <p>Pesan Anda kepada agen RumahNusa akan tampil di percakapan ini.</p>
+      <div class="inbox-thread">
+        <strong>RumahNusa Agent</strong>
+        <div id="inboxStatusCard" class="inbox-status-card">Pesan Anda akan ditampilkan di sini setelah dikirim.</div>
+        <div id="messageList" class="message-list" aria-live="polite"></div>
+        <div class="message-compose">
+          <textarea id="messageComposer" placeholder="Tulis pesan untuk agen RumahNusa..."></textarea>
+          <button class="btn" id="sendInboxMessage" type="button">Kirim Pesan</button>
+        </div>
+                <p class="inbox-note">✓ satu centang = terkirim · ✓✓ dua centang = sudah dilihat agen.</p>
+        <p class="inbox-note">RumahNusa siap membantu Anda menemukan rumah yang sesuai dengan kebutuhan, gaya hidup, dan rencana Anda.</p>
+      </div>
+      <p style="margin-top:16px;">Email agen secara langsung: <a href="mailto:rumahnusarealestate@gmail.com">rumahnusarealestate@gmail.com</a></p>
+    </div>
+  </div>
+</section>
+
+<section id="about" class="about">
+  <div class="about-box">
+    <h2 data-en="Your Trusted Real Estate Partner" data-id="Mitra Properti Tepercaya Anda">Your Trusted Real Estate Partner</h2>
+    <p data-en="At RumahNusa, every home begins with people. We treat every customer with respect, patience, and genuine care. We understand that choosing a home is choosing a place for your mornings, your family, your rest, your celebrations, and your future." data-id="Di RumahNusa, setiap rumah dimulai dari manusia. Kami memperlakukan setiap pelanggan dengan hormat, kesabaran, dan kepedulian yang tulus. Kami memahami bahwa memilih rumah berarti memilih tempat untuk pagi Anda, keluarga Anda, waktu beristirahat, perayaan, dan masa depan Anda.">At RumahNusa, every home begins with people. We treat every customer with respect, patience, and genuine care. We understand that choosing a home is choosing a place for your mornings, your family, your rest, your celebrations, and your future.</p>
+    <p class="bilingual" data-en="We look beyond beautiful rooms. We look for comfort, thoughtful spaces, welcoming surroundings, and a home that feels right for the people who will live there." data-id="Kami melihat lebih dari sekadar ruangan yang indah. Kami mencari kenyamanan, ruang yang dipikirkan dengan baik, lingkungan yang menyenangkan, dan rumah yang terasa tepat bagi orang-orang yang akan tinggal di dalamnya.">We look beyond beautiful rooms. We look for comfort, thoughtful spaces, welcoming surroundings, and a home that feels right for the people who will live there.</p>
+  </div>
+</section>
+
+<section class="cta" id="contact">
+  <h2 data-en="Ready to Find Your Dream Property?" data-id="Siap Menemukan Properti Impian Anda?">Ready to Find Your Dream Property?</h2>
+  <p data-en="Tell us what you need. We will listen, understand your priorities, and help you take the next step toward a comfortable home." data-id="Ceritakan kebutuhan Anda. Kami akan mendengarkan, memahami prioritas Anda, dan membantu Anda mengambil langkah berikutnya menuju rumah yang nyaman.">Tell us what you need. We will listen, understand your priorities, and help you take the next step toward a comfortable home.</p>
+
+  <a class="btn" href="mailto:rumahnusarealestate@gmail.com">
+    Kontak Us
+  </a>
+</section>
+
+<footer>
+  <h2> RumahNusa Real Estate</h2>
+  <p data-en="Better Rumahs. Brighter Futures." data-id="Rumah Lebih Baik. Masa Depan Lebih Cerah.">Better Rumahs. Brighter Futures.</p>
+  <p data-en="Beautiful homes, caring service, and a more comfortable way to find where you belong." data-id="Rumah indah, pelayanan penuh kepedulian, dan cara yang lebih nyaman untuk menemukan tempat Anda berada.">Beautiful homes, caring service, and a more comfortable way to find where you belong.</p>
+  <p>© 2024 RumahNusa All rights reserved.</p>
+</footer>
+
+<section id="rnSettingsPanel" class="rn-settings-panel" hidden aria-label="RumahNusa Settings">
+  <div class="rn-settings-head">
+    <div><span>RUMAHNUSA</span><h2>Settings</h2><p>Manage your account, property preferences and app experience.</p></div>
+    <button type="button" id="rnSettingsClose" aria-label="Close settings">×</button>
+  </div>
+  <div class="rn-settings-grid">
+    <div class="rn-settings-card"><h3>👤 Account</h3>
+      <button data-setting="profile">Profile <b>›</b></button><button data-setting="name">Edit name <b>›</b></button>
+      <button data-setting="email">Email address <b>›</b></button><button data-setting="phone">Phone number <b>›</b></button>
+      <button data-setting="password">Change password <b>›</b></button><button data-setting="security">Login &amp; security <b>›</b></button>
+    </div>
+    <div class="rn-settings-card"><h3>🔔 Notifications</h3>
+      <label><span>New property alerts</span><input type="checkbox" data-pref="newProperty" checked></label>
+      <label><span>Price-change alerts</span><input type="checkbox" data-pref="priceChange" checked></label>
+      <label><span>Saved-location alerts</span><input type="checkbox" data-pref="locationAlert" checked></label>
+      <label><span>Agent messages</span><input type="checkbox" data-pref="messages" checked></label>
+      <label><span>Viewing reminders</span><input type="checkbox" data-pref="reminders" checked></label>
+    </div>
+    <div class="rn-settings-card"><h3>📍 Search &amp; Location</h3>
+      <button data-setting="city">Preferred city / area <b>›</b></button><button data-setting="radius">Search radius <b>›</b></button>
+      <button data-setting="recent">Recently searched locations <b>›</b></button><button data-setting="clearSearch">Clear search history <b>›</b></button>
+      <button data-setting="locationPrivacy">Location privacy <b>›</b></button>
+    </div>
+    <div class="rn-settings-card"><h3>🏠 Property Preferences</h3>
+      <label>Property type<select data-pref="propertyType"><option>House</option><option>Apartment</option><option>Villa</option><option>Hotel</option><option>Any</option></select></label>
+      <label>Bedrooms<select data-pref="bedrooms"><option>Any</option><option>1 bedroom</option><option>2 bedrooms</option><option>3 bedrooms</option><option>4 bedrooms</option><option>5+ bedrooms</option></select></label>
+      <label>Bathrooms<select data-pref="bathrooms"><option>Any</option><option>1+</option><option>2+</option><option>3+</option><option>4+</option></select></label>
+      <label>Furnished<select data-pref="furnished"><option>Any</option><option>Furnished</option><option>Unfurnished</option></select></label>
+      <label>Purpose<select data-pref="purpose"><option>Buy</option><option>Rent</option></select></label>
+      <button data-setting="priceRange">Preferred price range <b>›</b></button>
+    </div>
+    <div class="rn-settings-card"><h3>❤️ Wish List</h3>
+      <button data-setting="savedProperties">Saved properties <b>›</b></button><button data-setting="savedSearches">Saved searches <b>›</b></button>
+      <button data-setting="savedLocations">Saved locations <b>›</b></button><label><span>Wish-list price alerts</span><input type="checkbox" data-pref="wishAlerts" checked></label>
+    </div>
+    <div class="rn-settings-card"><h3>💬 Messages</h3><button data-setting="messages">Customer / agent messages <b>›</b></button><button data-setting="unread">Unread messages <b>›</b></button><label><span>Message notifications</span><input type="checkbox" data-pref="messageAlerts" checked></label></div>
+    <div class="rn-settings-card"><h3>🌐 Language</h3><button data-lang-choice="en">🇬🇧 English <b>✓</b></button><button data-lang-choice="id">🇮🇩 Bahasa Indonesia <b>✓</b></button></div>
+    <div class="rn-settings-card"><h3>🎨 Appearance</h3><label><span>Light mode</span><input type="radio" name="rnTheme" value="light" checked></label><label><span>Dark mode</span><input type="radio" name="rnTheme" value="dark"></label><label><span>System default</span><input type="radio" name="rnTheme" value="system"></label></div>
+    <div class="rn-settings-card"><h3>🔒 Privacy</h3><button data-setting="privacy">Privacy settings <b>›</b></button><button data-setting="visibility">Information visibility <b>›</b></button><button data-setting="exactLocation">Exact property location privacy <b>›</b></button><button data-setting="data">Data &amp; account controls <b>›</b></button></div>
+    <div class="rn-settings-card"><h3>🛡️ Security</h3><button data-setting="password">Change password <b>›</b></button><button data-setting="activity">Login activity <b>›</b></button><button data-setting="devices">Sign out of other devices <b>›</b></button><label><span>Two-step verification</span><input type="checkbox" data-pref="twoStep"></label></div>
+    <div class="rn-settings-card"><h3>📞 Help &amp; Support</h3><button data-setting="help">Help Center <b>›</b></button><button data-setting="support">Contact support <b>›</b></button><button data-setting="report">Report a problem <b>›</b></button><button data-setting="faq">Frequently asked questions <b>›</b></button></div>
+    <div class="rn-settings-card"><h3>📄 About</h3><button data-setting="about">About RumahNusa <b>›</b></button><button data-setting="terms">Terms of service <b>›</b></button><button data-setting="privacyPolicy">Privacy policy <b>›</b></button><button data-setting="version">Version <b>1.0</b></button></div>
+  </div>
+  <div id="rnSettingsToast" class="rn-settings-toast" hidden></div>
+  <section id="rnSettingDetail" class="rn-setting-detail" hidden aria-label="Settings detail">
+    <div class="rn-detail-head">
+      <button type="button" id="rnSettingBack" class="rn-detail-back" aria-label="Go back">‹</button>
+      <div><span>RUMAHNUSA SETTINGS</span><h2 id="rnSettingDetailTitle">Settings</h2></div>
+    </div>
+    <div id="rnSettingDetailBody" class="rn-detail-body"></div>
+  </section>
+</section>
+<nav class="rn-bottom-nav" id="rnBottomNav" aria-label="RumahNusa quick navigation">
+  <button type="button" data-rn-nav="home" class="active" aria-label="Home">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9.5V21h13V9.5"/><path d="M9.5 21v-6h5v6"/></svg>
+    <span>Home</span>
+  </button>
+  <button type="button" data-rn-nav="search" aria-label="Search">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
+    <span>Search</span>
+  </button>
+  <button type="button" data-rn-nav="buy" aria-label="Buy">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 4l9 6.5"/><path d="M5 10v10h14V10"/><path d="M9 20v-5h6v5"/></svg>
+    <span>Buy</span>
+  </button>
+  <button type="button" data-rn-nav="promote" aria-label="Promote">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13v-2l11-5v12L4 13Z"/><path d="M15 9.5h4.5A1.5 1.5 0 0 1 21 11v2a1.5 1.5 0 0 1-1.5 1.5H15"/><path d="m7 14.5 1 5H5l-1-6.5"/></svg>
+    <span>Promote</span>
+  </button>
+  <button type="button" data-rn-nav="wishlist" aria-label="Wish list">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 8.8c0 5.5-8.8 11-8.8 11s-8.8-5.5-8.8-11A4.8 4.8 0 0 1 12 6.4a4.8 4.8 0 0 1 8.8 2.4Z"/></svg>
+    <span>Wish list</span>
+  </button>
+  <button type="button" data-rn-nav="settings" aria-label="Settings">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-1.8 1.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5v.2h-2.6v-.2a1.7 1.7 0 0 0-1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1-1.8-1.8.1-.1A1.7 1.7 0 0 0 8 15a1.7 1.7 0 0 0-1.5-1H6v-2.6h.5a1.7 1.7 0 0 0 1.5-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1 1.8-1.8.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 1-1.5v-.2h2.6v.2a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1 1.8 1.8-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.5 1h.2V14h-.2a1.7 1.7 0 0 0-1.5 1Z"/></svg>
+    <span>Settings</span>
+  </button>
+</nav>
+
+<script id="rn-global-search-engine">
+(function(){
+  const panel=document.getElementById('rnSearchPanel');
+  const input=document.getElementById('rnGlobalSearchInput');
+  const results=document.getElementById('rnSearchResults');
+  const suggestions=document.getElementById('rnSearchSuggestions');
+  const clear=document.getElementById('rnSearchClear');
+  const close=document.getElementById('rnSearchClose');
+  if(!panel||!input||!results)return;
+
+  const places=[
+    'Jakarta','South Jakarta','Central Jakarta','North Jakarta','West Jakarta','East Jakarta',
+    'Bali','Denpasar','Badung','Ubud','Seminyak','Canggu','Kuta','Gianyar',
+    'Surabaya','Bandung','Medan','Makassar','Palembang','Semarang','Yogyakarta',
+    'Tangerang','Tangerang City','Tangerang Regency','South Tangerang','Tangerang Selatan',
+    'Cipondoh','Karawaci','Ciledug','Batuceper','Benda','Pinang','Serpong','BSD City',
+    'Alam Sutera','Gading Serpong','Lippo Village','Kelapa Dua','Curug','Legok','Cikupa',
+    'Bekasi','Depok','Bogor','Batam','Malang','Solo','Surakarta','Balikpapan','Samarinda',
+    'Banjarmasin','Manado','Padang','Pekanbaru','Bandar Lampung','Pontianak','Mataram',
+    'Kupang','Jayapura','Banda Aceh','Jambi','Bengkulu','Serang','Cirebon','Tasikmalaya',
+    'Bogor City','Bogor Regency','Bekasi City','Bekasi Regency','Bandung City','Bandung Regency',
+    'Surabaya City','Medan City','Makassar City','Semarang City','Yogyakarta City'
+  ];
+  let selectedType='All';
+
+  const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  const getData=()=>window.__rnAllCategoryData||{};
+  const typeLabel=k=>k==='Separate Rumah'?'HOUSE':k==='Apartemen'?'APARTMENT':k==='Vila'?'VILLA':k==='Hotel'?'HOTEL':k.toUpperCase();
+  const normalize=s=>String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  const inventory=()=>{
+    const all=[];
+    Object.entries(getData()).forEach(([type,d])=>{
+      (Array.isArray(d.listings)?d.listings:[]).forEach(x=>all.push({type,data:d,item:x}));
+    });
+    return all;
+  };
+
+  function matches(r,q){
+    if(selectedType!=='All' && selectedType!=='Luxury'){
+      if(r.type!==selectedType)return false;
+    }
+    const text=normalize([r.type,r.item[0],r.item[1],r.item[2],r.item[3]].join(' '));
+    if(selectedType==='Luxury' && !text.includes('luxury'))return false;
+    return !q || text.includes(normalize(q));
+  }
+
+  function render(q){
+    const nq=normalize(q);
+    const data=getData();
+    const categoryAliases={
+      'house':'Separate Rumah','houses':'Separate Rumah','separate house':'Separate Rumah','separate rumah':'Separate Rumah','rumah':'Separate Rumah',
+      'apartment':'Apartemen','apartments':'Apartemen','apartemen':'Apartemen',
+      'villa':'Vila','villas':'Vila','hotel':'Hotel','hotels':'Hotel'
+    };
+    const requestedCategory=categoryAliases[nq] || Object.keys(data).find(k=>normalize(k)===nq);
+    const list=inventory().filter(r=>matches(r,q));
+    clear.hidden=!q;
+
+    if(!q){
+      results.innerHTML='<div class="rn-search-empty">Start typing a city, area, house type, villa, apartment, hotel, number of rooms, or another property detail.</div>';
+      return;
+    }
+
+    // If the customer searches a category name, show the category immediately,
+    // even when the individual listings do not contain the typed category name.
+    if(requestedCategory && data[requestedCategory]){
+      const d=data[requestedCategory];
+      const count=Array.isArray(d.listings)?d.listings.length:0;
+      results.innerHTML=
+        '<button type="button" class="rn-search-category-result" data-search-category="'+esc(requestedCategory)+'">'+
+        '<span class="rn-search-category-icon">'+(requestedCategory==='Hotel'?'🏨':requestedCategory==='Vila'?'🏝️':requestedCategory==='Apartemen'?'🏢':'🏠')+'</span>'+
+        '<span><span class="rn-search-result-type">PROPERTY</span>'+
+        '<strong>'+esc(d.title||requestedCategory)+'</strong>'+
+        '<small>'+count+' listed properties · Tap to view '+esc((d.title||requestedCategory).toLowerCase())+'</small></span>'+
+        '</button>'+
+        (list.length ? '<div class="rn-search-subheading">Available matching properties</div>' : '');
+      if(list.length){
+        results.innerHTML+=list.map((r,i)=>{
+          const x=r.item;
+          return '<button type="button" class="rn-search-result" data-search-index="'+i+'" style="text-align:left">'+
+            '<img src="'+esc(x[4])+'" alt="'+esc(x[0])+'">'+
+            '<span><span class="rn-search-result-type">'+esc(typeLabel(r.type))+'</span>'+
+            '<h3>'+esc(x[0])+'</h3><p>📍 '+esc(x[1])+'</p><p><strong>'+esc(x[2])+'</strong></p><p>'+esc(x[3])+'</p></span></button>';
+        }).join('');
+      }
+      results.querySelector('[data-search-category]')?.addEventListener('click',()=>{
+        panel.hidden=true;
+        const btn=[...document.querySelectorAll('#propertyOptions .client-option')].find(x=>x.dataset.value===requestedCategory);
+        if(btn) btn.click();
+      });
+      results.querySelectorAll('.rn-search-result').forEach((b,i)=>{
+        b.addEventListener('click',()=>{
+          const rr=list[i];
+          panel.hidden=true;
+          const btn=[...document.querySelectorAll('#propertyOptions .client-option')].find(x=>x.dataset.value===rr.type);
+          if(btn){btn.click();setTimeout(()=>document.querySelector('#rnCategoryListings')?.scrollIntoView({behavior:'smooth',block:'start'}),350);}
+        });
+      });
+      return;
+    }
+
+    if(!list.length){
+      // For a city/area search, show a location result instead of a dead end.
+      const city=places.find(p=>normalize(p)===nq || normalize(p).includes(nq));
+      if(city){
+        results.innerHTML=
+          '<button type="button" class="rn-search-category-result" data-search-place="'+esc(city)+'">'+
+          '<span class="rn-search-category-icon">📍</span><span><span class="rn-search-result-type">LOCATION</span>'+
+          '<strong>'+esc(city)+'</strong><small>Search all RumahNusa properties in this city/area</small></span></button>'+
+          '<div class="rn-search-empty">No property is listed in this location yet. More properties can be added here.</div>';
+        results.querySelector('[data-search-place]')?.addEventListener('click',()=>{
+          input.value=city;
+          selectedType='All';
+          document.querySelectorAll('.rn-search-chip').forEach(x=>x.classList.toggle('active',x.dataset.searchType==='All'));
+          render(city);
+        });
+        return;
+      }
+      results.innerHTML='<div class="rn-search-empty"><strong>No matching property is currently listed.</strong><br>Try another city, area, property type or room requirement. Exact street addresses are shared privately by the agent, not published publicly.</div>';
+      return;
+    }
+
+    results.innerHTML=list.map((r,i)=>{
+      const x=r.item;
+      return '<button type="button" class="rn-search-result" data-search-index="'+i+'" style="text-align:left">'+
+        '<img src="'+esc(x[4])+'" alt="'+esc(x[0])+'">'+
+        '<span><span class="rn-search-result-type">'+esc(typeLabel(r.type))+'</span>'+
+        '<h3>'+esc(x[0])+'</h3><p>📍 '+esc(x[1])+'</p><p><strong>'+esc(x[2])+'</strong></p><p>'+esc(x[3])+'</p></span></button>';
+    }).join('');
+    results.querySelectorAll('.rn-search-result').forEach((b,i)=>{
+      b.addEventListener('click',()=>{
+        const rr=list[i];
+        panel.hidden=true;
+        const btn=[...document.querySelectorAll('#propertyOptions .client-option')].find(x=>x.dataset.value===rr.type);
+        if(btn){btn.click();setTimeout(()=>document.querySelector('#rnCategoryListings')?.scrollIntoView({behavior:'smooth',block:'start'}),350);}
+      });
+    });
+  }
+
+  function showSuggestions(q){
+    const nq=normalize(q);
+    if(!nq){suggestions.hidden=true;suggestions.innerHTML='';return;}
+
+    // Keep offering progressively narrower Indonesian location choices while the
+    // customer types. We never invent a property; locations only become property
+    // results when RumahNusa actually has a listing there.
+    const locationMatches=places.filter(p=>normalize(p).includes(nq)).slice(0,12);
+    const inventoryLocations=inventory().map(r=>String(r.item[1]||'')).filter(Boolean);
+    const listingMatches=inventoryLocations.filter(p=>normalize(p).includes(nq)).slice(0,8);
+    const combined=[...new Set([...locationMatches,...listingMatches])].slice(0,12);
+
+    suggestions.hidden=!combined.length;
+    suggestions.innerHTML=combined.map(p=>{
+      const hasListing=inventory().some(r=>normalize(r.item[1]).includes(normalize(p)));
+      return '<button type="button" class="rn-search-suggestion" data-place="'+esc(p)+'">'+
+        '📍 <strong>'+esc(p)+'</strong><br><small>'+
+        (hasListing?'View RumahNusa properties in this location':'Location · continue typing to narrow the address')+
+        '</small></button>';
+    }).join('');
+
+    suggestions.querySelectorAll('[data-place]').forEach(b=>b.addEventListener('click',()=>{
+      const chosen=b.dataset.place||'';
+      input.value=chosen;
+      suggestions.hidden=true;
+      render(chosen);
+      input.focus();
+    }));
+  }
+
+  window.__rnRunGlobalSearch=render;
+  input.addEventListener('input',()=>{showSuggestions(input.value);render(input.value)});
+  clear.addEventListener('click',()=>{input.value='';showSuggestions('');render('');input.focus()});
+  close.addEventListener('click',()=>{panel.hidden=true});
+  document.querySelectorAll('.rn-search-chip').forEach(chip=>{
+    chip.addEventListener('click',()=>{
+      selectedType=chip.dataset.searchType||'All';
+      document.querySelectorAll('.rn-search-chip').forEach(c=>c.classList.toggle('active',c===chip));
+      render(input.value);
+    });
+  });
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!panel.hidden)panel.hidden=true});
+  render('');
+})();
+</script>
+<script>
+(function(){
+  const nav=document.getElementById('rnBottomNav');
+  const settingsPanel=document.getElementById('rnSettingsPanel');
+  const settingsClose=document.getElementById('rnSettingsClose');
+  const settingsToast=document.getElementById('rnSettingsToast');
+  const showSettings=()=>{
+    if(!settingsPanel)return;
+    settingsPanel.hidden=false;
+    setActive('settings');
+    settingsPanel.scrollIntoView({behavior:'smooth',block:'start'});
+  };
+
+  window.addEventListener('popstate',()=>{
+    if(detailOpen){detail.hidden=true;detailOpen=false;}
+  });
+  let rnEdgeStart=null;
+  document.addEventListener('touchstart',e=>{
+    if(!detailOpen)return;
+    const t=e.touches&&e.touches[0]; if(!t)return;
+    rnEdgeStart={x:t.clientX,y:t.clientY,time:Date.now()};
+  },{passive:true});
+  document.addEventListener('touchend',e=>{
+    if(!detailOpen||!rnEdgeStart)return;
+    const t=e.changedTouches&&e.changedTouches[0]; if(!t)return;
+    const dx=t.clientX-rnEdgeStart.x, dy=Math.abs(t.clientY-rnEdgeStart.y);
+    const edge=rnEdgeStart.x<=42 || rnEdgeStart.x>=window.innerWidth-42;
+    if(edge && Math.abs(dx)>70 && Math.abs(dx)>dy*1.25){ closeSettingDetail(); }
+    rnEdgeStart=null;
+  },{passive:true});
+  settingsClose?.addEventListener('click',()=>{
+    if(detailOpen){closeSettingDetail();return;}
+    settingsPanel.hidden=true;goTop();setActive('home');
+  });
+  document.querySelectorAll('#rnSettingsPanel [data-pref]').forEach(el=>{
+    const key='rnPref_'+el.dataset.pref;
+    const saved=localStorage.getItem(key);
+    if(saved!==null){
+      if(el.type==='checkbox'||el.type==='radio') el.checked=saved==='1';
+      else el.value=saved;
+    }
+    el.addEventListener('change',()=>localStorage.setItem(key,(el.type==='checkbox'||el.type==='radio')?(el.checked?'1':'0'):el.value));
+  });
+  document.querySelectorAll('#rnSettingsPanel [data-lang-choice]').forEach(b=>b.addEventListener('click',()=>{
+    const target=b.dataset.langChoice;
+    document.querySelector('.lang-btn[data-lang="'+target+'"]')?.click();
+    settingsToast.textContent=target==='id'?'Bahasa Indonesia selected.':'English selected.';
+    settingsToast.hidden=false;setTimeout(()=>settingsToast.hidden=true,1800);
+  }));
+  const detail=document.getElementById('rnSettingDetail');
+  const detailTitle=document.getElementById('rnSettingDetailTitle');
+  const detailBody=document.getElementById('rnSettingDetailBody');
+  const detailBack=document.getElementById('rnSettingBack');
+  let detailOpen=false;
+
+  const detailDefinitions={
+    profile:['Profile','Manage your RumahNusa customer profile.','profile'],
+    name:['Edit name','Change the name shown on your RumahNusa account.','name'],
+    email:['Email address','Update the email address used for RumahNusa messages.','email'],
+    phone:['Phone number','Add or update the phone number used when an agent needs to contact you.','phone'],
+    password:['Change password','Update your account password securely.','password'],
+    security:['Login & security','Review account security options and sign-in protection.','security'],
+    city:['Preferred city / area','Choose the places you want RumahNusa to use for your property searches.','city'],
+    radius:['Search radius','Choose how far from your preferred location you want to search.','radius'],
+    recent:['Recently searched locations','Review locations you recently searched for.','recent'],
+    clearSearch:['Clear search history','Remove your saved search history from this device.','clearSearch'],
+    locationPrivacy:['Location privacy','Control how your location information is handled.','locationPrivacy'],
+    priceRange:['Preferred price range','Set the property price range you normally want to see.','priceRange'],
+    savedProperties:['Saved properties','Open the properties you saved to your wish list.','savedProperties'],
+    savedSearches:['Saved searches','Manage searches you want to keep and reuse.','savedSearches'],
+    savedLocations:['Saved locations','Manage cities and areas you saved.','savedLocations'],
+    messages:['Customer / agent messages','Open your private RumahNusa conversations with customers or agents.','messages'],
+    unread:['Unread messages','See messages that still need your attention.','unread'],
+    privacy:['Privacy settings','Choose what information RumahNusa displays publicly.','privacy'],
+    visibility:['Information visibility','Manage which profile information other people can see.','visibility'],
+    exactLocation:['Exact property location privacy','Exact street/property addresses are kept private and are shared by the agent when appropriate.','exactLocation'],
+    data:['Data & account controls','Manage your account data and account-related controls.','data'],
+    activity:['Login activity','Review recent sign-in activity for your account.','activity'],
+    devices:['Sign out of other devices','Manage other devices where your account is signed in.','devices'],
+    help:['Help Center','Find answers about searching, buying, renting and using RumahNusa.','help'],
+    support:['Contact support','Send a question or request to RumahNusa support.','support'],
+    report:['Report a problem','Tell RumahNusa about a problem you found on the website.','report'],
+    faq:['Frequently asked questions','Browse common RumahNusa questions.','faq'],
+    about:['About RumahNusa','Learn about RumahNusa and its property marketplace.','about'],
+    terms:['Terms of service','Review the terms that apply when using RumahNusa.','terms'],
+    privacyPolicy:['Privacy policy','Review how RumahNusa handles information and privacy.','privacyPolicy'],
+    version:['Version','RumahNusa website version information.','version']
+  };
+
+  function settingTemplate(key){
+    const d=detailDefinitions[key]||['Settings','Manage this RumahNusa setting.','generic'];
+    let body='<div class="rn-detail-card"><h3>'+d[0]+'</h3><p>'+d[1]+'</p>';
+    if(['profile','name'].includes(key)) body+='<label class="rn-detail-field"><span>Name</span><input id="rnDetailName" type="text" placeholder="Your name"></label><label class="rn-detail-field"><span>Display name</span><input id="rnDetailDisplay" type="text" placeholder="Name shown on RumahNusa"></label>';
+    else if(key==='email') body+='<label class="rn-detail-field"><span>Email address</span><input id="rnDetailEmail" type="email" placeholder="you@example.com"></label>';
+    else if(key==='phone') body+='<label class="rn-detail-field"><span>Phone number</span><input id="rnDetailPhone" type="tel" placeholder="+62 ..."></label>';
+    else if(key==='password') body+='<label class="rn-detail-field"><span>Current password</span><input type="password"></label><label class="rn-detail-field"><span>New password</span><input type="password"></label><label class="rn-detail-field"><span>Confirm new password</span><input type="password"></label>';
+    else if(key==='city') body+='<label class="rn-detail-field"><span>Preferred city or area</span><input id="rnDetailCity" type="search" placeholder="e.g. Jakarta, Tangerang, Bali"></label>';
+    else if(key==='radius') body+='<label class="rn-detail-field"><span>Search radius</span><select><option>5 km</option><option>10 km</option><option>25 km</option><option>50 km</option><option>100 km</option><option>Any distance</option></select>';
+    else if(key==='priceRange') body+='<label class="rn-detail-field"><span>Minimum price</span><input type="number" placeholder="0"></label><label class="rn-detail-field"><span>Maximum price</span><input type="number" placeholder="No maximum"></label>';
+    else if(key==='support'||key==='report') body+='<label class="rn-detail-field"><span>Your message</span><textarea placeholder="Tell RumahNusa what you need..."></textarea><label class="rn-detail-field"><span>Email for reply</span><input type="email" placeholder="you@example.com"></label>';
+    else if(key==='clearSearch') body+='<button type="button" class="rn-detail-save" id="rnDetailClearSearch">Clear search history</button>';
+    else if(key==='security') body+='<label class="rn-detail-toggle"><span>Two-step verification</span><input type="checkbox" data-pref="twoStepDetail"></label><label class="rn-detail-toggle"><span>Login notifications</span><input type="checkbox" data-pref="loginAlerts"></label>';
+    else if(key==='locationPrivacy'||key==='exactLocation') body+='<label class="rn-detail-toggle"><span>Keep exact property location private</span><input type="checkbox" checked disabled></label>';
+    else if(key==='privacy'||key==='visibility') body+='<label class="rn-detail-toggle"><span>Profile visible to other customers</span><input type="checkbox" checked></label><label class="rn-detail-toggle"><span>Show phone number publicly</span><input type="checkbox"></label>';
+    else if(key==='version') body+='<p><strong>RumahNusa 1.0</strong><br>Property marketplace for Indonesia.</p>';
+    else body+='<p>Your '+d[0].toLowerCase()+' area is ready. Use the controls here to manage this part of your RumahNusa account.</p>';
+    body+='<button type="button" class="rn-detail-save" id="rnDetailSave">Save changes</button></div><div class="rn-swipe-hint">Swipe from the left or right edge of your phone to go back.</div>';
+    return body;
+  }
+
+  function openSettingDetail(key){
+    const d=detailDefinitions[key]||['Settings','Manage this setting.','generic'];
+    detailTitle.textContent=d[0];
+    detailBody.innerHTML=settingTemplate(key);
+    detail.hidden=false;detailOpen=true;
+    history.pushState({rnSettingsDetail:true},'',location.href.split('#')[0]+'#settings-'+key);
+    detail.scrollTop=0;
+    const save=document.getElementById('rnDetailSave');
+    save?.addEventListener('click',()=>{
+      const fields=detailBody.querySelectorAll('input,select,textarea');
+      fields.forEach((el,idx)=>{if(el.id) localStorage.setItem('rnDetail_'+el.id,el.type==='checkbox'?(el.checked?'1':'0'):el.value)});
+      settingsToast.textContent='Changes saved.';
+      settingsToast.hidden=false;setTimeout(()=>settingsToast.hidden=true,1800);
+    });
+    document.getElementById('rnDetailClearSearch')?.addEventListener('click',()=>{
+      Object.keys(localStorage).filter(k=>k.toLowerCase().includes('search')).forEach(k=>localStorage.removeItem(k));
+      settingsToast.textContent='Search history cleared.';
+      settingsToast.hidden=false;setTimeout(()=>settingsToast.hidden=true,1800);
+    });
+    detailBody.querySelectorAll('input[id]').forEach(el=>{const v=localStorage.getItem('rnDetail_'+el.id);if(v!==null)el.value=v});
+  }
+  function closeSettingDetail(){
+    if(!detailOpen)return;
+    detail.hidden=true;detailOpen=false;
+    if(location.hash.startsWith('#settings-')) history.back();
+  }
+  detailBack?.addEventListener('click',closeSettingDetail);
+
+  document.querySelectorAll('#rnSettingsPanel [data-setting]').forEach(b=>b.addEventListener('click',(ev)=>{
+    ev.preventDefault();
+    openSettingDetail(b.dataset.setting);
+  }));
+  document.querySelectorAll('#rnSettingsPanel [name="rnTheme"]').forEach(r=>r.addEventListener('change',()=>{
+    localStorage.setItem('rnTheme',r.value);
+    settingsToast.textContent=r.value==='dark'?'Dark mode selected.':'Light appearance selected.';
+    settingsToast.hidden=false;setTimeout(()=>settingsToast.hidden=true,1800);
+  }));
+  if(!nav)return;
+  const setActive=(name)=>{
+    nav.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.rnNav===name));
+  };
+  const goTop=()=>window.scrollTo({top:0,behavior:'smooth'});
+  const goTo=(selector,name)=>{
+    const el=document.querySelector(selector);
+    if(el){setActive(name);el.scrollIntoView({behavior:'smooth',block:'start'});}
+  };
+  nav.addEventListener('click',e=>{
+    const b=e.target.closest('button[data-rn-nav]');
+    if(!b)return;
+    const name=b.dataset.rnNav;
+    if(name==='home'){setActive(name);goTop();return;}
+    if(name==='search'){
+      setActive(name);
+      const panel=document.getElementById('rnSearchPanel');
+      const input=document.getElementById('rnGlobalSearchInput');
+      if(panel){
+        panel.hidden=false;
+        panel.scrollIntoView({behavior:'smooth',block:'start'});
+        setTimeout(()=>input?.focus(),220);
+      }
+      if(typeof window.__rnRunGlobalSearch==='function') window.__rnRunGlobalSearch('');
+      return;
+    }
+    if(name==='buy'){
+      const form=document.getElementById('clientProfilForm');
+      const gate=document.getElementById('rnWelcomeGate');
+      if(form){
+        form.hidden=false;
+        if(gate)gate.hidden=true;
+        if(typeof window.__rumahnusaShowCustomerStep==='function')window.__rumahnusaShowCustomerStep(1);
+        setActive(name);
+        form.scrollIntoView({behavior:'smooth',block:'start'});
+      }else goTo('#properties',name);
+      return;
+    }
+    if(name==='promote'){
+      const cta=document.querySelector('#contact')||document.querySelector('.cta');
+      if(cta){setActive(name);cta.scrollIntoView({behavior:'smooth',block:'start'});}
+      return;
+    }
+    if(name==='wishlist'){
+      setActive(name);
+      const msg=document.getElementById('rnWishlistMessage');
+      if(msg){msg.hidden=false;msg.scrollIntoView({behavior:'smooth',block:'center'});}
+      else{
+        const p=document.createElement('div');
+        p.id='rnWishlistMessage';
+        p.textContent='Your Wish list is ready. Select a property and add it to your Wish list.';
+        p.style.cssText='position:fixed;left:50%;bottom:92px;transform:translateX(-50%);z-index:16000;background:#fff;padding:14px 18px;border:1px solid #e4e4e7;border-radius:14px;box-shadow:0 8px 30px rgba(16,42,67,.18);color:#3f3f46;font-weight:700;width:min(90vw,430px);text-align:center';
+        document.body.appendChild(p);
+        setTimeout(()=>p.remove(),2800);
+      }
+      return;
+    }
+    if(name==='settings'){showSettings();return;}
+  });
+})();
+</script>
+
+<script>
+document.querySelectorAll('.copy-btn').forEach(function(button) {
+  button.addEventListener('click', async function() {
+    const text = button.getAttribute('data-copy') || '';
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (e) {
+      const area = document.createElement('textarea');
+      area.value = text;
+      area.style.position = 'fixed';
+      area.style.opacity = '0';
+      document.body.appendChild(area);
+      area.focus();
+      area.select();
+      document.execCommand('copy');
+      area.remove();
+    }
+    const oldText = button.textContent;
+    button.textContent = 'Tersalin!';
+    setTimeout(function() { button.textContent = oldText; }, 1500);
+  });
+});
+</script>
+
+<script>
+/* Customer navigation is handled by the final RumahNusa sequential experience. */
+</script>
+
+<script>
+(function(){
+ const buttons=document.querySelectorAll('.lang-btn');
+ function setLang(lang){
+  document.documentElement.lang=lang==='id'?'id':'en';
+  document.querySelectorAll('[data-en][data-id]').forEach(el=>{el.textContent=lang==='id'?el.dataset.id:el.dataset.en;});
+  buttons.forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));
+ }
+ buttons.forEach(b=>b.addEventListener('click',()=>setLang(b.dataset.lang)));
+ setLang('id');
+})();
+</script>
+
+
+
+<script src="supabase-config.js"></script>
+<script>
+window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrkijzjmnbsaqnpdmg.supabase.co';
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script>
+(function(){
+  const inbox = document.getElementById('clientKotak Masuk');
+  if (!inbox || !window.RUMAHNUSA_SUPABASE_URL || !window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY) return;
+
+  const oldSendRequest = document.getElementById('sendProfil');
+  const oldSendMessage = document.getElementById('sendInboxMessage');
+  if (oldSendRequest) {
+    const fresh = oldSendRequest.cloneNode(true);
+    oldSendRequest.replaceWith(fresh);
+  }
+  if (oldSendMessage) {
+    const fresh = oldSendMessage.cloneNode(true);
+    oldSendMessage.replaceWith(fresh);
+  }
+
+  const style = document.createElement('style');
+  style.textContent = `
+    .rn-auth-panel,.rn-agent-panel{background:#fff;border:1px solid #e4e4e7;border-radius:12px;padding:16px;margin:12px 0}
+    .rn-auth-grid{display:grid;gap:10px}
+    .rn-auth-grid input,.rn-agent-panel textarea{width:100%;box-sizing:border-box;border:1px solid #d4d4d8;border-radius:8px;padding:11px;font:inherit}
+    .rn-auth-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .rn-auth-message{margin-top:10px;font-size:14px;color:#52525b}
+    .rn-agent-list{display:grid;gap:8px;margin:12px 0}
+    .rn-agent-conv{width:100%;text-align:left;border:1px solid #e4e4e7;background:#fffafa;border-radius:8px;padding:10px;cursor:pointer}
+    .rn-agent-conv.active{border-color:#2680eb;background:#fff1f2}
+    .rn-agent-toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}
+    .rn-agent-thread{max-height:360px;overflow:auto;border:1px solid #e4e4e7;border-radius:8px;padding:10px;background:#fffafa}
+    .rn-live-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#20a464;margin-right:6px}
+    #propertyOptions.rn-login-locked{display:none !important}
+    #client-profile.rn-login-locked .client-form-step{display:none !important}
+    .rn-welcome-copy{padding:28px 18px;margin:18px 0;border:1px solid #e4e4e7;border-radius:18px;background:linear-gradient(135deg,#ffffff,#fff)}
+    .rn-welcome-copy h2{margin:0 0 10px}
+    .rn-welcome-copy p{line-height:1.65;margin:8px 0}
+    
+
+
+  `;
+  document.head.appendChild(style);
+
+  const agentPanel=document.createElement('div');
+  agentPanel.className='rn-agent-panel';
+  agentPanel.hidden=true;
+  agentPanel.innerHTML=`
+    <strong>Agent RumahNusa</strong>
+    <p class="rn-auth-message"><span class="rn-live-dot"></span>Kotak masuk agen live</p>
+    <div id="rnAgentList" class="rn-agent-list"></div>
+    <div class="rn-agent-toolbar">
+      <button class="btn secondary" id="rnRefreshAgent" type="button">Muat ulang</button>
+      <button class="btn secondary" id="rnClaimAgent" type="button" hidden>Ambil percakapan</button>
+    </div>
+    <div id="rnAgentThread" class="rn-agent-thread" aria-live="polite">Pilih percakapan.</div>
+    <div class="message-compose" style="margin-top:10px">
+      <textarea id="rnAgentComposer" placeholder="Balas kepada pelanggan..."></textarea>
+      <button class="btn" id="rnAgentSend" type="button">Kirim Balasan</button>
+    </div>
+  `;
+  inbox.insertBefore(agentPanel, inbox.querySelector('.inbox-thread'));
+
+  const state={user:null,profile:null,conversation:null,channel:null,agentSelected:null,agentConversations:[]};
+  let client;
+  try {
+    client=window.supabase.createClient(window.RUMAHNUSA_SUPABASE_URL,window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY);
+  } catch(e) {
+    document.getElementById('rnAuthState').textContent='Konfigurasi Supabase belum aktif.';
+    return;
+  }
+
+  // Customers do not use email, phone, username or password on the public site.
+  // Supabase uses an internal anonymous session only so the private agent inbox can remain protected.
+  const authState={textContent:''};
+  const signOut=null;
+
+  const agentList=document.getElementById('rnAgentList');
+  const agentThread=document.getElementById('rnAgentThread');
+  const agentComposer=document.getElementById('rnAgentComposer');
+  const agentSend=document.getElementById('rnAgentSend');
+  const claimBtn=document.getElementById('rnClaimAgent');
+
+  function esc(s){return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/\n/g,'<br>');}
+  function status(t){authState.textContent=t;}
+  function renderMessages(rows,target){
+    target.innerHTML='';
+    if(!rows.length){target.innerHTML='<div class="inbox-note">Belum ada pesan.</div>';return;}
+    rows.forEach(m=>{
+      const b=document.createElement('div');
+      b.className='message-bubble '+(m.sender_role==='customer'?'customer':'agent');
+      b.innerHTML='<div>'+esc(m.body)+'</div><div class="message-meta">'+(m.sender_role==='customer'?'Pelanggan':'Agen RumahNusa')+' · '+new Date(m.created_at).toLocaleString('id-ID')+(m.read_at?' · ✓✓':' · ✓')+'</div>';
+      target.appendChild(b);
+    });
+    target.scrollTop=target.scrollHeight;
+  }
+  async function getProfile(user){
+    const {data,error}=await client.from('profiles').select('*').eq('id',user.id).maybeSingle();
+    if(error) throw error;
+    if(data) return data;
+    const {data:built,error:createError}=await client.from('profiles').insert({
+      id:user.id,email:'',full_name:user.user_metadata?.full_name||'',phone:user.phone||user.user_metadata?.phone||'',role:'customer'
+    }).select('*').single();
+    if(createError) throw createError;
+    return built;
+  }
+  async function stopChannel(){
+    if(state.channel){await client.removeChannel(state.channel);state.channel=null;}
+  }
+  function subscribeConversation(id,target,afterInsert){
+    stopChannel().then(()=>{
+      state.channel=client.channel('rn-messages-'+id+'-'+Date.now())
+        .on('postgres_changes',{event:'*',schema:'public',table:'messages',filter:'conversation_id=eq.'+id},payload=>{
+          if(afterInsert) afterInsert(payload);
+          loadConversationMessages(id,target);
+        }).subscribe();
+    });
+  }
+  async function loadConversationMessages(id,target){
+    const {data,error}=await client.from('messages').select('*').eq('conversation_id',id).order('created_at',{ascending:true});
+    if(error){target.innerHTML='<div class="inbox-note">Pesan belum dapat dimuat.</div>';return;}
+    renderMessages(data||[],target);
+  }
+  async function ensureCustomerConversation(){
+    if(!state.user) return null;
+    if(state.conversation) return state.conversation;
+    const {data,error}=await client.from('conversations').select('*').eq('customer_id',state.user.id).order('created_at',{ascending:false}).limit(1).maybeSingle();
+    if(error) throw error;
+    state.conversation=data||null;
+    return state.conversation;
+  }
+  async function sendCustomerMessage(body){
+    if(!state.user){status('Permintaan Anda akan dikirim setelah Anda complete the property details.');return;}
+    let conv=await ensureCustomerConversation();
+    if(!conv){
+      const v=id=>document.getElementById(id)?.value||'';
+      const requestLabel=window.__rnPropertyName||v('clientCityWant')||'Permintaan RumahNusa';
+      const propertyLabel=requestLabel;
+      const {data,error}=await client.from('conversations').insert({
+        customer_id:state.user.id,
+        property_name:propertyLabel
+      }).select('*').single();
+      if(error){status('Percakapan belum dapat dibuat: '+error.message);return;}
+      conv=data; state.conversation=conv;
+    }
+    const {error}=await client.from('messages').insert({conversation_id:conv.id,sender_id:state.user.id,sender_role:'customer',body});
+    if(error){status('Pesan belum terkirim: '+error.message);return;}
+    await client.from('conversations').update({updated_at:new Date().toISOString()}).eq('id',conv.id);
+    await loadConversationMessages(conv.id,document.getElementById('messageList'));
+    document.getElementById('inboxStatusCard').textContent='Pesan terkirim. ✓ Agen akan melihatnya setelah percakapan tersedia.';
+  }
+  async function submitRequest(){
+    if(!state.user){ inbox.hidden=false; return; }
+    const v=id=>document.getElementById(id)?.value||'';
+    const selectedProperty=document.querySelector('#propertyOptions .client-option.selected');
+    const property=selectedProperty?.dataset.value||window.__rnCustomerFlowState?.property||'Properti RumahNusa';
+    const purpose=v('purpose')||'Beli';
+    const rooms=v('rooms');
+    const rentalTerm=purpose==='Sewa'?v('rentalTerm'):'Tidak berlaku';
+    const budgetIdr=v('clientBudgetIdr');
+    const identity=window.__rnCustomerIdentity||{};
+    const isApartment=property==='Apartemen';
+
+    const lines=[
+      '━━━━━━━━━━━━━━━━━━━━',
+      'RUMAHNUSA — DETAIL PELANGGAN',
+      '━━━━━━━━━━━━━━━━━━━━',
+      '',
+      'NAMA: '+(identity.name||''),
+      'JENIS KELAMIN: '+(identity.gender||''),
+      'USIA: '+(identity.age||''),
+      'EMAIL: '+v('clientEmail'),
+      'TELEPON: '+v('clientPhone'),
+      'ALAMAT SAAT INI: '+v('clientAddress'),
+      'KOTA TEMPAT TINGGAL SAAT INI: '+v('clientCity'),
+      'STATUS KELUARGA: '+v('clientMarital'),
+      'PUNYA ANAK: '+v('clientChildren'),
+      'JUMLAH ORANG YANG AKAN TINGGAL: '+v('household'),
+      'PEKERJAAN: '+v('clientOccupation'),
+      '',
+      '━━━━━━━━━━━━━━━━━━━━',
+      'PILIHAN PROPERTI',
+      '━━━━━━━━━━━━━━━━━━━━',
+      'JENIS PROPERTI: '+property,
+      'RUMAH / LISTING YANG DIPILIH: '+(window.__rnSelectedHome?.title||'Belum dipilih'),
+      'TRANSAKSI: '+purpose,
+      'KAMAR TIDUR / TIPE RUANG: '+rooms,
+      'AMOUNT (IDR): Rp '+Number(budgetIdr||0).toLocaleString('id-ID'),
+      'LAMA SEWA: '+rentalTerm,
+      'KOTA PROPERTI YANG DIINGINKAN: '+v('clientCityWant'),
+      'WAKTU BERTEMU AGEN: '+v('meetingDay')+' · '+v('meetingTime'),
+      '',
+      '━━━━━━━━━━━━━━━━━━━━',
+      'TENTANG PELANGGAN',
+      '━━━━━━━━━━━━━━━━━━━━',
+      'ALASAN MEMBELI: '+v('clientPurchaseReason'),
+      'PENGGUNAAN: '+v('clientUse'),
+      'MATA UANG PEMBAYARAN: '+(window.__rnCustomerFlowState?.paymentCurrency||'Belum dipilih'),
+      'NEGARA PEMBAYARAN: '+(window.__rnCustomerFlowState?.paymentCountry||'Belum dipilih'),
+      'BANK PEMBAYARAN: '+(window.__rnCustomerFlowState?.paymentBank||'Belum dipilih'),
+      'METODE PEMBAYARAN YANG DIPILIH: '+(window.__rnCustomerFlowState?.paymentMethod||'Belum dipilih'),
+      '',
+      'PRIVATE DOCUMENT STATUS: Dokumen identitas.',
+      '━━━━━━━━━━━━━━━━━━━━'
+    ];
+
+    const requestMessage=lines.join('\n');
+    const {error:profileError}=await client.from('profiles').update({
+      full_name:identity.name||'',
+      email:v('clientEmail')||identity.email||'',
+      phone:v('clientPhone')||null
+    }).eq('id',state.user.id);
+    if(profileError){status('Data pelanggan belum dapat disimpan: '+profileError.message);return;}
+
+    window.__rnPropertyName=(identity.name||'Customer')+' · '+property+' · '+(window.__rnSelectedHome?.title||'Selected home')+' · '+purpose+' · '+rooms;
+    await sendCustomerMessage(requestMessage);
+
+    inbox.hidden=false;
+    document.getElementById('sendProfil').textContent='Permintaan Terkirim';
+    document.getElementById('sendProfil').disabled=true;
+    document.getElementById('inboxStatusCard').textContent='Semua pilihan Anda sudah dikirim ke inbox agen. ✓';
+    inbox.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+  async function signInNow(){ return false; }
+  async function applyUser(user){
+    state.user=user;
+    try{state.profile=await getProfile(user);}
+    catch(e){status('Profil belum dapat dibuat: '+e.message);return;}
+    status('Masuk sebagai '+(state.profile.role==='agent'?'agen':'pelanggan')+'.');
+    if(state.profile.role==='agent'){
+      agentPanel.hidden=false;
+      inbox.querySelector('.inbox-thread').hidden=true;
+      await loadAgentConversations();
+    }else{
+      agentPanel.hidden=true;
+      inbox.querySelector('.inbox-thread').hidden=false;
+      const conv=await ensureCustomerConversation();
+      if(conv){
+        await loadConversationMessages(conv.id,document.getElementById('messageList'));
+        subscribeConversation(conv.id,document.getElementById('messageList'));
+      }
+    }
+  }
+  async function loadAgentConversations(){
+    if(!state.user||state.profile?.role!=='agent')return;
+    const {data,error}=await client.from('conversations').select('*').or('agent_id.eq.'+state.user.id+',agent_id.is.null').order('updated_at',{ascending:false});
+    if(error){agentList.innerHTML='<div class="inbox-note">Agen belum dapat membaca percakapan. Pastikan kebijakan agen Supabase sudah dibuat.</div>';return;}
+    state.agentConversations=data||[];
+    agentList.innerHTML='';
+    if(!state.agentConversations.length){agentList.innerHTML='<div class="inbox-note">Belum ada percakapan pelanggan.</div>';return;}
+    state.agentConversations.forEach(conv=>{
+      const b=document.createElement('button');
+      b.type='button';
+      b.className='rn-agent-conv'+(state.agentSelected?.id===conv.id?' active':'');
+      const customerPhone=(conv.property_name||'').split(' | ')[0].trim() || 'Customer';
+      b.innerHTML='<strong>'+esc(customerPhone)+'</strong><br><span style="font-size:12px;color:#71717a;">Tap to open customer conversation</span>';
+      b.setAttribute('aria-label','Open customer conversation for '+customerPhone);
+      b.addEventListener('click',()=>selectAgentConversation(conv));
+      agentList.appendChild(b);
+    });
+  }
+  async function selectAgentConversation(conv){
+    state.agentSelected=conv;
+    claimBtn.hidden=!!conv.agent_id;
+    await loadConversationMessages(conv.id,agentThread);
+    subscribeConversation(conv.id,agentThread);
+    const customerPhone=(conv.property_name||'').split(' | ')[0].trim();
+    if(customerPhone){
+      const heading=document.createElement('div');
+      heading.className='rn-agent-toolbar';
+      heading.innerHTML='<strong>Customer phone: '+esc(customerPhone)+'</strong>';
+      agentThread.parentElement?.insertBefore(heading,agentThread);
+      setTimeout(()=>heading.remove(),10000);
+    }
+    if(!conv.agent_id){
+      status('Customer message opened. Claim the conversation to reply.');
+    } else {
+      await client.from('messages').update({read_at:new Date().toISOString()}).eq('conversation_id',conv.id).eq('sender_role','customer').is('read_at',null);
+    }
+    await loadAgentConversations();
+  }
+  // Customer authentication is handled by the passwordless phone OTP gate at the top of the site.
+  // No password fields or password-eye controls are used here.
+
+  window.__rnSubmitRequest=submitRequest;
+  document.getElementById('sendProfil')?.addEventListener('click',submitRequest);
+  document.getElementById('sendInboxMessage')?.addEventListener('click',async()=>{
+    const box=document.getElementById('messageComposer'),body=box.value.trim();if(!body)return;
+    await sendCustomerMessage(body);box.value='';
+  });
+  claimBtn.addEventListener('click',async()=>{
+    if(!state.agentSelected||!state.user)return;
+    const {data,error}=await client.from('conversations').update({agent_id:state.user.id,updated_at:new Date().toISOString()}).eq('id',state.agentSelected.id).is('agent_id',null).select('*').single();
+    if(error){status('Percakapan belum dapat diambil: '+error.message);return;}
+    state.agentSelected=data;claimBtn.hidden=true;await selectAgentConversation(data);
+  });
+  document.getElementById('rnRefreshAgent').addEventListener('click',loadAgentConversations);
+  // Keep the agent inbox fresh so new customer requests appear without manual navigation.
+  const agentInboxTimer=setInterval(async()=>{
+    if(state.user && state.profile?.role==='agent'){
+      await loadAgentConversations();
+      if(state.agentSelected) await loadConversationMessages(state.agentSelected.id,agentThread);
+    }
+  },3000);
+  window.addEventListener('beforeunload',()=>clearInterval(agentInboxTimer));
+  agentSend.addEventListener('click',async()=>{
+    const body=agentComposer.value.trim();if(!body||!state.agentSelected||!state.user)return;
+    const {error}=await client.from('messages').insert({conversation_id:state.agentSelected.id,sender_id:state.user.id,sender_role:'agent',body});
+    if(error){status('Balasan belum terkirim: '+error.message);return;}
+    await client.from('conversations').update({updated_at:new Date().toISOString()}).eq('id',state.agentSelected.id);
+    agentComposer.value='';
+    await loadConversationMessages(state.agentSelected.id,agentThread);
+  });
+  client.auth.getSession().then(async({data})=>{
+    if(data.session){await applyUser(data.session.user);return;}
+    // Customers must log in explicitly before accessing home categories.
+  });
+  client.auth.onAuthStateChange((_event,session)=>{if(session&&!state.user)applyUser(session.user);});
+})();
+</script>
+
+<script>
+(function(){
+  function v(id){return document.getElementById(id)?.value||'';}
+  window.buildSummary=function(){
+    const identity=window.__rnCustomerIdentity||{};
+    const idr=Number(v('clientBudgetIdr')||0).toLocaleString('id-ID');
+    const lines=[
+      '<strong>'+(identity.name||'Customer')+'</strong>',
+      'Property category: '+(window.__rnCustomerFlowState?.property||''),
+      'Rooms: '+v('rooms'),
+      'Purchase plan: '+(window.__rnCustomerFlowState?.purpose||''),
+      'Amount (IDR): Rp '+idr,
+      'Email: '+v('clientEmail'),
+      'Phone: '+v('clientPhone'),
+      'Current address: '+v('clientAddress'),
+      'Meeting: '+v('meetingDay')+' at '+v('meetingTime'),
+      'Family status: '+v('clientMarital'),
+      'Children: '+v('clientChildren'),
+      'Occupation: '+v('clientOccupation'),
+      'Reason for purchase: '+v('clientPurchaseReason'),
+      'Use: '+v('clientUse'),
+      'Current city: '+v('clientCity'),
+      'Preferred property city: '+v('clientCityWant'),
+      'Household size: '+v('household'),
+      'Payment currency: '+(window.__rnCustomerFlowState?.paymentCurrency||'Not selected'),
+      'Payment country: '+(window.__rnCustomerFlowState?.paymentCountry||'Not selected'),
+      'Payment bank: '+(window.__rnCustomerFlowState?.paymentBank||'Not selected')
+    ];
+    const box=document.getElementById('clientSummary');
+    if(box)box.innerHTML=lines.join('<br>');
+  };
+})();
+</script>
+<script>
+(function(){
+  const collection=document.getElementById('rnCategoryCollection');
+  const title=document.getElementById('rnCategoryTitle');
+  const intro=document.getElementById('rnCategoryIntro');
+  const badge=document.getElementById('rnCategoryBadge');
+  const listings=document.getElementById('rnCategoryListings');
+  const confidence=document.getElementById('rnCategoryConfidence');
+  const buyChoices=document.getElementById('rnCategoryBuyChoices');
+  function renderBuyChoices(name){
+    if(!buyChoices)return;
+    const apartment=name==='Apartemen';
+    buyChoices.innerHTML=apartment
+      ? '<div class="rn-buy-choice apartment"><strong>🏢 Apartment — Buy or Rent</strong><span>Choose an apartment or room to buy, or rent for 1, 2, 3, 4, or 5 years. A whole apartment building can also be listed for purchase when available.</span></div><div class="rn-buy-choice"><strong>Apartment rooms</strong><span>Apartment listings can show available room/apartment sizes, bedrooms, bathrooms, kitchen, parlor, balcony, pool, parking and other facilities.</span></div><div class="rn-buy-choice"><strong>Property pictures</strong><span>When real properties are ready, their available interior and exterior pictures can be shown with the listing.</span></div>'
+      : '<div class="rn-buy-choice"><strong>🏠 Complete property</strong><span>This category is sold as one complete property. Bedrooms, bathrooms, kitchen, parlor, outdoor spaces, parking and other features belong to the property.</span></div><div class="rn-buy-choice"><strong>Buy only</strong><span>Hotels, separate houses, villas, neighborhoods, townhouses, penthouses, family residences and investment properties are purchase-only categories.</span></div><div class="rn-buy-choice"><strong>Property details</strong><span>When properties are ready, available rooms and inside and outside pictures can be shown as part of the complete property.</span></div>';
+  }
+const choiceTitle=document.getElementById('rnChoiceTitle');
+  const choiceIntro=document.getElementById('rnChoiceIntro');
+  const purpose=document.getElementById('purpose');
+  const purposeNote=document.getElementById('purposeNote');
+  const rentalWrap=document.getElementById('rentalTermOptions');
+  const rooms=document.getElementById('rooms');
+  const layoutTitle=document.getElementById('layoutTitle');
+  const layoutDetails=document.getElementById('layoutDetails');
+  const selectionInfo=document.getElementById('rnSelectionInfo');
+  const propertyContinue=document.getElementById('rnPropertyContinue');
+  const categoryGrid=document.getElementById('propertyOptions');
+  const chooseAnother=document.getElementById('rnChooseAnotherCategory');
+  if(!collection||!purpose||!rooms||!categoryGrid) return;
+
+  const data={
+    'Apartemen':{
+      title:'Apartments for Your City Life',
+      badge:'APARTMENT',
+      intro:'Choose the apartment size that fits your life. Each apartment listing stays focused on apartments, their rooms, interiors, views, pool, lobby and shared facilities.',
+      confidence:'Imagine coming home to a beautiful apartment where the rooms, furniture, kitchen, bathrooms, views and shared facilities work together to give you a comfortable place to enjoy every day.',
+      buy:'Apartments are available to buy or rent. Rental terms are 1–5 years.',
+      rooms:['2 kamar tidur','3 kamar tidur','4 kamar tidur'],
+      listings:[
+        ['Luxury Apartment — 2 Bedrooms','Jakarta, Indonesia','Rp 3.580.000.000+ · Sewa mulai Rp 89.500.000/tahun','2 bedrooms · 1 very large bathroom/toilet · large parlor + kitchen · furnished · AC','https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85'],
+        ['Luxury Apartment — 3 Bedrooms','Jakarta, Indonesia','Contact RumahNusa for the selected apartment','3 bedrooms · 2 very large bathrooms/toilets · large parlor + kitchen · furnished · AC','https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1200&q=85'],
+        ['Luxury Apartment — 4 Bedrooms','Jakarta, Indonesia','Contact RumahNusa for the selected apartment','4 bedrooms · 3 bathrooms/toilets · 2 large parlors · integrated kitchen · furnished · AC','https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=85']
+      ]
+    },
+    'Hotel':{
+      title:'Hotels for Ownership',
+      badge:'HOTEL',
+      intro:'A hotel-only collection. Every listing here is a hotel property for purchase, with guest rooms, suites, lobby, dining or kitchen areas, bathrooms, facilities, parking and surrounding spaces presented together.',
+      confidence:'Explore hotel properties that can be purchased as complete real-estate assets, with guest rooms, welcoming common spaces and facilities for the property owner.',
+      buy:'Hotels are sale-only. Hotel rentals are not available.',
+      rooms:['10 rooms','20 rooms','30 rooms','40 rooms','50 rooms'],
+      listings:[
+        ['RumahNusa City Hotel — 10 Rooms','Jakarta, Indonesia','Contact RumahNusa for the selected hotel','10 guest rooms · reception/lobby · bathrooms/toilets · dining area · kitchen · furnished · parking','https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=85'],
+        ['RumahNusa Grand Hotel — 20 Rooms','Jakarta, Indonesia','Contact RumahNusa for the selected hotel','20 guest rooms · spacious lobby · guest bathrooms · dining area · kitchen · furnished spaces · parking','https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?auto=format&fit=crop&w=1200&q=85'],
+        ['RumahNusa Signature Hotel — 30 Rooms','Jakarta, Indonesia','Contact RumahNusa for the selected hotel','30 guest rooms · grand lobby · suites · bathrooms/toilets · dining and kitchen areas · furnished · parking','https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1200&q=85']
+      ]
+    },
+    'Mansion':{
+      title:'Mansions',
+      badge:'MANSION',
+      intro:'Beautiful grand homes with elegant architecture, spacious living areas, private outdoor spaces and room for comfortable family living.',
+      confidence:'Explore distinguished Indonesian mansions with generous bedrooms, bathrooms, kitchens, parlors, gardens, pools and parking.',
+      buy:'Mansions are presented as complete properties for sale.',
+      rooms:[],
+      listings:[
+        ['Indonesia Beautiful Mansion — Grand Family Estate','Indonesia','Price will be added later when this property is ready.','Grand bedrooms · bathrooms/toilets · elegant parlor · large kitchen · private pool · landscaped garden · parking · outdoor living','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=90']
+      ]
+    },
+    'Separate Rumah':{
+      title:'Separate Houses',
+      badge:'SEPARATE HOUSE',
+      intro:'A private-house collection only. Every listing here is a separate house for sale, with its own rooms, bathrooms, kitchen, furniture, outdoor space and parking.',
+      confidence:'A separate house gives you the privacy of your own home, generous living areas, beautiful furnishings and room to enjoy peaceful everyday life with the people you love.',
+      buy:'Separate houses are sale-only.',
+      rooms:['4 kamar tidur','5 kamar tidur','6 kamar tidur','7 kamar tidur','8 kamar tidur','9 kamar tidur','10 kamar tidur','11 kamar tidur'],
+      listings:[
+        ['Private Family House — 4 Bedrooms','Bali, Indonesia','$350,000','4 bedrooms · 1 very large bathroom/toilet · very large parlor + kitchen · furniture · AC','https://images.unsplash.com/photo-1701502909888-6b11930e419d?auto=format&fit=crop&w=1200&q=85'],
+        ['Private Family House — 6 Bedrooms','Bali, Indonesia','Contact RumahNusa for the selected house','6 bedrooms · 3 very large bathrooms/toilets · 2 large parlors + kitchen · furniture · AC · private pool · parking','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85'],
+        ['Private Family House — 8 Bedrooms','Bali, Indonesia','Contact RumahNusa for the selected house','8 bedrooms · 4 large bathrooms/toilets · 3 large parlors + kitchen · furniture · AC · large pool · parking','https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=85'],
+        ['Private Family House — 11 Bedrooms','Bali, Indonesia','Contact RumahNusa for the selected house','11 bedrooms · 5 bathrooms/toilets · 4 kitchen areas · large parlors · furniture · AC · pool · parking','https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=85']
+      ]
+    },
+    'Vila':{
+      title:'Villas',
+      badge:'VILLA',
+      intro:'A villa-only collection. Every listing focuses on the villa itself: beautiful rooms, furniture, bathrooms, toilets, kitchen, private outdoor space, pool and the city where it is located.',
+      confidence:'Picture yourself opening the door to a peaceful villa, enjoying beautiful furnished rooms, a welcoming kitchen, comfortable bathrooms and private outdoor space made for relaxing.',
+      buy:'Villas are presented as sale properties.',
+      rooms:['4 kamar tidur','5 kamar tidur','6 kamar tidur','7 kamar tidur','8 kamar tidur'],
+      listings:[
+        ['Villa with Private Pool — 4 Bedrooms','Bali, Indonesia','Rp 1,2 billion','4 bedrooms · 3 bathrooms/toilets · furnished parlor · kitchen · private pool · parking · outdoor space · AC · private fridge · beds · large chairs · large TV · security cameras in parlor/outside · hot-water heater','https://kano-archi.jp/_src/89990583/20201007104909.jpg?v=1762324623482'],
+        ['Garden Villa — 5 Bedrooms','Bali, Indonesia','Contact RumahNusa for the selected villa','5 bedrooms · furnished rooms · large bathrooms/toilets · kitchen · pool · parking · garden','https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=85'],
+        ['Private Pool Villa — 6 Bedrooms','Bali, Indonesia','Rp 6.000.000.000','6 bedrooms · furnished parlors · beautiful bathrooms/toilets · kitchen · private pool · parking','https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=1200&q=85']
+      ]
+    },
+    'Neighborhood Rumah':{
+      title:'Neighborhood Homes',
+      badge:'NEIGHBORHOOD',
+      intro:'A neighborhood-only collection. See only neighborhood homes, their interiors, shared surroundings, parking, family spaces and the character of the neighborhood.',
+      confidence:'A neighborhood home is about feeling settled: beautiful rooms, comfortable parlors, a practical kitchen, spacious bathrooms and a welcoming environment where your family can enjoy everyday life.',
+      buy:'Neighborhood homes are sale-only.',
+      rooms:['4 kamar tidur','5 kamar tidur','6 kamar tidur','7 kamar tidur','8 kamar tidur','9 kamar tidur','10 kamar tidur','11 kamar tidur'],
+      listings:[
+        ['Neighborhood Home — 4 Bedrooms','Bali, Indonesia','Contact RumahNusa for the selected home','4 bedrooms · large bathroom/toilet · furnished parlor · kitchen · family parking · neighborhood setting','https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=85'],
+        ['Neighborhood Home — 7 Bedrooms','Bali, Indonesia','Contact RumahNusa for the selected home','7 bedrooms · 4 bathrooms/toilets · large parlors · kitchen · furniture · parking · family environment','https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85'],
+        ['Neighborhood Home — 10 Bedrooms','Bali, Indonesia','Contact RumahNusa for the selected home','10 bedrooms · 5 bathrooms/toilets · multiple kitchen areas · large parlors · furniture · parking','https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=85']
+      ]
+    },
+    'Townhouse':{
+      title:'Townhouses',
+      badge:'TOWNHOUSE',
+      intro:'A townhouse-only collection. Every listing stays focused on townhouse rooms, parlors, kitchens, bathrooms, toilets, furniture, parking and comfortable upstairs spaces where available.',
+      confidence:'A townhouse can bring together the comfort of a beautiful private home and the convenience of a connected residential setting, with welcoming rooms and enjoyable living spaces.',
+      buy:'Townhouses are presented as sale properties.',
+      rooms:['2 kamar tidur','3 kamar tidur','4 kamar tidur','5 kamar tidur'],
+      listings:[
+        ['Modern Townhouse — 2 Bedrooms','Jakarta, Indonesia','Contact RumahNusa for the selected townhouse','2 bedrooms · furnished parlor · kitchen · bathroom/toilet · parking','https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85'],
+        ['Family Townhouse — 3 Bedrooms','Jakarta, Indonesia','Contact RumahNusa for the selected townhouse','3 bedrooms · furnished parlors · kitchen · bathrooms/toilets · parking · comfortable upstairs area','https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1200&q=85'],
+        ['Large Townhouse — 5 Bedrooms','Jakarta, Indonesia','Contact RumahNusa for the selected townhouse','5 bedrooms · beautiful parlors · kitchen · bathrooms/toilets · furnished rooms · upstairs living area · parking','https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=85']
+      ]
+    },
+    'Penthouse':{
+      title:'Penthouses',
+      badge:'PENTHOUSE',
+      intro:'A penthouse-only collection. Every listing is presented as a penthouse with its own rooms, parlors, kitchen, bathrooms, toilets, furniture, lighting, views and private living atmosphere.',
+      confidence:'Step into a penthouse designed around space, light and comfort: beautiful bedrooms, elegant parlors, thoughtful lighting, a refined kitchen and bathrooms made for relaxing at the end of the day.',
+      buy:'Penthouses are presented as sale properties.',
+      rooms:['2 kamar tidur','3 kamar tidur','4 kamar tidur','5 kamar tidur'],
+      listings:[
+        ['Signature Penthouse — 2 Bedrooms','Jakarta, Indonesia','Contact RumahNusa for the selected penthouse','2 bedrooms · elegant parlor · designer-style lighting · kitchen · bathroom/toilet · furnished','https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85'],
+        ['Grand Penthouse — 4 Bedrooms','Jakarta, Indonesia','Contact RumahNusa for the selected penthouse','4 bedrooms · multiple parlors · beautiful lighting · kitchen · bathrooms/toilets · furnished rooms · city views','https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1200&q=85'],
+        ['Royal Penthouse — 5 Bedrooms','Jakarta, Indonesia','Contact RumahNusa for the selected penthouse','5 bedrooms · multiple parlor designs · premium lighting · kitchen · bathrooms/toilets · furnished · views','https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=85']
+      ]
+    },
+    'Family Residence':{
+      title:'Family Residences',
+      badge:'FAMILY RESIDENCE',
+      intro:'A family-residence-only collection. See family homes, furnished rooms, parlors, kitchens, bathrooms, toilets, family spaces and comfortable surroundings.',
+      confidence:'A family residence is designed around the people who make a house feel alive: comfortable bedrooms, beautiful furniture, welcoming parlors, practical kitchens and generous spaces for peaceful family life.',
+      buy:'Family residences are presented as sale properties.',
+      rooms:['3 kamar tidur','4 kamar tidur','5 kamar tidur','6 kamar tidur','7 kamar tidur'],
+      listings:[
+        ['Modern Family Residence — 3 Bedrooms','Bali, Indonesia','$350,000','3 bedrooms · 2 bathrooms/toilets · furnished parlor · kitchen · family living space · parking','https://images.unsplash.com/photo-1701502909888-6b11930e419d?auto=format&fit=crop&w=1200&q=85'],
+        ['Grand Family Residence — 5 Bedrooms','Bali, Indonesia','Contact RumahNusa for the selected residence','5 bedrooms · beautiful furnished rooms · bathrooms/toilets · kitchen · large parlor · family spaces · parking','https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85'],
+        ['Large Family Residence — 7 Bedrooms','Bali, Indonesia','Contact RumahNusa for the selected residence','7 bedrooms · multiple furnished parlors · kitchen · bathrooms/toilets · family garden · parking','https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=85']
+      ]
+    },
+    'Investment Property':{
+      title:'Investment Properties',
+      badge:'INVESTMENT PROPERTY',
+      intro:'An investment-property-only collection. Every listing focuses on the property itself, its rooms, facilities, condition, location and ownership opportunity.',
+      confidence:'An investment property can give you a clear place to consider for long-term ownership, with the rooms, facilities and location presented together so you can understand what you are choosing.',
+      buy:'Investment properties are presented as sale properties.',
+      rooms:['2 kamar tidur','3 kamar tidur','4 kamar tidur','5 kamar tidur','6 kamar tidur'],
+      listings:[
+        ['Residential Investment — 2 Bedrooms','Jakarta, Indonesia','Contact RumahNusa for the selected property','2 bedrooms · furnished living area · kitchen · bathroom/toilet · parking · investment-focused property details','https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85'],
+        ['Residential Investment — 4 Bedrooms','Jakarta, Indonesia','Contact RumahNusa for the selected property','4 bedrooms · furnished rooms · parlors · kitchen · bathrooms/toilets · parking','https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=85'],
+        ['Large Investment Property — 6 Bedrooms','Jakarta, Indonesia','Contact RumahNusa for the selected property','6 bedrooms · multiple living spaces · kitchen · bathrooms/toilets · furnished · parking','https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=85']
+      ]
+    },
+  };
+
+  /* RumahNusa purchase rules: all non-apartment categories are complete properties and Buy only. */
+  const rnCompleteBuyOnlyCategories=['Hotel','Separate Rumah','Mansion','Vila','Neighborhood Rumah','Townhouse','Penthouse','Family Residence','Investment Property'];
+  rnCompleteBuyOnlyCategories.forEach(function(k){
+    if(data[k]){
+      data[k].rooms=[];
+      data[k].buy='BUY ONLY — This is one complete property. The property rooms are included; customers do not choose individual rooms.';
+    }
+  });
+  if(data['Apartemen']){
+    data['Apartemen'].buy='APARTMENT — Buy an apartment/room or rent an apartment/room for 1–5 years. Whole-building purchase can also be listed when available.';
+  }
+
+  /* Keep the category inventory available to the mobile fallback and villa cards. */
+  window.__rnCategoryDataMap=data;
+  window.__rnVillaFallbackListings=[
+    ['Villa with Private Pool — 4 Bedrooms','Bali, Indonesia','Rp 1,2 billion','4 bedrooms · 3 bathrooms/toilets · furnished parlor · kitchen · private pool · parking · outdoor space · AC · private fridge · beds · large chairs · large TV · security cameras in parlor/outside · hot-water heater','https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=85'],
+    ['Garden Villa — 5 Bedrooms','Bali, Indonesia','Contact RumahNusa for the selected villa','5 bedrooms · furnished rooms · large bathrooms/toilets · kitchen · pool · parking · garden','https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=85'],
+    ['Private Pool Villa — 6 Bedrooms','Bali, Indonesia','Rp 6.000.000.000','6 bedrooms · furnished parlors · beautiful bathrooms/toilets · kitchen · private pool · parking','https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=1200&q=85']
+  ];
+
+  /* Make the complete property inventory available to the global search. */
+  window.__rnAllCategoryData=data;
+
+  function setOptions(select,values){
+    select.innerHTML=values.map(v=>'<option>'+v+'</option>').join('');
+  };
+
+  function setOptions(select,values){
+    select.innerHTML=values.map(v=>'<option>'+v+'</option>').join('');
+  }
+
+  let categoryHistoryActive = false;
+
+  function closeCategory(fromHistory){
+    categoryHistoryActive = false;
+    categoryGrid.classList.remove('rn-category-open');
+    document.querySelectorAll('#propertyOptions .client-option').forEach(btn=>btn.classList.remove('selected'));
+    collection.hidden=true;
+    categoryGrid.insertAdjacentElement('afterend',collection);
+    document.querySelector('.rn-home-welcome')?.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+
+  function renderCategory(name){
+    renderBuyChoices(name);
+    const d=data[name];
+    if(!d)return;
+
+    window.__rnCustomerFlowState=window.__rnCustomerFlowState||{
+      property:'',purpose:'Beli',rentalTerm:'',paymentMethod:''
+    };
+    window.__rnCustomerFlowState.property=name;
+    window.__rnCustomerFlowState.purpose='Beli';
+
+    const selected=document.querySelector('#propertyOptions .client-option[data-value="'+CSS.escape(name)+'"]');
+    if(!selected || !categoryGrid || !collection || !listings)return;
+
+    /* Select the tapped card first, then open its collection. */
+    document.querySelectorAll('#propertyOptions .client-option')
+      .forEach(btn=>btn.classList.toggle('selected',btn===selected));
+    /* A category tap must always stay on the category screen. Never jump to
+       the phone/details steps just because an older saved step exists. */
+    if(typeof window.__rumahnusaShowCustomerStep==='function'){
+      window.__rumahnusaShowCustomerStep(1);
+    }
+    categoryGrid.classList.add('rn-category-open');
+    selected.insertAdjacentElement('afterend',collection);
+    collection.hidden=false;
+
+    /* These are the elements that actually exist in the current page. */
+    if(title) title.textContent=d.title;
+    if(intro) intro.textContent=d.intro;
+    if(badge) badge.textContent=d.badge;
+    if(confidence) confidence.textContent=d.confidence;
+
+    const usdToIdrRate=17900;
+    const formatIdr=n=>'Rp '+Math.round(n).toLocaleString('id-ID');
+    const addIdrPrice=price=>{
+      const m=String(price||'').match(/\$([0-9][0-9,]*)/);
+      if(!m)return String(price||'');
+      return formatIdr(Number(m[1].replace(/,/g,''))*usdToIdrRate);
+    };
+
+    const categoryListings=(Array.isArray(d.listings)&&d.listings.length)?d.listings:(name==='Vila'?(window.__rnVillaFallbackListings||[]):[]);
+    listings.innerHTML=categoryListings.map(x=>
+      '<article class="rn-listing">'+
+      '<img loading="lazy" src="'+x[4]+'" alt="'+x[0]+' interior and exterior">'+
+      '<div class="rn-listing-body">'+
+      '<h5>'+x[0]+'</h5>'+
+      '<p>📍 '+x[1]+'</p>'+
+      '<p class="rn-listing-price rn-price-pending">Price will be added later when this property is ready.</p>'+
+      '<div class="rn-listing-specs">'+String(x[3]||'').split(' · ').map(s=>'<span>'+s+'</span>').join('')+'</div>'+
+      '<p>'+d.buy+'</p>'+
+      ''+
+      '</div></article>'
+    ).join('');
+
+    /* The old page had removed these optional step elements. Never let their
+       absence stop the category from opening. */
+    if(choiceTitle) choiceTitle.textContent=d.title+' — choose your rooms and plan';
+    if(choiceIntro) choiceIntro.textContent=d.intro;
+    if(purpose){
+      purpose.innerHTML=d.buy.toLowerCase().includes('rent')
+        ? '<option value="Beli">Beli</option><option value="Sewa">Sewa</option>'
+        : '<option value="Beli">Beli</option>';
+      purpose.value='Beli';
+    }
+    if(purposeNote){
+      purposeNote.textContent=name==='Apartemen'
+        ? 'Apartments can be bought or rented for 1–5 years.'
+        : 'SALE ONLY — This property category is permanently for sale. Rental is not available.';
+    }
+    if(rooms) setOptions(rooms,d.rooms);
+    if(rentalWrap) rentalWrap.hidden=!(name==='Apartemen' && purpose?.value==='Sewa');
+    if(propertyContinue) propertyContinue.hidden=false;
+    if(layoutTitle) layoutTitle.textContent=d.title+' details';
+    if(layoutDetails) layoutDetails.innerHTML=d.listings.map(x=>'<div class="house-layout"><strong>'+x[0]+'</strong><p>'+x[3]+'</p></div>').join('');
+    if(selectionInfo) selectionInfo.innerHTML='<strong>'+d.title+'</strong> — '+d.buy+' Choose your rooms and purchase plan here.';
+    
+    window.__rnCategoryOpen=name;
+    window.__rnCategoryData=d;
+
+    /* Wire the newly-built listing cards without relying on the old flow. */
+    if(typeof window.__rnWireListings==='function') window.__rnWireListings();
+
+    requestAnimationFrame(function(){
+      selected.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+  }
+
+  // Expose the category opener so the final mobile-safe click safeguard
+  // can use the same category renderer.
+  window.__rnOpenCategory = renderCategory;
+
+  document.querySelectorAll('#propertyOptions .client-option').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const name=btn.dataset.value;
+      if(history.state?.rnCategory !== name){
+        history.pushState({rnCategory:name},'',location.href);
+      }
+      categoryHistoryActive=true;
+      renderCategory(name);
+    });
+  });
+
+  chooseAnother?.addEventListener('click',function(){
+    if(categoryHistoryActive){
+      history.back();
+    }else{
+      closeCategory(true);
+    }
+  });
+
+  if(!history.state || !history.state.rnRumahNusa){
+    history.replaceState(Object.assign({},history.state||{},{rnRumahNusa:true}),'',location.href);
+  }
+
+  window.addEventListener('popstate',function(event){
+    /* A house-detail history entry is handled by the dedicated house-modal listener below. */
+    if(event.state && event.state.rnHouseModal) return;
+    if(event.state && event.state.rnCategory){
+      categoryHistoryActive=true;
+      renderCategory(event.state.rnCategory);
+      return;
+    }
+    categoryHistoryActive=false;
+    closeCategory(true);
+  });
+
+  const rnGallery=document.getElementById('rnHouseGallery');
+  const rnGalleryCount=document.getElementById('rnGalleryCount');
+  const rnGalleryLightbox=document.createElement('div');
+  rnGalleryLightbox.className='rn-gallery-lightbox';
+  rnGalleryLightbox.hidden=true;
+  rnGalleryLightbox.innerHTML='<button class="rn-gallery-close" type="button" aria-label="Close picture">×</button><img src="" alt=""><div class="rn-gallery-caption"></div>';
+  document.body.appendChild(rnGalleryLightbox);
+
+  const rnVillaGalleryImage='./assets/rumahnusa-villa-60-gallery.jpg';
+  const rnVillaGalleryLabels=[
+    'Front View','Back View','Right Side View','Left Side View','Private Pool','Parking Area',
+    'Basketball Game Area','Outdoor Space','Front Entrance','Back Patio','Aerial View','Upstairs Balcony',
+    'Living Room & Kitchen (1)','Living Room & Kitchen (2)','Dining Area','Kitchen (1)','Kitchen (2)','Large Fridge',
+    'Kitchen Appliances','Kitchen Sink','Living Room (TV)','Lounge Seating','Security Camera (Outside)','Stairs to Upstairs',
+    'Upstairs Hallway','Bedroom 1 (Master)','Bedroom 2','Bedroom 3','Bedroom 4','Bedroom 1 Balcony',
+    'Bedroom 2 View','Bedroom 3 View','Bedroom 4 View','Bathroom 1','Bathroom 2','Bathroom 3',
+    'Bathroom 1 (Shower)','Bathroom 2 (Shower)','Bathroom 3 (Shower)','Toilet (All Bathrooms)','Hot Water Heater','Bathroom Amenities',
+    'Wash Basin','Bathtub','Laundry Room','AC (Rooms & Living)','Private Fridge (Rooms)','Room TV (All Rooms)',
+    'Living Room TV (Large)','Outdoor Lounge','Garden Area','Pool at Night','Front View (Evening)','Back View (Sunset)',
+    'Right Side View (Night)','Left Side View (Night)','Upstairs Balcony (Night)','View from Upstairs','Basketball Court (Night)','Full View (Aerial)'
+  ];
+
+  function buildPropertyGallery(item){
+  if(!rnGallery)return;
+  const isTargetVilla=item?.[0]==='Villa with Private Pool — 4 Bedrooms';
+  if(!isTargetVilla){
+    const fallback=item?.[4]||'';
+    rnGallery.innerHTML=Array.from({length:60},(_,i)=>'<button class="rn-gallery-item" type="button"><img loading="'+(i<6?'eager':'lazy')+'" src="'+fallback+'" alt="Property picture '+(i+1)+'"><span class="rn-gallery-label">Property picture '+(i+1)+'</span></button>').join('');
+    rnGalleryCount.textContent='60 pictures';
+    rnGallery.querySelectorAll('.rn-gallery-item').forEach((btn)=>btn.addEventListener('click',()=>{
+      const img=btn.querySelector('img');
+      const lightboxImage=rnGalleryLightbox.querySelector('img');
+      lightboxImage.src=img.src;
+      lightboxImage.alt=img.alt;
+      lightboxImage.style.objectFit='contain';
+      lightboxImage.style.transform='none';
+      rnGalleryLightbox.querySelector('.rn-gallery-caption').textContent=img.alt;
+      rnGalleryLightbox.hidden=false;
+    }));
+    return;
+  }
+
+  // Use the exact clear house photo supplied for the RumahNusa gallery.\n  const rnHousePhoto='https://images.contentstack.io/v3/assets/blt8ede3f648df7664a/blt55abbf48945769fa/686c8d2edf067e5409fba475/Architectural-home.jpg';\n  rnGallery.innerHTML='<button class="rn-gallery-item" type="button"><img loading="eager" src="'+rnHousePhoto+'" alt="House exterior — clear original photo"><span class="rn-gallery-label">House Exterior</span></button>';\n  rnGalleryCount.textContent='1 clear picture';\n  rnGallery.querySelector('.rn-gallery-item')?.addEventListener('click',()=>{\n    const lightboxImage=rnGalleryLightbox.querySelector('img');\n    lightboxImage.src=rnHousePhoto;\n    lightboxImage.alt='House exterior — clear original photo';\n    lightboxImage.style.objectFit='contain';\n    lightboxImage.style.transform='none';\n    rnGalleryLightbox.querySelector('.rn-gallery-caption').textContent='House Exterior';\n    rnGalleryLightbox.hidden=false;\n  });\n  rnGalleryLightbox.addEventListener('click',e=>{if(e.target===rnGalleryLightbox||e.target.closest('.rn-gallery-close'))rnGalleryLightbox.hidden=true});
+
+  const houseModal=document.getElementById('rnHouseModal');
+  const houseModalSelect=document.getElementById('rnHouseModalSelect');
+  let houseModalHistoryOpen=false;
+
+  function closeHouseModal(useHistory){
+    if(!houseModal)return;
+    houseModal.hidden=true;
+    document.body.style.overflow='';
+    if(useHistory && houseModalHistoryOpen){
+      houseModalHistoryOpen=false;
+      if(history.state && history.state.rnHouseModal){
+        history.back();
+      }
+    }
+  }
+
+  document.getElementById('rnHouseModalClose')?.addEventListener('click',()=>closeHouseModal(true));
+  houseModalSelect?.addEventListener('click',function(e){
+    e.preventDefault();
+    const title=document.getElementById('rnHouseModalTitle')?.textContent||'';
+    const card=Array.from(document.querySelectorAll('#rnCategoryListings .rn-listing')).find(x=>(x.querySelector('h5')?.textContent||'')===title);
+    const selectButton=card?.querySelector('.rn-card-select');
+    if(selectButton){
+      selectButton.click();
+      closeHouseModal(true);
+    }
+  });
+  houseModal?.addEventListener('click',e=>{
+    if(e.target===houseModal)closeHouseModal(true);
+  });
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape')closeHouseModal(true);
+  });
+
+  /* Mobile back navigation: browser Back/edge-swipe closes the open house first. */
+  window.addEventListener('popstate',function(event){
+    if(houseModalHistoryOpen){
+      houseModalHistoryOpen=false;
+      if(houseModal){
+        houseModal.hidden=true;
+        document.body.style.overflow='';
+      }
+    }
+  });
+
+  /* Also support an intentional left/right edge swipe while viewing a house. */
+  let edgeSwipeStartX=0;
+  let edgeSwipeStartY=0;
+  let edgeSwipeTracking=false;
+  houseModal?.addEventListener('touchstart',function(e){
+    if(!e.touches.length)return;
+    const t=e.touches[0];
+    edgeSwipeTracking=(t.clientX<=28 || t.clientX>=window.innerWidth-28);
+    edgeSwipeStartX=t.clientX;
+    edgeSwipeStartY=t.clientY;
+  },{passive:true});
+  houseModal?.addEventListener('touchend',function(e){
+    if(!edgeSwipeTracking || !e.changedTouches.length)return;
+    const t=e.changedTouches[0];
+    const dx=t.clientX-edgeSwipeStartX;
+    const dy=Math.abs(t.clientY-edgeSwipeStartY);
+    edgeSwipeTracking=false;
+    if(Math.abs(dx)>=70 && dy<=90){
+      closeHouseModal(true);
+    }
+  },{passive:true});
+
+  listings.addEventListener('click',e=>{
+    if(e.target.closest('button,select,input,label'))return;
+    const card=e.target.closest('.rn-listing');
+    if(!card)return;
+    const category=document.querySelector('#propertyOptions .client-option.selected')?.dataset.value;
+    const item=data[category]?.listings.find(x=>x[0]===(card.querySelector('h5')?.textContent||''));
+    if(!item||!houseModal)return;
+    document.getElementById('rnHouseModalImage').src=item[4];
+    document.getElementById('rnHouseModalImage').alt=item[0];
+    document.getElementById('rnHouseModalTitle').textContent=item[0];
+    document.getElementById('rnHouseModalLocation').textContent='📍 '+item[1];
+    document.getElementById('rnHouseModalPrice').textContent=item[2];
+    document.getElementById('rnHouseModalSpecs').innerHTML=item[3].split(' · ').map(s=>'<span style="display:inline-block;margin:4px;padding:7px 10px;background:#fff5f5;border-radius:8px;">'+s+'</span>').join('');
+    buildPropertyGallery(item);
+    document.getElementById('rnHouseModalDescription').textContent=data[category].confidence;
+    if(!houseModalHistoryOpen){
+      history.pushState({rnHouseModal:true},'',location.href);
+      houseModalHistoryOpen=true;
+    }
+    houseModal.hidden=false;
+    document.body.style.overflow='hidden';
+  });
+
+  purpose.addEventListener('change',()=>{
+    const selectedCategory=document.querySelector('#propertyOptions .client-option.selected')?.dataset.value;
+    const isApartment=selectedCategory==='Apartemen';
+    rentalWrap.hidden=!(isApartment && purpose.value==='Sewa');
+  });
+
+  const originalNext=document.querySelector('.client-form-step[data-step="3"] .client-next');
+  if(originalNext) originalNext.addEventListener('click',()=>{
+    const selected=document.querySelector('#propertyOptions .client-option.selected');
+    if(selected) renderCategory(selected.dataset.value);
+  });
+})();</script>
+
+
+
+
+
+<script>
+(function(){
+  const send=document.getElementById('sendProfil');
+  if(!send)return;
+  window.__rnSendRequest=async function(){
+    send.click();
+  };
+})();
+</script>
+
+<style id="rn-sequential-flow-style">
+  #rnSequentialFlow{display:none;max-width:760px;margin:18px auto 0;padding:22px;background:#fff;border:1px solid #e4e4e7;border-radius:18px;box-shadow:0 8px 30px rgba(16,42,67,.08)}
+  #rnSequentialFlow .rn-flow-title{font-size:28px;margin-bottom:8px;color:#27272a}
+  #rnSequentialFlow .rn-flow-help{color:#71717a;margin-bottom:18px;line-height:1.6}
+  #rnSequentialFlow .rn-flow-card{border:1px solid #e4e4e7;border-radius:14px;padding:18px;background:#fffafa}
+  #rnSequentialFlow label{display:block;font-weight:700;margin-bottom:9px;color:#3f3f46}
+  #rnSequentialFlow input,#rnSequentialFlow select,#rnSequentialFlow textarea{width:100%;box-sizing:border-box;padding:14px 15px;border:1px solid #d4d4d8;border-radius:10px;font:inherit;background:#fff}
+  #rnSequentialFlow textarea{min-height:120px;resize:vertical}
+  #rnSequentialFlow .rn-flow-actions{display:flex;align-items:center;justify-content:flex-end;gap:10px;margin-top:18px}
+  #rnSequentialFlow .rn-flow-actions .btn{min-height:50px}
+  #rnSequentialFlow .rn-flow-actions .rn-flow-continue{display:none}
+  #rnSequentialFlow .rn-flow-actions .rn-flow-continue.ready{display:inline-block}
+  #rnSequentialFlow .rn-home-track{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:14px;padding:2px 2px 12px;scrollbar-width:none}
+  #rnSequentialFlow .rn-home-track::-webkit-scrollbar{display:none}
+  #rnSequentialFlow .rn-home-slide{flex:0 0 100%;scroll-snap-align:center;border:1px solid #e4e4e7;border-radius:16px;overflow:hidden;background:#fff}
+  #rnSequentialFlow .rn-home-slide img{width:100%;height:220px;object-fit:cover;display:block}
+  #rnSequentialFlow .rn-home-slide-body{padding:16px}
+  #rnSequentialFlow .rn-home-slide-body h4{font-size:21px;margin:0 0 7px}
+  #rnSequentialFlow .rn-home-slide-body p{color:#71717a;margin:6px 0}
+  #rnSequentialFlow .rn-home-select{margin-top:12px;width:100%}
+  #rnSequentialFlow .rn-home-select.selected{background:#b91c1c}
+  #rnSequentialFlow .rn-selected-home{display:none;color:#b91c1c;font-weight:700;margin-top:10px}
+  #rnSequentialFlow .rn-selected-home.show{display:block}
+  #rnSequentialFlow .rn-camera-box{border:1px solid #e4e4e7;border-radius:14px;padding:12px;background:#fffafa}
+  #rnSequentialFlow video{width:100%;max-height:360px;object-fit:cover;border-radius:10px;background:#27272a;display:block}
+  #rnSequentialFlow canvas{display:block;width:100%;max-height:360px;object-fit:contain;border-radius:10px;background:#27272a;margin-top:10px}
+  #rnSequentialFlow .rn-camera-status{margin-top:10px;color:#52525b;line-height:1.5}
+  #rnSequentialFlow .rn-privacy-note{margin-top:12px;padding:12px;border-radius:10px;background:#fffafa;color:#52525b;font-size:14px;line-height:1.5}
+  #rnSequentialFlow .rn-step-count{font-size:13px;color:#71717a;margin-bottom:10px}
+  #rnSequentialFlow .rn-flow-complete{font-size:18px;font-weight:700;color:#b91c1c}
+  @media(max-width:700px){
+    #rnSequentialFlow{margin:10px 0 0;padding:16px;border-radius:14px}
+    #rnSequentialFlow .rn-flow-title{font-size:24px}
+    #rnSequentialFlow .rn-home-slide img{height:200px}
+  }
+</style>
+
+<script>
+/* The legacy sequential flow has been disabled. RumahNusa now uses the category-and-price selection flow below. */
+</script>
+
+<div id="rnHomeViewer" class="rn-home-viewer" hidden role="dialog" aria-modal="true" aria-label="RumahNusa home viewer">
+  <div class="rn-home-viewer-panel">
+    <div class="rn-home-viewer-top">
+      <button class="rn-home-viewer-back" type="button" aria-label="Back to homes">‹ Back</button>
+      <div>
+        <div class="rn-home-viewer-title" data-viewer-title>RumahNusa Home</div>
+        <div style="font-size:13px;opacity:.9" data-viewer-location></div>
+      </div>
+      <button class="rn-home-viewer-close" type="button" aria-label="Close">Close</button>
+    </div>
+    <div class="rn-home-viewer-tabs">
+      <button class="rn-home-viewer-tab active" type="button" data-tab="photo">Photo</button>
+      <button class="rn-home-viewer-tab" type="button" data-tab="360">360°</button>
+    </div>
+    <div class="rn-home-viewer-photo" data-viewer-panel="photo"><img data-viewer-image alt=""></div>
+    <div class="rn-home-viewer-photo" data-viewer-panel="360" hidden>
+      <div style="border-radius:14px;background:#263238;color:#fff;padding:50px 24px;text-align:center;font-weight:700">360° viewing area<br><span style="font-weight:400;font-size:14px;opacity:.85">The property's 360° file can be connected here.</span></div>
+    </div>
+    <div class="rn-home-viewer-section">
+      <h4>Inside this home</h4>
+      <div style="font-weight:700;margin-bottom:8px" data-viewer-price></div>
+      <div class="rn-home-viewer-chips" data-viewer-specs></div>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  const viewer=document.getElementById('rnHomeViewer');
+  if(!viewer)return;
+  const close=viewer.querySelector('.rn-home-viewer-close');
+  const back=viewer.querySelector('.rn-home-viewer-back');
+  const choose=viewer.querySelector('.rn-home-viewer-choose');
+  const tabs=Array.from(viewer.querySelectorAll('.rn-home-viewer-tab'));
+  const panels=Array.from(viewer.querySelectorAll('[data-viewer-panel]'));
+
+  let viewerHistoryOpen=false;
+  function hide(useHistory=true){
+    viewer.hidden=true;
+    document.body.style.overflow='';
+    if(useHistory && viewerHistoryOpen){
+      viewerHistoryOpen=false;
+      if(history.state && history.state.rnHomeViewer) history.back();
+    }
+  }
+  close?.addEventListener('click',()=>hide(true));
+  back?.addEventListener('click',()=>hide(true));
+  viewer.addEventListener('click',e=>{if(e.target===viewer)hide(true);});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!viewer.hidden)hide(true);});
+
+  window.addEventListener('popstate',function(){
+    if(viewerHistoryOpen){
+      viewerHistoryOpen=false;
+      viewer.hidden=true;
+      document.body.style.overflow='';
+    }
+  });
+
+  tabs.forEach(tab=>tab.addEventListener('click',()=>{
+    tabs.forEach(x=>x.classList.toggle('active',x===tab));
+    panels.forEach(p=>p.hidden=p.dataset.viewerPanel!==tab.dataset.tab);
+  }));
+
+  choose.addEventListener('click',()=>{
+    const title=viewer.querySelector('[data-viewer-title]')?.textContent||'';
+    const card=Array.from(document.querySelectorAll('#rnCategoryListings .rn-listing')).find(x=>(x.querySelector('h5')?.textContent||'')===title);
+    if(card)card.querySelector('.rn-select-home')?.click();
+    hide(true);
+  });
+
+  // Reliable in-page swipe: start anywhere in the viewer, not only at the browser edge.
+  // A horizontal swipe in either direction closes the viewer; vertical scrolling remains normal.
+  let startX=0,startY=0,tracking=false;
+  viewer.addEventListener('touchstart',e=>{
+    if(viewer.hidden||!e.touches[0])return;
+    startX=e.touches[0].clientX;
+    startY=e.touches[0].clientY;
+    tracking=true;
+  },{passive:true});
+  viewer.addEventListener('touchend',e=>{
+    if(!tracking||!e.changedTouches[0])return;
+    const dx=e.changedTouches[0].clientX-startX;
+    const dy=Math.abs(e.changedTouches[0].clientY-startY);
+    tracking=false;
+    if(Math.abs(dx)>=70&&Math.abs(dx)>dy*1.25){
+      hide();
+    }
+  },{passive:true});
+})();
+</script>
+
+<!-- RUMAHNUSA_SWIPE_BACK_START -->
+<style>
+  .rn-swipe-hint{position:fixed;left:50%;bottom:86px;transform:translateX(-50%);z-index:999;background:rgba(20,38,56,.92);color:#fff;padding:9px 14px;border-radius:20px;font-size:13px;box-shadow:0 4px 14px rgba(0,0,0,.18);opacity:0;pointer-events:none;transition:opacity .25s}
+  .rn-swipe-hint.show{opacity:1}
+</style>
+<div id="rnSwipeHint" class="rn-swipe-hint" aria-live="polite">Swipe left or right to go back</div>
+<script>
+(function(){
+  const state={stack:[],lastX:0,lastY:0,startTime:0};
+  const hint=document.getElementById('rnSwipeHint');
+  function currentView(){
+    const active=document.querySelector('.client-form-step.active');
+    const category=document.querySelector('#propertyOptions .client-option.selected');
+    const collection=document.getElementById('rnCategoryCollection');
+    const viewer=document.getElementById('rnHomeViewer');
+    const modal=document.getElementById('rnHouseModal');
+    return {step:active?.dataset.step||'',category:category?.dataset.value||'',collectionOpen:!!collection&&!collection.hidden,viewerOpen:!!viewer&&!viewer.hidden,modalOpen:!!modal&&!modal.hidden};
+  }
+  function key(v){return JSON.stringify(v)}
+  function capture(){const v=currentView();if(!state.stack.length||key(state.stack[state.stack.length-1])!==key(v))state.stack.push(v);if(state.stack.length>30)state.stack.shift();}
+  function goBack(){
+    const viewer=document.getElementById('rnHomeViewer');
+    if(viewer&&!viewer.hidden){viewer.querySelector('.rn-home-viewer-back')?.click();return true;}
+    const modal=document.getElementById('rnHouseModal');
+    if(modal&&!modal.hidden){document.getElementById('rnHouseModalClose')?.click();return true;}
+    if(state.stack.length>1){state.stack.pop();restore(state.stack[state.stack.length-1]);return true;}
+    const active=document.querySelector('.client-form-step.active');
+    if(active&&active.dataset.step&&active.dataset.step!=='1'){const b=active.querySelector('[data-back]');if(b){b.click();return true;}}
+    return false;
+  }
+  function restore(v){
+    const steps=Array.from(document.querySelectorAll('.client-form-step'));
+    const badges=Array.from(document.querySelectorAll('.client-step'));
+    if(v.step!==''&&steps.length){const i=steps.findIndex(s=>s.dataset.step===v.step);if(i>=0){steps.forEach((s,n)=>s.classList.toggle('active',n===i));badges.forEach((b,n)=>b.classList.toggle('active',n===Math.min(i,badges.length-1)));}}
+    if(v.category){const opt=document.querySelector('#propertyOptions .client-option[data-value="'+CSS.escape(v.category)+'"]');if(opt&&!opt.classList.contains('selected'))opt.click();}
+    const collection=document.getElementById('rnCategoryCollection');if(collection)collection.hidden=!v.collectionOpen;
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  document.addEventListener('touchstart',e=>{if(!e.touches[0])return;state.lastX=e.touches[0].clientX;state.lastY=e.touches[0].clientY;state.startTime=Date.now();},{passive:true});
+  document.addEventListener('touchend',e=>{
+    if(!e.changedTouches[0])return;
+    const x=e.changedTouches[0].clientX,y=e.changedTouches[0].clientY;
+    const dx=x-state.lastX,dy=y-state.lastY;
+    if(Math.abs(dx)>=90&&Math.abs(dx)>Math.abs(dy)*1.35&&Date.now()-state.startTime<1200){goBack();}
+  },{passive:true});
+  window.addEventListener('popstate',()=>goBack());
+  document.addEventListener('click',()=>setTimeout(capture,50),true);
+  setTimeout(capture,300);
+  window.addEventListener('load',()=>setTimeout(capture,300));
+  if(hint){hint.classList.add('show');setTimeout(()=>hint.classList.remove('show'),3500);}
+})();
+</script>
+<!-- RUMAHNUSA_SWIPE_BACK_END -->
+</body>
+<script>
+(function(){
+  const radios=[...document.querySelectorAll('input[name="paymentCurrency"]')];
+  const panels={
+    USD:document.getElementById('usdPaymentPanel'),
+    IDR:document.getElementById('idrPaymentPanel'),
+    EUR:document.getElementById('eurPaymentPanel')
+  };
+  const selects={
+    USD:document.getElementById('usdBank'),
+    IDR:document.getElementById('idrBank'),
+    EUR:document.getElementById('eurBank')
+  };
+  function sync(){
+    const currency=radios.find(r=>r.checked)?.value||'';
+    Object.keys(panels).forEach(k=>{ if(panels[k]) panels[k].hidden=k!==currency; });
+    Object.keys(selects).forEach(k=>{
+      const s=selects[k]; if(!s)return;
+      s.required=k===currency;
+    });
+  }
+  radios.forEach(r=>r.addEventListener('change',sync));
+  document.getElementById('usdBank')?.addEventListener('change',e=>{
+    document.getElementById('usdBankOther').hidden=e.target.value!=='Other U.S. bank';
+  });
+  document.getElementById('idrBank')?.addEventListener('change',e=>{
+    document.getElementById('idrBankOther').hidden=e.target.value!=='Other Indonesian bank';
+  });
+  document.getElementById('eurBank')?.addEventListener('change',e=>{
+    document.getElementById('eurBankOther').hidden=e.target.value!=='Other euro-area bank';
+  });
+  sync();
+})();
+</script>
+<script>
+/* RumahNusa customer flow: category selection first, then one detail question at a time. */
+(function(){
+  function boot(){
+    const form=document.getElementById('clientProfilForm');
+    const gate=document.getElementById('rnWelcomeGate');
+    const loginBtn=document.getElementById('rnGateIdentityContinue');
+    const name=document.getElementById('rnGateName');
+    const age=document.getElementById('rnGateAge');
+    const status=document.getElementById('rnGateLoginStatus');
+    const genders=Array.from(document.querySelectorAll('#rnGateIdentityFields .rn-gender-option'));
+    if(!form||!gate||!loginBtn)return;
+
+    const state=window.__rnCustomerFlowState||{
+      property:'',purpose:'Beli',rentalTerm:'',selectedHome:'',selectedHomePriceIDR:'',
+      selectedRoom:'',paymentMethod:''
+    };
+    window.__rnCustomerFlowState=state;
+    const RN_CUSTOMER_STORAGE_KEY='rumahnusa_customer_flow_v2';
+    let gender='';
+
+    function saveCustomerFlow(){
+      try{
+        const values={};
+        form.querySelectorAll('input,select,textarea').forEach(el=>{
+          if(!el.id || el.type==='file') return;
+          if(el.type==='radio' || el.type==='checkbox') values[el.id]={checked:el.checked,value:el.value};
+          else values[el.id]=el.value;
+        });
+        localStorage.setItem(RN_CUSTOMER_STORAGE_KEY,JSON.stringify({
+          identity:window.__rnCustomerIdentity||null,
+          state:{...state},
+          step:Number(window.__rumahnusaCustomerStep||1),
+          values,
+          savedAt:Date.now()
+        }));
+      }catch(e){ console.warn('RumahNusa local progress could not be saved.',e); }
+    }
+
+    function restoreCustomerFlow(){
+      try{
+        const raw=localStorage.getItem(RN_CUSTOMER_STORAGE_KEY);
+        if(!raw)return false;
+        const saved=JSON.parse(raw);
+        if(!saved || !saved.identity)return false;
+        window.__rnCustomerIdentity=saved.identity;
+        if(saved.state) Object.assign(state,saved.state);
+        if(saved.values){
+          Object.entries(saved.values).forEach(([id,val])=>{
+            const el=document.getElementById(id);
+            if(!el || el.type==='file')return;
+            if(el.type==='radio' || el.type==='checkbox') el.checked=!!val.checked;
+            else el.value=val;
+          });
+        }
+        gender=saved.identity.gender||'';
+        genders.forEach(x=>{
+          const selected=x.dataset.gender===gender;
+          x.classList.toggle('selected',selected);
+          x.setAttribute('aria-pressed',selected?'true':'false');
+        });
+        if(name) name.value=saved.identity.name||'';
+        if(age) age.value=saved.identity.age||'';
+        return true;
+      }catch(e){
+        console.warn('RumahNusa saved progress could not be restored.',e);
+        return false;
+      }
+    }
+
+    function updateLogin(){
+      const a=Number(age?.value);
+      loginBtn.disabled=!(name?.value.trim()&&gender&&a>=18&&a<=120);
+    }
+    function chooseGender(button){
+      gender=button?.dataset.gender||'';
+      genders.forEach(x=>{
+        const selected=x===button;
+        x.classList.toggle('selected',selected);
+        x.setAttribute('aria-pressed',selected?'true':'false');
+      });
+      updateLogin();
+    }
+    genders.forEach(button=>{
+      button.style.pointerEvents='auto';
+      button.addEventListener('pointerdown',e=>{e.preventDefault();chooseGender(button);});
+      button.addEventListener('click',e=>{e.preventDefault();chooseGender(button);});
+    });
+    [name,age].forEach(x=>x?.addEventListener('input',updateLogin));
+    updateLogin();
+
+    function showDataStep(stepNumber){
+      const safeStep=Math.max(1,Math.min(18,Number(stepNumber)||1));
+      const steps=Array.from(form.querySelectorAll('.client-form-step'));
+      steps.forEach(step=>step.classList.toggle('active',Number(step.dataset.step)===safeStep));
+      window.__rumahnusaCustomerStep=safeStep;
+      saveCustomerFlow();
+      const panel=document.querySelector('.client-panel');
+      if(panel) panel.scrollIntoView({behavior:'smooth',block:'start'});
+    }
+    window.__rumahnusaShowCustomerStep=showDataStep;
+
+    const countryNames=[
+      "Afghanistan","Albania","Algeria","Andorra","Angola","Antigua and Barbuda","Argentina","Armenia","Australia","Austria",
+      "Azerbaijan","Bahamas","Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bhutan",
+      "Bolivia","Bosnia and Herzegovina","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso","Burundi","Cabo Verde","Cambodia",
+      "Cameroon","Canada","Central African Republic","Chad","Chile","China","Colombia","Comoros","Congo, Democratic Republic of the","Congo, Republic of the",
+      "Costa Rica","Cote d'Ivoire","Croatia","Cuba","Cyprus","Czechia","Denmark","Djibouti","Dominica","Dominican Republic",
+      "Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Eswatini","Ethiopia","Fiji","Finland",
+      "France","Gabon","Gambia","Georgia","Germany","Ghana","Greece","Grenada","Guatemala","Guinea",
+      "Guinea-Bissau","Guyana","Haiti","Honduras","Hungary","Iceland","India","Indonesia","Iran","Iraq",
+      "Ireland","Israel","Italy","Jamaica","Japan","Jordan","Kazakhstan","Kenya","Kiribati","Kuwait",
+      "Kyrgyzstan","Laos","Latvia","Lebanon","Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg",
+      "Madagascar","Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius","Mexico",
+      "Micronesia","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique","Myanmar","Namibia","Nauru",
+      "Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria","North Korea","North Macedonia","Norway","Oman",
+      "Pakistan","Palau","Palestine","Panama","Papua New Guinea","Paraguay","Peru","Philippines","Poland","Portugal",
+      "Qatar","Romania","Russia","Rwanda","Saint Kitts and Nevis","Saint Lucia","Saint Vincent and the Grenadines","Samoa","San Marino","Sao Tome and Principe",
+      "Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone","Singapore","Slovakia","Slovenia","Solomon Islands","Somalia",
+      "South Africa","South Korea","South Sudan","Spain","Sri Lanka","Sudan","Suriname","Sweden","Switzerland","Syria",
+      "Taiwan","Tajikistan","Tanzania","Thailand","Timor-Leste","Togo","Tonga","Trinidad and Tobago","Tunisia","Turkey",
+      "Turkmenistan","Tuvalu","Uganda","Ukraine","United Arab Emirates","United Kingdom","United States","Uruguay","Uzbekistan",
+      "Vanuatu","Vatican City","Venezuela","Vietnam","Yemen","Zambia","Zimbabwe"
+    ];
+    const countrySelect=document.getElementById('clientCountry');
+    if(countrySelect && countrySelect.options.length===1){
+      countryNames.forEach(country=>{
+        const option=document.createElement('option');
+        option.value=country; option.textContent=country; countrySelect.appendChild(option);
+      });
+    }
+
+    const hasSavedCustomer=restoreCustomerFlow();
+    if(hasSavedCustomer){
+      document.getElementById('rnGateName')?.setAttribute('value',window.__rnCustomerIdentity?.name||'');
+      document.getElementById('rnGateAge')?.setAttribute('value',String(window.__rnCustomerIdentity?.age||''));
+    }
+    updateLogin();
+
+    form.querySelectorAll('input,select,textarea').forEach(el=>{
+      if(el.type==='file') return;
+      el.addEventListener('input',saveCustomerFlow);
+      el.addEventListener('change',saveCustomerFlow);
+    });
+
+    function validateCurrent(stepNumber){
+      const requiredByStep={
+        6:['clientCountry','clientPhone'],7:['clientEmail'],8:['clientAddress'],9:['meetingDay'],
+        10:['meetingTime'],11:['clientMarital'],12:['clientChildren'],13:['clientOccupation'],
+        14:['clientPurchaseReason'],15:['clientUse'],16:['clientCity'],17:['clientCityWant'],18:['household']
+      };
+      const ids=requiredByStep[stepNumber]||[];
+      for(const id of ids){
+        const el=document.getElementById(id);
+        if(el&&!el.reportValidity()) return false;
+      }
+      if(stepNumber===19){
+        const type=document.getElementById('privateIdentityType');
+        const photo=document.getElementById('privateIdentityPhoto');
+        if(!type?.value||!photo?.files?.length){photo?.focus();return false;}
+      }
+      if(stepNumber===20){
+        const photo=document.getElementById('faceScanPhoto');
+        if(!photo?.files?.length){photo?.focus();return false;}
+      }
+      if(stepNumber===21){
+        const photo=document.getElementById('frontCameraPhoto');
+        if(!photo?.files?.length){photo?.focus();return false;}
+      }
+      if(stepNumber===22){
+        const currency=document.querySelector('input[name="paymentCurrency"]:checked')?.value||'';
+        if(!currency){document.getElementById('paymentStatus').textContent='Choose how you want to pay first.';return false;}
+        let country='',bank='';
+        if(currency==='USD'){
+          bank=document.getElementById('usdBank')?.value||''; country='United States';
+          if(bank==='Other U.S. bank') bank=document.getElementById('usdBankOther')?.value.trim()||'';
+        }else if(currency==='IDR'){
+          bank=document.getElementById('idrBank')?.value||''; country='Indonesia';
+          if(bank==='Other Indonesian bank') bank=document.getElementById('idrBankOther')?.value.trim()||'';
+        }else{
+          country=document.getElementById('eurCountry')?.value||'';
+          bank=document.getElementById('eurBank')?.value||'';
+          if(bank==='Other euro-area bank') bank=document.getElementById('eurBankOther')?.value.trim()||'';
+          if(!country){document.getElementById('paymentStatus').textContent='Choose your euro-area country.';return false;}
+        }
+        if(!bank){document.getElementById('paymentStatus').textContent='Choose your bank.';return false;}
+        state.paymentMethod=currency+' · '+country+' · '+bank;
+        state.paymentCurrency=currency; state.paymentCountry=country; state.paymentBank=bank;
+      }
+      return true;
+    }
+
+    function nextFrom(stepNumber){
+      if(!validateCurrent(stepNumber))return;
+      if(stepNumber>=6&&stepNumber<23){
+        if(stepNumber===19) document.getElementById('privateIdentityPhoto').value='';
+        if(stepNumber===20) document.getElementById('faceScanPhoto').value='';
+        if(stepNumber===21) document.getElementById('frontCameraPhoto').value='';
+        showDataStep(stepNumber+1);
+      }
+      if(stepNumber===22) window.buildSummary?.();
+    }
+
+    form.addEventListener('click',function(event){
+      const back=event.target.closest('[data-back]');
+      if(back){
+        event.preventDefault();
+        const current=Number(window.__rumahnusaCustomerStep||1);
+        showDataStep(current>6?current-1:1);
+        return;
+      }
+      const nextButton=event.target.closest('.client-next');
+      if(nextButton){
+        event.preventDefault();
+        nextFrom(Number(nextButton.closest('.client-form-step')?.dataset.step||0));
+      }
+    });
+
+    loginBtn.addEventListener('click',async function(){
+      const a=Number(age.value);
+      if(!name.value.trim()||!gender||a<18||a>120)return;
+      loginBtn.disabled=true;
+      status.textContent='Welcome to RumahNusa…';
+      window.__rnCustomerIdentity={name:name.value.trim(),gender,age:a};
+      saveCustomerFlow();
+      try{
+        if(window.supabase&&window.RUMAHNUSA_SUPABASE_URL&&window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY){
+          const db=window.supabase.createClient(window.RUMAHNUSA_SUPABASE_URL,window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY);
+          let user=(await db.auth.getSession())?.data?.session?.user||null;
+          if(!user){
+            const anonymous=await db.auth.signInAnonymously({options:{data:{full_name:name.value.trim(),gender,age:a}}});
+            if(!anonymous.error&&anonymous.data?.user) user=anonymous.data.user;
+          }else{
+            await db.auth.updateUser({data:{full_name:name.value.trim(),gender,age:a}});
+          }
+          if(user){
+            window.__rnLoggedInUser=user;
+            await db.from('profiles').upsert({id:user.id,full_name:name.value.trim(),email:'',role:'customer'},{onConflict:'id'});
+          }
+        }
+      }catch(e){ console.warn('RumahNusa authentication is continuing locally.',e); }
+      status.textContent='Welcome to RumahNusa. Choose your beautiful home.';
+      gate.hidden=true; form.hidden=false;
+      document.getElementById('client-profile')?.classList.remove('rn-login-locked');
+      document.body.classList.remove('rn-gate-active');
+      showDataStep(1);
+      saveCustomerFlow();
+      loginBtn.disabled=false;
+    });
+
+    const categoryOptions=Array.from(document.querySelectorAll('#propertyOptions .client-option'));
+    const listings=document.getElementById('rnCategoryListings');
+    const collection=document.getElementById('rnCategoryCollection');
+    const selectionPrompt=document.getElementById('rnSelectionPrompt');
+    const fixedContinue=document.getElementById('propertyContinueFloat');
+
+    function esc(value){
+      return String(value??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+    }
+    function priceIdr(card){
+      const existing=card.querySelector('.rn-listing-price-idr')?.textContent?.trim();
+      if(existing) return existing;
+      const title=card.querySelector('h5')?.textContent||'';
+      if(title.includes('Luxury Apartment — 2 Bedrooms')) return 'Rp 3.500.000.000+';
+      if(title.includes('Private Family House — 4 Bedrooms')) return 'Rp 350.000.000';
+      if(title.includes('Villa with Private Pool — 4 Bedrooms')) return 'Rp 550.000.000';
+      if(title.includes('Private Pool Villa — 6 Bedrooms')) return 'Rp 6.000.000.000';
+      return 'Harga dalam Rupiah: Hubungi RumahNusa';
+    }
+
+    function syncContinue(){
+      if(!fixedContinue)return;
+      const ready=!!state.selectedHome&&!!state.property;
+      fixedContinue.hidden=!ready;
+      fixedContinue.disabled=!ready;
+      fixedContinue.textContent='Continue';
+      if(selectionPrompt) selectionPrompt.textContent=ready
+        ? 'Home selected. Your Continue button is ready on the right side of your phone.'
+        : 'Open the rooms and details, then choose the home you want.';
+    }
+
+    function selectHome(card,choice){
+      listings?.querySelectorAll('.rn-listing').forEach(x=>x.classList.remove('rn-home-selected'));
+      card.classList.add('rn-home-selected');
+      const title=card.querySelector('h5')?.textContent||'Selected RumahNusa home';
+      const location=card.querySelector('p')?.textContent?.replace(/^📍\s*/,'')||'';
+      const specs=card.querySelector('.rn-listing-specs')?.textContent||'';
+      const plan=choice.querySelector('.rn-card-plan')?.value||'Beli';
+      const room=choice.querySelector('.rn-card-room')?.value||'';
+      const rental=choice.querySelector('.rn-card-rental')?.value||'';
+      state.property=document.querySelector('#propertyOptions .client-option.selected')?.dataset.value||state.property;
+      state.selectedHome=title;
+      state.selectedRoom=room;
+      state.purpose=plan;
+      state.rentalTerm=plan==='Sewa'?rental:'Tidak berlaku';
+      state.selectedHomePriceIDR=priceIdr(card);
+      window.__rnSelectedHome={title,location,details:specs,displayedPriceIdr:state.selectedHomePriceIDR};
+      const budget=document.getElementById('clientBudgetIdr');
+      if(budget) budget.value=(state.selectedHomePriceIDR.match(/[0-9][0-9.]*/)?.[0]||'').replace(/\./g,'');
+      syncContinue();
+      saveCustomerFlow();
+    }
+
+    function wireListings(){
+      if(!listings)return;
+      listings.querySelectorAll('.rn-listing').forEach(card=>{
+        if(card.dataset.rnNewWired)return;
+        card.dataset.rnNewWired='1';
+        const body=card.querySelector('.rn-listing-body');
+        if(!body)return;
+        const specs=card.querySelector('.rn-listing-specs')?.textContent||'';
+        const roomSource=Array.from(document.querySelectorAll('#rooms option')).filter(o=>o.value).map(o=>o.value);
+        const oldPrice=card.querySelector('.rn-listing-price');
+        if(oldPrice){
+          oldPrice.textContent='Price will be added later when this property is ready.';
+          oldPrice.classList.add('rn-price-pending');
+        }
+        const details=document.createElement('div');
+        details.className='rn-category-home-controls';
+        const isApartment=state.property==='Apartemen';
+        details.innerHTML=isApartment
+          ? '<div class="rn-control-title">Apartment options</div>'+
+            '<p>'+esc(specs)+'</p>'+
+            '<label>Apartment/room size<select class="rn-card-room"><option value="">Choose apartment room option</option>'+
+            roomSource.map(x=>'<option value="'+esc(x)+'">'+esc(x)+'</option>').join('')+
+            '</select></label>'+
+            '<label>Purchase or rental<select class="rn-card-plan"><option value="Beli">Buy</option><option value="Sewa">Rent</option></select></label>'+
+            '<div class="rn-card-rental-wrap" hidden><label>Rental duration<select class="rn-card-rental"><option value="">Choose duration</option><option>1 year</option><option>2 years</option><option>3 years</option><option>4 years</option><option>5 years</option></select></label></div>'+
+            '<p class="rn-card-price rn-price-pending"><strong>Price:</strong> Will be shown when this apartment is ready.</p>'+
+            '<button type="button" class="rn-card-select">Select this apartment</button>'
+          : '<div class="rn-control-title">Complete property · Buy only</div>'+
+            '<p>'+esc(specs)+'</p>'+
+            '<p class="rn-complete-property-note"><strong>Rooms included:</strong> '+esc(specs.match(/^[^·]*/)?.[0]||'Rooms are part of the property')+'</p>'+
+            '<p class="rn-price-pending">Price will be added later when this property is ready.</p>'+
+            '<button type="button" class="rn-card-select">Select this property</button>';
+        body.appendChild(details);
+
+        const room=details.querySelector('.rn-card-room');
+        const plan=details.querySelector('.rn-card-plan');
+        const rentalWrap=details.querySelector('.rn-card-rental-wrap');
+        const rental=details.querySelector('.rn-card-rental');
+        const choose=details.querySelector('.rn-card-select');
+
+        function updateRental(){
+          rentalWrap.hidden=!(plan.value==='Sewa'&&state.property==='Apartemen');
+          if(plan.value!=='Sewa') rental.value='';
+        }
+        plan.addEventListener('change',updateRental);
+        room.addEventListener('change',()=>{});
+        rental.addEventListener('change',()=>{});
+        choose.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();selectHome(card,details);});
+        card.addEventListener('click',e=>{
+          if(e.target.closest('button,select,input,label'))return;
+          const inside=details;
+          inside.scrollIntoView({behavior:'smooth',block:'center'});
+        });
+        updateRental();
+      });
+      syncContinue();
+    }
+
+    categoryOptions.forEach(option=>{
+      option.addEventListener('click',function(){
+        categoryOptions.forEach(x=>x.classList.remove('selected'));
+        option.classList.add('selected');
+        state.property=option.dataset.value||'';
+        if(typeof window.__rumahnusaShowCustomerStep==='function'){
+          window.__rumahnusaShowCustomerStep(1);
+        }
+        state.selectedHome='';state.selectedHomePriceIDR='';state.selectedRoom='';
+        window.__rnSelectedHome=null;
+        saveCustomerFlow();
+        if(fixedContinue){fixedContinue.hidden=true;fixedContinue.disabled=true;}
+        setTimeout(wireListings,150);
+      });
+    });
+
+    if(fixedContinue){
+      fixedContinue.addEventListener('click',function(e){
+        e.preventDefault();
+        if(!state.selectedHome||!state.property)return;
+        showDataStep(6);
+      });
+    }
+
+    const initialSavedStep=hasSavedCustomer ? Number((()=>{try{return JSON.parse(localStorage.getItem(RN_CUSTOMER_STORAGE_KEY)||'{}').step||1}catch(e){return 1}})()) : 1;
+    if(hasSavedCustomer){
+      gate.hidden=true;
+      form.hidden=false;
+      document.getElementById('client-profile')?.classList.remove('rn-login-locked');
+      document.body.classList.remove('rn-gate-active');
+      form.querySelectorAll('.rn-selection-hidden').forEach(step=>step.classList.remove('active'));
+      showDataStep(initialSavedStep);
+      // Restore the selected category and rebuild its listing controls after refresh.
+      if(state.property){
+        const selected=categoryOptions.find(x=>x.dataset.value===state.property);
+        if(selected) selected.classList.add('selected');
+      }
+    }else{
+      form.hidden=true;
+      form.querySelectorAll('.rn-selection-hidden').forEach(step=>step.classList.remove('active'));
+      window.__rumahnusaCustomerStep=1;
+    }
+    syncContinue();
+    setTimeout(()=>{wireListings(); if(hasSavedCustomer) saveCustomerFlow();},300);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+})();
+</script>
+<style>
+.rn-listing-price-idr{display:block;margin-top:4px;font-weight:700;color:#991b1b}.rn-listing-continue{display:block;width:100%;margin-top:16px;padding:13px 16px;border:0;border-radius:10px;background:#dc2626;color:#fff;font-size:16px;font-weight:700;cursor:pointer;touch-action:manipulation}.rn-listing-continue:active{transform:scale(.99)}
+.rn-listing{cursor:pointer;touch-action:manipulation;transition:transform .18s,box-shadow .18s,border-color .18s;border:2px solid transparent;border-radius:16px;overflow:hidden}.rn-listing:hover,.rn-listing:focus-within{transform:translateY(-3px);box-shadow:0 10px 28px rgba(16,42,67,.16);border-color:#dc2626}.rn-listing:active{transform:scale(.995)}.rn-listing img,.rn-listing-body,.rn-listing-body h5,.rn-listing-body p,.rn-listing-body .rn-listing-specs{cursor:pointer}.rn-view-inside,.rn-select-home{width:100%;min-height:50px;margin-top:10px;padding:13px 14px;border-radius:10px;border:1px solid #d4d4d8;background:#fff;color:#450a0a;font-weight:700;cursor:pointer;touch-action:manipulation}.rn-select-home{background:#dc2626;color:#fff;border-color:#dc2626}.rn-view-inside:active,.rn-select-home:active{transform:scale(.98)}.rn-home-inside{margin-top:10px;padding:14px;border:1px solid #e4e4e7;border-radius:12px;background:#fff}.rn-home-inside p{margin:7px 0}
+.rn-selection-hidden{display:none!important}
+.rn-category-actions{display:flex;justify-content:flex-end;min-height:48px}
+.rn-house-selected{outline:3px solid #dc2626;outline-offset:2px}
+.rn-house-price-picker{margin-top:14px;padding:14px;border:1px solid #e4e4e7;border-radius:12px;background:#fffafa;display:grid;gap:10px}
+.rn-house-price-picker label{display:grid;gap:6px;font-weight:600}
+.rn-house-price-picker input{width:100%;box-sizing:border-box;padding:12px;border:1px solid #d4d4d8;border-radius:9px;font:inherit}
+.rn-house-price-picker small{color:#52525b}
+#propertyContinueFloat{
+  position:fixed;
+  right:12px;
+  top:50%;
+  bottom:auto;
+  transform:translateY(-50%);
+  z-index:10000;
+  min-width:150px;
+  padding:14px 18px;
+  border:0;
+  border-radius:12px;
+  background:#dc2626;
+  color:#fff;
+  font-weight:700;
+  font-size:16px;
+  box-shadow:0 5px 18px rgba(0,0,0,.2);
+}
+#propertyContinueFloat[hidden]{display:none!important}
+#propertyContinueFloat:disabled{opacity:.55}
+@media(max-width:600px){
+  #propertyContinueFloat{right:10px;top:50%;bottom:auto;min-width:150px;transform:translateY(-50%)}
 }
 
 .rn-listing{cursor:pointer;touch-action:manipulation}
@@ -254,7 +3051,7 @@ body{padding-bottom:82px}
 .rn-home-viewer-section h4{margin:8px 0 10px;font-size:20px}
 .rn-home-viewer-chips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .rn-home-viewer-chip{padding:14px;border:1px solid #e4e4e7;border-radius:12px;background:#fffafa;font-weight:700}
-
+.rn-home-viewer-choose{margin:0 18px 24px;width:calc(100% - 36px);padding:15px;border:0;border-radius:12px;background:#dc2626;color:#fff;font-size:17px;font-weight:800;cursor:pointer}
 .rn-home-viewer-note{padding:0 18px 18px;color:#71717a;font-size:13px;line-height:1.5}
 @media(max-width:520px){.rn-home-viewer-chips{grid-template-columns:1fr}.rn-home-viewer-title{font-size:17px}}
 .rn-home-viewer-back{border:0;background:rgba(255,255,255,.16);color:#fff;border-radius:10px;padding:9px 12px;font-weight:700;font-size:14px;cursor:pointer;touch-action:manipulation}.rn-home-viewer-back:active{transform:scale(.98)}</style>
@@ -356,7 +3153,7 @@ body{padding-bottom:82px}
         '<p class="rn-listing-price">'+displayPrice(x[2])+'</p>'+
         '<div class="rn-listing-specs">'+String(x[3]).split(' · ').map(s=>'<span>'+s+'</span>').join('')+'</div>'+
         '<p>'+String(d.buy||'')+'</p>'+
-        '<button type="button" class="rn-listing-continue">Continue with this home</button>'+
+        ''+
         '</div></article>'
       ).join('');
     }
@@ -396,3 +3193,4 @@ body{padding-bottom:82px}
 })();
 </script>
 </html>
+<style id="rn-remove-old-customer-controls">.rn-listing-continue,.rn-select-home,#propertyContinueFloat,.rn-home-viewer-choose{display:none!important}</style>
