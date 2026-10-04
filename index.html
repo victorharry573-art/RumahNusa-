@@ -721,6 +721,39 @@ body.rn-settings-only>#rnSettingsPanel{display:block!important;position:fixed!im
 body.rn-settings-only>#rnSettingsPanel .rn-settings-panel{min-height:100%;box-sizing:border-box}
 </style>
 </style>
+<style id="rn-settings-navigation-fix">
+body.rn-settings-only{overflow:hidden!important}
+body.rn-settings-only>header,
+body.rn-settings-only>section:not(#rnSettingsPanel),
+body.rn-settings-only>footer,
+body.rn-settings-only>.hero,
+body.rn-settings-only>#rnSearchPanel,
+body.rn-settings-only>#rnWelcomeGate,
+body.rn-settings-only>#clientProfilForm,
+body.rn-settings-only>#rnSwipeHint{display:none!important}
+body.rn-settings-only>#rnSettingsPanel{
+  display:block!important;
+  position:fixed!important;
+  top:0!important;
+  left:0!important;
+  right:0!important;
+  bottom:76px!important;
+  width:auto!important;
+  height:auto!important;
+  min-height:0!important;
+  overflow:auto!important;
+  z-index:19000!important;
+  background:#fff!important;
+}
+body.rn-settings-only>#rnBottomNav{
+  display:grid!important;
+  z-index:20000!important;
+}
+body.rn-settings-only #rnSettingDetail{
+  bottom:76px!important;
+  z-index:19500!important;
+}
+</style>
 </head>
 
 <body class="rn-gate-active">
