@@ -4238,54 +4238,42 @@ body.rn-search-only .rn-search-section-head{padding-left:0!important;padding-rig
 </script>
 
 <style id="rn-mobile-identity-scroll-fix">
-/* Reliable phone scrolling: make the welcome area its own native scroll surface. */
-body.rn-gate-active{overflow:hidden!important;height:100dvh!important;min-height:100dvh!important;}
-body.rn-gate-active #client-profile{height:100dvh!important;min-height:100dvh!important;max-height:none!important;overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important;touch-action:pan-y!important;position:relative!important;}
-body.rn-gate-active #rnWelcomeGate{min-height:calc(100dvh + 1px)!important;height:auto!important;overflow:visible!important;touch-action:pan-y!important;}
-body.rn-gate-active .client-panel{height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;}
-
-/* Keep the welcome identity flow fully usable on phones. */
-html,body{min-height:100%}
+/* Reliable phone scrolling and direct name-input focus. */
 body.rn-gate-active{
-  min-height:100dvh!important;
-  height:auto!important;
   overflow-y:auto!important;
   overflow-x:hidden!important;
-  -webkit-overflow-scrolling:touch!important;
+  height:auto!important;
+  min-height:100dvh!important;
+  position:static!important;
+  touch-action:pan-y!important;
 }
 body.rn-gate-active #client-profile{
   display:block!important;
-  min-height:100dvh!important;
   height:auto!important;
+  min-height:100dvh!important;
+  max-height:none!important;
   overflow:visible!important;
   position:relative!important;
-  z-index:1!important;
+  touch-action:pan-y!important;
 }
 body.rn-gate-active #rnWelcomeGate{
-  min-height:100dvh!important;
+  height:auto!important;
+  min-height:0!important;
   overflow:visible!important;
   position:relative!important;
-  z-index:2!important;
+  touch-action:pan-y!important;
 }
-body.rn-gate-active #rnGateIdentityStep,
-body.rn-gate-active #rnGateIdentityFields{
+body.rn-gate-active #rnGateName{
+  display:block!important;
+  width:100%!important;
+  min-height:54px!important;
   position:relative!important;
-  z-index:10!important;
-  pointer-events:auto!important;
-}
-body.rn-gate-active #rnGateName,
-body.rn-gate-active #rnGateAge{
-  position:relative!important;
-  z-index:20!important;
+  z-index:60001!important;
   pointer-events:auto!important;
   touch-action:auto!important;
   -webkit-user-select:text!important;
   user-select:text!important;
-}
-body.rn-gate-active #rnGateName:focus,
-body.rn-gate-active #rnGateAge:focus{
-  outline:2px solid #dc2626!important;
-  outline-offset:2px!important;
+  cursor:text!important;
 }
 </style>
 <script id="rn-mobile-identity-scroll-fix-engine">
@@ -4350,4 +4338,23 @@ body.rn-gate-active #rnGateAge:focus{
   setTimeout(bootIdentityTouch,800);
 })();
 </script>
+<script id="rn-direct-name-focus-fix">
+(function(){
+  function fixName(){
+    const name=document.getElementById('rnGateName');
+    if(!name||name.dataset.rnDirectFocus)return;
+    name.dataset.rnDirectFocus='1';
+    name.addEventListener('pointerdown',function(){
+      setTimeout(()=>{try{name.focus({preventScroll:false});}catch(e){try{name.focus();}catch(_){}}},0);
+    },{passive:true});
+    name.addEventListener('touchstart',function(){
+      try{name.focus();}catch(e){}
+    },{passive:true});
+  }
+  fixName();
+  document.addEventListener('DOMContentLoaded',fixName,{once:true});
+  setTimeout(fixName,300);
+})();
+</script>
+
 \n
