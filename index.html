@@ -783,6 +783,7 @@ body.rn-search-only>#rnSearchPanel .rn-search-panel-inner{
 
 <style id="rn-identity-tap-fix">
 #rnGateIdentityFields{position:relative;z-index:40;pointer-events:auto!important}
+#rnGateIdentityFields [hidden]{display:none!important}
 #rnGateName,#rnGateAge{position:relative;z-index:50;pointer-events:auto!important;touch-action:manipulation!important;-webkit-user-select:text!important;user-select:text!important}
 #rnGateIdentityFields .rn-gender-option{position:relative;z-index:50;pointer-events:auto!important;touch-action:manipulation!important}
 #rnGateIdentityContinue{position:relative;z-index:50;pointer-events:auto!important;touch-action:manipulation!important;opacity:1!important}
@@ -1024,9 +1025,9 @@ body.rn-search-only>#rnSearchPanel .rn-search-panel-inner{
       <div id="rnGateIdentityStep" class="rn-gate-step">
         <div id="rnGateIdentityFields">
           <div class="rn-gate-field"><label for="rnGateName">Your name</label><input id="rnGateName" type="text" autocomplete="name" placeholder="Enter your name"></div>
-          <div id="rnGateGenderStep"><label>Select your gender</label><div class="rn-gender-options" role="group" aria-label="Gender"><button type="button" class="rn-gender-option" data-gender="Female" aria-pressed="false">Female</button><button type="button" class="rn-gender-option" data-gender="Male" aria-pressed="false">Male</button></div></div>
-          <div id="rnGateAgeStep"><label for="rnGateAge">Your age</label><input id="rnGateAge" type="number" min="18" max="120" inputmode="numeric" placeholder="18 or older"></div>
-          <button id="rnGateIdentityContinue" class="btn" type="button" disabled>Continue to RumahNusa</button>
+          <div id="rnGateGenderStep" hidden><label>Select your gender</label><div class="rn-gender-options" role="group" aria-label="Gender"><button type="button" class="rn-gender-option" data-gender="Female" aria-pressed="false">Female</button><button type="button" class="rn-gender-option" data-gender="Male" aria-pressed="false">Male</button></div></div>
+          <div id="rnGateAgeStep" hidden><label for="rnGateAge">Your age</label><input id="rnGateAge" type="number" min="18" max="120" inputmode="numeric" placeholder="18 or older"></div>
+          <button id="rnGateIdentityContinue" class="btn" type="button" disabled hidden>Continue to RumahNusa</button>
         </div>
         <p id="rnGateLoginStatus" class="rn-gate-status" aria-live="polite"></p>
       </div>
@@ -3034,33 +3035,46 @@ body.rn-gate-active #rnGateGenderStep .rn-gender-option{
       });
       updateLogin();
     }
+    const genderStep=document.getElementById('rnGateGenderStep');
+    const ageStep=document.getElementById('rnGateAgeStep');
+
+    function syncIdentitySteps(){
+      const hasName=!!name?.value.trim();
+      const hasGender=!!gender;
+      const ageValue=Number(age?.value);
+      const hasValidAge=Number.isFinite(ageValue)&&ageValue>=18&&ageValue<=120;
+      if(genderStep) genderStep.hidden=!hasName;
+      if(ageStep) ageStep.hidden=!(hasName&&hasGender);
+      loginBtn.hidden=!(hasName&&hasGender&&hasValidAge);
+      loginBtn.disabled=!(hasName&&hasGender&&hasValidAge);
+    }
+
     genders.forEach(button=>{
       button.style.pointerEvents='auto';
       button.style.touchAction='manipulation';
-      button.addEventListener('pointerup',()=>chooseGender(button),{passive:true});
-      button.addEventListener('click',()=>chooseGender(button));
-      button.addEventListener('touchend',()=>chooseGender(button),{passive:true});
+      button.addEventListener('click',function(event){
+        event.stopPropagation();
+        chooseGender(button);
+        syncIdentitySteps();
+        setTimeout(()=>age?.focus(),80);
+      });
     });
     [name,age].forEach(x=>{
       if(!x)return;
       x.style.pointerEvents='auto';
       x.style.touchAction='manipulation';
-      x.addEventListener('input',updateLogin);
-      x.addEventListener('change',updateLogin);
-      x.addEventListener('focus',()=>x.style.pointerEvents='auto');
+      x.addEventListener('input',function(){
+        updateLogin();
+        syncIdentitySteps();
+      });
+      x.addEventListener('change',function(){
+        updateLogin();
+        syncIdentitySteps();
+      });
     });
     loginBtn.style.pointerEvents='auto';
     loginBtn.style.touchAction='manipulation';
-    updateLogin();
-
-    /* Mobile touch fallback: keep the identity fields and gender choices tappable
-       even when an older overlay or cached layout interferes with pointer events. */
-    document.addEventListener('touchend',function(event){
-      const genderButton=event.target.closest?.('#rnGateIdentityFields .rn-gender-option');
-      if(genderButton){ event.preventDefault(); chooseGender(genderButton); return; }
-      const field=event.target.closest?.('#rnGateName,#rnGateAge');
-      if(field){ field.focus(); }
-    },{passive:false});
+    syncIdentitySteps();
 
     function showDataStep(stepNumber){
       const safeStep=Math.max(1,Math.min(18,Number(stepNumber)||1));
@@ -3109,6 +3123,7 @@ body.rn-gate-active #rnGateGenderStep .rn-gender-option{
       document.getElementById('rnGateAge')?.setAttribute('value',String(window.__rnCustomerIdentity?.age||''));
     }
     updateLogin();
+    syncIdentitySteps();
 
     form.querySelectorAll('input,select,textarea').forEach(el=>{
       if(el.type==='file') return;
