@@ -3019,15 +3019,13 @@ body.rn-gate-active #rnGateIdentityContinue:not([hidden]):not(:disabled){
 
     if(!name.dataset.rnWorkingFinal){
       name.dataset.rnWorkingFinal='1';
-      name.addEventListener('pointerdown',function(){ setTimeout(()=>name.focus(),0); },{passive:true});
-      name.addEventListener('touchstart',function(){ setTimeout(()=>name.focus(),0); },{passive:true});
+      /* Let the phone/browser handle native input focus and keyboard scrolling. */
       name.addEventListener('input',sync);
       name.addEventListener('change',sync);
     }
     if(!age.dataset.rnWorkingFinal){
       age.dataset.rnWorkingFinal='1';
-      age.addEventListener('pointerdown',function(){ setTimeout(()=>age.focus(),0); },{passive:true});
-      age.addEventListener('touchstart',function(){ setTimeout(()=>age.focus(),0); },{passive:true});
+      /* Let the phone/browser handle native input focus and keyboard scrolling. */
       age.addEventListener('input',sync);
       age.addEventListener('change',sync);
     }
@@ -3054,6 +3052,60 @@ body.rn-gate-active #rnGateIdentityContinue:not([hidden]):not(:disabled){
   setTimeout(wire,100);
   setTimeout(wire,500);
   setTimeout(wire,1200);
+})();
+</script>
+<style id="rn-identity-native-scroll-final">
+/* Keep the identity screen scrollable while the mobile keyboard is open. */
+html,body{min-height:100%!important}
+body.rn-gate-active{
+  height:auto!important;
+  min-height:100dvh!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  position:static!important;
+  touch-action:pan-y!important;
+  -webkit-overflow-scrolling:touch!important;
+}
+body.rn-gate-active #client-profile,
+body.rn-gate-active #rnWelcomeGate,
+body.rn-gate-active .client-panel{
+  height:auto!important;
+  min-height:0!important;
+  max-height:none!important;
+  overflow:visible!important;
+  position:relative!important;
+}
+body.rn-gate-active #rnGateName,
+body.rn-gate-active #rnGateAge{
+  touch-action:auto!important;
+}
+</style>
+<script id="rn-identity-native-scroll-final-engine">
+(function(){
+  function keepInputVisible(){
+    const active=document.activeElement;
+    if(!active || (active.id!=='rnGateName' && active.id!=='rnGateAge')) return;
+    setTimeout(()=>{
+      try{ active.scrollIntoView({behavior:'auto',block:'center',inline:'nearest'}); }catch(e){}
+    },120);
+  }
+  function wire(){
+    const name=document.getElementById('rnGateName');
+    const age=document.getElementById('rnGateAge');
+    [name,age].forEach(el=>{
+      if(!el || el.dataset.rnNativeScrollFinal)return;
+      el.dataset.rnNativeScrollFinal='1';
+      el.addEventListener('focus',keepInputVisible);
+      el.addEventListener('click',keepInputVisible);
+    });
+    if(window.visualViewport && !window.__rnIdentityViewportFix){
+      window.__rnIdentityViewportFix=true;
+      window.visualViewport.addEventListener('resize',keepInputVisible,{passive:true});
+    }
+  }
+  wire();
+  document.addEventListener('DOMContentLoaded',wire,{once:true});
+  setTimeout(wire,200);
 })();
 </script>
 </body>
