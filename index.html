@@ -3237,3 +3237,189 @@ const choiceTitle=document.getElementById('rnChoiceTitle');
 </script>
 </html>
 <style id="rn-remove-old-customer-controls">.rn-listing-continue,.rn-select-home,#propertyContinueFloat,.rn-home-viewer-choose{display:none!important}</style>
+
+<style id="rn-search-level-up">
+body.rn-search-only #rnBottomNav{display:none!important}
+body.rn-search-only #rnSearchPanel{display:block!important;position:fixed!important;inset:0!important;height:100dvh!important;max-height:100dvh!important;overflow:auto!important;z-index:99999!important;background:#fff!important}
+body.rn-search-only #rnSearchPanel .rn-search-panel-inner{min-height:100dvh!important;padding:22px 16px 34px!important;box-sizing:border-box}
+.rn-city-browser{display:grid;gap:12px;margin-top:14px}
+.rn-city-card,.rn-search-home-card{width:100%;box-sizing:border-box;border:1px solid #fecaca;border-radius:16px;background:#fff;text-align:left;cursor:pointer;touch-action:manipulation}
+.rn-city-card{display:flex;align-items:center;gap:14px;padding:15px}
+.rn-city-card:active,.rn-search-home-card:active{transform:scale(.985)}
+.rn-city-icon{width:48px;height:48px;border-radius:14px;background:#fff1f2;display:grid;place-items:center;font-size:25px;flex:none}
+.rn-city-card strong{display:block;color:#991b1b;font-size:17px}
+.rn-city-card small{display:block;color:#71717a;margin-top:4px}
+.rn-search-back{border:0;background:#fff1f2;color:#991b1b;border-radius:10px;padding:10px 13px;font-weight:800;cursor:pointer;margin-bottom:12px}
+.rn-search-city-head{padding:16px;border-radius:16px;background:linear-gradient(135deg,#fff1f2,#fff);border:1px solid #fecaca;margin-bottom:14px}
+.rn-search-city-head h3{margin:2px 0 5px;color:#991b1b;font-size:24px}
+.rn-search-city-head p{margin:0;color:#52525b;line-height:1.5}
+.rn-search-home-card{overflow:hidden}
+.rn-search-home-card img{display:block;width:100%;height:210px;object-fit:cover;background:#f4f4f5}
+.rn-search-home-card-body{padding:14px}
+.rn-search-home-card-body .rn-search-result-type{display:block;color:#b91c1c;font-size:11px;font-weight:900;letter-spacing:1px}
+.rn-search-home-card-body h4{margin:5px 0 7px;font-size:18px;color:#18181b}
+.rn-search-home-card-body p{margin:5px 0;color:#52525b;line-height:1.45}
+.rn-search-empty-city{padding:20px;border:1px dashed #fecaca;border-radius:16px;background:#fffafa;color:#52525b;line-height:1.55}
+.rn-search-detail-card{display:grid;gap:10px}
+.rn-search-detail-card img{width:100%;max-height:430px;object-fit:contain;border-radius:16px;background:#f4f4f5}
+.rn-search-detail-card h3{margin:0;color:#991b1b;font-size:24px}
+.rn-search-detail-card p{margin:0;color:#52525b;line-height:1.55}
+</style>
+<script id="rn-search-level-up-engine">
+(function(){
+  const panel=document.getElementById('rnSearchPanel');
+  const input=document.getElementById('rnGlobalSearchInput');
+  const suggestions=document.getElementById('rnSearchSuggestions');
+  const results=document.getElementById('rnSearchResults');
+  const close=document.getElementById('rnSearchClose');
+  const clear=document.getElementById('rnSearchClear');
+  const nav=document.getElementById('rnBottomNav');
+  if(!panel||!input||!results)return;
+
+  const places=[
+    'Jakarta','South Jakarta','Central Jakarta','North Jakarta','West Jakarta','East Jakarta',
+    'Bali','Denpasar','Badung','Ubud','Seminyak','Canggu','Kuta','Gianyar',
+    'Surabaya','Bandung','Medan','Makassar','Palembang','Semarang','Yogyakarta',
+    'Tangerang','Tangerang City','Tangerang Regency','South Tangerang','Tangerang Selatan',
+    'Cipondoh','Karawaci','Ciledug','Batuceper','Benda','Pinang','Serpong','BSD City',
+    'Alam Sutera','Gading Serpong','Lippo Village','Kelapa Dua','Curug','Legok','Cikupa',
+    'Bekasi','Depok','Bogor','Batam','Malang','Solo','Surakarta','Balikpapan','Samarinda',
+    'Banjarmasin','Manado','Padang','Pekanbaru','Bandar Lampung','Pontianak','Mataram',
+    'Kupang','Jayapura','Banda Aceh','Jambi','Bengkulu','Serang','Cirebon','Tasikmalaya',
+    'Bogor City','Bogor Regency','Bekasi City','Bekasi Regency','Bandung City','Bandung Regency',
+    'Surabaya City','Medan City','Makassar City','Semarang City','Yogyakarta City'
+  ];
+  const norm=s=>String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
+  const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  const typeLabel=k=>k==='Separate Rumah'?'HOUSE':k==='Apartemen'?'APARTMENT':k==='Vila'?'VILLA':k==='Hotel'?'HOTEL':String(k||'PROPERTY').toUpperCase();
+  const inventory=()=>Object.entries(window.__rnAllCategoryData||{}).flatMap(([type,d])=>
+    (Array.isArray(d?.listings)?d.listings:[]).map(item=>({type,item}))
+  );
+
+  function matchingCities(q){
+    const nq=norm(q);
+    const inv=inventory().map(r=>String(r.item[1]||'')).filter(Boolean);
+    const all=[...new Set([...places,...inv])];
+    return all.filter(x=>norm(x).includes(nq)).slice(0,14);
+  }
+
+  function cityHomes(city){
+    const nq=norm(city);
+    return inventory().filter(r=>norm(r.item[1]).includes(nq) || norm(r.item[1]).includes(norm(city.split(',')[0])));
+  }
+
+  function showSearchOnly(){
+    document.body.classList.add('rn-search-only');
+    panel.hidden=false;
+    if(nav)nav.style.display='none';
+  }
+  function showSearchStart(){
+    showSearchOnly();
+    suggestions.hidden=true;
+    results.innerHTML='<div class="rn-search-empty">Search for a city or area in Indonesia. Then tap the city you want to open its property page.</div>';
+    setTimeout(()=>input.focus(),80);
+  }
+
+  function showCity(city){
+    showSearchOnly();
+    input.value=city;
+    suggestions.hidden=true;
+    const homes=cityHomes(city);
+    results.innerHTML=
+      '<div class="rn-search-city-head">'+
+        '<button type="button" class="rn-search-back" data-search-back>‹ Back to search</button>'+
+        '<h3>'+esc(city)+'</h3>'+
+        '<p>Homes and properties available in this city or area.</p>'+
+      '</div>'+
+      (homes.length
+        ? '<div class="rn-city-browser">'+homes.map((r,i)=>{
+            const x=r.item;
+            return '<button type="button" class="rn-search-home-card" data-home-index="'+i+'">'+
+              '<img src="'+esc(x[4])+'" alt="'+esc(x[0])+'">'+
+              '<div class="rn-search-home-card-body"><span class="rn-search-result-type">'+esc(typeLabel(r.type))+'</span>'+
+              '<h4>'+esc(x[0])+'</h4><p>📍 '+esc(x[1])+'</p><p>'+esc(x[3])+'</p></div></button>';
+          }).join('')+'</div>'
+        : '<div class="rn-search-empty-city"><strong>No property is listed in '+esc(city)+' yet.</strong><br>When RumahNusa has homes in this city, they will appear here. You can search another Indonesian city or area.</div>');
+    results.querySelector('[data-search-back]')?.addEventListener('click',()=>showSearchStart());
+    results.querySelectorAll('[data-home-index]').forEach((b,i)=>b.addEventListener('click',()=>showHome(homes[i],city)));
+    window.scrollTo(0,0);
+  }
+
+  function showHome(r,city){
+    showSearchOnly();
+    const x=r.item;
+    results.innerHTML=
+      '<div class="rn-search-city-head">'+
+        '<button type="button" class="rn-search-back" data-search-back>‹ Back to '+esc(city)+'</button>'+
+        '<h3>Property details</h3><p>Explore this property inside the RumahNusa search.</p>'+
+      '</div>'+
+      '<div class="rn-search-detail-card">'+
+        '<img src="'+esc(x[4])+'" alt="'+esc(x[0])+'">'+
+        '<span class="rn-search-result-type">'+esc(typeLabel(r.type))+'</span>'+
+        '<h3>'+esc(x[0])+'</h3>'+
+        '<p>📍 '+esc(x[1])+'</p>'+
+        '<p><strong>'+esc(x[2])+'</strong></p>'+
+        '<p>'+esc(x[3])+'</p>'+
+        '<p>The public listing shows the city and Indonesia. Exact street/property location remains private and can be shared by the agent when appropriate.</p>'+
+      '</div>';
+    results.querySelector('[data-search-back]')?.addEventListener('click',()=>showCity(city));
+    window.scrollTo(0,0);
+  }
+
+  function showSuggestions(q){
+    const nq=norm(q);
+    if(!nq){suggestions.hidden=true;suggestions.innerHTML='';return;}
+    const matches=matchingCities(q);
+    if(!matches.length){
+      suggestions.hidden=false;
+      suggestions.innerHTML='<button type="button" class="rn-search-suggestion" data-city="'+esc(q)+'">📍 <strong>'+esc(q)+'</strong><br><small>Open this location search</small></button>';
+    }else{
+      suggestions.hidden=false;
+      suggestions.innerHTML=matches.map(p=>
+        '<button type="button" class="rn-search-suggestion" data-city="'+esc(p)+'">📍 <strong>'+esc(p)+'</strong><br><small>Tap to open this city or area</small></button>'
+      ).join('');
+    }
+    suggestions.querySelectorAll('[data-city]').forEach(b=>b.addEventListener('click',()=>showCity(b.dataset.city||q)));
+  }
+
+  function renderTyping(q){
+    const nq=norm(q);
+    if(!nq){showSearchStart();return;}
+    const matches=matchingCities(q);
+    const exact=matches.find(p=>norm(p)===nq);
+    if(exact){
+      results.innerHTML='<button type="button" class="rn-city-card" data-city-open="'+esc(exact)+'">'+
+        '<span class="rn-city-icon">📍</span><span><strong>'+esc(exact)+'</strong><small>Tap to open this city and see its RumahNusa properties.</small></span></button>';
+      results.querySelector('[data-city-open]')?.addEventListener('click',()=>showCity(exact));
+      return;
+    }
+    results.innerHTML=matches.length
+      ? '<div class="rn-search-subheading">INDONESIAN LOCATIONS</div><div class="rn-city-browser">'+matches.map(p=>
+          '<button type="button" class="rn-city-card" data-city-open="'+esc(p)+'"><span class="rn-city-icon">📍</span><span><strong>'+esc(p)+'</strong><small>Tap to open this city or area</small></span></button>').join('')+'</div>'
+      : '<button type="button" class="rn-city-card" data-city-open="'+esc(q)+'"><span class="rn-city-icon">📍</span><span><strong>'+esc(q)+'</strong><small>Tap to open this location search</small></span></button>';
+    results.querySelectorAll('[data-city-open]').forEach(b=>b.addEventListener('click',()=>showCity(b.dataset.cityOpen)));
+  }
+
+  function openSearch(){
+    showSearchOnly();
+    showSearchStart();
+  }
+
+  document.addEventListener('click',function(e){
+    const b=e.target.closest?.('#rnBottomNav [data-rn-nav="search"]');
+    if(!b)return;
+    e.preventDefault();e.stopImmediatePropagation();
+    openSearch();
+  },true);
+
+  input.addEventListener('input',()=>{showSuggestions(input.value);renderTyping(input.value)});
+  clear?.addEventListener('click',()=>{input.value='';showSuggestions('');showSearchStart();input.focus()});
+  close?.addEventListener('click',()=>{
+    panel.hidden=true;
+    document.body.classList.remove('rn-search-only');
+    if(nav)nav.style.display='';
+    document.querySelector('#rnBottomNav [data-rn-nav="home"]')?.click();
+  });
+  window.__rnOpenStandaloneSearch=openSearch;
+})();
+</script>
