@@ -788,6 +788,44 @@ body.rn-search-only>#rnSearchPanel .rn-search-panel-inner{
 #rnGateIdentityFields .rn-gender-option{position:relative;z-index:50;pointer-events:auto!important;touch-action:manipulation!important}
 #rnGateIdentityContinue{position:relative;z-index:50;pointer-events:auto!important;touch-action:manipulation!important;opacity:1!important}
 </style>
+
+<style id="rn-identity-step-final-fix">
+/* Identity gate: reveal one field at a time and keep the final button hidden until all required details are valid. */
+#rnGateGenderStep[hidden],#rnGateAgeStep[hidden],#rnGateIdentityContinue[hidden]{display:none!important}
+#rnGateIdentityContinue:disabled{display:none!important}
+#rnGateIdentityContinue:not([hidden]):not(:disabled){display:block!important;background:#dc2626!important;color:#fff!important}
+</style>
+<script id="rn-identity-step-final-fix-engine">
+(function(){
+  function enforce(){
+    const name=document.getElementById('rnGateName');
+    const genderStep=document.getElementById('rnGateGenderStep');
+    const ageStep=document.getElementById('rnGateAgeStep');
+    const age=document.getElementById('rnGateAge');
+    const button=document.getElementById('rnGateIdentityContinue');
+    const gender=document.querySelector('#rnGateGenderStep .rn-gender-option[aria-pressed="true"]');
+    if(!name||!genderStep||!ageStep||!age||!button)return;
+    const hasName=!!name.value.trim();
+    const hasGender=!!gender;
+    const n=Number(age.value);
+    const validAge=Number.isFinite(n)&&n>=18&&n<=120;
+    genderStep.hidden=!hasName;
+    ageStep.hidden=!(hasName&&hasGender);
+    const ready=hasName&&hasGender&&validAge;
+    button.disabled=!ready;
+    button.hidden=!ready;
+  }
+  function wire(){
+    const ids=['rnGateName','rnGateAge'];
+    ids.forEach(id=>document.getElementById(id)?.addEventListener('input',enforce));
+    document.querySelectorAll('#rnGateGenderStep .rn-gender-option').forEach(b=>b.addEventListener('click',()=>setTimeout(enforce,0)));
+    enforce();
+  }
+  wire();
+  document.addEventListener('DOMContentLoaded',wire,{once:true});
+  setTimeout(enforce,100);setTimeout(enforce,500);setTimeout(enforce,1200);
+})();
+</script>
 </head>
 
 <body class="rn-gate-active">
