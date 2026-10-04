@@ -835,6 +835,50 @@ body.rn-gate-active #client-profile{height:auto!important;min-height:0!important
 body.rn-gate-active #rnWelcomeGate{height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;position:relative!important}
 body.rn-gate-active #rnGateName{pointer-events:auto!important;touch-action:auto!important;position:relative!important;z-index:2!important}
 </style>
+
+<style id="RUMAHNUSA_WELCOME_SCROLL_CONTAINER_FIX">
+/* Guaranteed mobile scroll container for the first welcome/identity screen. */
+html{overflow:hidden!important}
+body.rn-gate-active{
+  overflow:hidden!important;
+  height:100dvh!important;
+  min-height:100dvh!important;
+  padding-bottom:0!important;
+  overscroll-behavior:none!important;
+}
+body.rn-gate-active #client-profile{
+  display:block!important;
+  position:fixed!important;
+  inset:0!important;
+  width:100%!important;
+  height:100dvh!important;
+  min-height:100dvh!important;
+  max-height:none!important;
+  margin:0!important;
+  padding:0!important;
+  overflow-y:scroll!important;
+  overflow-x:hidden!important;
+  -webkit-overflow-scrolling:touch!important;
+  overscroll-behavior-y:auto!important;
+  touch-action:pan-y!important;
+  z-index:9999!important;
+}
+body.rn-gate-active #rnWelcomeGate{
+  display:block!important;
+  position:relative!important;
+  width:100%!important;
+  min-height:100%!important;
+  height:auto!important;
+  overflow:visible!important;
+  padding-bottom:120px!important;
+}
+body.rn-gate-active #rnGateIdentityStep,
+body.rn-gate-active #rnGateIdentityFields,
+body.rn-gate-active #rnGateName{
+  pointer-events:auto!important;
+  touch-action:auto!important;
+}
+</style>
 </head>
 
 <body class="rn-gate-active">
