@@ -703,7 +703,7 @@ body.rn-search-only>#rnSettingDetail,
 body.rn-search-only>#rnWelcomeGate,
 body.rn-search-only>#clientProfilForm,
 body.rn-search-only>#rnSwipeHint{display:none!important}
-body.rn-search-only>#rnSearchPanel{display:block!important;position:fixed!important;inset:0!important;width:100%!important;height:calc(100vh - 76px)!important;overflow:auto!important;z-index:19000!important;background:#fff!important;border:0!important;box-shadow:none!important}
+body.rn-search-only>#rnSearchPanel{display:block!important;position:relative!important;inset:auto!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;z-index:1!important;background:#f5f5f5!important;border:0!important;box-shadow:none!important}
 body.rn-search-only>#rnSearchPanel .rn-search-panel-inner{min-height:100%;box-sizing:border-box;padding:20px 16px 100px}
 body.rn-search-only>#rnBottomNav{display:grid!important;z-index:20000!important}
 </style>
@@ -772,10 +772,7 @@ body.rn-wishlist-only>#rnBottomNav{
   opacity:1!important;
   pointer-events:auto!important;
 }
-body.rn-search-only>#rnSearchPanel{
-  height:calc(100vh - 76px)!important;
-  padding-bottom:0!important;
-}
+body.rn-search-only>#rnSearchPanel{display:block!important;position:relative!important;inset:auto!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;z-index:1!important;background:#f5f5f5!important;border:0!important;box-shadow:none!important}
 body.rn-search-only>#rnSearchPanel .rn-search-panel-inner{
   padding-bottom:100px!important;
 }
@@ -858,7 +855,7 @@ body.rn-search-only>#rnSettingDetail,
 body.rn-search-only>#rnWelcomeGate,
 body.rn-search-only>#clientProfilForm,
 body.rn-search-only>#rnSwipeHint{display:none!important}
-body.rn-search-only>#rnSearchPanel{display:block!important;position:relative!important;inset:auto!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;z-index:1!important;touch-action:pan-y!important}
+body.rn-search-only>#rnSearchPanel{display:block!important;position:relative!important;inset:auto!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;z-index:1!important;background:#f5f5f5!important;border:0!important;box-shadow:none!important}
 body.rn-search-only>#rnSearchPanel .rn-search-panel-inner{height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;touch-action:pan-y!important;padding-bottom:110px!important}
 body.rn-search-only .rn-city-rail{touch-action:pan-x!important;-webkit-overflow-scrolling:touch}
 body.rn-search-only .rn-search-results{touch-action:pan-y!important}
@@ -1241,7 +1238,7 @@ body.rn-search-only .rn-search-results{touch-action:pan-y!important}
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9.5V21h13V9.5"/><path d="M9.5 21v-6h5v6"/></svg>
     <span>Home</span>
   </button>
-  <button type="button" data-rn-nav="search" aria-label="Search" onclick="document.body.classList.remove('rn-settings-only','rn-buy-only','rn-promote-only','rn-wishlist-only');document.body.classList.add('rn-search-only');var p=document.getElementById('rnSearchPanel');if(p){p.hidden=false;p.style.display='block';p.scrollTop=0;}window.scrollTo(0,0);setTimeout(function(){var i=document.getElementById('rnGlobalSearchInput');if(i)i.focus();},100);">
+  <button type="button" data-rn-nav="search" aria-label="Search">
     <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
     <span>Search</span>
   </button>
