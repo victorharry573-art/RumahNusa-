@@ -693,7 +693,7 @@ header .lang-btn.active{color:#dc2626!important;background:#fff!important;border
 @media(max-width:650px){.rn-settings-grid{grid-template-columns:1fr}.rn-settings-panel{padding-left:12px;padding-right:12px}.rn-settings-head h2{font-size:24px}}
 </style>
 <style id="rn-search-standalone-style">
-body.rn-search-only{overflow:hidden}
+body.rn-search-only{overflow:visible}
 body.rn-search-only>header,
 body.rn-search-only>section:not(#rnSearchPanel),
 body.rn-search-only>footer,
@@ -845,6 +845,18 @@ window.addEventListener('pageshow',function(e){
   if(e.persisted){window.scrollTo(0,0);}
 });
 </script>
+<style id="rn-scroll-unlock-final">
+/* Final mobile scroll unlock: Search and category pages must remain touch-scrollable. */
+body.rn-search-only{overflow:visible!important;height:auto!important;touch-action:auto!important}
+body.rn-search-only>#rnSearchPanel{
+  touch-action:pan-y!important;
+  -webkit-overflow-scrolling:touch!important;
+  overscroll-behavior:auto!important;
+  pointer-events:auto!important;
+}
+body.rn-search-only>#rnBottomNav{pointer-events:auto!important}
+#clientProfilForm,#rnCategoryCollection,.rn-category-collection{touch-action:pan-y}
+</style>
 </head>
 
 <body>
@@ -4156,7 +4168,7 @@ body.rn-search-only #rnSearchPanel .rn-search-panel-inner{min-height:100dvh!impo
 <style id="rn-search-no-close">#rnSearchClose{display:none!important}</style>
 
 <style id="rn-navigation-isolation-final">
-body.rn-search-only{overflow:hidden!important}
+body.rn-search-only{overflow:visible!important}
 body.rn-search-only>header,
 body.rn-search-only>section:not(#rnSearchPanel),
 body.rn-search-only>footer,
