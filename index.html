@@ -76,7 +76,7 @@ nav a {
   align-items: center;
   background:
     linear-gradient(rgba(3,30,52,.65),rgba(3,30,52,.65)),
-    url("https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1600&q=80")
+    url("https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1000&q=65")
     center/cover;
 }
 
@@ -834,6 +834,17 @@ body.rn-search-only>#rnSearchPanel .rn-search-panel-inner{
 #client-profile{display:block!important}
 #client-profile .client-form-step{display:block}
 </style>
+<style id="rn-performance-fast-start">
+/* Keep the first screen light on phones; browser renders lower sections when needed. */
+#about,#contact,#properties{content-visibility:auto;contain-intrinsic-size:700px;}
+img{decoding:async;}
+</style>
+<script id="rn-performance-scroll-reset">
+try{history.scrollRestoration='manual';}catch(e){}
+window.addEventListener('pageshow',function(e){
+  if(e.persisted){window.scrollTo(0,0);}
+});
+</script>
 </head>
 
 <body>
@@ -950,7 +961,7 @@ body.rn-search-only>#rnSearchPanel .rn-search-panel-inner{
     </div>
 
     <div class="card">
-      <img src="https://images.unsplash.com/photo-1701502909888-6b11930e419d?fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=60&w=3000>
+      <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1701502909888-6b11930e419d?fm=jpg&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&ixlib=rb-4.1.0&q=60&w=3000>
 
       <div class="card-content">
         <span class="tag">DIJUAL</span>
@@ -968,7 +979,7 @@ body.rn-search-only>#rnSearchPanel .rn-search-panel-inner{
     </div>
 
     <div class="card">
-      <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=900&q=80">
+      <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=900&q=80">
 
       <div class="card-content">
         <span class="tag">DIJUAL</span>
@@ -986,7 +997,7 @@ body.rn-search-only>#rnSearchPanel .rn-search-panel-inner{
     </div>
 
     <div class="card">
-      <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=900&q=80">
+      <img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=900&q=80">
 
       <div class="card-content">
         <span class="tag">DIJUAL</span>
@@ -3145,7 +3156,6 @@ body.rn-gate-active #rnGateAge{
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',startHome,{once:true});
   else startHome();
   setTimeout(startHome,120);
-  setTimeout(startHome,800);
 })();
 </script>
 </body>
