@@ -845,6 +845,26 @@ window.addEventListener('pageshow',function(e){
   if(e.persisted){window.scrollTo(0,0);}
 });
 </script>
+<style id="rn-clean-navigation">
+html,body{width:100%;max-width:100%;min-height:100%;height:auto!important;overflow-x:hidden!important}
+body{overflow-y:auto!important;touch-action:pan-y!important}
+body.rn-search-only{position:static!important;overflow-x:hidden!important;overflow-y:auto!important;min-height:100vh!important}
+body.rn-search-only>header,
+body.rn-search-only>section:not(#rnSearchPanel),
+body.rn-search-only>footer,
+body.rn-search-only>.hero,
+body.rn-search-only>#rnSettingsPanel,
+body.rn-search-only>#rnSettingDetail,
+body.rn-search-only>#rnWelcomeGate,
+body.rn-search-only>#clientProfilForm,
+body.rn-search-only>#rnSwipeHint{display:none!important}
+body.rn-search-only>#rnSearchPanel{display:block!important;position:relative!important;inset:auto!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;z-index:1!important;touch-action:pan-y!important}
+body.rn-search-only>#rnSearchPanel .rn-search-panel-inner{height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;touch-action:pan-y!important;padding-bottom:110px!important}
+body.rn-search-only .rn-city-rail{touch-action:pan-x!important;-webkit-overflow-scrolling:touch}
+body.rn-search-only .rn-search-results{touch-action:pan-y!important}
+#rnBottomNav{touch-action:manipulation!important}
+#propertyOptions .rn-home-category{touch-action:manipulation!important;-webkit-tap-highlight-color:rgba(220,38,38,.15)}
+</style>
 </head>
 
 <body>
@@ -1626,7 +1646,7 @@ window.addEventListener('pageshow',function(e){
       const input=document.getElementById('rnGlobalSearchInput');
       if(panel){
         panel.hidden=false;
-        panel.scrollIntoView({behavior:'smooth',block:'start'});
+        window.scrollTo({top:0,behavior:'auto'});
         setTimeout(()=>input?.focus(),220);
       }
       if(typeof window.__rnRunGlobalSearch==='function') window.__rnRunGlobalSearch('');
@@ -2356,7 +2376,7 @@ const choiceTitle=document.getElementById('rnChoiceTitle');
     if(typeof window.__rnWireListings==='function') window.__rnWireListings();
 
     requestAnimationFrame(function(){
-      selected.scrollIntoView({behavior:'smooth',block:'start'});
+      selected.scrollIntoView({behavior:'auto',block:'start'});
     });
   }
 
@@ -2690,60 +2710,6 @@ const choiceTitle=document.getElementById('rnChoiceTitle');
   },{passive:true});
 })();
 </script>
-
-<!-- RUMAHNUSA_SWIPE_BACK_START -->
-<style>
-  .rn-swipe-hint{position:fixed;left:50%;bottom:86px;transform:translateX(-50%);z-index:999;background:rgba(20,38,56,.92);color:#fff;padding:9px 14px;border-radius:20px;font-size:13px;box-shadow:0 4px 14px rgba(0,0,0,.18);opacity:0;pointer-events:none;transition:opacity .25s}
-  .rn-swipe-hint.show{opacity:1}
-</style>
-<div id="rnSwipeHint" class="rn-swipe-hint" aria-live="polite">Swipe left or right to go back</div>
-<script>
-(function(){
-  const state={stack:[],lastX:0,lastY:0,startTime:0};
-  const hint=document.getElementById('rnSwipeHint');
-  function currentView(){
-    const active=document.querySelector('.client-form-step.active');
-    const category=document.querySelector('#propertyOptions .client-option.selected');
-    const collection=document.getElementById('rnCategoryCollection');
-    const viewer=document.getElementById('rnHomeViewer');
-    const modal=document.getElementById('rnHouseModal');
-    return {step:active?.dataset.step||'',category:category?.dataset.value||'',collectionOpen:!!collection&&!collection.hidden,viewerOpen:!!viewer&&!viewer.hidden,modalOpen:!!modal&&!modal.hidden};
-  }
-  function key(v){return JSON.stringify(v)}
-  function capture(){const v=currentView();if(!state.stack.length||key(state.stack[state.stack.length-1])!==key(v))state.stack.push(v);if(state.stack.length>30)state.stack.shift();}
-  function goBack(){
-    const viewer=document.getElementById('rnHomeViewer');
-    if(viewer&&!viewer.hidden){viewer.querySelector('.rn-home-viewer-back')?.click();return true;}
-    const modal=document.getElementById('rnHouseModal');
-    if(modal&&!modal.hidden){document.getElementById('rnHouseModalClose')?.click();return true;}
-    if(state.stack.length>1){state.stack.pop();restore(state.stack[state.stack.length-1]);return true;}
-    const active=document.querySelector('.client-form-step.active');
-    if(active&&active.dataset.step&&active.dataset.step!=='1'){const b=active.querySelector('[data-back]');if(b){b.click();return true;}}
-    return false;
-  }
-  function restore(v){
-    const steps=Array.from(document.querySelectorAll('.client-form-step'));
-    const badges=Array.from(document.querySelectorAll('.client-step'));
-    if(v.step!==''&&steps.length){const i=steps.findIndex(s=>s.dataset.step===v.step);if(i>=0){steps.forEach((s,n)=>s.classList.toggle('active',n===i));badges.forEach((b,n)=>b.classList.toggle('active',n===Math.min(i,badges.length-1)));}}
-    if(v.category){const opt=document.querySelector('#propertyOptions .client-option[data-value="'+CSS.escape(v.category)+'"]');if(opt&&!opt.classList.contains('selected'))opt.click();}
-    const collection=document.getElementById('rnCategoryCollection');if(collection)collection.hidden=!v.collectionOpen;
-    window.scrollTo({top:0,behavior:'smooth'});
-  }
-  document.addEventListener('touchstart',e=>{if(!e.touches[0])return;state.lastX=e.touches[0].clientX;state.lastY=e.touches[0].clientY;state.startTime=Date.now();},{passive:true});
-  document.addEventListener('touchend',e=>{
-    if(!e.changedTouches[0])return;
-    const x=e.changedTouches[0].clientX,y=e.changedTouches[0].clientY;
-    const dx=x-state.lastX,dy=y-state.lastY;
-    if(Math.abs(dx)>=90&&Math.abs(dx)>Math.abs(dy)*1.35&&Date.now()-state.startTime<1200){goBack();}
-  },{passive:true});
-  window.addEventListener('popstate',()=>goBack());
-  document.addEventListener('click',()=>setTimeout(capture,50),true);
-  setTimeout(capture,300);
-  window.addEventListener('load',()=>setTimeout(capture,300));
-  if(hint){hint.classList.add('show');setTimeout(()=>hint.classList.remove('show'),3500);}
-})();
-</script>
-<!-- RUMAHNUSA_SWIPE_BACK_END -->
 
 <style id="rn-search-clean-city-cards-final">
 /* Final search layout: search first, then clean city cards with only the city name. */
@@ -3678,131 +3644,8 @@ body.rn-gate-active #rnGateAge{
 @media(max-width:700px){.rn-buy-rules{grid-template-columns:1fr}.rn-buy-overview{padding:16px}.rn-buy-overview-head strong{font-size:19px}}
 </style>
 
-<style>
-/* Final mobile tap fix: every home category is a real, full-size touch target. */
-#propertyOptions .rn-home-category{
-  position:relative!important;
-  z-index:50!important;
-  pointer-events:auto!important;
-  touch-action:manipulation!important;
-  -webkit-tap-highlight-color:rgba(8,121,189,.18)!important;
-  user-select:none!important;
-  cursor:pointer!important;
-}
-#propertyOptions .rn-home-category:active{
-  transform:scale(.98)!important;
-}
-</style>
-<script>
-/* Final direct category tap fix: capture Android touch/clicks before any
-   other page handler, then open the selected category immediately. */
-(function(){
-  function open(button){
-    const name=button?.dataset?.value||'';
-    if(!name) return;
-    if(history.state?.rnCategory!==name){
-      history.pushState({rnCategory:name},'',location.href);
-    }
-    if(typeof window.__rnOpenCategory==='function'){
-      window.__rnOpenCategory(name);
-    }
-  }
-  document.addEventListener('click',function(event){
-    const button=event.target?.closest?.('#propertyOptions .rn-home-category');
-    if(!button) return;
-    event.preventDefault();
-    event.stopPropagation();
-    open(button);
-  },true);
-  document.addEventListener('pointerup',function(event){
-    const button=event.target?.closest?.('#propertyOptions .rn-home-category');
-    if(!button) return;
-    if(event.pointerType==='mouse' && event.button!==0) return;
-    event.preventDefault();
-    event.stopPropagation();
-    open(button);
-  },true);
-})();
-</script>
-<script>
-/* FINAL CATEGORY FALLBACK: if an older handler throws, the tapped
-   category must still open visibly on the same screen. */
-(function(){
-  function forceOpen(button){
-    const collection=document.getElementById('rnCategoryCollection');
-    const grid=document.getElementById('propertyOptions');
-    const listings=document.getElementById('rnCategoryListings');
-    if(!button||!collection||!grid)return;
-    const name=button.dataset.value||'';
-    const d=window.__rnCategoryDataMap?.[name] || (name==='Vila' ? {title:'Villas',badge:'VILLA',intro:'Villa homes available in Bali.',buy:'Villas are presented as sale properties.',listings:window.__rnVillaFallbackListings||[]} : null);
-    grid.classList.add('rn-category-open');
-    grid.querySelectorAll('.rn-home-category').forEach(x=>x.classList.toggle('selected',x===button));
-    collection.hidden=false;
-    button.insertAdjacentElement('afterend',collection);
-
-    const title=document.getElementById('rnCategoryTitle');
-    const intro=document.getElementById('rnCategoryIntro');
-    const badge=document.getElementById('rnCategoryBadge');
-    if(title) title.textContent=d?.title||((button.querySelector('strong')?.textContent||'Selected category')+' homes');
-    if(intro) intro.textContent=d?.intro||'Homes in this category are now open below. Choose a home to continue.';
-    if(badge) badge.textContent=d?.badge||(button.querySelector('strong')?.textContent||'CATEGORY').toUpperCase();
-
-    /* Populate the cards independently of the main renderer. This is the
-       important recovery path when the normal renderer was interrupted. */
-    if(listings && d?.listings?.length){
-      const rate=17900;
-      const idr=n=>'Rp '+Math.round(n).toLocaleString('id-ID');
-      const displayPrice=p=>'Price will be added later when this property is ready.';
-      listings.innerHTML=d.listings.map(x=>
-        '<article class="rn-listing">'+
-        '<img loading="eager" src="'+x[4]+'" alt="'+x[0]+'">'+
-        '<div class="rn-listing-body">'+
-        '<h5>'+x[0]+'</h5>'+
-        '<p>📍 '+x[1]+'</p>'+
-        '<p class="rn-listing-price">'+displayPrice(x[2])+'</p>'+
-        '<div class="rn-listing-specs">'+String(x[3]).split(' · ').map(s=>'<span>'+s+'</span>').join('')+'</div>'+
-        '<p>'+String(d.buy||'')+'</p>'+
-        ''+
-        '</div></article>'
-      ).join('');
-    }
-
-    collection.scrollIntoView({behavior:'smooth',block:'start'});
-  }
-  function open(button){
-    const name=button?.dataset?.value||'';
-    if(!name)return;
-    try{
-      if(typeof window.__rnOpenCategory==='function') window.__rnOpenCategory(name);
-      else forceOpen(button);
-    }catch(error){
-      console.warn('RumahNusa category renderer recovered from an error.',error);
-      forceOpen(button);
-    }
-    setTimeout(()=>{
-      const collection=document.getElementById('rnCategoryCollection');
-      const grid=document.getElementById('propertyOptions');
-      if(collection&&grid&&collection.hidden) forceOpen(button);
-    },80);
-  }
-  document.addEventListener('click',function(e){
-    const button=e.target?.closest?.('#propertyOptions .rn-home-category');
-    if(!button)return;
-    e.preventDefault();
-    e.stopPropagation();
-    open(button);
-  },true);
-  document.addEventListener('pointerup',function(e){
-    const button=e.target?.closest?.('#propertyOptions .rn-home-category');
-    if(!button)return;
-    e.preventDefault();
-    e.stopPropagation();
-    open(button);
-  },true);
-})();
-</script>
 <style id="rn-search-reference-design">
-body.rn-search-only{background:#f5f5f5!important;overflow:hidden!important}
+body.rn-search-only{background:#f5f5f5!important;overflow-x:hidden!important;overflow-y:auto!important}
 body.rn-search-only>header,
 body.rn-search-only>section:not(#rnSearchPanel),
 body.rn-search-only>footer,
@@ -3812,7 +3655,7 @@ body.rn-search-only>#rnSettingDetail,
 body.rn-search-only>#rnWelcomeGate,
 body.rn-search-only>#clientProfilForm,
 body.rn-search-only>#rnSwipeHint{display:none!important}
-body.rn-search-only>#rnSearchPanel{display:block!important;position:fixed!important;inset:0 0 76px 0!important;width:100%!important;height:auto!important;overflow:auto!important;z-index:29000!important;background:#f5f5f5!important;border:0!important;box-shadow:none!important}
+body.rn-search-only>#rnSearchPanel{display:block!important;position:relative!important;inset:auto!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;z-index:1!important;background:#f5f5f5!important;border:0!important;box-shadow:none!important}
 body.rn-search-only>#rnBottomNav{display:grid!important;z-index:30000!important}
 .rn-search-panel-inner{width:100%!important;max-width:900px!important;margin:0 auto!important;padding:0 0 34px!important;background:#f5f5f5}
 .rn-search-hero{height:176px;background:linear-gradient(135deg,#b91c1c 0%,#ef4444 60%,#fca5a5 100%);position:relative;overflow:hidden;padding:32px 20px 0;color:#fff}
@@ -3881,23 +3724,3 @@ body.rn-search-only>#rnBottomNav{display:grid!important;z-index:30000!important}
 <style id="rn-search-no-close">#rnSearchClose{display:none!important}</style>
 
 \n
-<style id="rn-one-navigation-system">
-html,body{height:auto!important;min-height:100%!important}
-body{overflow-x:hidden!important;overflow-y:auto!important;touch-action:pan-y!important}
-body.rn-search-only{overflow-x:hidden!important;overflow-y:auto!important;height:auto!important;min-height:100vh!important;position:static!important}
-body.rn-search-only>header,
-body.rn-search-only>section:not(#rnSearchPanel),
-body.rn-search-only>footer,
-body.rn-search-only>.hero,
-body.rn-search-only>#rnSettingsPanel,
-body.rn-search-only>#rnSettingDetail,
-body.rn-search-only>#rnWelcomeGate,
-body.rn-search-only>#clientProfilForm,
-body.rn-search-only>#rnSwipeHint{display:none!important}
-body.rn-search-only>#rnSearchPanel{display:block!important;position:relative!important;inset:auto!important;width:100%!important;height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;z-index:1!important;touch-action:pan-y!important}
-body.rn-search-only>#rnSearchPanel .rn-search-panel-inner{min-height:0!important;height:auto!important;overflow:visible!important;padding:16px 14px 110px!important;touch-action:pan-y!important}
-body.rn-search-only>#rnBottomNav{display:grid!important;position:fixed!important;left:0!important;right:0!important;bottom:0!important;z-index:50000!important}
-body.rn-search-only .rn-city-rail{touch-action:pan-x!important}
-body.rn-search-only .rn-search-results{touch-action:pan-y!important}
-#propertyOptions .rn-home-category{touch-action:manipulation!important}
-</style>
