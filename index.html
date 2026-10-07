@@ -1210,7 +1210,7 @@ body.rn-search-only>#rnSearchPanel .rn-search-panel-inner{
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9.5V21h13V9.5"/><path d="M9.5 21v-6h5v6"/></svg>
     <span>Home</span>
   </button>
-  <button type="button" data-rn-nav="search" aria-label="Search">
+  <button type="button" data-rn-nav="search" aria-label="Search" onclick="document.body.classList.remove('rn-settings-only','rn-buy-only','rn-promote-only','rn-wishlist-only');document.body.classList.add('rn-search-only');var p=document.getElementById('rnSearchPanel');if(p){p.hidden=false;p.style.display='block';p.scrollTop=0;}window.scrollTo(0,0);setTimeout(function(){var i=document.getElementById('rnGlobalSearchInput');if(i)i.focus();},100);">
     <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 5 5"/></svg>
     <span>Search</span>
   </button>
