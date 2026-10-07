@@ -708,7 +708,7 @@ body.rn-search-only>#rnSearchPanel .rn-search-panel-inner{min-height:100%;box-si
 body.rn-search-only>#rnBottomNav{display:grid!important;z-index:20000!important}
 </style>
 <style id="rn-settings-standalone-style">
-body.rn-settings-only{overflow:hidden}
+body.rn-settings-only{overflow:visible!important}
 body.rn-settings-only>header,
 body.rn-settings-only>section:not(#rnSettingsPanel),
 body.rn-settings-only>footer,
@@ -722,7 +722,7 @@ body.rn-settings-only>#rnSettingsPanel{display:block!important;position:fixed!im
 body.rn-settings-only>#rnSettingsPanel .rn-settings-panel{min-height:100%;box-sizing:border-box}
 </style>
 <style id="rn-settings-navigation-fix">
-body.rn-settings-only{overflow:hidden!important}
+body.rn-settings-only{overflow:visible!important}
 body.rn-settings-only>header,
 body.rn-settings-only>section:not(#rnSettingsPanel),
 body.rn-settings-only>footer,
@@ -3092,6 +3092,112 @@ body.rn-gate-active #rnGateAge{
   setTimeout(startHome,120);
 })();
 </script>
+<script id="rn-final-mobile-controller">
+(function(){
+  const nav=document.getElementById('rnBottomNav');
+  const panel=document.getElementById('rnSearchPanel');
+  const form=document.getElementById('clientProfilForm');
+  const settings=document.getElementById('rnSettingsPanel');
+  if(!nav)return;
+
+  function unlock(){
+    document.documentElement.style.setProperty('overflow-y','auto','important');
+    document.documentElement.style.setProperty('height','auto','important');
+    document.body.style.setProperty('overflow-y','auto','important');
+    document.body.style.setProperty('overflow-x','hidden','important');
+    document.body.style.setProperty('position','static','important');
+    document.body.style.setProperty('height','auto','important');
+    document.body.style.setProperty('touch-action','pan-y','important');
+    document.body.classList.remove('rn-search-only','rn-settings-only','rn-buy-only','rn-promote-only','rn-wishlist-only');
+  }
+  function active(name){
+    nav.querySelectorAll('button[data-rn-nav]').forEach(b=>b.classList.toggle('active',b.dataset.rnNav===name));
+  }
+  function top(){
+    window.scrollTo(0,0);
+    document.documentElement.scrollTop=0;
+    document.body.scrollTop=0;
+  }
+  nav.addEventListener('click',function(e){
+    const b=e.target.closest('button[data-rn-nav]');
+    if(!b)return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    const name=b.dataset.rnNav;
+    unlock();
+
+    if(name==='search'){
+      if(panel)panel.hidden=false;
+      document.body.classList.add('rn-search-only');
+      active('search');
+      top();
+      setTimeout(()=>document.getElementById('rnGlobalSearchInput')?.focus(),50);
+      window.__rnRunGlobalSearch?.('');
+      return;
+    }
+
+    if(name==='home'){
+      if(panel)panel.hidden=true;
+      if(settings)settings.hidden=true;
+      active('home');
+      top();
+      return;
+    }
+
+    if(name==='buy'){
+      if(panel)panel.hidden=true;
+      if(settings)settings.hidden=true;
+      if(form){
+        form.hidden=false;
+        document.getElementById('rnWelcomeGate')?.setAttribute('hidden','');
+        window.__rumahnusaShowCustomerStep?.(1);
+        active('buy');
+        requestAnimationFrame(()=>form.scrollIntoView({behavior:'auto',block:'start'}));
+      }else{
+        active('buy');
+      }
+      return;
+    }
+
+    if(name==='settings'){
+      if(panel)panel.hidden=true;
+      if(settings){
+        settings.hidden=false;
+        document.body.classList.add('rn-settings-only');
+        active('settings');
+        top();
+      }
+      return;
+    }
+
+    if(name==='promote'){
+      if(panel)panel.hidden=true;
+      active('promote');
+      const target=document.querySelector('#contact,.cta');
+      target?.scrollIntoView({behavior:'auto',block:'start'});
+      return;
+    }
+
+    if(name==='wishlist'){
+      if(panel)panel.hidden=true;
+      active('wishlist');
+      const msg=document.getElementById('rnWishlistMessage');
+      if(msg) msg.scrollIntoView({behavior:'auto',block:'center'});
+      return;
+    }
+  },true);
+})();
+</script>
+<style id="rn-final-scroll-guard">
+html,body{height:auto!important;min-height:100%!important;overflow-x:hidden!important;overflow-y:auto!important;position:static!important}
+body.rn-search-only,body.rn-settings-only,body.rn-buy-only,body.rn-promote-only,body.rn-wishlist-only{
+  height:auto!important;min-height:100vh!important;overflow-x:hidden!important;overflow-y:auto!important;position:static!important;touch-action:pan-y!important;
+}
+body.rn-search-only>#rnSearchPanel{position:relative!important;inset:auto!important;height:auto!important;max-height:none!important;overflow:visible!important;}
+body.rn-search-only>#rnBottomNav,body.rn-settings-only>#rnBottomNav,body.rn-buy-only>#rnBottomNav,body.rn-promote-only>#rnBottomNav,body.rn-wishlist-only>#rnBottomNav{
+  position:fixed!important;left:0!important;right:0!important;bottom:0!important;z-index:50000!important;
+}
+</style>
 </body>
 <script>
 (function(){
@@ -3715,9 +3821,10 @@ body.rn-search-only>#rnBottomNav{display:grid!important;z-index:30000!important}
   .rn-city-card{flex-basis:150px}
 }
 </style>
-</html>
+
 <style id="rn-remove-old-customer-controls">.rn-listing-continue,.rn-select-home,#propertyContinueFloat,.rn-home-viewer-choose{display:none!important}</style>
 
 <style id="rn-search-no-close">#rnSearchClose{display:none!important}</style>
 
 \n
+</html>
