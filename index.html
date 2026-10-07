@@ -826,9 +826,17 @@ body.rn-search-only>#rnSearchPanel .rn-search-panel-inner{
   setTimeout(enforce,100);setTimeout(enforce,500);setTimeout(enforce,1200);
 })();
 </script>
+
+<style id="rn-fast-home-start">
+/* Fast start: no name, gender, or age gate. Open directly to RumahNusa home/categories. */
+#rnWelcomeGate{display:none!important}
+#clientProfilForm{display:block!important}
+#client-profile{display:block!important}
+#client-profile .client-form-step{display:block}
+</style>
 </head>
 
-<body class="rn-gate-active">
+<body>
 <header>
   <div class="logo">Rumah<span>Nusa</span></div>
 
@@ -1040,7 +1048,7 @@ body.rn-search-only>#rnSearchPanel .rn-search-panel-inner{
 .rn-gallery-caption{position:absolute;left:18px;right:18px;bottom:18px;color:#fff;text-align:center;font-size:15px}
 @media(max-width:600px){.rn-house-gallery{grid-template-columns:repeat(1,minmax(0,1fr));gap:12px}.rn-gallery-item img{height:210px}.rn-gallery-single-clear .rn-gallery-item img{height:320px}.rn-villa-crop-image{aspect-ratio:1.61/1}}
 </style>
-<section id="client-profile" class="client-area rn-login-locked">
+<section id="client-profile" class="client-area">
   <div class="section-title">
     <h2 data-en="Welcome to RumahNusa Real Estate" data-id="Selamat Datang di RumahNusa Real Estate">Selamat Datang di RumahNusa Real Estate</h2>
     <p data-en="Welcome to RumahNusa Real Estate. Discover beautiful, comfortable homes designed for peaceful everyday living, thoughtful spaces, and a place you can truly feel at home." data-id="Selamat datang di RumahNusa Real Estate. Temukan hunian yang indah dan nyaman untuk kehidupan yang tenang, ruang yang bermakna, dan tempat yang benar-benar terasa seperti rumah.">Welcome to RumahNusa Real Estate. Discover beautiful, comfortable homes designed for peaceful everyday living, thoughtful spaces, and a place you can truly feel at home.</p>
@@ -1071,7 +1079,7 @@ body.rn-search-only>#rnSearchPanel .rn-search-panel-inner{
       </div>
     </div>
 
-    <form id="clientProfilForm" hidden>
+    <form id="clientProfilForm">
       <div class="client-form-step active" data-step="1">
         <h3>Buy — Choose a Property Type</h3>
         <p>Choose one property category. Houses, villas, hotels and the other complete-property categories are for purchase only. Apartments are handled separately because apartments can be bought or rented.</p>
@@ -3110,6 +3118,25 @@ body.rn-gate-active #rnGateAge{
 </script>
 
 
+
+<script id="rn-fast-home-start-engine">
+(function(){
+  function startHome(){
+    document.body.classList.remove('rn-gate-active','rn-site-locked','rn-site-unlocked');
+    const profile=document.getElementById('client-profile');
+    const form=document.getElementById('clientProfilForm');
+    const gate=document.getElementById('rnWelcomeGate');
+    if(profile) profile.classList.remove('rn-login-locked');
+    if(form) form.hidden=false;
+    if(gate) gate.hidden=true;
+    if(typeof window.__rumahnusaShowCustomerStep==='function') window.__rumahnusaShowCustomerStep(1);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',startHome,{once:true});
+  else startHome();
+  setTimeout(startHome,120);
+  setTimeout(startHome,800);
+})();
+</script>
 </body>
 <script>
 (function(){
@@ -3578,9 +3605,12 @@ body.rn-gate-active #rnGateAge{
         if(selected) selected.classList.add('selected');
       }
     }else{
-      form.hidden=true;
+      form.hidden=false;
       form.querySelectorAll('.rn-selection-hidden').forEach(step=>step.classList.remove('active'));
       window.__rumahnusaCustomerStep=1;
+      document.getElementById('client-profile')?.classList.remove('rn-login-locked');
+      document.body.classList.remove('rn-gate-active');
+      if(typeof window.__rumahnusaShowCustomerStep==='function') window.__rumahnusaShowCustomerStep(1);
     }
     syncContinue();
     setTimeout(()=>{wireListings(); if(hasSavedCustomer) saveCustomerFlow();},300);
