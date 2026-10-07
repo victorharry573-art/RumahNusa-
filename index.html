@@ -1232,6 +1232,35 @@ body.rn-search-only>#rnSearchPanel .rn-search-panel-inner{
   </button>
 </nav>
 
+<script id="rn-bottom-nav-immediate-fix">
+(function(){
+  const nav=document.getElementById('rnBottomNav');
+  if(!nav)return;
+  nav.addEventListener('click',function(e){
+    const b=e.target.closest('button[data-rn-nav]');
+    if(!b)return;
+    const name=b.dataset.rnNav;
+    nav.querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===b));
+    if(name==='search'){
+      document.body.classList.remove('rn-settings-only','rn-buy-only','rn-promote-only','rn-wishlist-only');
+      document.body.classList.add('rn-search-only');
+      const panel=document.getElementById('rnSearchPanel');
+      if(panel){
+        panel.hidden=false;
+        panel.style.display='block';
+        window.scrollTo(0,0);
+        setTimeout(()=>document.getElementById('rnGlobalSearchInput')?.focus(),120);
+      }
+    }else if(name==='home'){
+      document.body.classList.remove('rn-search-only');
+      const panel=document.getElementById('rnSearchPanel');
+      if(panel)panel.hidden=true;
+      window.scrollTo(0,0);
+    }
+  },true);
+})();
+</script>
+
 <script id="rn-global-search-engine">
 (function(){
   const panel=document.getElementById('rnSearchPanel');
@@ -1425,7 +1454,7 @@ body.rn-search-only>#rnSearchPanel .rn-search-panel-inner{
   window.__rnRunGlobalSearch=render;
   input.addEventListener('input',()=>{showSuggestions(input.value);render(input.value)});
   clear.addEventListener('click',()=>{input.value='';showSuggestions('');render('');input.focus()});
-  close.addEventListener('click',()=>{panel.hidden=true;document.body.classList.remove('rn-search-only');document.querySelector('[data-rn-nav="home"]')?.click()});
+  close?.addEventListener('click',()=>{panel.hidden=true;document.body.classList.remove('rn-search-only');document.querySelector('[data-rn-nav="home"]')?.click()});
   document.querySelectorAll('.rn-search-chip').forEach(chip=>{
     chip.addEventListener('click',()=>{
       selectedType=chip.dataset.searchType||'All';
