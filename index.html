@@ -3872,6 +3872,95 @@ html,body{overflow-x:hidden!important;overflow-y:auto!important;height:auto!impo
   wire();document.addEventListener('DOMContentLoaded',wire,{once:true});setTimeout(wire,300);setTimeout(wire,1000);
 })();
 </script>
+<style id="rn-final-mobile-fix">
+html,body{
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  height:auto!important;
+  min-height:100%!important;
+  touch-action:pan-y!important;
+}
+#rnBottomNav{
+  pointer-events:auto!important;
+  z-index:2147483647!important;
+}
+#rnBottomNav button{
+  pointer-events:auto!important;
+  position:relative!important;
+  z-index:2147483648!important;
+  touch-action:manipulation!important;
+}
+</style>
 
+<script id="rn-final-mobile-fix-script">
+(function(){
+  'use strict';
+
+  function fixNav(){
+    var nav=document.getElementById('rnBottomNav');
+    if(!nav)return;
+
+    nav.style.pointerEvents='auto';
+
+    nav.querySelectorAll('button[data-rn-nav]').forEach(function(btn){
+      btn.style.pointerEvents='auto';
+      btn.style.touchAction='manipulation';
+
+      if(btn.dataset.finalFix)return;
+      btn.dataset.finalFix='1';
+
+      btn.addEventListener('click',function(e){
+        e.preventDefault();
+        e.stopPropagation();
+
+        var name=btn.dataset.rnNav;
+
+        if(name==='home'){
+          window.scrollTo({top:0,behavior:'smooth'});
+        }
+
+        if(name==='search'){
+          var p=document.getElementById('rnSearchPanel');
+          if(p){
+            p.hidden=false;
+            p.scrollIntoView({behavior:'smooth',block:'start'});
+          }
+        }
+
+        if(name==='buy'){
+          var p=document.getElementById('client-profile');
+          if(p){
+            p.hidden=false;
+            p.scrollIntoView({behavior:'smooth',block:'start'});
+          }
+        }
+
+        if(name==='promote'){
+          var p=document.getElementById('contact')||document.querySelector('.cta');
+          if(p)p.scrollIntoView({behavior:'smooth',block:'start'});
+        }
+
+        if(name==='wishlist'){
+          var p=document.getElementById('rnCleanWishlistMessage');
+          if(p)p.scrollIntoView({behavior:'smooth',block:'start'});
+        }
+
+        if(name==='settings'){
+          var p=document.getElementById('rnSettingsPanel');
+          if(p){
+            p.hidden=false;
+            p.scrollIntoView({behavior:'smooth',block:'start'});
+          }
+        }
+      },true);
+    });
+  }
+
+  fixNav();
+  document.addEventListener('DOMContentLoaded',fixNav);
+  setTimeout(fixNav,500);
+  setTimeout(fixNav,1500);
+})();
+</script>
 </body>
 </html>
