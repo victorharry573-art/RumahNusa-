@@ -497,8 +497,7 @@ body.rn-site-unlocked footer { display:none !important; }
 #rnLoginPhone,
 #rnLoginCountry {
   position: relative;
-  z-index: 20;
-  pointer-events: auto !important;
+  z-index: 20;  pointer-events: auto !important;
   touch-action: manipulation;
 }
 
@@ -997,8 +996,7 @@ body.rn-search-only>#rnSearchPanel .rn-search-panel-inner{
         <div class="features">
           <span>🛏 4 Beds</span>
           <span>🛁 3 Baths</span>
-          <span>📐 250 m²</span>
-        </div>
+          <span>📐 250 m²</span>        </div>
         <button class="copy-btn" type="button" data-copy="Vila with Private Pool | Bali, Indonesia | For Sale | $550,000 | 4 Beds | 3 Baths | 250 m²">Salin Detail</button>
       </div>
     </div>
@@ -1497,8 +1495,7 @@ body.rn-search-only>#rnSearchPanel .rn-search-panel-inner{
   const detailDefinitions={
     profile:['Profile','Manage your RumahNusa customer profile.','profile'],
     name:['Edit name','Change the name shown on your RumahNusa account.','name'],
-    email:['Email address','Update the email address used for RumahNusa messages.','email'],
-    phone:['Phone number','Add or update the phone number used when an agent needs to contact you.','phone'],
+    email:['Email address','Update the email address used for RumahNusa messages.','email'],    phone:['Phone number','Add or update the phone number used when an agent needs to contact you.','phone'],
     password:['Change password','Update your account password securely.','password'],
     security:['Login & security','Review account security options and sign-in protection.','security'],
     city:['Preferred city / area','Choose the places you want RumahNusa to use for your property searches.','city'],
@@ -1997,8 +1994,7 @@ window.RUMAHNUSA_SUPABASE_URL = window.RUMAHNUSA_SUPABASE_URL || 'https://vuhrki
   claimBtn.addEventListener('click',async()=>{
     if(!state.agentSelected||!state.user)return;
     const {data,error}=await client.from('conversations').update({agent_id:state.user.id,updated_at:new Date().toISOString()}).eq('id',state.agentSelected.id).is('agent_id',null).select('*').single();
-    if(error){status('Percakapan belum dapat diambil: '+error.message);return;}
-    state.agentSelected=data;claimBtn.hidden=true;await selectAgentConversation(data);
+    if(error){status('Percakapan belum dapat diambil: '+error.message);return;}    state.agentSelected=data;claimBtn.hidden=true;await selectAgentConversation(data);
   });
   document.getElementById('rnRefreshAgent').addEventListener('click',loadAgentConversations);
   // Keep the agent inbox fresh so new customer requests appear without manual navigation.
@@ -2498,7 +2494,6 @@ const choiceTitle=document.getElementById('rnChoiceTitle');
       closeHouseModal(true);
     }
   },{passive:true});
-
   listings.addEventListener('click',e=>{
     if(e.target.closest('button,select,input,label'))return;
     const card=e.target.closest('.rn-listing');
@@ -2997,8 +2992,7 @@ body.rn-gate-active #rnGateIdentityContinue:not([hidden]):not(:disabled){
     if(!name||!genderStep||!ageStep||!age||!continueBtn)return false;
 
     function sync(){
-      const hasName=!!name.value.trim();
-      const genderSelected=genderButtons.some(b=>b.getAttribute('aria-pressed')==='true');
+      const hasName=!!name.value.trim();      const genderSelected=genderButtons.some(b=>b.getAttribute('aria-pressed')==='true');
       const n=Number(age.value);
       const validAge=Number.isFinite(n)&&n>=18&&n<=120;
       genderStep.hidden=!hasName;
@@ -3497,8 +3491,7 @@ body.rn-gate-active #rnGateAge{
         if(card.dataset.rnNewWired)return;
         card.dataset.rnNewWired='1';
         const body=card.querySelector('.rn-listing-body');
-        if(!body)return;
-        const specs=card.querySelector('.rn-listing-specs')?.textContent||'';
+        if(!body)return;        const specs=card.querySelector('.rn-listing-specs')?.textContent||'';
         const roomSource=Array.from(document.querySelectorAll('#rooms option')).filter(o=>o.value).map(o=>o.value);
         const oldPrice=card.querySelector('.rn-listing-price');
         if(oldPrice){
@@ -3998,484 +3991,246 @@ body.rn-search-only #rnSearchPanel .rn-search-panel-inner{min-height:100dvh!impo
     results.innerHTML=inv.slice(0,20).map((r,i)=>{
       const x=r.item;
       return '<button type="button" class="rn-search-home-card" data-recommend="'+i+'">'+
-        '<img loading="lazy" src="'+esc(x[4])+'" alt="'+esc(x[0])+'">'+
-        '<div class="rn-search-home-card-body"><span class="rn-search-result-type">'+esc(typeLabel(r.type))+'</span>'+
-        '<h4>'+esc(x[0])+'</h4><p>📍 '+esc(x[1])+'</p><p>'+esc(x[3])+'</p></div></button>';
-    }).join('');
-    results.querySelectorAll('[data-recommend]').forEach((b,i)=>b.addEventListener('click',()=>showHome(inv.slice(0,20)[i],inv.slice(0,20)[i].item[1])));
-  }
-  function showStart(){
-    showOnly();
-    input.value='';
-    suggestions.hidden=true;
-    clear.hidden=true;
-    renderCityRail();
-    renderRecent();
-    results.className='rn-search-results';
-    document.querySelector('.rn-recommend-head')?.scrollIntoView({block:'start',behavior:'auto'});
-    renderRecommendations();
-    window.scrollTo(0,0);
-  }
-  function showCity(city){
-    showOnly();
-    input.value=city;
-    clear.hidden=false;
-    suggestions.hidden=true;
-    const homes=homesForCity(city);
-    results.className='rn-search-results';
-    results.innerHTML='<div class="rn-search-city-view"><button type="button" class="rn-search-back" data-search-back>← All cities</button>'+
-      '<div class="rn-search-city-head"><h3>'+esc(city)+'</h3><p>'+ (homes.length?homes.length+' RumahNusa homes and properties in this city.':'No homes are listed in this city yet.') +'</p></div></div>'+
-      (homes.length?homes.map((r,i)=>{
-        const x=r.item;
-        return '<button type="button" class="rn-search-home-card" data-city-home="'+i+'"><img loading="lazy" src="'+esc(x[4])+'" alt="'+esc(x[0])+'"><div class="rn-search-home-card-body"><span class="rn-search-result-type">'+esc(typeLabel(r.type))+'</span><h4>'+esc(x[0])+'</h4><p>📍 '+esc(x[1])+'</p><p>'+esc(x[3])+'</p></div></button>';
-      }).join(''):'<div class="rn-search-empty">No homes are listed in '+esc(city)+' yet.</div>');
-    results.querySelector('[data-search-back]')?.addEventListener('click',showStart);
-    results.querySelectorAll('[data-city-home]').forEach((b,i)=>b.addEventListener('click',()=>showHome(homes[i],city)));
-    window.scrollTo(0,0);
-  }
-  window.__rnSearchShowCity=showCity;
-
-  function showHome(r,city){
-    showOnly();
-    const x=r.item;
-    input.value=city||x[1];
-    clear.hidden=false;
-    suggestions.hidden=true;
-    saveRecent(r,city||x[1]);
-    results.className='rn-search-results';
-    results.innerHTML='<div class="rn-search-city-view"><button type="button" class="rn-search-back" data-search-back>← '+esc(city||x[1])+'</button>'+
-      '<div class="rn-search-city-head"><h3>'+esc(x[0])+'</h3><p>'+esc(typeLabel(r.type))+' · '+esc(x[1])+'</p></div></div>'+
-      '<button type="button" class="rn-search-home-card rn-search-open-detail" style="grid-column:1/-1">'+
-        '<img src="'+esc(x[4])+'" alt="'+esc(x[0])+'"><div class="rn-search-home-card-body"><span class="rn-search-result-type">'+esc(typeLabel(r.type))+'</span><h4>'+esc(x[0])+'</h4><p>📍 '+esc(x[1])+'</p><p><strong>'+esc(x[2])+'</strong></p><p>'+esc(x[3])+'</p><p>The public listing shows the city and Indonesia. Exact street/property location stays private and can be shared by the agent when appropriate.</p></div>'+
-      '</button>';
-    results.querySelector('[data-search-back]')?.addEventListener('click',()=>showCity(city||x[1]));
-    window.scrollTo(0,0);
-  }
-  function search(q){
-    const nq=norm(q);
-    if(!nq){showStart();return}
-    clear.hidden=false;
-    const cityMatches=cities.filter(c=>norm(c).includes(nq));
-    const inv=inventory().filter(r=>{
-      const x=r.item;
-      return norm(x[0]).includes(nq)||norm(x[1]).includes(nq)||norm(x[3]).includes(nq)||norm(r.type).includes(nq);
-    });
-    suggestions.hidden=true;
-    results.className='rn-search-results';
-    if(cityMatches.length){
-      results.innerHTML='<div class="rn-search-city-view"><div class="rn-search-city-head"><h3>Locations</h3><p>Tap a city to open its homes.</p></div></div>'+
-        cityMatches.slice(0,18).map(c=>'<button type="button" class="rn-city-card" data-search-city="'+esc(c)+'"><img loading="lazy" src="'+cityImage(c,20+cityMatches.indexOf(c))+'" alt="'+esc(c)+'"><div class="rn-city-card-body"><strong>'+esc(c)+'</strong><small>Tap to open</small></div></button>').join('');
-      results.querySelectorAll('[data-search-city]').forEach(b=>b.addEventListener('click',()=>showCity(b.dataset.searchCity)));
-      if(inv.length){
-        results.innerHTML+='<div class="rn-search-city-view" style="margin-top:4px"><div class="rn-search-city-head"><h3>Matching homes</h3><p>Properties matching your search.</p></div></div>';
-        results.innerHTML+=inv.slice(0,20).map((r,i)=>{const x=r.item;return '<button type="button" class="rn-search-home-card" data-search-home="'+i+'"><img loading="lazy" src="'+esc(x[4])+'" alt="'+esc(x[0])+'"><div class="rn-search-home-card-body"><span class="rn-search-result-type">'+esc(typeLabel(r.type))+'</span><h4>'+esc(x[0])+'</h4><p>📍 '+esc(x[1])+'</p><p>'+esc(x[3])+'</p></div></button>'}).join('');
-        results.querySelectorAll('[data-search-home]').forEach((b,i)=>b.addEventListener('click',()=>showHome(inv[i],inv[i].item[1])));
-      }
-      return;
-    }
-    if(inv.length){
-      results.innerHTML='<div class="rn-search-city-view"><div class="rn-search-city-head"><h3>Matching properties</h3><p>Tap any property to open it.</p></div></div>'+
-        inv.slice(0,30).map((r,i)=>{const x=r.item;return '<button type="button" class="rn-search-home-card" data-search-home="'+i+'"><img loading="lazy" src="'+esc(x[4])+'" alt="'+esc(x[0])+'"><div class="rn-search-home-card-body"><span class="rn-search-result-type">'+esc(typeLabel(r.type))+'</span><h4>'+esc(x[0])+'</h4><p>📍 '+esc(x[1])+'</p><p>'+esc(x[3])+'</p></div></button>'}).join('');
-      results.querySelectorAll('[data-search-home]').forEach((b,i)=>b.addEventListener('click',()=>showHome(inv[i],inv[i].item[1])));
-    }else{
-      /* Any Indonesian city or area can still be opened even before a home is listed there. */
-      const typed=String(q||'').trim();
-      results.innerHTML='<div class="rn-search-city-view"><div class="rn-search-city-head"><h3>Location</h3><p>Open this city or area and see its RumahNusa homes.</p></div></div>'+
-        '<button type="button" class="rn-city-card" style="grid-column:1/-1;width:100%;flex-basis:auto;display:flex;align-items:center;padding:10px" data-search-city-typed="'+esc(typed)+'">'+
-        '<img loading="lazy" style="width:110px;height:78px;border-radius:10px;flex:none" src="'+cityImage(typed,77)+'" alt="'+esc(typed)+'">'+
-        '<div class="rn-city-card-body"><strong>'+esc(typed)+'</strong><small>Tap to open this city or area</small></div></button>';
-      results.querySelector('[data-search-city-typed]')?.addEventListener('click',()=>showCity(typed));
-    }
-  }
-  function openSearch(){
-    showStart();
-    setTimeout(()=>input.focus(),90);
-  }
-
-  document.addEventListener('click',function(e){
-    const b=e.target.closest?.('#rnBottomNav [data-rn-nav="search"]');
-    if(!b)return;
-    e.preventDefault();e.stopImmediatePropagation();
-    openSearch();
-  },true);
-  input.addEventListener('input',()=>search(input.value));
-  clear.addEventListener('click',()=>{input.value='';showStart();input.focus()});
-  window.__rnOpenStandaloneSearch=openSearch;
-
-  // Keep the search page independent while allowing the bottom navigation to switch areas.
-  const navButtons=nav?.querySelectorAll('button')||[];
-  navButtons.forEach(b=>b.addEventListener('click',function(){
-    const target=this.dataset.rnNav;
-    if(target!=='search' && document.body.classList.contains('rn-search-only')){
-      document.body.classList.remove('rn-search-only');
-      panel.hidden=true;
-    }
-  }));
-})();
-</script>
-
-<style id="rn-search-no-close">#rnSearchClose{display:none!important}</style>
-
-<style id="rn-navigation-isolation-final">
-body.rn-search-only{overflow:hidden!important}
-body.rn-search-only>header,
-body.rn-search-only>section:not(#rnSearchPanel),
-body.rn-search-only>footer,
-body.rn-search-only>.hero,
-body.rn-search-only>#rnSettingsPanel,
-body.rn-search-only>#rnSettingDetail,
-body.rn-search-only>#rnWelcomeGate,
-body.rn-search-only>#clientProfilForm,
-body.rn-search-only>#rnSwipeHint{display:none!important}
-body.rn-search-only>#rnSearchPanel{display:block!important}
-body.rn-search-only>#rnBottomNav{display:grid!important}
-
-body.rn-settings-only{overflow:hidden!important}
-body.rn-settings-only>header,
-body.rn-settings-only>section:not(#rnSettingsPanel),
-body.rn-settings-only>footer,
-body.rn-settings-only>.hero,
-body.rn-settings-only>#rnSearchPanel,
-body.rn-settings-only>#rnWelcomeGate,
-body.rn-settings-only>#clientProfilForm,
-body.rn-settings-only>#rnSwipeHint{display:none!important}
-body.rn-settings-only>#rnSettingsPanel{display:block!important}
-body.rn-settings-only>#rnBottomNav{display:grid!important;z-index:20000!important}
-</style>
-
-<style id="rn-search-city-layout-final">
-/* Search stays focused: search field first, then the cities that have RumahNusa listings. */
-body.rn-search-only .rn-search-hero{display:none!important}
-body.rn-search-only .rn-search-panel-inner{padding-top:18px!important}
-body.rn-search-only .rn-search-card{margin-top:0!important}
-body.rn-search-only .rn-cities-top{margin-top:18px!important}
-body.rn-search-only .rn-city-rail{padding-left:0!important;padding-right:0!important}
-body.rn-search-only .rn-city-card{flex-basis:170px!important;border-radius:17px!important}
-body.rn-search-only .rn-city-card img{height:112px!important}
-body.rn-search-only .rn-search-results{padding-left:0!important;padding-right:0!important}
-body.rn-search-only .rn-search-section-head{padding-left:0!important;padding-right:0!important}
-@media(max-width:600px){
-  body.rn-search-only .rn-search-panel-inner{padding:16px 14px 100px!important}
-  body.rn-search-only .rn-city-card{flex-basis:164px!important}
-}
-</style>
-<script id="rn-search-city-layout-final-engine">
-(function(){
-  const panel=document.getElementById('rnSearchPanel');
-  if(!panel)return;
-  const inner=panel.querySelector('.rn-search-panel-inner');
-  const searchCard=panel.querySelector('.rn-search-card');
-  const cityHead=panel.querySelector('.rn-cities-top');
-  const cityRail=panel.querySelector('#rnSearchCities');
-  const suggestions=panel.querySelector('#rnSearchSuggestions');
-  const recent=panel.querySelector('#rnSearchRecentWrap');
-  const recommendHead=panel.querySelector('.rn-recommend-head');
-  const results=panel.querySelector('#rnSearchResults');
-  if(!inner||!searchCard||!cityHead||!cityRail)return;
-
-  /* Keep the search box at the top, followed immediately by city choices. */
-  inner.insertBefore(searchCard,cityHead);
-  if(suggestions) inner.insertBefore(suggestions,cityHead);
-  inner.insertBefore(cityHead,cityRail);
-  inner.insertBefore(cityRail,recent||recommendHead||results);
-
-  /* The city rail is driven from actual RumahNusa inventory. */
-  const baseCities=['Jakarta','Bali','Surabaya','Bandung','Medan','Semarang','Yogyakarta','Makassar','Palembang','Denpasar','Padang','Pekanbaru','Bandar Lampung','Jambi','Bengkulu','Serang','Pontianak','Banjarmasin','Samarinda','Manado','Mataram','Kupang','Jayapura','Batam','Malang','Solo','Bogor','Bekasi','Depok','Tangerang','South Jakarta','Central Jakarta','North Jakarta','West Jakarta','East Jakarta','South Tangerang','BSD City','Alam Sutera','Cipondoh','Karawaci','Ciledug','Serpong','Gading Serpong','Ubud','Seminyak','Canggu','Kuta','Gianyar'];
-
-  const norm=s=>String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
-  const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-  const inventory=()=>Object.entries(window.__rnAllCategoryData||{}).flatMap(([type,d])=>
-    (Array.isArray(d&&d.listings)?d.listings:[]).map(item=>({type,item}))
-  );
-  const cityImageMap={
-    'Jakarta':'https://images.unsplash.com/photo-1555899434-94d1368aa7af?auto=format&fit=crop&w=900&q=85',
-    'Bali':'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=900&q=85',
-    'Surabaya':'https://images.unsplash.com/photo-1584810359583-96fc3447be0b?auto=format&fit=crop&w=900&q=85',
-    'Bandung':'https://images.unsplash.com/photo-1518005020951-eccb494ad742?auto=format&fit=crop&w=900&q=85',
-    'Medan':'https://images.unsplash.com/photo-1531058020387-3be344556be6?auto=format&fit=crop&w=900&q=85',
-    'Semarang':'https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=900&q=85',
-    'Yogyakarta':'https://images.unsplash.com/photo-1596422846543-75c6fc197f07?auto=format&fit=crop&w=900&q=85',
-    'Makassar':'https://images.unsplash.com/photo-1548013146-72479768bada?auto=format&fit=crop&w=900&q=85'
-  };
-  const fallback='https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=85';
-  const homesForCity=city=>inventory().filter(r=>{
-    const loc=norm(r.item&&r.item[1]);
-    const n=norm(city);
-    return loc.includes(n)||n.includes(loc);
-  });
-
-  function renderCities(){
-    const known=[...new Set(baseCities)];
-    const fromListings=[];
-    inventory().forEach(r=>{
-      const loc=String(r.item&&r.item[1]||'').replace(/,\s*Indonesia.*$/i,'').trim();
-      if(loc)fromListings.push(loc);
-    });
-    // Show the city choices first. A city remains visible even before its first listing is added.
-    const cities=[...new Set([...known,...fromListings])];
-    cityRail.innerHTML=cities.map((city,i)=>{
-      const image=cityImageMap[city]||fallback;
-      return '<button type="button" class="rn-city-card" data-rn-city="'+esc(city)+'" aria-label="'+esc(city)+'">'+
-        '<img loading="lazy" src="'+esc(image)+'" alt="'+esc(city)+'" onerror="this.onerror=null;this.src=\''+fallback+'\'">'+
-        '<div class="rn-city-card-body"><strong>'+esc(city)+'</strong></div>'+
-      '</button>';
-    }).join('');
-    const openCity=city=>{
-      if(typeof window.__rnSearchShowCity==='function'){
-        window.__rnSearchShowCity(city);
-      }
-    };
-    cityRail.querySelectorAll('[data-rn-city]').forEach(b=>{
-      b.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openCity(b.getAttribute('data-rn-city'));});
-      b.addEventListener('pointerup',e=>{
-        if(e.pointerType==='mouse'&&e.button!==0)return;
-        e.preventDefault();e.stopPropagation();openCity(b.getAttribute('data-rn-city'));
-      });
-      b.addEventListener('touchend',e=>{e.preventDefault();openCity(b.getAttribute('data-rn-city'));},{passive:false});
-    });
-  }
-
-  renderCities();
-  setTimeout(renderCities,700);
-  setTimeout(renderCities,1800);
-
-  /* If there are no recommendations yet, leave the area empty rather than showing instructional text. */
-  const observer=new MutationObserver(()=>{
-    if(!results)return;
-    const txt=results.textContent.trim().toLowerCase();
-    if(/properties are built|will appear here|homes will appear|built and added/.test(txt)){
-      results.innerHTML='';
-    }
-  });
-  observer.observe(results,{childList:true,subtree:true,characterData:true});
-})();
-</script>
-
-<style id="rn-mobile-identity-scroll-fix">
-/* Reliable phone scrolling and direct name-input focus. */
-body.rn-gate-active{
-  overflow-y:auto!important;
+<!-- RUMAHNUSA_DIRECT_MOBILE_NAV_V2 -->
+<style id="rn-direct-mobile-nav-v2">
+html,body{
   overflow-x:hidden!important;
+  overflow-y:auto!important;
   height:auto!important;
-  min-height:100dvh!important;
+  min-height:100%!important;
   position:static!important;
   touch-action:pan-y!important;
 }
-body.rn-gate-active #client-profile{
-  display:block!important;
+body.rn-search-only,body.rn-settings-only,body.rn-buy-only,body.rn-promote-only,body.rn-wishlist-only{
+  overflow-y:auto!important;
+  position:static!important;
   height:auto!important;
-  min-height:100dvh!important;
+  min-height:100%!important;
+  touch-action:pan-y!important;
+}
+#rnBottomNav{
+  pointer-events:auto!important;
+  touch-action:manipulation!important;
+  z-index:2147483647!important;
+}
+#rnBottomNav button{
+  pointer-events:auto!important;
+  touch-action:manipulation!important;
+  position:relative!important;
+  z-index:2147483648!important;
+}
+#rnSearchPanel,#rnSettingsPanel{
+  position:relative!important;
+  inset:auto!important;
+  height:auto!important;
   max-height:none!important;
   overflow:visible!important;
-  position:relative!important;
-  touch-action:pan-y!important;
-}
-body.rn-gate-active #rnWelcomeGate{
-  height:auto!important;
-  min-height:0!important;
-  overflow:visible!important;
-  position:relative!important;
-  touch-action:pan-y!important;
-}
-body.rn-gate-active #rnGateName{
-  display:block!important;
-  width:100%!important;
-  min-height:54px!important;
-  position:relative!important;
-  z-index:60001!important;
-  pointer-events:auto!important;
-  touch-action:auto!important;
-  -webkit-user-select:text!important;
-  user-select:text!important;
-  cursor:text!important;
-}
-
-body.rn-gate-active #rnGateName{pointer-events:auto!important;touch-action:auto!important;-webkit-tap-highlight-color:transparent!important;}
-</style>
-<script id="rn-mobile-identity-scroll-fix-engine">
-(function(){
-  function bootIdentityTouch(){
-    const name=document.getElementById('rnGateName');
-    const genderStep=document.getElementById('rnGateGenderStep');
-    const ageStep=document.getElementById('rnGateAgeStep');
-    const age=document.getElementById('rnGateAge');
-    const continueBtn=document.getElementById('rnGateIdentityContinue');
-    const genders=Array.from(document.querySelectorAll('#rnGateGenderStep .rn-gender-option'));
-    if(!name||!genderStep||!ageStep||!age||!continueBtn)return false;
-
-    const bringIntoView=(el,delay)=>{
-      if(!el||el.hidden)return;
-      setTimeout(()=>{
-        try{el.scrollIntoView({behavior:'smooth',block:'center',inline:'nearest'});}catch(e){}
-      },delay||80);
-    };
-
-    if(!name.dataset.rnScrollFix){
-      name.dataset.rnScrollFix='1';
-      name.addEventListener('focus',()=>bringIntoView(name,80));
-      name.addEventListener('click',()=>bringIntoView(name,80));
-      name.addEventListener('input',()=>{
-        if(!genderStep.hidden)bringIntoView(genderStep,120);
-      });
-    }
-
-    if(!age.dataset.rnScrollFix){
-      age.dataset.rnScrollFix='1';
-      age.addEventListener('focus',()=>bringIntoView(age,80));
-      age.addEventListener('click',()=>bringIntoView(age,80));
-      age.addEventListener('input',()=>{
-        const n=Number(age.value);
-        if(n>=18&&n<=120)bringIntoView(continueBtn,120);
-      });
-    }
-
-    genders.forEach(btn=>{
-      if(btn.dataset.rnScrollFix)return;
-      btn.dataset.rnScrollFix='1';
-      btn.addEventListener('click',()=>{
-        setTimeout(()=>bringIntoView(ageStep,120),120);
-      });
-    });
-
-    if(!continueBtn.dataset.rnScrollFix){
-      continueBtn.dataset.rnScrollFix='1';
-      continueBtn.addEventListener('click',()=>setTimeout(()=>{
-        const form=document.getElementById('clientProfilForm');
-        if(form&&!form.hidden)form.scrollIntoView({behavior:'smooth',block:'start'});
-      },180));
-    }
-
-    return true;
-  }
-
-  bootIdentityTouch();
-  document.addEventListener('DOMContentLoaded',bootIdentityTouch,{once:true});
-  setTimeout(bootIdentityTouch,200);
-  setTimeout(bootIdentityTouch,800);
-})();
-</script>
-<script id="rn-direct-name-focus-fix">
-(function(){
-  function install(){
-    const name=document.getElementById('rnGateName');
-    if(!name||name.dataset.rnHardFix)return;
-    name.dataset.rnHardFix='1';
-    name.style.pointerEvents='auto';
-    name.style.touchAction='auto';
-    const focusName=()=>{try{name.focus();}catch(e){}};
-    name.addEventListener('click',focusName,true);
-    name.addEventListener('pointerup',focusName,true);
-    name.addEventListener('touchend',focusName,{passive:true});
-  }
-  install();
-  document.addEventListener('DOMContentLoaded',install,{once:true});
-  setTimeout(install,250);
-})();
-</script>
-
-\n\n
-<!-- RUMAHNUSA_STABLE_NAV_OVERRIDE_V1 -->
-<style id="rn-stable-nav-override">
-/* Stable mobile navigation: keep the page in normal document flow. */
-html,body{overflow-x:hidden!important;overflow-y:auto!important;position:static!important;touch-action:pan-y!important}
-body.rn-search-only,body.rn-settings-only,body.rn-buy-only,body.rn-promote-only,body.rn-wishlist-only{
-  overflow-y:auto!important;position:static!important;touch-action:pan-y!important;
-}
-body.rn-search-only>header,
-body.rn-search-only>section:not(#rnSearchPanel),
-body.rn-search-only>footer,
-body.rn-settings-only>header,
-body.rn-settings-only>section:not(#rnSettingsPanel),
-body.rn-settings-only>footer{display:block!important}
-body.rn-search-only>#rnSearchPanel,
-body.rn-settings-only>#rnSettingsPanel{
-  position:static!important;inset:auto!important;width:100%!important;height:auto!important;
-  max-height:none!important;overflow:visible!important;z-index:auto!important;
-}
-body.rn-search-only>#rnSearchPanel .rn-search-panel-inner,
-body.rn-settings-only>#rnSettingsPanel .rn-settings-panel{
-  min-height:0!important;padding-bottom:120px!important;
 }
 #rnSearchPanel[hidden],#rnSettingsPanel[hidden]{display:none!important}
-#rnBottomNav{pointer-events:auto!important;z-index:2147483647!important}
-#rnBottomNav button{pointer-events:auto!important;touch-action:manipulation!important}
+#client-profile,#clientProfilForm{
+  position:relative!important;
+  height:auto!important;
+  max-height:none!important;
+  overflow:visible!important;
+  touch-action:pan-y!important;
+}
 </style>
-<script id="rn-stable-nav-override-script">
+<script id="rn-direct-mobile-nav-v2-script">
 (function(){
-  const nav=document.getElementById('rnBottomNav');
-  if(!nav)return;
-  function clean(){
-    document.body.classList.remove('rn-search-only','rn-settings-only','rn-buy-only','rn-promote-only','rn-wishlist-only','rn-site-locked','rn-site-unlocked','rn-gate-active');
+  'use strict';
+
+  function cleanView(){
+    document.body.classList.remove(
+      'rn-search-only','rn-settings-only','rn-buy-only',
+      'rn-promote-only','rn-wishlist-only','rn-site-locked',
+      'rn-site-unlocked','rn-gate-active'
+    );
     document.documentElement.style.overflowY='auto';
+    document.documentElement.style.position='static';
     document.body.style.overflowY='auto';
     document.body.style.position='static';
     document.body.style.touchAction='pan-y';
-  }
-  function go(name){
-    clean();
+
     const search=document.getElementById('rnSearchPanel');
     const settings=document.getElementById('rnSettingsPanel');
-    const form=document.getElementById('clientProfilForm');
-    if(search)search.hidden=true;
-    if(settings)settings.hidden=true;
+    if(search) search.hidden=true;
+    if(settings) settings.hidden=true;
+  }
+
+  function activate(button){
+    const nav=document.getElementById('rnBottomNav');
+    nav?.querySelectorAll('button[data-rn-nav]').forEach(x=>{
+      x.classList.toggle('active',x===button);
+    });
+  }
+
+  function scrollToElement(el){
+    if(!el)return;
+    el.hidden=false;
+    requestAnimationFrame(function(){
+      try{el.scrollIntoView({behavior:'smooth',block:'start'});}
+      catch(_){el.scrollIntoView();}
+    });
+  }
+
+  function openCategory(button){
+    const name=button && button.dataset ? button.dataset.value : '';
+    if(!name)return;
+
+    cleanView();
+
+    try{
+      if(typeof window.__rnOpenCategory==='function'){
+        window.__rnOpenCategory(name);
+      }
+    }catch(err){
+      console.warn('RumahNusa category renderer error:',err);
+    }
+
+    setTimeout(function(){
+      const collection=document.getElementById('rnCategoryCollection');
+      const grid=document.getElementById('propertyOptions');
+      const title=document.getElementById('rnCategoryTitle');
+      const intro=document.getElementById('rnCategoryIntro');
+      const badge=document.getElementById('rnCategoryBadge');
+      const data=window.__rnCategoryDataMap && window.__rnCategoryDataMap[name];
+
+      if(collection && grid && collection.hidden){
+        grid.querySelectorAll('.rn-home-category').forEach(x=>x.classList.toggle('selected',x===button));
+        collection.hidden=false;
+        if(title)title.textContent=data?.title || ((button.querySelector('strong')?.textContent||name)+' homes');
+        if(intro)intro.textContent=data?.intro || 'Choose a home in this category.';
+        if(badge)badge.textContent=data?.badge || name.toUpperCase();
+        const listings=document.getElementById('rnCategoryListings');
+        if(listings && data?.listings?.length){
+          listings.innerHTML=data.listings.map(function(x){
+            return '<article class="rn-listing">'+
+              '<img loading="eager" src="'+String(x[4]||'')+'" alt="'+String(x[0]||'')+'">'+
+              '<div class="rn-listing-body">'+
+              '<h5>'+String(x[0]||'')+'</h5>'+
+              '<p>📍 '+String(x[1]||'')+'</p>'+
+              '<p class="rn-listing-price">Price will be added later when this property is ready.</p>'+
+              '<div class="rn-listing-specs">'+String(x[3]||'').split(' · ').map(s=>'<span>'+s+'</span>').join('')+'</div>'+
+              '</div></article>';
+          }).join('');
+        }
+      }
+      if(collection)collection.hidden=false;
+      if(collection)scrollToElement(collection);
+      else scrollToElement(grid);
+    },100);
+  }
+
+  function handleNav(button){
+    const name=button.dataset.rnNav;
+    cleanView();
+    activate(button);
+
     if(name==='home'){
       window.scrollTo({top:0,behavior:'smooth'});
       return;
     }
+
     if(name==='search'){
-      if(search){
-        search.hidden=false;
-        requestAnimationFrame(()=>search.scrollIntoView({behavior:'smooth',block:'start'}));
-      }
-      return;
-    }
-    if(name==='buy'){
-      if(form){
-        form.hidden=false;
-        const gate=document.getElementById('rnWelcomeGate');
-        if(gate)gate.hidden=true;
-        if(typeof window.__rumahnusaShowCustomerStep==='function'){
-          try{window.__rumahnusaShowCustomerStep(1);}catch(e){}
+      const panel=document.getElementById('rnSearchPanel');
+      if(panel){
+        panel.hidden=false;
+        if(typeof window.__rnOpenStandaloneSearch==='function'){
+          try{window.__rnOpenStandaloneSearch();return;}catch(_){}
         }
-        requestAnimationFrame(()=>form.scrollIntoView({behavior:'smooth',block:'start'}));
+        scrollToElement(panel);
       }
       return;
     }
+
+    if(name==='buy'){
+      const profile=document.getElementById('client-profile');
+      const form=document.getElementById('clientProfilForm');
+      if(profile)profile.hidden=false;
+      if(form)form.hidden=false;
+      const gate=document.getElementById('rnWelcomeGate');
+      if(gate)gate.hidden=true;
+      if(typeof window.__rumahnusaShowCustomerStep==='function'){
+        try{window.__rumahnusaShowCustomerStep(1);}catch(_){}
+      }
+      scrollToElement(form||profile);
+      return;
+    }
+
     if(name==='promote'){
-      const target=document.querySelector('#contact')||document.querySelector('.cta');
-      if(target)requestAnimationFrame(()=>target.scrollIntoView({behavior:'smooth',block:'start'}));
+      scrollToElement(document.getElementById('contact'));
       return;
     }
+
     if(name==='wishlist'){
-      const msg=document.getElementById('rnWishlistMessage');
-      if(msg){msg.hidden=false;requestAnimationFrame(()=>msg.scrollIntoView({behavior:'smooth',block:'center'}));}
-      else{
-        const p=document.createElement('div');
-        p.id='rnWishlistMessage';
-        p.textContent='Your Wish list is ready. Select a property and add it to your Wish list.';
-        p.style.cssText='margin:24px auto 110px;max-width:430px;background:#fff;padding:16px;border:1px solid #e4e4e7;border-radius:14px;box-shadow:0 8px 30px rgba(16,42,67,.18);color:#3f3f46;font-weight:700;text-align:center';
-        document.body.appendChild(p);
-        p.scrollIntoView({behavior:'smooth',block:'center'});
-        setTimeout(()=>p.remove(),2800);
+      let msg=document.getElementById('rnDirectWishlistMessage');
+      if(!msg){
+        msg=document.createElement('div');
+        msg.id='rnDirectWishlistMessage';
+        msg.textContent='Your Wish list is ready. Select a property to save it here.';
+        msg.style.cssText='margin:24px auto 120px;max-width:520px;padding:18px;background:#fff;border:1px solid #e4e4e7;border-radius:14px;text-align:center;font-weight:700;color:#3f3f46';
+        document.body.appendChild(msg);
       }
+      scrollToElement(msg);
       return;
     }
+
     if(name==='settings'){
-      if(settings){
-        settings.hidden=false;
-        requestAnimationFrame(()=>settings.scrollIntoView({behavior:'smooth',block:'start'}));
+      const panel=document.getElementById('rnSettingsPanel');
+      if(panel){
+        panel.hidden=false;
+        scrollToElement(panel);
       }
     }
   }
-  function handle(e){
-    const b=e.target&&e.target.closest&&e.target.closest('#rnBottomNav button[data-rn-nav]');
-    if(!b)return;
+
+  function targetFromEvent(e){
+    const t=e && e.target;
+    if(!t || !t.closest)return null;
+    const nav=t.closest('#rnBottomNav button[data-rn-nav]');
+    if(nav)return {kind:'nav',el:nav};
+    const cat=t.closest('#propertyOptions .rn-home-category');
+    if(cat)return {kind:'category',el:cat};
+    return null;
+  }
+
+  /* Window capture runs before the older document-level handlers in this file.
+     We handle the critical mobile controls here and stop those old handlers
+     from cancelling the tap or locking the page. */
+  window.addEventListener('click',function(e){
+    const hit=targetFromEvent(e);
+    if(!hit)return;
     e.preventDefault();
     e.stopImmediatePropagation();
-    nav.querySelectorAll('button').forEach(x=>x.classList.toggle('active',x===b));
-    go(b.dataset.rnNav);
-  }
-  document.addEventListener('click',handle,true);
+    if(hit.kind==='nav')handleNav(hit.el);
+    else openCategory(hit.el);
+  },true);
+
+  window.addEventListener('pointerup',function(e){
+    const hit=targetFromEvent(e);
+    if(!hit)return;
+    if(e.pointerType==='mouse' && e.button!==0)return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    if(hit.kind==='nav')handleNav(hit.el);
+    else openCategory(hit.el);
+  },true);
+
+  window.addEventListener('touchend',function(e){
+    const hit=targetFromEvent(e);
+    if(!hit)return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    if(hit.kind==='nav')handleNav(hit.el);
+    else openCategory(hit.el);
+  },{capture:true,passive:false});
+
+  window.addEventListener('touchmove',function(e){
+    /* Never allow the old page scripts to cancel normal finger scrolling. */
+    if(!e.target?.closest?.('#rnBottomNav')){
+      e.stopImmediatePropagation();
+    }
+  },{capture:true,passive:true});
 })();
 </script>
-\n
+<!-- /RUMAHNUSA_DIRECT_MOBILE_NAV_V2 -->
