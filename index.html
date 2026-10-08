@@ -3962,5 +3962,98 @@ html,body{
   setTimeout(fixNav,1500);
 })();
 </script>
+</body><style id="rn-navigation-touch-final">
+#rnBottomNav{
+  pointer-events:auto!important;
+  touch-action:manipulation!important;
+}
+
+#rnBottomNav button{
+  pointer-events:auto!important;
+  touch-action:manipulation!important;
+  -webkit-tap-highlight-color:transparent!important;
+}
+</style>
+
+<script id="rn-navigation-touch-final-script">
+(function(){
+  'use strict';
+
+  var lastNavTouch=0;
+
+  function activateFromPoint(x,y){
+    var now=Date.now();
+
+    if(now-lastNavTouch<400)return;
+
+    var nav=document.getElementById('rnBottomNav');
+    if(!nav)return;
+
+    var rect=nav.getBoundingClientRect();
+
+    if(
+      x<rect.left ||
+      x>rect.right ||
+      y<rect.top ||
+      y>rect.bottom
+    )return;
+
+    var buttons=Array.from(
+      nav.querySelectorAll('button[data-rn-nav]')
+    );
+
+    if(!buttons.length)return;
+
+    var buttonWidth=rect.width/buttons.length;
+
+    var index=Math.floor(
+      (x-rect.left)/buttonWidth
+    );
+
+    index=Math.max(
+      0,
+      Math.min(buttons.length-1,index)
+    );
+
+    var button=buttons[index];
+
+    if(!button)return;
+
+    lastNavTouch=now;
+
+    button.click();
+  }
+
+  window.addEventListener(
+    'pointerup',
+    function(e){
+      activateFromPoint(
+        e.clientX,
+        e.clientY
+      );
+    },
+    true
+  );
+
+  window.addEventListener(
+    'touchend',
+    function(e){
+      if(
+        !e.changedTouches ||
+        !e.changedTouches.length
+      )return;
+
+      var t=e.changedTouches[0];
+
+      activateFromPoint(
+        t.clientX,
+        t.clientY
+      );
+    },
+    true
+  );
+
+})();
+</script>
 </body>
 </html>
