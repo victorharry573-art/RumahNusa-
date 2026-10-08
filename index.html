@@ -3884,4 +3884,55 @@ body.rn-search-only>#rnBottomNav{display:grid!important;z-index:30000!important}
 <style id="rn-search-no-close">#rnSearchClose{display:none!important}</style>
 
 \n
+<script id="rn-absolute-mobile-nav-controller">
+(function(){
+  function install(){
+    const nav=document.getElementById('rnBottomNav');
+    if(!nav)return;
+    nav.style.setProperty('pointer-events','auto','important');
+    nav.style.setProperty('z-index','2147483647','important');
+    nav.querySelectorAll('button').forEach(b=>{
+      b.style.setProperty('pointer-events','auto','important');
+      b.style.setProperty('touch-action','manipulation','important');
+      b.style.setProperty('position','relative','important');
+      b.style.setProperty('z-index','2147483647','important');
+    });
+    function run(name){
+      const b=nav.querySelector('button[data-rn-nav="'+name+'"]');
+      if(!b)return;
+      b.click();
+    }
+    function fromPoint(e){
+      const t=e.changedTouches&&e.changedTouches[0];
+      if(!t)return;
+      const rect=nav.getBoundingClientRect();
+      if(t.clientY < rect.top-12)return;
+      const buttons=Array.from(nav.querySelectorAll('button[data-rn-nav]'));
+      if(!buttons.length)return;
+      const x=t.clientX;
+      const b=buttons.find(btn=>{
+        const r=btn.getBoundingClientRect();
+        return x>=r.left && x<=r.right;
+      });
+      if(!b)return;
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      run(b.dataset.rnNav);
+    }
+    document.addEventListener('touchend',fromPoint,{capture:true,passive:false});
+    document.addEventListener('pointerup',function(e){
+      const rect=nav.getBoundingClientRect();
+      if(e.clientY<rect.top-12)return;
+      const b=Array.from(nav.querySelectorAll('button[data-rn-nav]')).find(btn=>{
+        const r=btn.getBoundingClientRect();
+        return e.clientX>=r.left&&e.clientX<=r.right;
+      });
+      if(b){e.preventDefault();e.stopImmediatePropagation();run(b.dataset.rnNav);}
+    },{capture:true,passive:false});
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',install,{once:true});
+  else install();
+  setTimeout(install,500);
+})();
+</script>
 </html>
