@@ -1,6 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- RUMAHNUSA_EARLY_MOBILE_NAV_V3 -->
+<style id="rn-early-nav-v3">
+html,body{overflow-x:hidden!important;overflow-y:auto!important;position:static!important;height:auto!important;min-height:100%!important;touch-action:pan-y!important}
+#rnBottomNav,#rnBottomNav button{pointer-events:auto!important;touch-action:manipulation!important}
+#rnBottomNav{z-index:2147483647!important}
+#rnBottomNav button{position:relative!important;z-index:2147483648!important}
+</style>
+<script id="rn-early-nav-v3-script">
+(function(){
+  'use strict';
+  var lastAction=0;
+  function hit(e){
+    var t=e&&e.target;
+    if(!t||!t.closest)return null;
+    var n=t.closest('#rnBottomNav button[data-rn-nav]');
+    if(n)return ['nav',n];
+    var c=t.closest('#propertyOptions .rn-home-category');
+    if(c)return ['cat',c];
+    return null;
+  }
+  function reset(){
+    var b=document.body, h=document.documentElement;
+    b.classList.remove('rn-search-only','rn-settings-only','rn-buy-only','rn-promote-only','rn-wishlist-only','rn-site-locked','rn-site-unlocked','rn-gate-active');
+    h.style.overflow='auto';h.style.position='static';h.style.touchAction='pan-y';
+    b.style.overflow='auto';b.style.position='static';b.style.touchAction='pan-y';
+    var s=document.getElementById('rnSearchPanel'),p=document.getElementById('rnSettingsPanel');
+    if(s)s.hidden=true;if(p)p.hidden=true;
+  }
+  function scroll(el){
+    if(!el)return;
+    try{el.hidden=false;}catch(_){}
+    setTimeout(function(){try{el.scrollIntoView({behavior:'smooth',block:'start'});}catch(_){try{el.scrollIntoView();}catch(__){}}},0);
+  }
+  function category(c){
+    reset();
+    var name=c.dataset.value;
+    try{
+      if(typeof window.__rnOpenCategory==='function')window.__rnOpenCategory(name);
+    }catch(_){}
+    setTimeout(function(){
+      var col=document.getElementById('rnCategoryCollection');
+      if(col&&col.hidden){
+        col.hidden=false;
+        var title=document.getElementById('rnCategoryTitle');
+        var intro=document.getElementById('rnCategoryIntro');
+        var badge=document.getElementById('rnCategoryBadge');
+        var d=window.__rnCategoryDataMap&&window.__rnCategoryDataMap[name];
+        if(title)title.textContent=d&&d.title?d.title:(c.querySelector('strong')?.textContent||name)+' homes';
+        if(intro)intro.textContent=d&&d.intro?d.intro:'Choose a home in this category.';
+        if(badge)badge.textContent=d&&d.badge?d.badge:name.toUpperCase();
+      }
+      scroll(col||document.getElementById('propertyOptions'));
+    },80);
+  }
+  function nav(btn){
+    reset();
+    document.querySelectorAll('#rnBottomNav button[data-rn-nav]').forEach(function(x){x.classList.toggle('active',x===btn);});
+    var name=btn.dataset.rnNav;
+    if(name==='home'){window.scrollTo(0,0);return;}
+    if(name==='search'){
+      var p=document.getElementById('rnSearchPanel');
+      if(p)p.hidden=false;
+      try{
+        if(typeof window.__rnOpenStandaloneSearch==='function'){window.__rnOpenStandaloneSearch();return;}
+      }catch(_){}
+      scroll(p);
+      return;
+    }
+    if(name==='buy'){
+      var profile=document.getElementById('client-profile'),form=document.getElementById('clientProfilForm');
+      if(profile)profile.hidden=false;if(form)form.hidden=false;
+      try{if(typeof window.__rumahnusaShowCustomerStep==='function')window.__rumahnusaShowCustomerStep(1);}catch(_){}
+      scroll(form||profile);return;
+    }
+    if(name==='promote'){scroll(document.getElementById('contact'));return;}
+    if(name==='wishlist'){
+      var w=document.getElementById('rnDirectWishlistMessage');
+      if(!w){w=document.createElement('div');w.id='rnDirectWishlistMessage';w.textContent='Your Wish list is ready. Select a property to save it here.';w.style.cssText='margin:24px auto 120px;padding:18px;background:#fff;border:1px solid #ddd;border-radius:14px;text-align:center;font-weight:700';document.body.appendChild(w);}
+      scroll(w);return;
+    }
+    if(name==='settings'){var s=document.getElementById('rnSettingsPanel');if(s){s.hidden=false;scroll(s);}}
+  }
+  function run(e){
+    var now=Date.now();if(now-lastAction<250)return;
+    var h=hit(e);if(!h)return;
+    lastAction=now;
+    e.preventDefault();e.stopImmediatePropagation();
+    if(h[0]==='nav')nav(h[1]);else category(h[1]);
+  }
+  /* Registered immediately, before the many older handlers lower in index.html. */
+  window.addEventListener('touchend',run,{capture:true,passive:false});
+  window.addEventListener('pointerup',run,{capture:true,passive:false});
+  window.addEventListener('click',run,{capture:true,passive:false});
+})();
+</script>
+<!-- /RUMAHNUSA_EARLY_MOBILE_NAV_V3 -->
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
