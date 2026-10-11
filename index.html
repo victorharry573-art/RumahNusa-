@@ -3813,48 +3813,183 @@ body.rn-search-only #rnSearchPanel .rn-search-panel-inner{min-height:100dvh!impo
       const x=r.item;
       return '<button type="button" class="rn-search-home-card" data-recommend="'+i+'">'+
 
-<!-- RumahNusa mobile search: keep search in normal document flow so the phone page can scroll. -->
-<style id="rn-mobile-search-scroll-fix">
-html, body {
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
-  height: auto !important;
-  min-height: 100% !important;
-  touch-action: pan-y !important;
+<style id="rn-clean-mobile-navigation-style">
+html,body{overflow-x:hidden!important;overflow-y:auto!important;height:auto!important;min-height:100%!important;touch-action:pan-y!important}
+#rnBottomNav,#rnBottomNav button{pointer-events:auto!important;touch-action:manipulation!important}
+#rnBottomNav{z-index:2147483647!important}
+#rnBottomNav button{position:relative!important;z-index:2147483648!important}
+#rnSearchPanel[hidden],#rnSettingsPanel[hidden]{display:none!important}
+</style>
+<script id="rn-clean-mobile-navigation">
+(function(){
+  'use strict';
+  function activate(name){document.querySelectorAll('#rnBottomNav button[data-rn-nav]').forEach(function(b){b.classList.toggle('active',b.dataset.rnNav===name);});}
+  function closePanels(){
+    var search=document.getElementById('rnSearchPanel'),settings=document.getElementById('rnSettingsPanel');
+    if(search)search.hidden=true;if(settings)settings.hidden=true;
+    document.body.classList.remove('rn-search-only','rn-settings-only','rn-buy-only','rn-promote-only','rn-wishlist-only');
+    document.documentElement.style.overflowY='auto';document.body.style.overflowY='auto';
+  }
+  function go(el){if(!el)return;el.hidden=false;el.scrollIntoView({behavior:'smooth',block:'start'});}
+  function navAction(name){
+    closePanels();activate(name);
+    if(name==='home'){window.scrollTo({top:0,behavior:'smooth'});return;}
+    if(name==='search'){
+      var p=document.getElementById('rnSearchPanel');if(!p)return;
+      p.hidden=false;document.body.classList.add('rn-search-only');
+      if(typeof window.__rnRunGlobalSearch==='function')window.__rnRunGlobalSearch('');
+      go(p);return;
+    }
+    if(name==='buy'){
+      var f=document.getElementById('clientProfilForm'),profile=document.getElementById('client-profile');
+      if(profile)profile.hidden=false;if(f)f.hidden=false;
+      if(typeof window.__rumahnusaShowCustomerStep==='function')window.__rumahnusaShowCustomerStep(1);
+      go(f||profile);return;
+    }
+    if(name==='promote'){go(document.getElementById('contact')||document.querySelector('.cta'));return;}
+    if(name==='wishlist'){
+      var w=document.getElementById('rnCleanWishlistMessage');
+      if(!w){w=document.createElement('div');w.id='rnCleanWishlistMessage';w.textContent='Your Wish list is ready. Select a property to save it here.';w.style.cssText='max-width:520px;margin:24px auto 120px;padding:18px;border:1px solid #e4e4e7;border-radius:14px;background:#fff;text-align:center;font-weight:700';document.body.appendChild(w);}
+      go(w);return;
+    }
+    if(name==='settings'){var sp=document.getElementById('rnSettingsPanel');if(sp){sp.hidden=false;document.body.classList.add('rn-settings-only');go(sp);}}
+  }
+  function wire(){
+    var bottom=document.getElementById('rnBottomNav');
+    if(bottom&&!bottom.dataset.rnCleanWired){
+      bottom.dataset.rnCleanWired='1';
+      bottom.addEventListener('click',function(e){
+        var b=e.target.closest('button[data-rn-nav]');if(!b)return;
+        e.preventDefault();navAction(b.dataset.rnNav);
+      });
+    }
+    document.querySelectorAll('#propertyOptions .rn-home-category').forEach(function(b){
+      if(b.dataset.rnCleanCategoryWired)return;
+      b.dataset.rnCleanCategoryWired='1';
+      b.addEventListener('click',function(e){e.preventDefault();if(typeof window.__rnOpenCategory==='function')window.__rnOpenCategory(b.dataset.value);});
+    });
+  }
+  wire();document.addEventListener('DOMContentLoaded',wire,{once:true});setTimeout(wire,300);setTimeout(wire,1000);
+})();
+</script>
+<style id="rn-final-mobile-fix">
+html,body{
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  height:auto!important;
+  min-height:100%!important;
+  touch-action:pan-y!important;
 }
+#rnBottomNav{
+  pointer-events:auto!important;
+  z-index:2147483647!important;
+}
+#rnBottomNav button{
+  pointer-events:auto!important;
+  position:relative!important;
+  z-index:2147483648!important;
+  touch-action:manipulation!important;
+}
+</style>
+
+<script id="rn-final-mobile-fix-script">
+(function(){
+  'use strict';
+
+  function fixNav(){
+    var nav=document.getElementById('rnBottomNav');
+    if(!nav)return;
+
+    nav.style.pointerEvents='auto';
+
+    nav.querySelectorAll('button[data-rn-nav]').forEach(function(btn){
+      btn.style.pointerEvents='auto';
+      btn.style.touchAction='manipulation';
+
+      if(btn.dataset.finalFix)return;
+      btn.dataset.finalFix='1';
+
+      btn.addEventListener('click',function(e){
+        e.preventDefault();
+        e.stopPropagation();
+
+        var name=btn.dataset.rnNav;
+
+        if(name==='home'){
+          window.scrollTo({top:0,behavior:'smooth'});
+        }
+
+        if(name==='search'){
+          var p=document.getElementById('rnSearchPanel');
+          if(p){
+            p.hidden=false;
+            p.scrollIntoView({behavior:'smooth',block:'start'});
+          }
+        }
+
+        if(name==='buy'){
+          var p=document.getElementById('client-profile');
+          if(p){
+            p.hidden=false;
+            p.scrollIntoView({behavior:'smooth',block:'start'});
+          }
+        }
+
+        if(name==='promote'){
+          var p=document.getElementById('contact')||document.querySelector('.cta');
+          if(p)p.scrollIntoView({behavior:'smooth',block:'start'});
+        }
+
+        if(name==='wishlist'){
+          var p=document.getElementById('rnCleanWishlistMessage');
+          if(p)p.scrollIntoView({behavior:'smooth',block:'start'});
+        }
+
+        if(name==='settings'){
+          var p=document.getElementById('rnSettingsPanel');
+          if(p){
+            p.hidden=false;
+            p.scrollIntoView({behavior:'smooth',block:'start'});
+          }
+        }
+      },true);
+    });
+  }
+
+  fixNav();
+  document.addEventListener('DOMContentLoaded',fixNav);
+  setTimeout(fixNav,500);
+  setTimeout(fixNav,1500);
+})();
+</script>
+<!-- Mobile search scrolling override: appended after existing CSS so it takes precedence. -->
+<style id="rn-mobile-search-scroll-final">
+html, body { overflow-x:hidden !important; }
 body.rn-search-only {
-  overflow-y: auto !important;
-  height: auto !important;
-  min-height: 100% !important;
-  position: static !important;
+  overflow-y:auto !important;
+  height:auto !important;
+  min-height:100% !important;
+  position:static !important;
 }
 body.rn-search-only > #rnSearchPanel {
-  display: block !important;
-  position: relative !important;
-  inset: auto !important;
-  width: 100% !important;
-  height: auto !important;
-  min-height: 100vh !important;
-  max-height: none !important;
-  overflow: visible !important;
-  z-index: auto !important;
-  touch-action: pan-y !important;
-  padding-bottom: 100px !important;
+  display:block !important;
+  position:relative !important;
+  inset:auto !important;
+  width:100% !important;
+  height:auto !important;
+  min-height:100vh !important;
+  max-height:none !important;
+  overflow:visible !important;
+  z-index:auto !important;
+  padding-bottom:100px !important;
+  touch-action:pan-y !important;
 }
 body.rn-search-only > #rnBottomNav {
-  position: fixed !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
-  z-index: 15000 !important;
+  position:fixed !important;
+  left:0 !important; right:0 !important; bottom:0 !important;
+  z-index:30000 !important;
 }
-#rnBottomNav, #rnBottomNav button {
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-}
-#rnSearchPanel[hidden], #rnSettingsPanel[hidden] {
-  display: none !important;
-}
+#rnSearchPanel[hidden], #rnSettingsPanel[hidden] { display:none !important; }
 </style>
 </body>
 </html>
