@@ -3,48 +3,142 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>RumahNusa Real Estate</title>
-  <meta name="description" content="Discover homes and properties across Indonesia with RumahNusa.">
+  <title>RumahNusa Real Estate | Indonesia</title>
+  <meta name="description" content="Explore homes, villas, apartments and property communities across Indonesia with RumahNusa.">
   <style>
     *{box-sizing:border-box}
     html{width:100%;min-height:100%;overflow-x:hidden;overflow-y:auto;scroll-behavior:smooth}
-    body{margin:0;width:100%;min-height:100vh;padding-bottom:82px;overflow-x:hidden;overflow-y:auto;font-family:Arial,Helvetica,sans-serif;color:#222;background:#f5f7fa;line-height:1.6;-webkit-overflow-scrolling:touch}
-    header{width:100%;background:#c9232b;color:#fff;padding:20px clamp(18px,5vw,56px)}
+    body{margin:0;width:100%;min-height:100vh;padding-bottom:84px;overflow-x:hidden;overflow-y:auto;font-family:Arial,Helvetica,sans-serif;color:#222;background:#f5f7fa;line-height:1.6;-webkit-overflow-scrolling:touch}
+    header{background:#c9232b;color:#fff;padding:20px clamp(18px,5vw,56px)}
     .brand{margin:0;font-size:clamp(26px,5vw,38px);line-height:1.2;font-weight:800}
-    .tagline{margin:6px 0 0;font-size:14px;opacity:.95}
-    main{width:100%;padding:clamp(18px,4vw,42px);max-width:1100px;margin:0 auto}
+    .tagline{margin:6px 0 0;font-size:14px}
+    main{width:100%;max-width:1180px;padding:clamp(16px,4vw,40px);margin:0 auto}
+    section{margin:0 0 34px}
     .hero{background:#243746;color:#fff;border-radius:18px;overflow:hidden}
-    .hero img{display:block;width:100%;height:clamp(220px,48vw,480px);object-fit:cover}
+    .hero img{display:block;width:100%;height:clamp(230px,48vw,480px);object-fit:cover}
     .hero-copy{padding:clamp(22px,5vw,44px)}
-    .eyebrow{margin:0 0 10px;font-size:13px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#ffd4d4}
-    h2{margin:0 0 14px;font-size:clamp(30px,6vw,54px);line-height:1.12}
-    .hero-copy p{margin:0;font-size:clamp(16px,2.5vw,20px);max-width:680px;color:#f2f5f7}
-    .notice{margin:24px 0 0;padding:18px 20px;border-radius:12px;background:#fff;border:1px solid #e3e7eb;color:#50565c}
+    .eyebrow{margin:0 0 10px;font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#c9232b}
+    .hero .eyebrow{color:#ffd4d4}
+    h2{margin:0 0 12px;font-size:clamp(27px,5vw,42px);line-height:1.15}
+    h3{margin:0 0 7px;font-size:19px;line-height:1.3}
+    p{margin:0 0 12px}
+    .hero-copy p{font-size:clamp(16px,2.5vw,20px);max-width:720px;color:#f2f5f7}
+    .section-intro{color:#5a626b;margin-bottom:18px}
+    .cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+    .card{min-width:0;background:#fff;border:1px solid #e4e8ec;border-radius:14px;overflow:hidden;box-shadow:0 4px 15px rgba(20,35,50,.05)}
+    .card img{display:block;width:100%;height:210px;object-fit:cover}
+    .card-body{padding:16px}
+    .card-body p{color:#5a626b;font-size:14px}
+    .pill{display:inline-block;padding:4px 9px;border-radius:99px;background:#fff0f0;color:#a51e25;font-size:12px;font-weight:700;margin-bottom:9px}
+    .city-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+    .city{background:#fff;border:1px solid #e4e8ec;border-radius:10px;padding:14px;text-align:center;font-weight:700}
+    .feature-panel{background:#fff;border:1px solid #e4e8ec;border-radius:16px;padding:22px}
+    .feature-panel ul{padding-left:21px;margin:10px 0 0}
+    .contact-panel{background:#243746;color:#fff;padding:24px;border-radius:16px}
+    .contact-panel p{color:#e6edf1}
+    .contact-options{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+    .contact-option{display:inline-block;padding:10px 14px;border-radius:9px;background:#fff;color:#243746;font-weight:700;text-decoration:none}
+    .category-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+    .category-card{display:flex;align-items:flex-end;min-height:145px;padding:16px;border-radius:14px;overflow:hidden;background:#243746;color:#fff;text-decoration:none;font-size:18px;font-weight:800;position:relative;isolation:isolate}
+    .category-card:before{content:"";position:absolute;inset:0;background-image:var(--photo);background-size:cover;background-position:center;z-index:-2;transition:transform .2s}
+    .category-card:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.75),rgba(0,0,0,.05));z-index:-1}
+    .category-card:active{transform:scale(.99)}
     footer{text-align:center;padding:24px 16px;color:#666;font-size:13px}
     .bottom-nav{position:fixed;z-index:20;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));padding:7px 3px calc(7px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid #e1e1e1;box-shadow:0 -3px 14px rgba(0,0,0,.08)}
     .nav-button{min-width:0;min-height:53px;border:0;border-radius:9px;background:transparent;color:#555;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:4px 0;font-family:inherit;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
     .nav-icon{font-size:18px;line-height:1.2}
-    .nav-label{font-size:clamp(8px,2.45vw,11px);font-weight:700;line-height:1.2;white-space:nowrap;letter-spacing:-.25px}
+    .nav-label{font-size:clamp(7px,2.15vw,10px);font-weight:700;line-height:1.2;white-space:nowrap;letter-spacing:-.3px}
     .nav-button.active{color:#c9232b;background:#fff0f0}
-    .nav-button:focus-visible{outline:2px solid #c9232b;outline-offset:-2px}
-    @media(max-width:480px){main{padding:16px}.hero{border-radius:12px}.hero img{height:250px}.nav-icon{font-size:17px}.nav-label{font-size:8.5px}}
+    @media(max-width:720px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.city-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.category-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.card img{height:165px}}
+    @media(max-width:390px){main{padding:12px}.cards{gap:10px}.card-body{padding:12px}.card img{height:135px}.category-card{min-height:120px;padding:12px;font-size:16px}.nav-icon{font-size:16px}.nav-label{font-size:7px}}
   </style>
 </head>
 <body id="top">
   <header>
-    <h1 class="brand">RumahNusa</h1>
+    <h1 class="brand">RumahNusa 🇮🇩</h1>
     <p class="tagline">Real Estate · Indonesia</p>
   </header>
   <main>
     <section class="hero" aria-labelledby="welcome-title">
       <img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1800&q=85" alt="Bright modern home interior">
       <div class="hero-copy">
-        <p class="eyebrow">Find a place to call home</p>
+        <p class="eyebrow">A place to belong</p>
         <h2 id="welcome-title">Welcome to RumahNusa</h2>
-        <p>Discover homes and apartments across Indonesia. We are rebuilding the mobile experience one step at a time.</p>
+        <p>Explore beautiful homes, villas, apartments and residential communities across Indonesia.</p>
       </div>
     </section>
-    <div class="notice" id="section-notice" role="status" aria-live="polite">Choose Home, Buy, Search, Rentapartment, Promote, Profile, or Message from the navigation bar below.</div>
+
+    <section aria-labelledby="featured-title">
+      <p class="eyebrow">Explore the collection</p>
+      <h2 id="featured-title">Featured Properties</h2>
+      <p class="section-intro">View a selection of property styles. Property prices and availability will be shown when verified listing details are added.</p>
+      <div class="cards">
+        <article class="card"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=85" alt="Modern family house exterior"><div class="card-body"><span class="pill">House</span><h3>Modern Family House</h3><p>Example property style · Indonesia</p></div></article>
+        <article class="card"><img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=85" alt="Elegant contemporary living room"><div class="card-body"><span class="pill">Interior</span><h3>Contemporary Residence</h3><p>Bright living spaces and modern design</p></div></article>
+        <article class="card"><img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=900&q=85" alt="Tropical villa with swimming pool"><div class="card-body"><span class="pill">Villa</span><h3>Tropical Private Villa</h3><p>Example property style · Indonesia</p></div></article>
+      </div>
+    </section>
+
+    <section aria-labelledby="cities-title">
+      <p class="eyebrow">Across the country</p>
+      <h2 id="cities-title">Property Communities in Indonesia</h2>
+      <p class="section-intro">Explore the cities where RumahNusa plans to feature properties.</p>
+      <div class="city-grid">
+        <div class="city">Jakarta</div><div class="city">Bali</div><div class="city">Surabaya</div><div class="city">Bandung</div>
+        <div class="city">Medan</div><div class="city">Yogyakarta</div><div class="city">Semarang</div><div class="city">Makassar</div>
+      </div>
+    </section>
+
+    <section aria-labelledby="living-title">
+      <p class="eyebrow">More than a home</p>
+      <h2 id="living-title">Spaces for Every Lifestyle</h2>
+      <div class="cards">
+        <article class="card"><img src="https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=900&q=85" alt="Elegant living room"><div class="card-body"><h3>Beautiful Interiors</h3><p>Explore living rooms, bedrooms, kitchens and bathrooms through clear property photography.</p></div></article>
+        <article class="card"><img src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=900&q=85" alt="Bright home interior"><div class="card-body"><h3>Room-by-Room Views</h3><p>Property galleries can show each room and its features when photos are available.</p></div></article>
+        <article class="card"><img src="https://images.unsplash.com/photo-1572331165267-854da2b10ccc?auto=format&fit=crop&w=900&q=85" alt="Swimming pool beside a modern home"><div class="card-body"><h3>Community Facilities</h3><p>View amenities such as pools, gardens, parking and shared facilities where available.</p></div></article>
+      </div>
+    </section>
+
+    <section aria-labelledby="jakarta-title">
+      <p class="eyebrow">City living</p>
+      <h2 id="jakarta-title">Luxury Apartment Communities in Jakarta</h2>
+      <div class="feature-panel">
+        <p>Discover high-rise apartment communities, modern residences and city living in Jakarta.</p>
+        <ul><li>Apartment and building photography</li><li>Bedrooms, living rooms, kitchens and bathrooms</li><li>Building amenities, swimming pools and parking where available</li><li>Property details and verified prices when listings are published</li></ul>
+      </div>
+    </section>
+
+    <section aria-labelledby="contact-title">
+      <div class="contact-panel">
+        <p class="eyebrow">Here to help</p>
+        <h2 id="contact-title">Connect with RumahNusa</h2>
+        <p>Interested in a property? Contact the RumahNusa team through website messages, email or a phone call.</p>
+        <div class="contact-options"><a class="contact-option" href="mailto:rumahnusarealestate@gmail.com">Email RumahNusa</a></div>
+      </div>
+    </section>
+
+    <section aria-labelledby="about-title">
+      <p class="eyebrow">Our mission</p>
+      <h2 id="about-title">About RumahNusa</h2>
+      <div class="feature-panel"><p>RumahNusa helps people explore property styles and residential communities throughout Indonesia. Our goal is to make property information clear, welcoming and easy to view on mobile devices.</p><p>Public property pages will show the general city and country only. Exact street addresses will be shared privately by an agent with serious prospective customers.</p><p>Verified listings can display prices in Indonesian Rupiah (IDR) and US dollars (USD).</p></div>
+    </section>
+
+    <section aria-labelledby="categories-title">
+      <p class="eyebrow">Explore property types</p>
+      <h2 id="categories-title">Discover Your Preferred Property</h2>
+      <p class="section-intro">These categories are placed at the end of Home, as requested.</p>
+      <div class="category-grid">
+        <a class="category-card" href="#categories-title" style="--photo:url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=85')">Villa</a>
+        <a class="category-card" href="#categories-title" style="--photo:url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=85')">Separate Rumah</a>
+        <a class="category-card" href="#categories-title" style="--photo:url('https://images.unsplash.com/photo-1511814420156-5b7c2b6e9c15?auto=format&fit=crop&w=800&q=85')">Neighborhood</a>
+        <a class="category-card" href="#categories-title" style="--photo:url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=85')">Townhouse</a>
+        <a class="category-card" href="#categories-title" style="--photo:url('https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=800&q=85')">Penthouse</a>
+        <a class="category-card" href="#categories-title" style="--photo:url('https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=800&q=85')">Family Residence</a>
+        <a class="category-card" href="#categories-title" style="--photo:url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=85')">Investment Property</a>
+        <a class="category-card" href="#categories-title" style="--photo:url('https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=85')">Hotel</a>
+        <a class="category-card" href="#categories-title" style="--photo:url('https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=800&q=85')">Mansion</a>
+      </div>
+    </section>
   </main>
   <footer>RumahNusa Real Estate · Indonesia</footer>
 
@@ -60,7 +154,6 @@
   <script>
     (function () {
       var buttons = document.querySelectorAll('.nav-button');
-      var notice = document.getElementById('section-notice');
       buttons.forEach(function (button) {
         button.addEventListener('click', function () {
           buttons.forEach(function (item) {
@@ -71,11 +164,14 @@
           button.setAttribute('aria-current', 'page');
           var section = button.getAttribute('data-section');
           if (section === 'Home') {
-            notice.textContent = 'You are on Home. Choose another section from the navigation bar below.';
             window.scrollTo({top: 0, behavior: 'smooth'});
           } else {
-            notice.textContent = section + ' is selected. This section is being added next.';
-            notice.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+            var notice = document.createElement('div');
+            notice.setAttribute('role', 'status');
+            notice.style.cssText = 'position:fixed;z-index:30;left:12px;right:12px;bottom:85px;background:#243746;color:#fff;padding:14px 16px;border-radius:12px;box-shadow:0 4px 18px rgba(0,0,0,.2);text-align:center';
+            notice.textContent = section + ' section is being built separately. Home remains for viewing properties and categories.';
+            document.body.appendChild(notice);
+            window.setTimeout(function () { notice.remove(); }, 2600);
           }
         });
       });
