@@ -39,9 +39,8 @@
     .contact-options{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
     .contact-option{display:inline-block;padding:10px 14px;border-radius:9px;background:#fff;color:#243746;font-weight:700;text-decoration:none}
     .category-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-    .category-card{display:flex;align-items:flex-end;min-height:145px;padding:16px;border-radius:14px;overflow:hidden;background:#243746;color:#fff;text-decoration:none;font-size:18px;font-weight:800;position:relative;isolation:isolate}
-    .category-card:before{content:"";position:absolute;inset:0;background-image:var(--photo);background-size:cover;background-position:center;z-index:-2;transition:transform .2s}
-    .category-card:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.75),rgba(0,0,0,.05));z-index:-1}
+    .category-card{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-height:145px;padding:16px;border-radius:14px;overflow:hidden;background:#fff;color:#243746;text-decoration:none;font-size:16px;font-weight:800;text-align:center;border:1px solid #e1e6eb;box-shadow:0 4px 15px rgba(20,35,50,.05);position:relative}
+    .category-icon{font-size:34px;line-height:1;color:#c9232b}
     .category-card:active{transform:scale(.99)}
     footer{text-align:center;padding:24px 16px;color:#666;font-size:13px}
     .bottom-nav{position:fixed;z-index:20;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));padding:7px 3px calc(7px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid #e1e1e1;box-shadow:0 -3px 14px rgba(0,0,0,.08)}
@@ -128,15 +127,15 @@
       <h2 id="categories-title">Discover Your Preferred Property</h2>
       <p class="section-intro">These categories are placed at the end of Home, as requested.</p>
       <div class="category-grid">
-        <a class="category-card" href="#categories-title" style="--photo:url('https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=800&q=85')">Villa</a>
-        <a class="category-card" href="#categories-title" style="--photo:url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=85')">Separate Rumah</a>
-        <a class="category-card" href="#categories-title" style="--photo:url('https://images.unsplash.com/photo-1511814420156-5b7c2b6e9c15?auto=format&fit=crop&w=800&q=85')">Neighborhood</a>
-        <a class="category-card" href="#categories-title" style="--photo:url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=85')">Townhouse</a>
-        <a class="category-card" href="#categories-title" style="--photo:url('https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=800&q=85')">Penthouse</a>
-        <a class="category-card" href="#categories-title" style="--photo:url('https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=800&q=85')">Family Residence</a>
-        <a class="category-card" href="#categories-title" style="--photo:url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=800&q=85')">Investment Property</a>
-        <a class="category-card" href="#categories-title" style="--photo:url('https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=85')">Hotel</a>
-        <a class="category-card" href="#categories-title" style="--photo:url('https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=800&q=85')">Mansion</a>
+        <a class="category-card" href="#categories-title"><span class="category-icon" aria-hidden="true">♧</span><span>Villa</span></a>
+        <a class="category-card" href="#categories-title"><span class="category-icon" aria-hidden="true">⌂</span><span>Separate Rumah</span></a>
+        <a class="category-card" href="#categories-title"><span class="category-icon" aria-hidden="true">⌘</span><span>Neighborhood</span></a>
+        <a class="category-card" href="#categories-title"><span class="category-icon" aria-hidden="true">▥</span><span>Townhouse</span></a>
+        <a class="category-card" href="#categories-title"><span class="category-icon" aria-hidden="true">▤</span><span>Penthouse</span></a>
+        <a class="category-card" href="#categories-title"><span class="category-icon" aria-hidden="true">⌂</span><span>Family Residence</span></a>
+        <a class="category-card" href="#categories-title"><span class="category-icon" aria-hidden="true">▦</span><span>Investment Property</span></a>
+        <a class="category-card" href="#categories-title"><span class="category-icon" aria-hidden="true">▣</span><span>Hotel</span></a>
+        <a class="category-card" href="#categories-title"><span class="category-icon" aria-hidden="true">⌂</span><span>Mansion</span></a>
       </div>
     </section>
   </main>
