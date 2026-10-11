@@ -3902,8 +3902,18 @@ body.rn-search-only #rnSearchPanel .rn-search-panel-inner{min-height:100dvh!impo
     }
   }
   function openSearch(){
+    document.body.classList.remove('rn-settings-only');
+    document.body.classList.add('rn-search-only');
+    panel.hidden=false;
+    panel.scrollTop=0;
+    window.scrollTo(0,0);
     showStart();
-    setTimeout(()=>input.focus(),90);
+    panel.scrollTop=0;
+    window.scrollTo(0,0);
+    setTimeout(()=>{
+      panel.scrollTop=0;
+      try{input.focus({preventScroll:true});}catch(e){input.focus();}
+    },180);
   }
 
   document.addEventListener('click',function(e){
@@ -3931,39 +3941,43 @@ body.rn-search-only #rnSearchPanel .rn-search-panel-inner{min-height:100dvh!impo
 
 <!-- RumahNusa mobile scrolling repair: preserve native page scrolling. -->
 <style id="rn-native-mobile-scroll-repair">
-html {
-  height:auto !important;
+html,body {
+  width:100% !important;
+  max-width:100% !important;
   min-height:100% !important;
+  height:auto !important;
   overflow-x:hidden !important;
   overflow-y:auto !important;
+  position:static !important;
   touch-action:pan-y !important;
 }
 body {
-  height:auto !important;
   min-height:100vh !important;
-  overflow-x:hidden !important;
-  overflow-y:auto !important;
-  position:static !important;
-  touch-action:pan-y !important;
   -webkit-overflow-scrolling:touch !important;
 }
 body.rn-search-only {
-  height:auto !important;
-  min-height:100vh !important;
-  overflow-y:auto !important;
-  position:static !important;
+  overflow-x:hidden !important;
+  overflow-y:hidden !important;
+  height:100dvh !important;
+  min-height:100dvh !important;
 }
 body.rn-search-only > #rnSearchPanel {
   display:block !important;
-  position:relative !important;
-  inset:auto !important;
+  position:fixed !important;
+  top:0 !important;
+  left:0 !important;
+  right:0 !important;
+  bottom:76px !important;
   width:100% !important;
   height:auto !important;
-  min-height:calc(100vh - 76px) !important;
+  min-height:0 !important;
   max-height:none !important;
-  overflow:visible !important;
-  z-index:auto !important;
-  padding-bottom:100px !important;
+  overflow-x:hidden !important;
+  overflow-y:auto !important;
+  overscroll-behavior:contain !important;
+  -webkit-overflow-scrolling:touch !important;
+  z-index:29000 !important;
+  padding-bottom:24px !important;
   touch-action:pan-y !important;
 }
 body.rn-search-only > #rnBottomNav {
