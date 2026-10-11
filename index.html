@@ -8,7 +8,7 @@
   <style>
     *{box-sizing:border-box}
     html{width:100%;min-height:100%;overflow-x:hidden;overflow-y:auto;scroll-behavior:smooth}
-    body{margin:0;width:100%;min-height:100vh;padding-bottom:78px;overflow-x:hidden;overflow-y:auto;font-family:Arial,Helvetica,sans-serif;color:#222;background:#f5f7fa;line-height:1.6;-webkit-overflow-scrolling:touch}
+    body{margin:0;width:100%;min-height:100vh;padding-bottom:82px;overflow-x:hidden;overflow-y:auto;font-family:Arial,Helvetica,sans-serif;color:#222;background:#f5f7fa;line-height:1.6;-webkit-overflow-scrolling:touch}
     header{width:100%;background:#c9232b;color:#fff;padding:20px clamp(18px,5vw,56px)}
     .brand{margin:0;font-size:clamp(26px,5vw,38px);line-height:1.2;font-weight:800}
     .tagline{margin:6px 0 0;font-size:14px;opacity:.95}
@@ -21,7 +21,7 @@
     .hero-copy p{margin:0;font-size:clamp(16px,2.5vw,20px);max-width:680px;color:#f2f5f7}
     .notice{margin:24px 0 0;padding:18px 20px;border-radius:12px;background:#fff;border:1px solid #e3e7eb;color:#50565c}
     footer{text-align:center;padding:24px 16px;color:#666;font-size:13px}
-    .bottom-nav{position:fixed;z-index:20;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));padding:7px 3px calc(7px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid #e1e1e1;box-shadow:0 -3px 14px rgba(0,0,0,.08)}
+    .bottom-nav{position:fixed;z-index:20;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(7,minmax(0,1fr));padding:7px 3px calc(7px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid #e1e1e1;box-shadow:0 -3px 14px rgba(0,0,0,.08)}
     .nav-button{min-width:0;min-height:53px;border:0;border-radius:9px;background:transparent;color:#555;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:4px 0;font-family:inherit;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
     .nav-icon{font-size:18px;line-height:1.2}
     .nav-label{font-size:clamp(8px,2.45vw,11px);font-weight:700;line-height:1.2;white-space:nowrap;letter-spacing:-.25px}
@@ -44,7 +44,7 @@
         <p>Discover homes and apartments across Indonesia. We are rebuilding the mobile experience one step at a time.</p>
       </div>
     </section>
-    <div class="notice" id="section-notice" role="status" aria-live="polite">Choose Home, Buy, Search, Rentapartment, Promote, or Profile from the navigation bar below.</div>
+    <div class="notice" id="section-notice" role="status" aria-live="polite">Choose Home, Buy, Search, Rentapartment, Promote, Profile, or Message from the navigation bar below.</div>
   </main>
   <footer>RumahNusa Real Estate · Indonesia</footer>
 
@@ -55,6 +55,7 @@
     <button class="nav-button" type="button" data-section="Rentapartment"><span class="nav-icon" aria-hidden="true">▤</span><span class="nav-label">Rentapartment</span></button>
     <button class="nav-button" type="button" data-section="Promote"><span class="nav-icon" aria-hidden="true">♢</span><span class="nav-label">Promote</span></button>
     <button class="nav-button" type="button" data-section="Profile"><span class="nav-icon" aria-hidden="true">♙</span><span class="nav-label">Profile</span></button>
+    <button class="nav-button" type="button" data-section="Message"><span class="nav-icon" aria-hidden="true">✉</span><span class="nav-label">Message</span></button>
   </nav>
   <script>
     (function () {
