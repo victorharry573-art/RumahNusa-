@@ -191,7 +191,7 @@
       var stage = document.getElementById('propertyGalleryStage');
       function showGalleryImage(index) {
         galleryIndex = (index + galleryFiles.length) % galleryFiles.length;
-        var src = galleryBase + galleryFiles[galleryIndex];
+        var src = galleryBase + galleryFiles[galleryIndex] + '?v=20261013';
         galleryImage.src = src;
         galleryImage.alt = 'RumahNusa property photo ' + (galleryIndex + 1) + ' of ' + galleryFiles.length;
         galleryCount.textContent = (galleryIndex + 1) + ' / ' + galleryFiles.length;
