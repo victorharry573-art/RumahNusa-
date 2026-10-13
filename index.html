@@ -28,6 +28,21 @@
     .card{min-width:0;background:#fff;border:1px solid #e4e8ec;border-radius:14px;overflow:hidden;box-shadow:0 4px 15px rgba(20,35,50,.05)}
     .card img{display:block;width:100%;height:210px;object-fit:cover}
     .card-body{padding:16px}
+    .property-gallery{grid-column:span 2;min-width:0;background:#fff;border:1px solid #e4e8ec;border-radius:14px;overflow:hidden;box-shadow:0 4px 15px rgba(20,35,50,.05)}
+    .gallery-stage{position:relative;background:#e9edf0;overflow:hidden}
+    .gallery-stage img{display:block;width:100%;height:clamp(300px,48vw,540px);object-fit:cover;cursor:zoom-in;touch-action:pan-y}
+    .gallery-arrow{position:absolute;top:50%;transform:translateY(-50%);width:46px;height:46px;border:0;border-radius:50%;background:rgba(255,255,255,.94);color:#243746;font-size:30px;line-height:1;box-shadow:0 2px 10px rgba(0,0,0,.2);cursor:pointer;touch-action:manipulation}
+    .gallery-prev{left:12px}.gallery-next{right:12px}
+    .gallery-caption{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 16px;color:#243746;font-weight:700}
+    .gallery-count{color:#5a626b;font-size:13px;white-space:nowrap}
+    .gallery-lightbox{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.94);padding:16px}
+    .gallery-lightbox.open{display:flex}
+    .gallery-lightbox img{display:block;max-width:100%;max-height:82vh;object-fit:contain}
+    .lightbox-close{position:absolute;top:14px;right:14px;width:46px;height:46px;border:0;border-radius:50%;background:#fff;color:#222;font-size:28px;cursor:pointer}
+    .lightbox-arrow{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:54px;border:0;border-radius:12px;background:rgba(255,255,255,.92);font-size:30px;cursor:pointer}
+    .lightbox-prev{left:12px}.lightbox-next{right:12px}
+    .lightbox-count{position:absolute;bottom:14px;left:0;right:0;text-align:center;color:#fff;font-weight:700}
+
     .card-body p{color:#5a626b;font-size:14px}
     .pill{display:inline-block;padding:4px 9px;border-radius:99px;background:#fff0f0;color:#a51e25;font-size:12px;font-weight:700;margin-bottom:9px}
     .city-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
@@ -48,7 +63,7 @@
     .nav-icon{font-size:18px;line-height:1.2}
     .nav-label{font-size:clamp(7px,2.15vw,10px);font-weight:700;line-height:1.2;white-space:nowrap;letter-spacing:-.3px}
     .nav-button.active{color:#c9232b;background:#fff0f0}
-    @media(max-width:720px){.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.city-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.category-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.card img{height:165px}}
+    @media(max-width:720px){.property-gallery{grid-column:1 / -1}.gallery-stage img{height:clamp(280px,72vw,460px)}.gallery-arrow{width:40px;height:40px;font-size:27px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.city-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.category-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.card img{height:165px}}
     @media(max-width:390px){main{padding:12px}.cards{gap:10px}.card-body{padding:12px}.card img{height:135px}.category-card{min-height:120px;padding:12px;font-size:16px}.nav-icon{font-size:16px}.nav-label{font-size:7px}}
   </style>
 </head>
@@ -72,9 +87,22 @@
       <h2 id="featured-title">Featured Properties</h2>
       <p class="section-intro">View a selection of property styles. Property prices and availability will be shown when verified listing details are added.</p>
       <div class="cards">
-        <article class="card"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=85" alt="Modern family house exterior"><div class="card-body"><span class="pill">House</span><h3>Modern Family House</h3><p>Example property style · Indonesia</p></div></article>
-        <article class="card"><img src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=900&q=85" alt="Elegant contemporary living room"><div class="card-body"><span class="pill">Interior</span><h3>Contemporary Residence</h3><p>Bright living spaces and modern design</p></div></article>
+        <div class="property-gallery" aria-label="RumahNusa property photo gallery">
+          <div class="gallery-stage" id="propertyGalleryStage">
+            <img id="propertyGalleryImage" src="https://vuhrkijzjmnbsaqnpdmg.supabase.co/storage/v1/object/public/property-images/image-1791749115838.jpg" alt="RumahNusa property photo 1 of 29" loading="eager">
+            <button class="gallery-arrow gallery-prev" type="button" id="propertyGalleryPrev" aria-label="Previous property photo">‹</button>
+            <button class="gallery-arrow gallery-next" type="button" id="propertyGalleryNext" aria-label="Next property photo">›</button>
+          </div>
+          <div class="gallery-caption"><span>Explore Our Properties</span><span class="gallery-count" id="propertyGalleryCount">1 / 29</span></div>
+        </div>
         <article class="card"><img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=900&q=85" alt="Tropical villa with swimming pool"><div class="card-body"><span class="pill">Villa</span><h3>Tropical Private Villa</h3><p>Example property style · Indonesia</p></div></article>
+      </div>
+      <div class="gallery-lightbox" id="propertyGalleryLightbox" role="dialog" aria-modal="true" aria-label="Property photo viewer">
+        <button class="lightbox-close" type="button" id="propertyGalleryClose" aria-label="Close photo viewer">×</button>
+        <button class="lightbox-arrow lightbox-prev" type="button" id="propertyGalleryLightboxPrev" aria-label="Previous property photo">‹</button>
+        <img id="propertyGalleryLightboxImage" alt="Large property photo">
+        <button class="lightbox-arrow lightbox-next" type="button" id="propertyGalleryLightboxNext" aria-label="Next property photo">›</button>
+        <div class="lightbox-count" id="propertyGalleryLightboxCount">1 / 29</div>
       </div>
     </section>
 
@@ -152,6 +180,55 @@
   </nav>
   <script>
     (function () {
+      var galleryFiles = ["image-1791749115838.jpg","image-1791749225314.jpg","image-1791749286396.jpg","image-1791749462892.jpg","image-1791749590340.jpg","image-1791749752112.jpg","image-1791749818382.jpg","image-1791749951346.jpg","image-1791749970517.jpg","image-1791750220520.jpg","image-1791750339560.jpg","image-1791750402333.jpg","image-1791750493500.jpg","image-1791750688545.jpg","image-1791750897006.jpg","image-1791751125772.jpg","image-1791751206686.jpg","image-1791751435068.jpg","image-1791751609210.jpg","image-1791751949483.jpg","image-1791812202288.jpg","image-1791812465822.jpg","image-1791812981224.jpg","image-1791813239104.jpg","image-1791813337819.jpg","image-1791813522043.jpg","image-1791813600738.jpg","image-1791813651478.jpg","image-1791813682098.jpg"];
+      var galleryBase = 'https://vuhrkijzjmnbsaqnpdmg.supabase.co/storage/v1/object/public/property-images/';
+      var galleryIndex = 0;
+      var galleryImage = document.getElementById('propertyGalleryImage');
+      var galleryCount = document.getElementById('propertyGalleryCount');
+      var lightbox = document.getElementById('propertyGalleryLightbox');
+      var lightboxImage = document.getElementById('propertyGalleryLightboxImage');
+      var lightboxCount = document.getElementById('propertyGalleryLightboxCount');
+      var stage = document.getElementById('propertyGalleryStage');
+      function showGalleryImage(index) {
+        galleryIndex = (index + galleryFiles.length) % galleryFiles.length;
+        var src = galleryBase + galleryFiles[galleryIndex];
+        galleryImage.src = src;
+        galleryImage.alt = 'RumahNusa property photo ' + (galleryIndex + 1) + ' of ' + galleryFiles.length;
+        galleryCount.textContent = (galleryIndex + 1) + ' / ' + galleryFiles.length;
+        lightboxImage.src = src;
+        lightboxImage.alt = 'Large property photo ' + (galleryIndex + 1) + ' of ' + galleryFiles.length;
+        lightboxCount.textContent = (galleryIndex + 1) + ' / ' + galleryFiles.length;
+      }
+      function openLightbox() { showGalleryImage(galleryIndex); lightbox.classList.add('open'); document.body.style.overflow = 'hidden'; }
+      function closeLightbox() { lightbox.classList.remove('open'); document.body.style.overflow = ''; }
+      document.getElementById('propertyGalleryPrev').addEventListener('click', function () { showGalleryImage(galleryIndex - 1); });
+      document.getElementById('propertyGalleryNext').addEventListener('click', function () { showGalleryImage(galleryIndex + 1); });
+      galleryImage.addEventListener('click', openLightbox);
+      document.getElementById('propertyGalleryClose').addEventListener('click', closeLightbox);
+      document.getElementById('propertyGalleryLightboxPrev').addEventListener('click', function () { showGalleryImage(galleryIndex - 1); });
+      document.getElementById('propertyGalleryLightboxNext').addEventListener('click', function () { showGalleryImage(galleryIndex + 1); });
+      lightbox.addEventListener('click', function (event) { if (event.target === lightbox) closeLightbox(); });
+      document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && lightbox.classList.contains('open')) closeLightbox();
+        if (lightbox.classList.contains('open') && event.key === 'ArrowLeft') showGalleryImage(galleryIndex - 1);
+        if (lightbox.classList.contains('open') && event.key === 'ArrowRight') showGalleryImage(galleryIndex + 1);
+      });
+      var swipeStartX = 0;
+      var swipeStartY = 0;
+      function attachSwipe(element) {
+        element.addEventListener('touchstart', function (event) {
+          if (!event.touches || !event.touches.length) return;
+          swipeStartX = event.touches[0].clientX; swipeStartY = event.touches[0].clientY;
+        }, {passive:true});
+        element.addEventListener('touchend', function (event) {
+          if (!event.changedTouches || !event.changedTouches.length) return;
+          var dx = event.changedTouches[0].clientX - swipeStartX;
+          var dy = event.changedTouches[0].clientY - swipeStartY;
+          if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy) * 1.2) showGalleryImage(galleryIndex + (dx < 0 ? 1 : -1));
+        }, {passive:true});
+      }
+      attachSwipe(stage); attachSwipe(lightbox);
+      showGalleryImage(0);
       var buttons = document.querySelectorAll('.nav-button');
       buttons.forEach(function (button) {
         button.addEventListener('click', function () {
