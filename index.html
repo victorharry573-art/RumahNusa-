@@ -65,6 +65,42 @@
     .nav-button.active{color:#c9232b;background:#fff0f0}
     @media(max-width:720px){.property-gallery{grid-column:1 / -1}.gallery-stage img{height:clamp(280px,72vw,460px)}.gallery-arrow{width:40px;height:40px;font-size:27px}.cards{grid-template-columns:repeat(2,minmax(0,1fr))}.city-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.category-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.card img{height:165px}}
     @media(max-width:390px){main{padding:12px}.cards{gap:10px}.card-body{padding:12px}.card img{height:135px}.category-card{min-height:120px;padding:12px;font-size:16px}.nav-icon{font-size:16px}.nav-label{font-size:7px}}
+
+    /* Profile area only */
+    .profile-view{display:none;margin:0 auto 34px;max-width:920px}
+    .profile-view.visible{display:block}
+    .profile-hero{background:linear-gradient(135deg,#8f1720,#c9232b);color:#fff;padding:24px;border-radius:18px;margin-bottom:16px;box-shadow:0 8px 24px rgba(120,20,30,.16)}
+    .profile-hero h2{font-size:clamp(25px,5vw,34px);margin:0 0 8px}
+    .profile-hero p{color:#fff4f4}
+    .profile-card{background:#fff;border:1px solid #e4e8ec;border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:0 4px 15px rgba(20,35,50,.04)}
+    .profile-card h3{margin-bottom:10px;color:#243746}
+    .profile-field{display:block;margin:12px 0;font-weight:700;color:#35404a;font-size:14px}
+    .profile-field input,.profile-field select,.profile-field textarea{display:block;width:100%;margin-top:6px;padding:12px;border:1px solid #cfd6dc;border-radius:10px;background:#fff;color:#222;font:inherit;font-weight:400;min-height:46px}
+    .profile-field textarea{min-height:82px;resize:vertical}
+    .profile-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 14px}
+    .profile-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+    .profile-btn{border:0;border-radius:10px;padding:12px 16px;min-height:45px;font:inherit;font-weight:800;cursor:pointer;touch-action:manipulation}
+    .profile-btn.primary{background:#c9232b;color:#fff}.profile-btn.secondary{background:#f0f2f4;color:#243746;border:1px solid #d9dfe4}
+    .profile-menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+    .profile-menu button{background:#fff;border:1px solid #e1e6eb;border-radius:12px;padding:15px 12px;text-align:left;min-height:76px;font:inherit;font-weight:800;color:#243746;cursor:pointer}
+    .profile-menu button span{display:block;font-size:12px;font-weight:400;color:#66717b;margin-top:4px}
+    .profile-error{display:none;color:#b4232d;background:#fff0f0;border:1px solid #f2c5c8;border-radius:9px;padding:10px;margin-top:12px;font-size:14px}
+    .profile-error.show{display:block}
+    .profile-step{display:none}.profile-step.active{display:block}
+    .profile-progress{height:7px;background:#f1d9db;border-radius:99px;overflow:hidden;margin:14px 0}.profile-progress span{display:block;height:100%;width:0;background:#c9232b;transition:width .2s}
+    .profile-upload{border:2px dashed #cbd3da;border-radius:12px;padding:18px;text-align:center;background:#fafbfc}
+    .profile-preview{max-width:100%;max-height:220px;display:block;margin:12px auto;border-radius:10px}
+    .id-guide{position:relative;max-width:360px;min-height:175px;margin:14px auto;border:2px solid #c9232b;border-radius:14px;background:linear-gradient(135deg,#fff,#f3f6f8);display:flex;align-items:center;justify-content:center;text-align:center;padding:18px;color:#34404a}
+    .id-guide.passport{max-width:245px;min-height:300px;border-radius:12px}.id-guide p{margin:0}
+    .face-guide{width:220px;height:285px;border:4px solid #b6c1c8;border-radius:48% 48% 44% 44%;margin:16px auto;display:flex;align-items:center;justify-content:center;text-align:center;padding:25px;position:relative}
+    .face-guide::after{content:"";position:absolute;inset:-4px;border:4px solid #1b9b62;border-radius:inherit;clip-path:inset(0 0 0 0);animation:facePulse 2s infinite}
+    @keyframes facePulse{0%,100%{opacity:.45}50%{opacity:1}}
+    .profile-muted{color:#66717b;font-size:13px}
+    .profile-toggle{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid #edf0f2}
+    .profile-toggle input{width:24px;height:24px;accent-color:#c9232b}
+    .profile-status{padding:10px 12px;border-radius:10px;background:#edf8f1;color:#17633b;font-weight:700;margin-top:12px}
+    @media(max-width:560px){.profile-grid,.profile-menu{grid-template-columns:1fr}.profile-card{padding:14px}.profile-hero{padding:20px}}
+
   </style>
 </head>
 <body id="top">
@@ -167,6 +203,108 @@
       </div>
     </section>
   </main>
+
+    <section class="profile-view" id="profileView" aria-labelledby="profileTitle">
+      <div class="profile-hero">
+        <p class="eyebrow" style="color:#ffe2e4">Your account, your next home</p>
+        <h2 id="profileTitle">My Profile</h2>
+        <p>Build your profile to make property enquiries smoother. Share the details you are comfortable providing and choose the property journey that suits you.</p>
+        <label class="profile-field" style="color:#fff;max-width:230px">Language
+          <select id="profileLanguage" aria-label="Choose profile language"><option value="en">English</option><option value="id">Bahasa Indonesia</option></select>
+        </label>
+      </div>
+
+      <div class="profile-card" id="profileDetailsCard">
+        <h3 data-i18n="completeTitle">Complete your details</h3>
+        <p data-i18n="completeIntro">Tell us a little about yourself and the kind of property you are looking for, so your property journey can be more personal and organised.</p>
+        <form id="profileDetailsForm" novalidate>
+          <div class="profile-grid">
+            <label class="profile-field"><span data-i18n="legalName">Full legal name</span><input name="legalName" autocomplete="name" required></label>
+            <label class="profile-field"><span data-i18n="dob">Date of birth</span><input name="dob" type="date" required></label>
+            <label class="profile-field"><span data-i18n="nationality">Nationality</span><select name="nationality" id="nationalitySelect" required><option value="">Choose nationality</option></select></label>
+            <label class="profile-field"><span data-i18n="address">Residential address</span><textarea name="address" autocomplete="street-address" required></textarea></label>
+            <label class="profile-field"><span data-i18n="phone">Phone number</span><div style="display:flex;gap:7px"><select name="phoneCountry" id="phoneCountry" aria-label="Phone country code" style="width:46%;margin-top:6px" required><option value="">Country code</option></select><input name="phone" type="tel" autocomplete="tel-national" placeholder="Phone number" required style="min-width:0"></div></label>
+            <label class="profile-field"><span data-i18n="email">Email address</span><input name="email" type="email" autocomplete="email" required></label>
+          </div>
+          <label class="profile-field"><span data-i18n="propertyJourney">What property journey are you interested in?</span>
+            <select name="propertyJourney" required><option value="">Choose one</option><option>Buying a home</option><option>Renting a property</option><option>Listing my property</option><option>Property investment</option><option>Exploring options</option></select>
+          </label>
+          <div class="profile-actions"><button class="profile-btn primary" type="submit" data-i18n="saveContinue">Save details and continue</button></div>
+          <div class="profile-error" id="profileDetailsError" role="alert" data-i18n="requiredError">Some required information is missing. Please complete all mandatory fields to continue with your property registration.</div>
+        </form>
+      </div>
+
+      <div class="profile-card" id="verificationCard">
+        <h3 data-i18n="identityTitle">Identity and account verification</h3>
+        <p data-i18n="identityIntro">Follow the guided steps below. Choose your document type, add a document image if you wish, and review the information before continuing.</p>
+        <p class="profile-muted" data-i18n="privacyNotice">This prototype does not submit identity documents or face images to a verification service. Do not upload sensitive documents until a secure verification service and privacy notice are in place.</p>
+        <div class="profile-progress" aria-label="Verification progress"><span id="verifyProgress"></span></div>
+        <div class="profile-step active" data-step="0">
+          <h3 data-i18n="chooseId">Step 1 · Choose your identity document</h3>
+          <label class="profile-field"><span data-i18n="identityType">Choose your identity type</span>
+            <select id="identityType" required>
+              <option value="">Choose document type</option>
+              <option>KTP (Kartu Tanda Penduduk)</option><option>Passport</option><option>KITAS</option><option>KITAP</option><option>Driver's license</option><option>National identity card</option><option>Residence permit</option><option>Tax Identification Number (NPWP)</option>
+            </select>
+          </label>
+          <div class="profile-actions"><button class="profile-btn primary" id="idTypeContinue" type="button" data-i18n="continue">Continue</button></div>
+        </div>
+        <div class="profile-step" data-step="1">
+          <h3 data-i18n="captureId">Step 2 · Add your identity document</h3>
+          <div class="id-guide" id="idGuide"><p id="idGuideText">Your selected document guide will appear here.</p></div>
+          <div class="profile-actions"><button class="profile-btn secondary" type="button" id="openIdCamera" data-i18n="takePhoto">Take a photo</button><label class="profile-btn secondary" for="idUpload" data-i18n="uploadId">Upload ID image</label><input id="idUpload" type="file" accept="image/*" hidden></div>
+          <video id="idVideo" playsinline autoplay style="display:none;width:100%;max-height:240px;border-radius:12px;margin-top:12px"></video>
+          <canvas id="idCanvas" hidden></canvas><img id="idPreview" class="profile-preview" alt="Selected document preview" hidden>
+          <div class="profile-actions"><button class="profile-btn secondary" type="button" id="stopIdCamera" hidden data-i18n="capturePhoto">Capture photo</button><button class="profile-btn primary" type="button" id="idDone" data-i18n="done">Done</button></div>
+          <div class="profile-actions"><button class="profile-btn secondary" type="button" data-back-step="0" data-i18n="back">Back</button></div>
+        </div>
+        <div class="profile-step" data-step="2">
+          <h3 data-i18n="faceTitle">Step 3 · Facial check</h3>
+          <p data-i18n="faceIntro">Complete the guided camera check to help protect your account and support a safer property journey.</p>
+          <div class="face-guide"><span id="facePrompt">Position your face inside the oval</span></div>
+          <p class="profile-muted" id="faceStatus" aria-live="polite">Camera access is optional in this demo. No automated identity match is performed.</p>
+          <div class="profile-actions"><button class="profile-btn primary" type="button" id="startFaceCamera" data-i18n="startScan">Start camera check</button><button class="profile-btn secondary" type="button" id="faceDone" data-i18n="done">Done</button></div>
+          <video id="faceVideo" playsinline autoplay style="display:none;width:100%;max-height:240px;border-radius:12px;margin-top:12px"></video>
+          <div class="profile-actions"><button class="profile-btn secondary" type="button" data-back-step="1" data-i18n="back">Back</button></div>
+        </div>
+        <div class="profile-step" data-step="3">
+          <div class="profile-status" data-i18n="profileComplete">Your profile steps are complete. Welcome to Nusantara Developer Real Estate Group.</div>
+          <p data-i18n="completeThanks">Thank you for taking the time to set up your account. Continue to add a profile photo or review your property preferences.</p>
+          <div class="profile-actions"><button class="profile-btn primary" type="button" id="verificationFinish" data-i18n="continue">Continue</button></div>
+        </div>
+      </div>
+
+      <div class="profile-card" id="profilePhotoCard">
+        <h3 data-i18n="photoTitle">Upload your profile photo</h3>
+        <p data-i18n="photoIntro">Choose a photo from your device. Tap it again to deselect it, or choose another image.</p>
+        <div class="profile-upload"><input type="file" id="profilePhotoUpload" accept="image/*"><div id="photoSelection" aria-live="polite"></div><img id="profilePhotoPreview" class="profile-preview" alt="Selected profile photo" hidden></div>
+        <div class="profile-actions"><button class="profile-btn primary" type="button" id="saveProfilePhoto" data-i18n="continue">Continue</button></div>
+      </div>
+
+      <div class="profile-card">
+        <h3 data-i18n="accountOptions">Your account</h3>
+        <div class="profile-menu">
+          <button type="button" data-profile-panel="myProperty"><span aria-hidden="true">🏡</span> <span data-i18n="myProperty">My Property</span><span data-i18n="myPropertyDesc">Your property preferences and listing interests</span></button>
+          <button type="button" data-profile-panel="payment"><span aria-hidden="true">💳</span> <span data-i18n="payment">Payment History</span><span data-i18n="paymentDesc">Receipts, payments and transaction status</span></button>
+          <button type="button" data-profile-panel="booking"><span aria-hidden="true">📅</span> <span data-i18n="booking">My Booking</span><span data-i18n="bookingDesc">Viewing appointments and booking updates</span></button>
+          <button type="button" data-profile-panel="properties"><span aria-hidden="true">🏘️</span> <span data-i18n="properties">My Properties</span><span data-i18n="propertiesDesc">Saved listings and properties you manage</span></button>
+          <button type="button" data-profile-panel="security"><span aria-hidden="true">🔐</span> <span data-i18n="security">Security Settings</span><span data-i18n="securityDesc">Password and account access</span></button>
+          <button type="button" data-profile-panel="notifications"><span aria-hidden="true">🔔</span> <span data-i18n="notifications">Notifications</span><span data-i18n="notificationsDesc">Choose which updates you receive</span></button>
+          <button type="button" data-profile-panel="help"><span aria-hidden="true">💬</span> <span data-i18n="help">Help & Support</span><span data-i18n="helpDesc">Get help with your account or property journey</span></button>
+          <button type="button" data-profile-panel="settings"><span aria-hidden="true">⚙️</span> <span data-i18n="settings">Settings</span><span data-i18n="settingsDesc">Language and profile preferences</span></button>
+        </div>
+      </div>
+      <div class="profile-card" id="profileSubpanel" hidden>
+        <h3 id="profileSubpanelTitle">Account option</h3><div id="profileSubpanelBody"></div>
+        <div class="profile-actions"><button class="profile-btn secondary" type="button" id="profileSubpanelBack">Back to My Profile</button></div>
+      </div>
+      <div class="profile-card">
+        <h3 data-i18n="signOutTitle">Log out</h3>
+        <p data-i18n="signOutText">Sign out of this device. Your saved account information is not erased by logging out.</p>
+        <button class="profile-btn secondary" type="button" id="profileLogout" data-i18n="logout">Log Out</button>
+      </div>
+      <p class="profile-muted" data-i18n="communityPromise">Thoughtful homes, clear information and a welcoming property community — your next chapter starts here.</p>
+    </section>
   <footer>Nusantara Developer Real Estate Group Real Estate · Indonesia</footer>
 
   <nav class="bottom-nav" aria-label="Main navigation">
@@ -180,6 +318,18 @@
   </nav>
   <script>
     (function () {
+
+      var profileTranslations = {
+        en: {completeTitle:"Complete your details",completeIntro:"Tell us a little about yourself and the kind of property you are looking for, so your property journey can be more personal and organised.",legalName:"Full legal name",dob:"Date of birth",nationality:"Nationality",address:"Residential address",phone:"Phone number",email:"Email address",propertyJourney:"What property journey are you interested in?",saveContinue:"Save details and continue",requiredError:"Some required information is missing. Please complete all mandatory fields to continue with your property registration.",identityTitle:"Identity and account verification",identityIntro:"Follow the guided steps below. Choose your document type, add a document image if you wish, and review the information before continuing.",privacyNotice:"This prototype does not submit identity documents or face images to a verification service. Do not upload sensitive documents until a secure verification service and privacy notice are in place.",chooseId:"Step 1 · Choose your identity document",identityType:"Choose your identity type",continue:"Continue",captureId:"Step 2 · Add your identity document",takePhoto:"Take a photo",uploadId:"Upload ID image",capturePhoto:"Capture photo",done:"Done",back:"Back",faceTitle:"Step 3 · Facial check",faceIntro:"Complete the guided camera check to help protect your account and support a safer property journey.",startScan:"Start camera check",profileComplete:"Your profile steps are complete. Welcome to Nusantara Developer Real Estate Group.",completeThanks:"Thank you for taking the time to set up your account. Continue to add a profile photo or review your property preferences.",photoTitle:"Upload your profile photo",photoIntro:"Choose a photo from your device. Tap it again to deselect it, or choose another image.",accountOptions:"Your account",myProperty:"My Property",myPropertyDesc:"Your property preferences and listing interests",payment:"Payment History",paymentDesc:"Receipts, payments and transaction status",booking:"My Booking",bookingDesc:"Viewing appointments and booking updates",properties:"My Properties",propertiesDesc:"Saved listings and properties you manage",security:"Security Settings",securityDesc:"Password and account access",notifications:"Notifications",notificationsDesc:"Choose which updates you receive",help:"Help & Support",helpDesc:"Get help with your account or property journey",settings:"Settings",settingsDesc:"Language and profile preferences",signOutTitle:"Log out",signOutText:"Sign out of this device. Your saved account information is not erased by logging out.",logout:"Log Out",communityPromise:"Thoughtful homes, clear information and a welcoming property community — your next chapter starts here."},
+        id: {completeTitle:"Lengkapi data Anda",completeIntro:"Ceritakan sedikit tentang diri Anda dan jenis properti yang dicari agar perjalanan properti Anda lebih personal dan teratur.",legalName:"Nama lengkap sesuai dokumen resmi",dob:"Tanggal lahir",nationality:"Kewarganegaraan",address:"Alamat tempat tinggal",phone:"Nomor telepon",email:"Alamat email",propertyJourney:"Apa tujuan properti Anda?",saveContinue:"Simpan data dan lanjutkan",requiredError:"Beberapa informasi wajib belum diisi. Lengkapi semua kolom wajib untuk melanjutkan pendaftaran properti.",identityTitle:"Verifikasi identitas dan akun",identityIntro:"Ikuti langkah berikut. Pilih jenis dokumen dan tambahkan gambar dokumen jika diperlukan.",privacyNotice:"Versi demo ini tidak mengirim dokumen identitas atau gambar wajah ke layanan verifikasi. Jangan unggah dokumen sensitif sebelum layanan verifikasi yang aman dan pemberitahuan privasi tersedia.",chooseId:"Langkah 1 · Pilih dokumen identitas",identityType:"Pilih jenis identitas",continue:"Lanjutkan",captureId:"Langkah 2 · Tambahkan dokumen identitas",takePhoto:"Ambil foto",uploadId:"Unggah gambar identitas",capturePhoto:"Ambil gambar",done:"Selesai",back:"Kembali",faceTitle:"Langkah 3 · Pemeriksaan wajah",faceIntro:"Ikuti panduan kamera untuk membantu melindungi akun dan mendukung perjalanan properti yang lebih aman.",startScan:"Mulai pemeriksaan kamera",profileComplete:"Langkah profil selesai. Selamat datang di Nusantara Developer Real Estate Group.",completeThanks:"Terima kasih telah menyiapkan akun. Lanjutkan untuk menambahkan foto profil atau meninjau preferensi properti.",photoTitle:"Unggah foto profil",photoIntro:"Pilih foto dari perangkat. Ketuk lagi untuk membatalkan pilihan atau pilih gambar lain.",accountOptions:"Akun Anda",myProperty:"Properti Saya",myPropertyDesc:"Preferensi properti dan minat listing",payment:"Riwayat Pembayaran",paymentDesc:"Kuitansi, pembayaran, dan status transaksi",booking:"Pemesanan Saya",bookingDesc:"Jadwal kunjungan dan pembaruan pemesanan",properties:"Properti Saya",propertiesDesc:"Listing tersimpan dan properti yang Anda kelola",security:"Pengaturan Keamanan",securityDesc:"Kata sandi dan akses akun",notifications:"Notifikasi",notificationsDesc:"Pilih pembaruan yang ingin diterima",help:"Bantuan & Dukungan",helpDesc:"Bantuan akun atau perjalanan properti Anda",settings:"Pengaturan",settingsDesc:"Bahasa dan preferensi profil",signOutTitle:"Keluar",signOutText:"Keluar dari perangkat ini. Informasi akun tersimpan tidak dihapus saat Anda keluar.",logout:"Keluar",communityPromise:"Hunian berkualitas, informasi yang jelas, dan komunitas properti yang ramah — babak baru Anda dimulai di sini."}
+      };
+      function setProfileLanguage(lang) {
+        var words = profileTranslations[lang] || profileTranslations.en;
+        document.querySelectorAll('#profileView [data-i18n]').forEach(function(el){ var key=el.getAttribute('data-i18n'); if(words[key]) el.textContent=words[key]; });
+        document.documentElement.lang = lang === 'id' ? 'id' : 'en';
+        try { sessionStorage.setItem('nusantara-profile-language', lang); } catch(e) {}
+      }
+
       var galleryFiles = ["IMG-20261014-WA0002.jpg","IMG-20261014-WA0000.jpg","IMG-20261014-WA0003.jpg","IMG-20261014-WA0004.jpg","IMG-20261014-WA0005.jpg","IMG-20261014-WA0007.jpg","IMG-20261014-WA0008.jpg","IMG-20261014-WA0009.jpg","IMG-20261014-WA0010.jpg","IMG-20261014-WA0011.jpg","IMG-20261014-WA0012.jpg","IMG-20261014-WA0013.jpg","IMG-20261014-WA0015.jpg","IMG-20261014-WA0016.jpg","IMG-20261014-WA0017.jpg","IMG-20261014-WA0018.jpg","IMG-20261014-WA0019.jpg","IMG-20261014-WA0020.jpg","IMG-20261014-WA0021.jpg","IMG-20261013-WA0002.jpg","IMG-20261013-WA0006(1).jpg","IMG-20261013-WA0009(1).jpg","IMG-20261013-WA0010.jpg","IMG-20261013-WA0011.jpg","IMG-20261013-WA0012.jpg","IMG-20261013-WA0013.jpg","IMG-20261013-WA0014.jpg","IMG-20261013-WA0015.jpg","IMG-20261013-WA0016.jpg","IMG-20261013-WA0017.jpg","IMG-20261013-WA0018.jpg","IMG-20261013-WA0019.jpg","IMG-20261013-WA0021.jpg","IMG-20261013-WA0022.jpg","IMG-20261013-WA0023.jpg","IMG-20261013-WA0025.jpg","IMG-20261013-WA0027.jpg","IMG-20261013-WA0028.jpg","IMG-20261013-WA0032.jpg","IMG-20261013-WA0033.jpg","IMG-20261013-WA0034.jpg","IMG-20261013-WA0035.jpg"];
       var galleryBase = 'https://vuhrkijzjmnbsaqnpdmg.supabase.co/storage/v1/object/public/property-images/';
       var galleryIndex = 0;
@@ -246,6 +396,95 @@
       }
       attachSwipe(stage); attachSwipe(lightbox);
       showGalleryImage(0);
+
+      var profileView = document.getElementById('profileView');
+      var mainSections = Array.from(document.querySelectorAll('main > section')).filter(function(s){return s.id !== 'profileView';});
+      var profileForm = document.getElementById('profileDetailsForm');
+      var profileError = document.getElementById('profileDetailsError');
+      var verifySteps = Array.from(document.querySelectorAll('.profile-step'));
+      var verifyStep = 0, idStream = null, faceStream = null, idImageUrl = null, profileImageUrl = null;
+      function showVerifyStep(n){verifyStep=n;verifySteps.forEach(function(s){s.classList.toggle('active',Number(s.getAttribute('data-step'))===n)});document.getElementById('verifyProgress').style.width=((n/3)*100)+'%';}
+      function showProfile(){mainSections.forEach(function(s){s.style.display='none'});profileView.classList.add('visible');window.scrollTo({top:0,behavior:'smooth'});document.getElementById('profileTitle').focus({preventScroll:true});}
+      function hideProfile(){profileView.classList.remove('visible');mainSections.forEach(function(s){s.style.display=''});}
+      var countryList = [
+        ["Indonesia","+62"],["Afghanistan","+93"],["Albania","+355"],["Algeria","+213"],["Andorra","+376"],["Angola","+244"],["Antigua and Barbuda","+1"],["Argentina","+54"],["Armenia","+374"],["Australia","+61"],["Austria","+43"],["Azerbaijan","+994"],["Bahamas","+1"],["Bahrain","+973"],["Bangladesh","+880"],["Barbados","+1"],["Belarus","+375"],["Belgium","+32"],["Belize","+501"],["Benin","+229"],["Bhutan","+975"],["Bolivia","+591"],["Bosnia and Herzegovina","+387"],["Botswana","+267"],["Brazil","+55"],["Brunei","+673"],["Bulgaria","+359"],["Burkina Faso","+226"],["Burundi","+257"],["Cambodia","+855"],["Cameroon","+237"],["Canada","+1"],["Cape Verde","+238"],["Central African Republic","+236"],["Chad","+235"],["Chile","+56"],["China","+86"],["Colombia","+57"],["Comoros","+269"],["Congo","+242"],["Costa Rica","+506"],["Croatia","+385"],["Cuba","+53"],["Cyprus","+357"],["Czechia","+420"],["Democratic Republic of the Congo","+243"],["Denmark","+45"],["Djibouti","+253"],["Dominica","+1"],["Dominican Republic","+1"],["Ecuador","+593"],["Egypt","+20"],["El Salvador","+503"],["Equatorial Guinea","+240"],["Eritrea","+291"],["Estonia","+372"],["Eswatini","+268"],["Ethiopia","+251"],["Fiji","+679"],["Finland","+358"],["France","+33"],["Gabon","+241"],["Gambia","+220"],["Georgia","+995"],["Germany","+49"],["Ghana","+233"],["Greece","+30"],["Grenada","+1"],["Guatemala","+502"],["Guinea","+224"],["Guinea-Bissau","+245"],["Guyana","+592"],["Haiti","+509"],["Honduras","+504"],["Hungary","+36"],["Iceland","+354"],["India","+91"],["Iran","+98"],["Iraq","+964"],["Ireland","+353"],["Israel","+972"],["Italy","+39"],["Jamaica","+1"],["Japan","+81"],["Jordan","+962"],["Kazakhstan","+7"],["Kenya","+254"],["Kiribati","+686"],["Kosovo","+383"],["Kuwait","+965"],["Kyrgyzstan","+996"],["Laos","+856"],["Latvia","+371"],["Lebanon","+961"],["Lesotho","+266"],["Liberia","+231"],["Libya","+218"],["Liechtenstein","+423"],["Lithuania","+370"],["Luxembourg","+352"],["Madagascar","+261"],["Malawi","+265"],["Malaysia","+60"],["Maldives","+960"],["Mali","+223"],["Malta","+356"],["Marshall Islands","+692"],["Mauritania","+222"],["Mauritius","+230"],["Mexico","+52"],["Micronesia","+691"],["Moldova","+373"],["Monaco","+377"],["Mongolia","+976"],["Montenegro","+382"],["Morocco","+212"],["Mozambique","+258"],["Myanmar","+95"],["Namibia","+264"],["Nauru","+674"],["Nepal","+977"],["Netherlands","+31"],["New Zealand","+64"],["Nicaragua","+505"],["Niger","+227"],["Nigeria","+234"],["North Korea","+850"],["North Macedonia","+389"],["Norway","+47"],["Oman","+968"],["Pakistan","+92"],["Palau","+680"],["Palestine","+970"],["Panama","+507"],["Papua New Guinea","+675"],["Paraguay","+595"],["Peru","+51"],["Philippines","+63"],["Poland","+48"],["Portugal","+351"],["Qatar","+974"],["Romania","+40"],["Russia","+7"],["Rwanda","+250"],["Saint Kitts and Nevis","+1"],["Saint Lucia","+1"],["Saint Vincent and the Grenadines","+1"],["Samoa","+685"],["San Marino","+378"],["Sao Tome and Principe","+239"],["Saudi Arabia","+966"],["Senegal","+221"],["Serbia","+381"],["Seychelles","+248"],["Sierra Leone","+232"],["Singapore","+65"],["Slovakia","+421"],["Slovenia","+386"],["Solomon Islands","+677"],["Somalia","+252"],["South Africa","+27"],["South Korea","+82"],["South Sudan","+211"],["Spain","+34"],["Sri Lanka","+94"],["Sudan","+249"],["Suriname","+597"],["Sweden","+46"],["Switzerland","+41"],["Syria","+963"],["Taiwan","+886"],["Tajikistan","+992"],["Tanzania","+255"],["Thailand","+66"],["Timor-Leste","+670"],["Togo","+228"],["Tonga","+676"],["Trinidad and Tobago","+1"],["Tunisia","+216"],["Turkey","+90"],["Turkmenistan","+993"],["Tuvalu","+688"],["Uganda","+256"],["Ukraine","+380"],["United Arab Emirates","+971"],["United Kingdom","+44"],["United States","+1"],["Uruguay","+598"],["Uzbekistan","+998"],["Vanuatu","+678"],["Vatican City","+379"],["Venezuela","+58"],["Vietnam","+84"],["Yemen","+967"],["Zambia","+260"],["Zimbabwe","+263"]
+      ];
+      function fillCountries(){
+        var nat=document.getElementById('nationalitySelect'), phone=document.getElementById('phoneCountry');
+        countryList.forEach(function(c){var a=document.createElement('option');a.value=c[0];a.textContent=c[0];nat.appendChild(a);var b=document.createElement('option');b.value=c[1];b.textContent=c[0]+' ('+c[1]+')';phone.appendChild(b);});
+        nat.value='';phone.value='+62';
+      }
+      fillCountries();
+      document.getElementById('profileLanguage').addEventListener('change',function(){setProfileLanguage(this.value)});
+      try {var savedLang=sessionStorage.getItem('nusantara-profile-language');if(savedLang){document.getElementById('profileLanguage').value=savedLang;setProfileLanguage(savedLang)}}catch(e){}
+      profileForm.addEventListener('submit',function(e){
+        e.preventDefault();var required=Array.from(profileForm.querySelectorAll('[required]'));var missing=required.some(function(el){return !String(el.value||'').trim()});
+        if(missing){profileError.classList.add('show');required.forEach(function(el){el.style.borderColor=String(el.value||'').trim()?'#cfd6dc':'#c9232b'});return;}
+        profileError.classList.remove('show');required.forEach(function(el){el.style.borderColor='#cfd6dc'});
+        try{var data={};new FormData(profileForm).forEach(function(v,k){data[k]=v});sessionStorage.setItem('nusantara-profile-draft',JSON.stringify(data));}catch(err){}
+        showVerifyStep(0);document.getElementById('verificationCard').scrollIntoView({behavior:'smooth',block:'start'});
+      });
+      document.getElementById('idTypeContinue').addEventListener('click',function(){
+        var t=document.getElementById('identityType').value;if(!t){document.getElementById('identityType').style.borderColor='#c9232b';return;}
+        var guide=document.getElementById('idGuide');guide.className='id-guide'+(/passport/i.test(t)?' passport':'');
+        document.getElementById('idGuideText').textContent='Align the '+t+' within this guide. Use a clear, well-lit image with all edges visible.';
+        showVerifyStep(1);
+      });
+      function stopStream(stream,video){if(stream){stream.getTracks().forEach(function(t){t.stop()});}if(video){video.srcObject=null;video.style.display='none';}}
+      document.getElementById('openIdCamera').addEventListener('click',async function(){
+        var video=document.getElementById('idVideo');
+        try{if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw new Error('Camera is not available in this browser.');idStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false});video.srcObject=idStream;video.style.display='block';document.getElementById('stopIdCamera').hidden=false;}
+        catch(e){alert('Camera could not be opened. Please allow camera access or use Upload ID image instead.');}
+      });
+      document.getElementById('stopIdCamera').addEventListener('click',function(){
+        var video=document.getElementById('idVideo'),canvas=document.getElementById('idCanvas');
+        if(!video.videoWidth){alert('Wait for the camera preview, then try again.');return;}
+        canvas.width=video.videoWidth;canvas.height=video.videoHeight;canvas.getContext('2d').drawImage(video,0,0);
+        if(idImageUrl)URL.revokeObjectURL(idImageUrl);canvas.toBlob(function(blob){if(blob){idImageUrl=URL.createObjectURL(blob);var p=document.getElementById('idPreview');p.src=idImageUrl;p.hidden=false;}});
+        stopStream(idStream,video);idStream=null;this.hidden=true;
+      });
+      document.getElementById('idUpload').addEventListener('change',function(){
+        var file=this.files&&this.files[0];if(!file)return;if(idImageUrl)URL.revokeObjectURL(idImageUrl);idImageUrl=URL.createObjectURL(file);
+        var p=document.getElementById('idPreview');p.src=idImageUrl;p.hidden=false;
+      });
+      document.getElementById('idDone').addEventListener('click',function(){if(!idImageUrl){if(!confirm('No document image is selected. Continue without adding one?'))return;}stopStream(idStream,document.getElementById('idVideo'));idStream=null;showVerifyStep(2);document.getElementById('verificationCard').scrollIntoView({behavior:'smooth',block:'start'});});
+      document.querySelectorAll('[data-back-step]').forEach(function(b){b.addEventListener('click',function(){showVerifyStep(Number(b.getAttribute('data-back-step')))});});
+      document.getElementById('startFaceCamera').addEventListener('click',async function(){
+        var video=document.getElementById('faceVideo'),prompt=document.getElementById('facePrompt'),status=document.getElementById('faceStatus');
+        try{if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw new Error('No camera API');faceStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:false});video.srcObject=faceStream;video.style.display='block';prompt.textContent='Look forward, then slowly turn left and right';status.textContent='Camera preview is active. This demo does not perform biometric face matching.';}
+        catch(e){status.textContent='Camera permission was not available. You can still finish this demo step without a camera scan.';}
+      });
+      document.getElementById('faceDone').addEventListener('click',function(){stopStream(faceStream,document.getElementById('faceVideo'));faceStream=null;showVerifyStep(3);document.getElementById('verificationCard').scrollIntoView({behavior:'smooth',block:'start'});});
+      document.getElementById('verificationFinish').addEventListener('click',function(){showVerifyStep(0);document.getElementById('profilePhotoCard').scrollIntoView({behavior:'smooth',block:'start'});});
+      document.getElementById('profilePhotoUpload').addEventListener('change',function(){
+        var file=this.files&&this.files[0];if(!file)return;if(profileImageUrl)URL.revokeObjectURL(profileImageUrl);profileImageUrl=URL.createObjectURL(file);
+        var img=document.getElementById('profilePhotoPreview');img.src=profileImageUrl;img.hidden=false;document.getElementById('photoSelection').textContent='✓ '+file.name+' selected';
+      });
+      document.getElementById('saveProfilePhoto').addEventListener('click',function(){document.getElementById('photoSelection').textContent=document.getElementById('profilePhotoUpload').files.length?'Photo selected for this session.':'You can add a photo later.';document.getElementById('profileSubpanel').hidden=false;document.getElementById('profileSubpanelTitle').textContent='Welcome';document.getElementById('profileSubpanelBody').textContent='Your profile setup steps are complete. Choose an account option below.';document.getElementById('profileSubpanel').scrollIntoView({behavior:'smooth'});});
+      var panelContent={
+        myProperty:['My Property','Choose your property goal, preferred city, property type, bedroom count and budget. Exact street addresses are not shown publicly.'],
+        payment:['Payment History','No payments are recorded in this prototype. When connected to a payment provider, this area can show transaction date, reference, amount, currency, status and receipt. Never enter card details here.'],
+        booking:['My Booking','View property viewing appointments, booking date and time, property name, appointment status, and agent messages. No bookings are connected yet.'],
+        properties:['My Properties','Customers can review saved homes and enquiries here. Approved agents can manage listings they are authorised to edit. No live listings are connected to this profile prototype yet.'],
+        security:['Security Settings','Account security should be connected to Supabase Authentication for password changes, email verification, password recovery and secure sign-in. This profile prototype is not yet connected to authentication.'],
+        notifications:['Notifications','<label class="profile-toggle">Booking updates <input type="checkbox" data-notice="booking"></label><label class="profile-toggle">Property and price updates <input type="checkbox" data-notice="property"></label><label class="profile-toggle">New messages <input type="checkbox" data-notice="messages" checked></label><label class="profile-toggle">Account and security notices <input type="checkbox" data-notice="security" checked></label>'],
+        help:['Help & Support','For assistance with your property enquiry, contact rumahnusarealestate@gmail.com or use the website messaging section when it becomes available. Never send passwords or payment card details in a message.'],
+        settings:['Settings','<label class="profile-field">Language<select id="panelLanguage"><option value="en">English</option><option value="id">Bahasa Indonesia</option></select></label><p>Language choice currently translates the profile section only. Full-site translation needs a separate site-wide translation pass.</p>']
+      };
+      document.querySelectorAll('[data-profile-panel]').forEach(function(btn){btn.addEventListener('click',function(){
+        var key=btn.getAttribute('data-profile-panel'),data=panelContent[key];document.getElementById('profileSubpanel').hidden=false;document.getElementById('profileSubpanelTitle').textContent=data[0];document.getElementById('profileSubpanelBody').innerHTML=data[1];document.getElementById('profileSubpanel').scrollIntoView({behavior:'smooth',block:'start'});
+        var pl=document.getElementById('panelLanguage');if(pl){pl.value=document.getElementById('profileLanguage').value;pl.addEventListener('change',function(){document.getElementById('profileLanguage').value=this.value;setProfileLanguage(this.value);});}
+        document.querySelectorAll('[data-notice]').forEach(function(el){var k='nusantara-notice-'+el.getAttribute('data-notice');try{el.checked=sessionStorage.getItem(k)!=='off';}catch(e){}el.addEventListener('change',function(){try{sessionStorage.setItem(k,el.checked?'on':'off')}catch(e){}})});
+      })});
+      document.getElementById('profileSubpanelBack').addEventListener('click',function(){document.getElementById('profileSubpanel').hidden=true;document.getElementById('profileDetailsCard').scrollIntoView({behavior:'smooth'});});
+      document.getElementById('profileLogout').addEventListener('click',function(){
+        if(!confirm('Log out of this device? Your saved account information will not be erased.'))return;
+        stopStream(idStream,document.getElementById('idVideo'));stopStream(faceStream,document.getElementById('faceVideo'));idStream=null;faceStream=null;
+        if(idImageUrl)URL.revokeObjectURL(idImageUrl);if(profileImageUrl)URL.revokeObjectURL(profileImageUrl);idImageUrl=null;profileImageUrl=null;
+        document.getElementById('idPreview').hidden=true;document.getElementById('profilePhotoPreview').hidden=true;document.getElementById('idUpload').value='';document.getElementById('profilePhotoUpload').value='';
+        alert('You have been signed out of this profile demo. Your details are still in this form until you clear or refresh the page.');hideProfile();
+      });
+
       var buttons = document.querySelectorAll('.nav-button');
       buttons.forEach(function (button) {
         button.addEventListener('click', function () {
@@ -257,7 +496,9 @@
           button.setAttribute('aria-current', 'page');
           var section = button.getAttribute('data-section');
           if (section === 'Home') {
-            window.scrollTo({top: 0, behavior: 'smooth'});
+            hideProfile(); window.scrollTo({top: 0, behavior: 'smooth'});
+          } else if (section === 'Profile') {
+            showProfile();
           } else {
             var notice = document.createElement('div');
             notice.setAttribute('role', 'status');
