@@ -607,7 +607,26 @@
       function escapeSearchText(value){return String(value==null?'':value).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
       function priceBounds(form){var min=Number(form.elements.minPrice.value)||0,max=Number(form.elements.maxPrice.value)||Infinity,band=form.elements.priceBand.value;var bands={'buy-under-500m':[0,500000000],'buy-500m-1b':[500000000,1000000000],'buy-1b-3b':[1000000000,3000000000],'buy-3b-5b':[3000000000,5000000000],'buy-over-5b':[5000000000,Infinity],'rent-under-100m':[0,100000000],'rent-100m-200m':[100000000,200000000],'rent-200m-300m':[200000000,300000000],'rent-over-300m':[300000000,Infinity]};if(band&&bands[band]){min=Math.max(min,bands[band][0]);max=Math.min(max,bands[band][1]);}return [min,max];}
       function parentCity(location){var n=String(location||'').trim().toLowerCase();var groups={'jakarta':['jakarta','central jakarta','south jakarta','east jakarta','west jakarta','north jakarta','kepulauan seribu','thousand islands'],'tangerang':['tangerang','tangerang city','south tangerang','tangerang selatan','tangerang regency','kabupaten tangerang','serpong','bsd city','bintaro'],'bogor':['bogor','bogor city','bogor regency','cibinong','sentul'],'bekasi':['bekasi','bekasi city','bekasi regency','cikarang'],'bandung':['bandung','bandung city','bandung regency','west bandung regency','cimahi'],'surabaya':['surabaya','surabaya city','sidoarjo','gresik'],'bali':['bali','denpasar','badung','ubud','gianyar','tabanan','sanur'],'yogyakarta':['yogyakarta','yogyakarta city','sleman','bantul']};for(var parent in groups){if(groups[parent].indexOf(n)>=0)return parent;}return n;}
-      async function loadSearchListings(){var url=supabaseUrl+'/rest/v1/properties?select=id,title,status,price,price_period,bedrooms,bathrooms,area_sqm,image_url,description,locations(name),property_types(name)&order=created_at.desc';var response=await fetch(url,{headers:{apikey:supabaseKey,Authorization:'Bearer '+supabaseKey}});if(!response.ok)throw new Error('Database request failed: '+response.status);var rows=await response.json();searchListings=rows.map(function(p){var l=Array.isArray(p.locations)?p.locations[0]:p.locations,t=Array.isArray(p.property_types)?p.property_types[0]:p.property_types;return {title:p.title||'Property listing',type:t&&t.name||'Property',status:p.status,city:l&&l.name||'',area:l&&l.name||'',bedrooms:Number(p.bedrooms)||0,bathrooms:Number(p.bathrooms)||0,areaSqm:Number(p.area_sqm)||0,price:p.price===null?null:Number(p.price),pricePeriod:String(p.price_period||'').toLowerCase(),image:p.image_url||'',description:p.description||''};});return searchListings;}
+      async function loadSearchListings(){
+        async function readTable(table,columns){
+          var url=supabaseUrl+'/rest/v1/'+table+'?select='+columns;
+          var response=await fetch(url,{headers:{apikey:supabaseKey,Authorization:'Bearer '+supabaseKey}});
+          if(!response.ok){throw new Error('Supabase '+table+' request failed: '+response.status);}
+          return await response.json();
+        }
+        var results=await Promise.all([
+          readTable('properties','id,title,status,property_type_id,location_id,price,price_period,bedrooms,bathrooms,area_sqm,image_url,description,created_at'),
+          readTable('locations','id,name,country'),
+          readTable('property_types','id,name')
+        ]);
+        var rows=results[0],locations=results[1],types=results[2];
+        searchListings=rows.map(function(p){
+          var l=locations.find(function(x){return Number(x.id)===Number(p.location_id);});
+          var t=types.find(function(x){return Number(x.id)===Number(p.property_type_id);});
+          return {title:p.title||'Property listing',type:t&&t.name||'Property',status:String(p.status||'').toLowerCase(),city:l&&l.name||'',area:l&&l.name||'',bedrooms:Number(p.bedrooms)||0,bathrooms:Number(p.bathrooms)||0,areaSqm:Number(p.area_sqm)||0,price:p.price===null?null:Number(p.price),pricePeriod:String(p.price_period||'').toLowerCase(),image:p.image_url||'',description:p.description||''};
+        });
+        return searchListings;
+      }
       searchForm.addEventListener('submit',async function(e){e.preventDefault();var loc=searchForm.elements.location.value.trim().toLowerCase(),parent=parentCity(loc),type=searchForm.elements.type.value,goal=searchForm.elements.goal.value,beds=searchForm.elements.bedrooms.value,baths=Number(searchForm.elements.bathrooms.value)||0,term=searchForm.elements.term.value,range=priceBounds(searchForm);
       if(goal==='rent'&&!term){propertySearchResults.innerHTML='<h3>Choose a rental term</h3><p>Please choose a rental period of 1, 2, or 3 years.</p>';return;}if(searchForm.elements.minPrice.value&&searchForm.elements.maxPrice.value&&Number(searchForm.elements.minPrice.value)>Number(searchForm.elements.maxPrice.value)){propertySearchResults.innerHTML='<h3>Check your price range</h3><p>The minimum price must not be higher than the maximum price.</p>';return;}
       propertySearchResults.innerHTML='<p role="status">Loading property listings…</p>';try{await loadSearchListings();}catch(err){propertySearchResults.innerHTML='<h3>Listings could not be loaded</h3><p>Please try again. The database connection may need checking.</p>';return;}
