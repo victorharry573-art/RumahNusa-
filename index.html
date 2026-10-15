@@ -221,7 +221,7 @@
 <form id="propertySearchForm" class="search-panel">
 <label class="search-field search-location-field" for="searchLocation">Where do you want to live?<input id="searchLocation" name="location" type="search" placeholder="Type a city or area, e.g. Jakarta or Tangerang" autocomplete="off" aria-expanded="false" aria-controls="locationSuggestions"><div id="locationSuggestions" class="location-suggestions" role="listbox" hidden></div><small class="location-help">Type a city to see its districts and nearby cities, then tap the exact area you want.</small></label>
 <div class="search-grid">
-<label class="search-field">Property type<select name="type"><option value="">All property types</option><option>House</option><option>Apartment</option><option>Villa</option><option>Townhouse</option><option>Penthouse</option><option>Hotel</option><option>Mansion</option><option>Family Residence</option></select></label>
+<label class="search-field">Property type<select name="type"><option value="">All property types</option><option>House</option><option>Separate Rumah</option><option>Neighborhood</option><option>Apartment</option><option>Villa</option><option>Townhouse</option><option>Penthouse</option><option>Hotel</option><option>Mansion</option><option>Family Residence</option><option>Investment Property</option></select></label>
 <label class="search-field">What are you looking for?<select name="goal"><option value="">Buy or rent</option><option value="sale">Buy a property</option><option value="rent">Rent a property</option></select></label>
 <label class="search-field">Bedrooms<select name="bedrooms"><option value="">Any number</option><option value="2">2 bedrooms</option><option value="3">3 bedrooms</option><option value="4">4 bedrooms</option><option value="5">5+ bedrooms</option></select></label>
 <label class="search-field">Bathrooms<select name="bathrooms"><option value="">Any number</option><option value="1">1+ bathroom</option><option value="2">2+ bathrooms</option><option value="3">3+ bathrooms</option><option value="4">4+ bathrooms</option></select></label>
@@ -635,6 +635,19 @@
       propertySearchResults.innerHTML='<h3>'+found.length+' matching '+(found.length===1?'property':'properties')+'</h3>'+found.map(function(p){return '<article class="search-result-card">'+'<img src="'+escapeSearchText((p.title==='Luxury Apartment'?'https://vuhrkijzjmnbsaqnpdmg.supabase.co/storage/v1/object/public/property-images/IMG-20261016-WA0000.jpg':(p.image||'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85'))) +'" alt="Luxury Apartment interior with Jakarta skyline" loading="lazy" onerror="this.onerror=null;this.style.display=\'none\';">'+'<div><h3>'+escapeSearchText(p.title)+'</h3><p>'+escapeSearchText(p.type)+' · '+(p.status==='sale'?'For sale':'For rent')+'</p><p>'+escapeSearchText(p.city)+', Indonesia</p><p>'+p.bedrooms+' bedrooms · '+p.bathrooms+' bathrooms · '+p.areaSqm+' m²</p><p class="search-result-price">'+rupiah(p.price)+(p.status==='rent'?' / year':'')+'</p><p>'+escapeSearchText(p.description)+'</p><p>Exact address available privately from an agent.</p></div></article>';}).join('');});
       searchForm.addEventListener('reset',function(){setTimeout(function(){propertySearchResults.innerHTML='<h3>Property results</h3><p>Choose your location and filters, then tap Search Properties.</p>';},0);});
       var buttons = document.querySelectorAll('.nav-button');
+      document.querySelectorAll('.category-card').forEach(function(card){
+        card.addEventListener('click',function(event){
+          event.preventDefault();
+          var category=card.querySelector('span:last-child').textContent.trim();
+          searchForm.reset();
+          searchForm.elements.type.value=category;
+          var searchButton=Array.prototype.find.call(buttons,function(b){return b.getAttribute('data-section')==='Search';});
+          if(searchButton) searchButton.click();
+          searchForm.elements.type.value=category;
+          if(typeof searchForm.requestSubmit==='function') searchForm.requestSubmit();
+          else searchForm.dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}));
+        });
+      });
       buttons.forEach(function (button) {
         button.addEventListener('click', function () {
           buttons.forEach(function (item) {
