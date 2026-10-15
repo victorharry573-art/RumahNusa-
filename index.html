@@ -92,9 +92,17 @@
     .profile-preview{max-width:100%;max-height:220px;display:block;margin:12px auto;border-radius:10px}
     .id-guide{position:relative;max-width:360px;min-height:175px;margin:14px auto;border:2px solid #c9232b;border-radius:14px;background:linear-gradient(135deg,#fff,#f3f6f8);display:flex;align-items:center;justify-content:center;text-align:center;padding:18px;color:#34404a}
     .id-guide.passport{max-width:245px;min-height:300px;border-radius:12px}.id-guide p{margin:0}
-    .face-guide{width:220px;height:285px;border:4px solid #b6c1c8;border-radius:48% 48% 44% 44%;margin:16px auto;display:flex;align-items:center;justify-content:center;text-align:center;padding:25px;position:relative}
-    .face-guide::after{content:"";position:absolute;inset:-4px;border:4px solid #1b9b62;border-radius:inherit;clip-path:inset(0 0 0 0);animation:facePulse 2s infinite}
-    @keyframes facePulse{0%,100%{opacity:.45}50%{opacity:1}}
+    .face-scan-stage{position:relative;width:min(78vw,360px);aspect-ratio:1/1;border-radius:50%;margin:18px auto 28px;background:#eef0f3;border:10px solid #e2e5e9;overflow:visible;display:flex;align-items:center;justify-content:center}
+    .face-scan-stage video{width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;background:#e7e9ed;position:relative;z-index:1}
+    .face-scan-stage::after{content:"";position:absolute;inset:8%;border:4px dashed #fff;border-radius:50%;pointer-events:none;z-index:2}
+    .face-direction{position:absolute;right:-17px;top:50%;transform:translateY(-50%);width:66px;height:66px;border:0;border-radius:50%;background:#0866e8;color:#fff;font-size:42px;line-height:1;box-shadow:0 3px 12px #0002;z-index:3}
+    .face-direction.left{right:auto;left:-17px;transform:translateY(-50%) scaleX(-1)}
+    .face-direction.up{right:calc(50% - 33px);top:-17px;transform:none}
+    .face-direction.down{right:calc(50% - 33px);top:auto;bottom:-17px;transform:none}
+    .face-placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;color:#34404a;z-index:0}
+    .face-placeholder[hidden]{display:none}
+    .face-scan-done{display:none}.face-scan-done.visible{display:inline-flex}
+    @media(max-width:560px){.face-scan-stage{width:min(76vw,320px)}}
     .profile-muted{color:#66717b;font-size:13px}
     .profile-toggle{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid #edf0f2}
     .profile-toggle input{width:24px;height:24px;accent-color:#c9232b}
@@ -261,10 +269,14 @@
         <div class="profile-step" data-step="2">
           <h3 data-i18n="faceTitle">Step 3 · Facial check</h3>
           <p data-i18n="faceIntro">Complete the guided camera check to help protect your account and support a safer property journey.</p>
-          <div class="face-guide"><span id="facePrompt">Position your face inside the oval</span></div>
-          <p class="profile-muted" id="faceStatus" aria-live="polite">Camera access is optional in this demo. No automated identity match is performed.</p>
-          <div class="profile-actions"><button class="profile-btn primary" type="button" id="startFaceCamera" data-i18n="startScan">Start camera check</button><button class="profile-btn secondary" type="button" id="faceDone" data-i18n="done">Done</button></div>
-          <video id="faceVideo" playsinline autoplay style="display:none;width:100%;max-height:240px;border-radius:12px;margin-top:12px"></video>
+          <div class="face-scan-stage" id="faceScanStage">
+            <div class="face-placeholder" id="facePlaceholder">Position your face inside the circle</div>
+            <video id="faceVideo" playsinline autoplay muted></video>
+            <button class="face-direction" id="faceDirectionArrow" type="button" aria-label="Follow the direction arrow">➜</button>
+          </div>
+          <p class="profile-muted" id="faceStatus" aria-live="polite">The camera starts when this step opens. Follow the arrow with your face.</p>
+          <p id="facePrompt" style="text-align:center;font-size:21px;font-weight:700;margin:12px 0" aria-live="polite">Position your face inside the circle</p>
+          <div class="profile-actions"><button class="profile-btn primary face-scan-done" type="button" id="faceDone" data-i18n="done">Done</button></div>
           <div class="profile-actions"><button class="profile-btn secondary" type="button" data-back-step="1" data-i18n="back">Back</button></div>
         </div>
         <div class="profile-step" data-step="3">
@@ -449,12 +461,14 @@
       });
       document.getElementById('idDone').addEventListener('click',function(){if(!idImageUrl){if(!confirm('No document image is selected. Continue without adding one?'))return;}stopStream(idStream,document.getElementById('idVideo'));idStream=null;showVerifyStep(2);document.getElementById('verificationCard').scrollIntoView({behavior:'smooth',block:'start'});});
       document.querySelectorAll('[data-back-step]').forEach(function(b){b.addEventListener('click',function(){showVerifyStep(Number(b.getAttribute('data-back-step')))});});
-      document.getElementById('startFaceCamera').addEventListener('click',async function(){
-        var video=document.getElementById('faceVideo'),prompt=document.getElementById('facePrompt'),status=document.getElementById('faceStatus');
-        try{if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw new Error('No camera API');faceStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:false});video.srcObject=faceStream;video.style.display='block';prompt.textContent='Look forward, then slowly turn left and right';status.textContent='Camera preview is active. This demo does not perform biometric face matching.';}
-        catch(e){status.textContent='Camera permission was not available. You can still finish this demo step without a camera scan.';}
-      });
-      document.getElementById('faceDone').addEventListener('click',function(){stopStream(faceStream,document.getElementById('faceVideo'));faceStream=null;showVerifyStep(3);document.getElementById('verificationCard').scrollIntoView({behavior:'smooth',block:'start'});});
+      var faceScanTimer=null,faceDirectionIndex=0,faceScanComplete=false;
+      var faceDirections=[{label:'Turn to the right',arrow:'➜',cls:''},{label:'Turn to the left',arrow:'➜',cls:'left'},{label:'Look up',arrow:'↑',cls:'up'},{label:'Look down',arrow:'↓',cls:'down'}];
+      function stopFaceSequence(){if(faceScanTimer){clearInterval(faceScanTimer);faceScanTimer=null;}}
+      function showFaceDirection(){var item=faceDirections[faceDirectionIndex],arrow=document.getElementById('faceDirectionArrow');document.getElementById('facePrompt').textContent=item.label;arrow.textContent=item.arrow;arrow.className='face-direction'+(item.cls?' '+item.cls:'');}
+      async function beginFaceScan(){var video=document.getElementById('faceVideo'),prompt=document.getElementById('facePrompt'),status=document.getElementById('faceStatus'),done=document.getElementById('faceDone'),placeholder=document.getElementById('facePlaceholder');stopFaceSequence();faceDirectionIndex=0;faceScanComplete=false;done.classList.remove('visible');document.getElementById('faceDirectionArrow').style.display='';placeholder.hidden=false;showFaceDirection();status.textContent='Allow camera access, then follow the arrow through each movement.';try{if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw new Error('No camera API');faceStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'},audio:false});video.srcObject=faceStream;await video.play();placeholder.hidden=true;status.textContent='Follow each arrow. The instruction changes every few seconds.';faceScanTimer=setInterval(function(){faceDirectionIndex++;if(faceDirectionIndex>=faceDirections.length){stopFaceSequence();faceScanComplete=true;prompt.textContent='Movement steps complete';status.textContent='You have completed the guided movements. Tap Done to continue.';document.getElementById('faceDirectionArrow').style.display='none';done.classList.add('visible');return;}showFaceDirection();},2500);}catch(e){status.textContent='Camera access is needed for this guided scan. Allow camera permission and try again.';prompt.textContent='Camera permission needed';done.classList.remove('visible');}}
+      document.getElementById('faceDirectionArrow').addEventListener('click',function(){if(!faceStream||faceScanComplete)return;faceDirectionIndex++;if(faceDirectionIndex>=faceDirections.length){stopFaceSequence();faceScanComplete=true;document.getElementById('facePrompt').textContent='Movement steps complete';document.getElementById('faceStatus').textContent='You have completed the guided movements. Tap Done to continue.';this.style.display='none';document.getElementById('faceDone').classList.add('visible');}else showFaceDirection();});
+      var baseShowVerifyStep=showVerifyStep;showVerifyStep=function(n){baseShowVerifyStep(n);if(n===2){beginFaceScan();}else{stopFaceSequence();if(faceStream){stopStream(faceStream,document.getElementById('faceVideo'));faceStream=null;}}};
+      document.getElementById('faceDone').addEventListener('click',function(){if(!faceScanComplete)return;stopFaceSequence();stopStream(faceStream,document.getElementById('faceVideo'));faceStream=null;showVerifyStep(3);document.getElementById('verificationCard').scrollIntoView({behavior:'smooth',block:'start'});});
       document.getElementById('verificationFinish').addEventListener('click',function(){showVerifyStep(0);document.getElementById('profilePhotoCard').scrollIntoView({behavior:'smooth',block:'start'});});
       document.getElementById('profilePhotoUpload').addEventListener('change',function(){
         var file=this.files&&this.files[0];if(!file)return;if(profileImageUrl)URL.revokeObjectURL(profileImageUrl);profileImageUrl=URL.createObjectURL(file);
