@@ -640,10 +640,13 @@
           event.preventDefault();
           var category=card.querySelector('span:last-child').textContent.trim();
           searchForm.reset();
-          searchForm.elements.type.value=category;
+          searchForm.querySelector('input[name="location"]').value='';
+          searchForm.querySelector('select[name="type"]').value=category;
+          var suggestions=document.getElementById('locationSuggestions');
+          if(suggestions){suggestions.hidden=true;suggestions.innerHTML='';}
           var searchButton=Array.prototype.find.call(buttons,function(b){return b.getAttribute('data-section')==='Search';});
           if(searchButton) searchButton.click();
-          searchForm.elements.type.value=category;
+          searchForm.querySelector('select[name="type"]').value=category;
           if(typeof searchForm.requestSubmit==='function') searchForm.requestSubmit();
           else searchForm.dispatchEvent(new Event('submit',{bubbles:true,cancelable:true}));
         });
