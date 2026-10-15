@@ -491,7 +491,7 @@
       document.getElementById('profileSubpanelBack').addEventListener('click',function(){closeProfilePanel(false);});
       window.addEventListener('popstate',function(){if(!document.getElementById('profileSubpanel').hidden)closeProfilePanel(true);});
       function performProfileLogout(){stopStream(idStream,document.getElementById('idVideo'));stopStream(faceStream,document.getElementById('faceVideo'));idStream=null;faceStream=null;if(idImageUrl)URL.revokeObjectURL(idImageUrl);if(profileImageUrl)URL.revokeObjectURL(profileImageUrl);idImageUrl=null;profileImageUrl=null;document.getElementById('idPreview').hidden=true;document.getElementById('profilePhotoPreview').hidden=true;document.getElementById('idUpload').value='';document.getElementById('profilePhotoUpload').value='';closeProfilePanel(true);hideProfile();alert('You have left this profile demo. Real account sign-in is not connected yet.');}
-      document.getElementById('profileLogout').addEventListener('click',function(){document.querySelector('[data-profile-panel="logout"]').click();});
+      var profileLogoutButton=document.getElementById('profileLogout');if(profileLogoutButton){profileLogoutButton.addEventListener('click',function(){var logoutOption=document.querySelector('[data-profile-panel="logout"]');if(logoutOption)logoutOption.click();});}
 
       var buttons = document.querySelectorAll('.nav-button');
       buttons.forEach(function (button) {
