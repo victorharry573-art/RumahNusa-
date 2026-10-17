@@ -708,19 +708,53 @@ document.getElementById('apartmentGalleryPrev').addEventListener('click',functio
 window.addEventListener('popstate',function(){if(modal.classList.contains('open'))closeGallery(true);});document.addEventListener('keydown',function(e){if(!modal.classList.contains('open'))return;if(e.key==='ArrowLeft')showPhoto(index-1);if(e.key==='ArrowRight')showPhoto(index+1);if(e.key==='Escape')closeGallery(false);});
 var start=null;modal.addEventListener('touchstart',function(e){if(e.touches.length===1)start={x:e.touches[0].clientX,y:e.touches[0].clientY};},{passive:true});modal.addEventListener('touchend',function(e){if(!start||!e.changedTouches.length)return;var dx=e.changedTouches[0].clientX-start.x,dy=e.changedTouches[0].clientY-start.y;if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)*1.2)showPhoto(index+(dx<0?1:-1));start=null;},{passive:true});
 document.getElementById('apartmentContinue').addEventListener('click',function(){document.getElementById('apartmentStartStep').hidden=false;document.getElementById('apartmentStartMessage').textContent='';document.getElementById('apartmentStartStep').scrollIntoView({behavior:'smooth',block:'nearest'});});document.getElementById('apartmentRentNo').addEventListener('click',function(){document.getElementById('apartmentStartStep').hidden=true;});
-document.getElementById('apartmentRentYes').addEventListener('click',function(){
-var box=document.getElementById('apartmentStartStep');
-box.innerHTML='<h3>Step 1: Your personal details</h3><p>Enter your full legal name to begin.</p><input id="rentalFirstName" type="text" placeholder="Full legal name" autocomplete="name" style="display:block;width:100%;box-sizing:border-box;padding:14px;border:1px solid #cbd3da;border-radius:10px;font:inherit;margin:12px 0"><p class="apartment-note" id="rentalFirstError" role="alert"></p><div class="apartment-actions"><button type="button" class="profile-btn secondary" id="rentalFirstBack">Back</button><button type="button" class="profile-btn primary" id="rentalFirstContinue">Continue</button></div><p class="apartment-note">Step 1 of your rental application</p>';
-box.scrollIntoView({behavior:'smooth',block:'start'});
-document.getElementById('rentalFirstBack').addEventListener('click',function(){box.hidden=true;});
-document.getElementById('rentalFirstContinue').addEventListener('click',function(){
-var name=document.getElementById('rentalFirstName').value.trim();
-if(!name){document.getElementById('rentalFirstError').textContent='Please enter your full legal name before continuing.';return;}
-box.innerHTML='<h3>Step 2: Phone number</h3><p>Enter your phone number, including your country code.</p><input id="rentalFirstPhone" type="tel" placeholder="+62 …" style="display:block;width:100%;box-sizing:border-box;padding:14px;border:1px solid #cbd3da;border-radius:10px;font:inherit;margin:12px 0"><p class="apartment-note" id="rentalPhoneError" role="alert"></p><div class="apartment-actions"><button type="button" class="profile-btn secondary" id="rentalPhoneBack">Previous</button><button type="button" class="profile-btn primary" id="rentalPhoneContinue">Continue</button></div><p class="apartment-note">Step 2 of your rental application</p>';
-document.getElementById('rentalPhoneBack').addEventListener('click',function(){document.getElementById('apartmentRentYes').click();});
-document.getElementById('rentalPhoneContinue').addEventListener('click',function(){var phone=document.getElementById('rentalFirstPhone').value.trim();if(!phone){document.getElementById('rentalPhoneError').textContent='Please enter your phone number.';return;}box.innerHTML='<h3>Details started</h3><p>Thank you, '+name.replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];})+'. Your phone number has been entered. The remaining rental fields, payment terms and agent submission still need to be added.</p><button type="button" class="profile-btn secondary" id="rentalRestart">Start again</button>';document.getElementById('rentalRestart').addEventListener('click',function(){document.getElementById('apartmentRentYes').click();});});
+var rentalFields=[
+{key:'name',title:'Step 1: Full legal name',prompt:'Enter your full legal name.',type:'text',placeholder:'Full legal name'},
+{key:'phone',title:'Step 2: Phone number',prompt:'Enter your phone number, including country code.',type:'tel',placeholder:'+62 …'},
+{key:'gender',title:'Step 3: Gender',prompt:'Choose your gender.',type:'select',options:['Choose gender','Male','Female']},
+{key:'email',title:'Step 4: Email address',prompt:'Enter your email address.',type:'email',placeholder:'Email address'},
+{key:'dob',title:'Step 5: Date of birth',prompt:'Select your date of birth.',type:'date'},
+{key:'property',title:'Step 6: Property name',prompt:'Confirm the apartment you want to rent.',type:'text',placeholder:'Luxury Apartment — First Room',value:'Luxury Apartment — First Room'},
+{key:'address',title:'Step 7: Current residential address',prompt:'Enter your current residential address.',type:'textarea',placeholder:'Current residential address'},
+{key:'nationality',title:'Step 8: Nationality',prompt:'Enter your nationality.',type:'text',placeholder:'Nationality'},
+{key:'start',title:'Step 9: Rental start date',prompt:'Choose the date you want the rental to start.',type:'date'},
+{key:'end',title:'Step 10: Rental end date',prompt:'Choose the date you want the rental to end.',type:'date'},
+{key:'occupants',title:'Step 11: Number of occupants',prompt:'How many people will live in the apartment?',type:'number',placeholder:'Number of occupants'},
+{key:'purpose',title:'Step 12: Purpose of renting',prompt:'Choose the main purpose of renting.',type:'select',options:['Choose purpose','Personal residence','Family residence','Work','Study','Other']},
+{key:'description',title:'Step 13: Additional details',prompt:'Add any other details for the agent (optional).',type:'textarea',placeholder:'Additional details',optional:true}
+];
+var rentalData={},rentalIndex=0;
+function showRentalField(){
+var f=rentalFields[rentalIndex],box=document.getElementById('apartmentStartStep');
+box.hidden=false;
+box.innerHTML='<h3 id="rentalStepTitle"></h3><p id="rentalStepPrompt"></p><div id="rentalStepInput"></div><p class="apartment-note" id="rentalStepError" role="alert"></p><div class="apartment-actions"><button type="button" class="profile-btn secondary" id="rentalStepBack">Previous</button><button type="button" class="profile-btn primary" id="rentalStepNext">Continue</button></div><p class="apartment-note" id="rentalStepCount"></p>';
+document.getElementById('rentalStepTitle').textContent=f.title;
+document.getElementById('rentalStepPrompt').textContent=f.prompt;
+document.getElementById('rentalStepCount').textContent='Step '+(rentalIndex+1)+' of '+rentalFields.length;
+var holder=document.getElementById('rentalStepInput'),input;
+if(f.type==='select'){input=document.createElement('select');f.options.forEach(function(opt,i){var o=document.createElement('option');o.value=i===0?'':opt;o.textContent=opt;input.appendChild(o);});}
+else if(f.type==='textarea'){input=document.createElement('textarea');input.rows=4;input.placeholder=f.placeholder||'';}
+else{input=document.createElement('input');input.type=f.type;input.placeholder=f.placeholder||'';if(f.type==='number'){input.min='1';input.max='50';}}
+input.id='rentalStepAnswer';input.style.cssText='display:block;width:100%;box-sizing:border-box;min-height:50px;padding:14px;border:1px solid #cbd3da;border-radius:10px;font:inherit;background:#fff;color:#243746;margin:12px 0';
+input.value=rentalData[f.key]!==undefined?rentalData[f.key]:(f.value||'');
+holder.appendChild(input);
+document.getElementById('rentalStepNext').textContent=rentalIndex===rentalFields.length-1?'Finish details':'Continue';
+document.getElementById('rentalStepBack').addEventListener('click',function(){
+rentalData[f.key]=document.getElementById('rentalStepAnswer').value;
+if(rentalIndex>0){rentalIndex--;showRentalField();}
+else{box.innerHTML='<h3>Confirm your details to continue renting</h3><p>Do you want to rent this apartment?</p><div class="apartment-actions"><button type="button" class="profile-btn secondary" id="apartmentRentNo">No</button><button type="button" class="profile-btn primary" id="apartmentRentYes">Yes, continue</button></div>';document.getElementById('apartmentRentNo').addEventListener('click',function(){box.hidden=true;});document.getElementById('apartmentRentYes').addEventListener('click',function(){rentalIndex=0;showRentalField();});}
 });
+document.getElementById('rentalStepNext').addEventListener('click',function(){
+var value=document.getElementById('rentalStepAnswer').value.trim();
+if(!value&&!f.optional){document.getElementById('rentalStepError').textContent='Please complete this field before continuing.';return;}
+if(f.key==='email'&&value&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)){document.getElementById('rentalStepError').textContent='Please enter a valid email address.';return;}
+if(f.key==='end'&&rentalData.start&&value<rentalData.start){document.getElementById('rentalStepError').textContent='The end date must be on or after the start date.';return;}
+rentalData[f.key]=value;
+if(rentalIndex<rentalFields.length-1){rentalIndex++;showRentalField();box.scrollIntoView({behavior:'smooth',block:'start'});}
+else{box.innerHTML='<h3>Rental details completed</h3><p>Your answers have been collected in this form. The payment terms, identity upload steps and secure agent submission still need to be connected before this can be submitted as a rental application.</p><button type="button" class="profile-btn secondary" id="rentalReviewBack">Review details</button>';document.getElementById('rentalReviewBack').addEventListener('click',function(){rentalIndex=0;showRentalField();});}
 });
+}
+document.getElementById('apartmentRentYes').addEventListener('click',function(){rentalData={};rentalIndex=0;showRentalField();document.getElementById('apartmentStartStep').scrollIntoView({behavior:'smooth',block:'start'});});
 cover.addEventListener('error',function(){if(!cover.dataset.fallback){cover.dataset.fallback='1';cover.src=base+'IMG-20261016-WA0000.jpg';}});update();
 })();
 </script>
