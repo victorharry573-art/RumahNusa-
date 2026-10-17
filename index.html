@@ -113,6 +113,21 @@
     .profile-status{padding:10px 12px;border-radius:10px;background:#edf8f1;color:#17633b;font-weight:700;margin-top:12px}
     @media(max-width:560px){.profile-grid,.profile-menu{grid-template-columns:1fr}.profile-card{padding:14px}.profile-hero{padding:20px}}
 
+#rentApartmentView[hidden]{display:none!important}
+    #rentApartmentView{max-width:1180px;margin:0 auto 34px;padding:clamp(14px,4vw,32px);background:#fff;border-radius:20px;box-shadow:0 8px 28px rgba(25,40,55,.06)}
+    .apartment-hero{background:#243746;color:#fff;border-radius:16px;padding:clamp(20px,4vw,34px);margin-bottom:18px}.apartment-hero .eyebrow{color:#d9e9f5}
+    .apartment-layout{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(260px,.75fr);gap:20px;align-items:start}
+    .apartment-cover{position:relative;border-radius:16px;overflow:hidden;background:#e9edf0}.apartment-cover img{display:block;width:100%;height:clamp(300px,42vw,520px);object-fit:cover;cursor:zoom-in}
+    .apartment-open-gallery{position:absolute;right:12px;bottom:12px;border:0;border-radius:10px;background:rgba(20,32,42,.88);color:#fff;padding:11px 14px;font:inherit;font-weight:800;cursor:pointer}
+    .apartment-details{border:1px solid #e1e6ea;border-radius:16px;padding:20px;background:#fff}.apartment-price{font-size:clamp(24px,4vw,32px);font-weight:900;color:#243746;line-height:1.2;margin:12px 0 4px}.apartment-subprice{font-size:14px;color:#65717b}
+    .apartment-facilities{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:18px 0}.apartment-facility{padding:11px;background:#f5f7f9;border-radius:10px;font-size:14px;font-weight:700;color:#34414b}
+    .duration-control{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px;border:1px solid #dfe5ea;border-radius:12px;margin-top:16px}.duration-control button{width:46px;height:46px;border:0;border-radius:10px;background:#243746;color:#fff;font-size:28px;font-weight:700;cursor:pointer;touch-action:manipulation}.duration-control button:disabled{opacity:.35;cursor:not-allowed}
+    .duration-number{text-align:center;font-weight:900;font-size:19px;min-width:92px}.duration-number small{display:block;font-size:12px;color:#68737d;font-weight:600}.duration-total{margin:14px 0 0;padding:14px;border-radius:12px;background:#edf5fa}.duration-total strong{display:block;font-size:22px;color:#243746}
+    .apartment-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.apartment-actions button{flex:1;min-width:140px}.apartment-note{font-size:13px;color:#69747d;margin-top:12px}
+    .room-lightbox{position:fixed;inset:0;z-index:1200;background:rgba(8,13,18,.97);display:none;align-items:center;justify-content:center;padding:18px}.room-lightbox.open{display:flex}.room-lightbox-inner{width:min(1100px,100%);height:100%;max-height:94vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}.room-lightbox img{max-width:100%;max-height:78vh;object-fit:contain;user-select:none;-webkit-user-drag:none}
+    .room-lightbox-top{width:100%;display:flex;align-items:center;justify-content:space-between;color:#fff;gap:12px}.room-lightbox-top button,.room-lightbox-arrow{border:0;border-radius:50%;width:44px;height:44px;background:rgba(255,255,255,.15);color:#fff;font-size:27px;cursor:pointer}.room-lightbox-arrow{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;font-size:34px}.room-lightbox-prev{left:clamp(8px,3vw,34px)}.room-lightbox-next{right:clamp(8px,3vw,34px)}.room-lightbox-count{color:#fff;font-size:14px}
+    .apartment-step-box{margin-top:18px;border:1px solid #dfe5ea;border-radius:14px;padding:18px;background:#f8fafb}.apartment-step-box[hidden]{display:none!important}
+    @media(max-width:760px){.apartment-layout{grid-template-columns:1fr}.apartment-cover img{height:clamp(280px,70vw,430px)}.apartment-details{padding:16px}.room-lightbox img{max-height:72vh}}
   </style>
 </head>
 <body id="top">
@@ -233,6 +248,17 @@
 <div class="search-actions"><button class="profile-btn primary" type="submit">Search Properties</button><button class="profile-btn secondary" type="reset">Clear filters</button></div></form>
 <div class="search-results" id="propertySearchResults" aria-live="polite"><h3>Property results</h3><p>Choose your location and filters, then tap Search Properties.</p></div></section>
 
+<section id="rentApartmentView" hidden aria-labelledby="rentApartmentTitle">
+<div class="apartment-hero"><p class="eyebrow">Rent apartment · Jakarta, Indonesia</p><h2 id="rentApartmentTitle">Luxury Apartment — First Room</h2><p>View the apartment first, explore the room photographs, and choose a rental duration from one to three annual periods.</p></div>
+<div class="apartment-layout"><div><div class="apartment-cover"><img id="apartmentCoverImage" src="https://vuhrkijzjmnbsaqnpdmg.supabase.co/storage/v1/object/public/property-images/IMG-20261017-WA0031.jpg" alt="Luxury apartment and room gallery" loading="eager"><button class="apartment-open-gallery" id="openApartmentGallery" type="button">View rooms and photos ↗</button></div><p class="apartment-note">Tap the photograph to open the large room viewer. Swipe left or right, or use the arrows to browse the available apartment pictures.</p></div>
+<div class="apartment-details"><span class="pill">For rent · Jakarta</span><h3>Luxury Apartment</h3><p>Modern apartment in Nusantara Grand Residence Group. Exact street address is shared privately by an agent with serious prospective customers.</p><div class="apartment-price">Rp150.000.000</div><div class="apartment-subprice">Annual rent · price for one annual period</div>
+<div class="apartment-facilities"><div class="apartment-facility">🛏️ Bedrooms</div><div class="apartment-facility">🚿 Bathrooms</div><div class="apartment-facility">🏊 Swimming pool</div><div class="apartment-facility">🏋️ Gym</div><div class="apartment-facility">🛡️ Building security</div><div class="apartment-facility">🚗 Parking</div></div>
+<div class="duration-control" aria-label="Choose rental duration"><button type="button" id="apartmentDurationMinus" aria-label="Decrease rental duration">−</button><div class="duration-number"><span id="apartmentDurationValue">1</span><small id="apartmentDurationLabel">annual period</small></div><button type="button" id="apartmentDurationPlus" aria-label="Increase rental duration">+</button></div>
+<div class="duration-total"><span>Total rent for selected duration</span><strong id="apartmentTotalPrice">Rp150.000.000</strong><small id="apartmentTotalCaption">1 annual period · security deposit calculated separately</small></div>
+<div class="apartment-actions"><button type="button" class="profile-btn secondary" id="apartmentViewRooms">View rooms</button><button type="button" class="profile-btn primary" id="apartmentContinue" hidden>Continue</button></div><p class="apartment-note">Rental duration is limited to one, two, or three annual periods. The total updates when you tap + or −.</p>
+<div class="apartment-step-box" id="apartmentStartStep" hidden aria-live="polite"><h3>Confirm your details to continue renting</h3><p>Do you want to rent this apartment?</p><div class="apartment-actions"><button type="button" class="profile-btn secondary" id="apartmentRentNo">No</button><button type="button" class="profile-btn primary" id="apartmentRentYes">Yes, continue</button></div><p class="apartment-note" id="apartmentStartMessage"></p></div></div></div>
+<div class="room-lightbox" id="apartmentRoomLightbox" role="dialog" aria-modal="true" aria-label="Apartment room photographs"><div class="room-lightbox-inner"><div class="room-lightbox-top"><strong>Apartment rooms and photographs</strong><button type="button" id="apartmentGalleryClose" aria-label="Close room viewer">×</button></div><button type="button" class="room-lightbox-arrow room-lightbox-prev" id="apartmentGalleryPrev" aria-label="Previous photograph">‹</button><img id="apartmentGalleryImage" alt="Apartment room photograph"><button type="button" class="room-lightbox-arrow room-lightbox-next" id="apartmentGalleryNext" aria-label="Next photograph">›</button><div class="room-lightbox-count" id="apartmentGalleryCount">1 / 13</div><p class="room-lightbox-count">Swipe left or right to browse. Use the phone Back button to close.</p></div></div>
+</section>
     <section class="profile-view" id="profileView" aria-labelledby="profileTitle">
       <div class="profile-hero">
         <p class="eyebrow" style="color:#ffe2e4">Your account, your next home</p>
@@ -649,7 +675,9 @@
           } else if (section === 'Profile') {
             document.getElementById('searchView').hidden=true; showProfile();
           } else if (section === 'Search') {
-            hideProfile(); mainSections.forEach(function(s){s.style.display='none';}); document.getElementById('searchView').style.display=''; document.getElementById('searchView').hidden=false; window.scrollTo({top:0,behavior:'smooth'});
+            hideProfile(); document.getElementById('rentApartmentView').hidden=true; mainSections.forEach(function(s){s.style.display='none'}); document.getElementById('searchView').style.display=''; document.getElementById('searchView').hidden=false; window.scrollTo({top:0,behavior:'smooth'});
+          } else if (section === 'Rentapartment') {
+            hideProfile(); document.getElementById('searchView').hidden=true; mainSections.forEach(function(s){s.style.display='none'}); document.getElementById('rentApartmentView').hidden=false; window.scrollTo({top:0,behavior:'smooth'});
           } else {
             var notice = document.createElement('div');
             notice.setAttribute('role', 'status');
@@ -662,5 +690,24 @@
       });
     }());
   </script>
+<script>
+(function(){
+var base='https://vuhrkijzjmnbsaqnpdmg.supabase.co/storage/v1/object/public/property-images/';
+var photos=['IMG-20261017-WA0031.jpg','IMG-20261017-WA0025.jpg','IMG-20261017-WA0026.jpg','IMG-20261017-WA0018.jpg','IMG-20261017-WA0021.jpg','IMG-20261017-WA0019.jpg','IMG-20261017-WA0020.jpg','IMG-20261017-WA0023.jpg','IMG-20261017-WA0028.jpg','IMG-20261017-WA0027.jpg','IMG-20261017-WA0029.jpg','IMG-20261017-WA0024.jpg','IMG-20261017-WA0022.jpg'];
+var duration=1,annualRent=150000000,index=0,viewed=false,modal=document.getElementById('apartmentRoomLightbox'),cover=document.getElementById('apartmentCoverImage'),image=document.getElementById('apartmentGalleryImage');
+function money(n){return 'Rp'+Number(n).toLocaleString('id-ID');}
+function update(){document.getElementById('apartmentDurationValue').textContent=duration;document.getElementById('apartmentDurationLabel').textContent=duration===1?'annual period':'annual periods';document.getElementById('apartmentDurationMinus').disabled=duration<=1;document.getElementById('apartmentDurationPlus').disabled=duration>=3;document.getElementById('apartmentTotalPrice').textContent=money(annualRent*duration);document.getElementById('apartmentTotalCaption').textContent=duration+' annual '+(duration===1?'period':'periods')+' · security deposit calculated separately';}
+function showPhoto(i){index=(i+photos.length)%photos.length;image.src=base+encodeURIComponent(photos[index]);image.alt='Apartment room photograph '+(index+1);document.getElementById('apartmentGalleryCount').textContent=(index+1)+' / '+photos.length;}
+function openGallery(){viewed=true;document.getElementById('apartmentContinue').hidden=false;showPhoto(0);modal.classList.add('open');document.body.style.overflow='hidden';try{history.pushState({apartmentGallery:true},'','#apartment-rooms');}catch(e){}}
+function closeGallery(fromPop){modal.classList.remove('open');document.body.style.overflow='';if(!fromPop&&location.hash==='#apartment-rooms'){try{history.back();}catch(e){}}if(viewed)document.getElementById('apartmentContinue').hidden=false;}
+document.getElementById('apartmentDurationMinus').addEventListener('click',function(){if(duration>1){duration--;update();}});document.getElementById('apartmentDurationPlus').addEventListener('click',function(){if(duration<3){duration++;update();}});
+document.getElementById('openApartmentGallery').addEventListener('click',openGallery);document.getElementById('apartmentViewRooms').addEventListener('click',openGallery);cover.addEventListener('click',openGallery);
+document.getElementById('apartmentGalleryPrev').addEventListener('click',function(){showPhoto(index-1);});document.getElementById('apartmentGalleryNext').addEventListener('click',function(){showPhoto(index+1);});document.getElementById('apartmentGalleryClose').addEventListener('click',function(){closeGallery(false);});
+window.addEventListener('popstate',function(){if(modal.classList.contains('open'))closeGallery(true);});document.addEventListener('keydown',function(e){if(!modal.classList.contains('open'))return;if(e.key==='ArrowLeft')showPhoto(index-1);if(e.key==='ArrowRight')showPhoto(index+1);if(e.key==='Escape')closeGallery(false);});
+var start=null;modal.addEventListener('touchstart',function(e){if(e.touches.length===1)start={x:e.touches[0].clientX,y:e.touches[0].clientY};},{passive:true});modal.addEventListener('touchend',function(e){if(!start||!e.changedTouches.length)return;var dx=e.changedTouches[0].clientX-start.x,dy=e.changedTouches[0].clientY-start.y;if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)*1.2)showPhoto(index+(dx<0?1:-1));start=null;},{passive:true});
+document.getElementById('apartmentContinue').addEventListener('click',function(){document.getElementById('apartmentStartStep').hidden=false;document.getElementById('apartmentStartMessage').textContent='';document.getElementById('apartmentStartStep').scrollIntoView({behavior:'smooth',block:'nearest'});});document.getElementById('apartmentRentNo').addEventListener('click',function(){document.getElementById('apartmentStartStep').hidden=true;});document.getElementById('apartmentRentYes').addEventListener('click',function(){document.getElementById('apartmentStartMessage').textContent='The next step is the guided rental-details form. This first apartment listing, duration selector and room gallery are now ready.';});
+cover.addEventListener('error',function(){if(!cover.dataset.fallback){cover.dataset.fallback='1';cover.src=base+'IMG-20261016-WA0000.jpg';}});update();
+})();
+</script>
 </body>
 </html>
