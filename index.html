@@ -709,19 +709,19 @@ window.addEventListener('popstate',function(){if(modal.classList.contains('open'
 var start=null;modal.addEventListener('touchstart',function(e){if(e.touches.length===1)start={x:e.touches[0].clientX,y:e.touches[0].clientY};},{passive:true});modal.addEventListener('touchend',function(e){if(!start||!e.changedTouches.length)return;var dx=e.changedTouches[0].clientX-start.x,dy=e.changedTouches[0].clientY-start.y;if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)*1.2)showPhoto(index+(dx<0?1:-1));start=null;},{passive:true});
 document.getElementById('apartmentContinue').addEventListener('click',function(){document.getElementById('apartmentStartStep').hidden=false;document.getElementById('apartmentStartMessage').textContent='';document.getElementById('apartmentStartStep').scrollIntoView({behavior:'smooth',block:'nearest'});});document.getElementById('apartmentRentNo').addEventListener('click',function(){document.getElementById('apartmentStartStep').hidden=true;});
 var rentalFields=[
-{key:'name',title:'Step 1: Full legal name',prompt:'Enter your full legal name.',type:'text',placeholder:'Full legal name'},
-{key:'phone',title:'Step 2: Phone number',prompt:'Enter your phone number, including country code.',type:'tel',placeholder:'+62 …'},
-{key:'gender',title:'Step 3: Gender',prompt:'Choose your gender.',type:'select',options:['Choose gender','Male','Female']},
-{key:'email',title:'Step 4: Email address',prompt:'Enter your email address.',type:'email',placeholder:'Email address'},
-{key:'dob',title:'Step 5: Date of birth',prompt:'Select your date of birth.',type:'date'},
-{key:'property',title:'Step 6: Property name',prompt:'Confirm the apartment you want to rent.',type:'text',placeholder:'Luxury Apartment — First Room',value:'Luxury Apartment — First Room'},
-{key:'address',title:'Step 7: Current residential address',prompt:'Enter your current residential address.',type:'textarea',placeholder:'Current residential address'},
-{key:'nationality',title:'Step 8: Nationality',prompt:'Enter your nationality.',type:'text',placeholder:'Nationality'},
-{key:'start',title:'Step 9: Rental start date',prompt:'Choose the date you want the rental to start.',type:'date'},
-{key:'end',title:'Step 10: Rental end date',prompt:'Choose the date you want the rental to end.',type:'date'},
-{key:'occupants',title:'Step 11: Number of occupants',prompt:'How many people will live in the apartment?',type:'number',placeholder:'Number of occupants'},
-{key:'purpose',title:'Step 12: Purpose of renting',prompt:'Choose the main purpose of renting.',type:'select',options:['Choose purpose','Personal residence','Family residence','Work','Study','Other']},
-{key:'description',title:'Step 13: Additional details',prompt:'Add any other details for the agent (optional).',type:'textarea',placeholder:'Additional details',optional:true}
+{key:'name',title:'Full legal name',prompt:'Enter your full legal name.',type:'text',placeholder:'Full legal name'},
+{key:'phone',title:'Phone number',prompt:'Enter your phone number, including country code.',type:'tel',placeholder:'+62 …'},
+{key:'gender',title:'Gender',prompt:'Choose your gender.',type:'select',options:['Choose gender','Male','Female']},
+{key:'email',title:'Email address',prompt:'Enter your email address.',type:'email',placeholder:'Email address'},
+{key:'dob',title:'Date of birth',prompt:'Select your date of birth.',type:'date'},
+{key:'property',title:'Property name',prompt:'Confirm the apartment you want to rent.',type:'text',placeholder:'Luxury Apartment — First Room',value:'Luxury Apartment — First Room'},
+{key:'address',title:'Current residential address',prompt:'Enter your current residential address.',type:'textarea',placeholder:'Current residential address'},
+{key:'nationality',title:'Nationality',prompt:'Enter your nationality.',type:'text',placeholder:'Nationality'},
+{key:'start',title:'Rental start date',prompt:'Choose the date you want the rental to start.',type:'date'},
+{key:'end',title:'Rental end date',prompt:'Choose the date you want the rental to end.',type:'date'},
+{key:'occupants',title:'Number of occupants',prompt:'How many people will live in the apartment?',type:'number',placeholder:'Number of occupants'},
+{key:'purpose',title:'Purpose of renting',prompt:'Choose the main purpose of renting.',type:'select',options:['Choose purpose','Personal residence','Family residence','Work','Study','Other']},
+{key:'description',title:'Additional details',prompt:'Add any other details for the agent (optional).',type:'textarea',placeholder:'Additional details',optional:true}
 ];
 var rentalData={},rentalIndex=0;
 function showRentalField(){
@@ -758,11 +758,11 @@ var rentalExtraIndex=0,rentalExtraValues={terms:false,idType:'',currency:'IDR'},
 function renderRentalExtraStep(index){
 rentalExtraIndex=index;var box=document.getElementById('apartmentStartStep');
 var steps=[
-{title:'Step 14: Payment terms',prompt:'Annual rent is Rp150,000,000 per annual period. Your selected duration is '+(document.getElementById('apartmentDurationCount')?document.getElementById('apartmentDurationCount').textContent:'the selected duration')+'. The security deposit is Rp5,000,000. The full rent for your selected duration plus the deposit must be paid before check-in. Monthly reference: Rp12,500,000; quarterly reference: Rp37,000,000. Confirm the final schedule with the agent before paying.',kind:'terms'},
-{title:'Step 15: Identity document type',prompt:'Choose the document you would use for identity verification.',kind:'idtype'},
-{title:'Step 16: Select identity document photo',prompt:'Choose a photo from your device. This selection stays in this page and is not sent to the agent.',kind:'idphoto'},
-{title:'Step 17: Select personal photo',prompt:'Choose a personal photo from your device. This selection stays in this page and is not sent to the agent.',kind:'selfie'},
-{title:'Step 18: Payment currency',prompt:'Choose the currency you prefer to use when discussing payment with the agent.',kind:'currency'}
+{title:'Payment terms',prompt:'Annual rent is Rp150,000,000 per annual period. Your selected duration is '+(document.getElementById('apartmentDurationCount')?document.getElementById('apartmentDurationCount').textContent:'the selected duration')+'. The security deposit is Rp5,000,000. The full rent for your selected duration plus the deposit must be paid before check-in. Monthly reference: Rp12,500,000; quarterly reference: Rp37,000,000. Confirm the final schedule with the agent before paying.',kind:'terms'},
+{title:'Identity document type',prompt:'Choose the document you would use for identity verification.',kind:'idtype'},
+{title:'Select identity document photo',prompt:'Choose a photo from your device.',kind:'idphoto'},
+{title:'Select personal photo',prompt:'Choose a personal photo from your device.',kind:'selfie'},
+{title:'Payment currency',prompt:'Choose the currency you prefer to use when discussing payment with the agent.',kind:'currency'}
 ];
 var st=steps[index];box.hidden=false;
 box.innerHTML='<h3>'+st.title+'</h3><p>'+st.prompt+'</p><div id="rentalExtraInput"></div><p class="apartment-note" id="rentalExtraError" role="alert"></p><div class="apartment-actions"><button type="button" class="profile-btn secondary" id="rentalExtraBack">Previous</button><button type="button" class="profile-btn primary" id="rentalExtraNext">'+(index===steps.length-1?'Review application':'Continue')+'</button></div><p class="apartment-note">Step '+(14+index)+' of 18</p>';
@@ -792,7 +792,7 @@ if(file)rentalLocalFiles[index-2]=file;
 }
 if(st.kind==='currency')rentalExtraValues.currency=document.getElementById('rentalCurrency').value;
 if(index<steps.length-1){renderRentalExtraStep(index+1);}
-else{box.innerHTML='<h3>Rental application review</h3><p>Your personal details and selected rental preferences are ready for review.</p><p><strong>Property:</strong> Luxury Apartment — First Room</p><p><strong>Duration:</strong> '+(document.getElementById('apartmentDurationCount')?document.getElementById('apartmentDurationCount').textContent:'selected duration')+'</p><p><strong>Payment currency:</strong> '+rentalExtraValues.currency+'</p><p><strong>Identity document:</strong> '+rentalExtraValues.idType+'</p><p>Your selected identity and personal photos have not been uploaded to the agent. Tap Done to clear them from this form.</p><div class="apartment-actions"><button type="button" class="profile-btn secondary" id="rentalReviewPrevious">Previous</button><button type="button" class="profile-btn primary" id="rentalReviewDone">Done</button></div><p class="apartment-note">Agent submission is not connected yet, so this review does not send or book a rental.</p>';document.getElementById('rentalReviewPrevious').addEventListener('click',function(){renderRentalExtraStep(4);});document.getElementById('rentalReviewDone').addEventListener('click',function(){rentalLocalFiles=[];rentalData={};rentalExtraValues={terms:false,idType:'',currency:'IDR'};rentalIndex=0;box.innerHTML='<h3>Rental details saved on this page</h3><p>Your selected photos have been cleared from this form. The rental request has not been sent to an agent.</p><button type="button" class="profile-btn primary" id="rentalStartOver">Start again</button>';document.getElementById('rentalStartOver').addEventListener('click',function(){document.getElementById('apartmentRentYes').click();});});}
+else{box.innerHTML='<h3>Rental application review</h3><p>Your personal details and selected rental preferences are ready for review.</p><p><strong>Property:</strong> Luxury Apartment — First Room</p><p><strong>Duration:</strong> '+(document.getElementById('apartmentDurationCount')?document.getElementById('apartmentDurationCount').textContent:'selected duration')+'</p><p><strong>Payment currency:</strong> '+rentalExtraValues.currency+'</p><p><strong>Identity document:</strong> '+rentalExtraValues.idType+'</p><div class="apartment-actions"><button type="button" class="profile-btn secondary" id="rentalReviewPrevious">Previous</button><button type="button" class="profile-btn primary" id="rentalReviewDone">Done</button></div>';document.getElementById('rentalReviewPrevious').addEventListener('click',function(){renderRentalExtraStep(4);});document.getElementById('rentalReviewDone').addEventListener('click',function(){rentalLocalFiles=[];rentalData={};rentalExtraValues={terms:false,idType:'',currency:'IDR'};rentalIndex=0;box.innerHTML='<h3>Thank you</h3><p>Your details are complete.</p><button type="button" class="profile-btn primary" id="rentalStartOver">Start again</button>';document.getElementById('rentalStartOver').addEventListener('click',function(){document.getElementById('apartmentRentYes').click();});});}
 });
 }
 document.getElementById('apartmentRentYes').addEventListener('click',function(){rentalData={};rentalIndex=0;showRentalField();document.getElementById('apartmentStartStep').scrollIntoView({behavior:'smooth',block:'start'});});
