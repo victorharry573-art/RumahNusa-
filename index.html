@@ -513,7 +513,7 @@ var siteVietnamnText = {
         try { sessionStorage.setItem('vinhomes-profile-language', lang); } catch(e) {}
       }
 
-      var galleryFiles = ["IMG-20261018-WA0016.jpg","IMG-20261014-WA0002.jpg","IMG-20261014-WA0000.jpg","IMG-20261014-WA0003.jpg","IMG-20261014-WA0004.jpg","IMG-20261014-WA0005.jpg","IMG-20261014-WA0007.jpg","IMG-20261014-WA0008.jpg","IMG-20261014-WA0009.jpg","IMG-20261014-WA0010.jpg","IMG-20261014-WA0011.jpg","IMG-20261014-WA0012.jpg","IMG-20261014-WA0013.jpg","IMG-20261014-WA0015.jpg","IMG-20261014-WA0016.jpg","IMG-20261014-WA0017.jpg","IMG-20261014-WA0018.jpg","IMG-20261014-WA0019.jpg","IMG-20261014-WA0020.jpg","IMG-20261014-WA0021.jpg","IMG-20261013-WA0002.jpg","IMG-20261013-WA0006(1).jpg","IMG-20261013-WA0009(1).jpg","IMG-20261013-WA0010.jpg","IMG-20261013-WA0011.jpg","IMG-20261013-WA0012.jpg","IMG-20261013-WA0013.jpg","IMG-20261013-WA0014.jpg","IMG-20261013-WA0015.jpg","IMG-20261013-WA0016.jpg","IMG-20261013-WA0017.jpg","IMG-20261013-WA0018.jpg","IMG-20261013-WA0019.jpg","IMG-20261013-WA0021.jpg","IMG-20261013-WA0022.jpg","IMG-20261013-WA0023.jpg","IMG-20261013-WA0025.jpg","IMG-20261013-WA0027.jpg","IMG-20261013-WA0028.jpg","IMG-20261013-WA0032.jpg","IMG-20261013-WA0033.jpg","IMG-20261013-WA0034.jpg","IMG-20261013-WA0035.jpg"];
+      var galleryFiles = ["IMG-20261018-WA0016.jpg","IMG-20261018-WA0008.jpg","IMG-20261018-WA0009.jpg","IMG-20261018-WA0010.jpg","IMG-20261018-WA0011.jpg","IMG-20261018-WA0012.jpg","IMG-20261018-WA0013.jpg","IMG-20261018-WA0014.jpg","IMG-20261018-WA0017.jpg","IMG-20261018-WA0018.jpg","IMG-20261018-WA0019.jpg","IMG-20261018-WA0021.jpg"];
       var galleryBase = 'https://vuhrkijzjmnbsaqnpdmg.supabase.co/storage/v1/object/public/property-images/';
       var galleryIndex = 0;
       var galleryImage = document.getElementById('propertyGalleryImage');
@@ -524,12 +524,12 @@ var siteVietnamnText = {
       var stage = document.getElementById('propertyGalleryStage');
       function showGalleryImage(index) {
         galleryIndex = (index + galleryFiles.length) % galleryFiles.length;
-        var src = galleryBase + encodeURIComponent(galleryFiles[galleryIndex]) + '?v=20261014';
+        var src = galleryBase + encodeURIComponent(galleryFiles[galleryIndex]) + '?v=20261018';
         galleryImage.src = src;
-        galleryImage.alt = 'Vinhomes Group Real Estate Developer property photo ' + (galleryIndex + 1) + ' of ' + galleryFiles.length;
+        galleryImage.alt = 'Vietnam property photo ' + (galleryIndex + 1) + ' of ' + galleryFiles.length;
         galleryCount.textContent = (galleryIndex + 1) + ' / ' + galleryFiles.length;
         lightboxImage.src = src;
-        lightboxImage.alt = 'Large property photo ' + (galleryIndex + 1) + ' of ' + galleryFiles.length;
+        lightboxImage.alt = 'Large Vietnam property photo ' + (galleryIndex + 1) + ' of ' + galleryFiles.length;
         lightboxCount.textContent = (galleryIndex + 1) + ' / ' + galleryFiles.length;
       }
       var lightboxHistoryOpen = false;
