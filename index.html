@@ -85,6 +85,9 @@
     .profile-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
     .profile-btn{border:0;border-radius:10px;padding:12px 16px;min-height:45px;font:inherit;font-weight:800;cursor:pointer;touch-action:manipulation}
     .profile-btn.primary{background:#c9232b;color:#fff}.profile-btn.secondary{background:#f0f2f4;color:#243746;border:1px solid #d9dfe4}
+    /* Profile Continue buttons stay white until their own required fields are complete. */
+    #profileView .profile-btn.continue-gated{background:#fff!important;color:#c9232b!important;border:2px solid #c9232b!important}
+    #profileView .profile-btn.continue-gated.is-ready{background:#c9232b!important;color:#fff!important;border-color:#c9232b!important}
     .profile-menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
     .profile-menu button{background:#fff;border:1px solid #e1e6eb;border-radius:12px;padding:15px 12px;text-align:left;min-height:76px;font:inherit;font-weight:800;color:#243746;cursor:pointer}
     .profile-menu button span{display:block;font-size:12px;font-weight:400;color:#66717b;margin-top:4px}
@@ -610,6 +613,44 @@ var siteVietnamnText = {
         nat.value='';phone.value='+62';
       }
       fillCountries();
+
+      // Continue buttons turn red only when the required information for that step is present.
+      (function(){
+        var profileRoot=document.getElementById('profileView');
+        var gatedButtons=[
+          document.querySelector('#profileDetailsForm button[type="submit"]'),
+          document.getElementById('idTypeContinue'),
+          document.getElementById('idDone'),
+          document.getElementById('verificationFinish'),
+          document.getElementById('saveProfilePhoto')
+        ].filter(Boolean);
+        gatedButtons.forEach(function(button){button.classList.add('continue-gated');});
+        function validEmail(value){return /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(String(value||'').trim());}
+        function detailsReady(){
+          var form=document.getElementById('profileDetailsForm');
+          if(!form)return false;
+          var required=Array.from(form.querySelectorAll('[required]'));
+          if(required.some(function(el){return !String(el.value||'').trim();}))return false;
+          var email=form.querySelector('input[type="email"]');
+          return !email||validEmail(email.value);
+        }
+        function updateContinueButtonStates(){
+          var detailsButton=document.querySelector('#profileDetailsForm button[type="submit"]');
+          if(detailsButton)detailsButton.classList.toggle('is-ready',detailsReady());
+          var identity=document.getElementById('identityType');
+          document.getElementById('idTypeContinue').classList.toggle('is-ready',!!(identity&&identity.value));
+          var idPhotoReady=!!idImageUrl;
+          document.getElementById('idDone').classList.toggle('is-ready',idPhotoReady);
+          document.getElementById('verificationFinish').classList.toggle('is-ready',verifyStep===3&&faceScanComplete);
+          var profilePhotoInput=document.getElementById('profilePhotoUpload');
+          document.getElementById('saveProfilePhoto').classList.toggle('is-ready',!!(profilePhotoInput&&profilePhotoInput.files&&profilePhotoInput.files.length));
+        }
+        profileRoot.addEventListener('input',updateContinueButtonStates,true);
+        profileRoot.addEventListener('change',updateContinueButtonStates,true);
+        window.__updateProfileContinueButtonStates=updateContinueButtonStates;
+        updateContinueButtonStates();
+      })();
+
       var siteLanguageControl = document.getElementById('siteLanguage');
       function applySiteLanguage(lang){
         lang = lang === 'vi' ? 'vi' : 'en';
@@ -627,13 +668,13 @@ var siteVietnamnText = {
       } catch(e) { applySiteLanguage('en'); }
       profileForm.addEventListener('submit',function(e){
         e.preventDefault();var required=Array.from(profileForm.querySelectorAll('[required]'));var missing=required.some(function(el){return !String(el.value||'').trim()});
-        if(missing){profileError.classList.add('show');required.forEach(function(el){el.style.borderColor=String(el.value||'').trim()?'#cfd6dc':'#c9232b'});return;}
+        if(missing||!profileForm.querySelector('input[type="email"]').checkValidity()){profileError.classList.add('show');required.forEach(function(el){el.style.borderColor=String(el.value||'').trim()?'#cfd6dc':'#c9232b'});if(window.__updateProfileContinueButtonStates)window.__updateProfileContinueButtonStates();return;}
         profileError.classList.remove('show');required.forEach(function(el){el.style.borderColor='#cfd6dc'});
         try{var data={};new FormData(profileForm).forEach(function(v,k){data[k]=v});sessionStorage.setItem('nusantara-profile-draft',JSON.stringify(data));}catch(err){}
         showVerifyStep(0);document.getElementById('verificationCard').scrollIntoView({behavior:'smooth',block:'start'});
       });
       document.getElementById('idTypeContinue').addEventListener('click',function(){
-        var t=document.getElementById('identityType').value;if(!t){document.getElementById('identityType').style.borderColor='#c9232b';return;}
+        var t=document.getElementById('identityType').value;if(!t){document.getElementById('identityType').style.borderColor='#c9232b';if(window.__updateProfileContinueButtonStates)window.__updateProfileContinueButtonStates();return;}
         var guide=document.getElementById('idGuide');guide.className='id-guide'+(/passport/i.test(t)?' passport':'');
         document.getElementById('idGuideText').textContent='Align the '+t+' within this guide. Use a clear, well-lit image with all edges visible.';
         showVerifyStep(1);
@@ -649,13 +690,13 @@ var siteVietnamnText = {
         if(!video.videoWidth){alert('Wait for the camera preview, then try again.');return;}
         canvas.width=video.videoWidth;canvas.height=video.videoHeight;canvas.getContext('2d').drawImage(video,0,0);
         if(idImageUrl)URL.revokeObjectURL(idImageUrl);canvas.toBlob(function(blob){if(blob){idImageUrl=URL.createObjectURL(blob);var p=document.getElementById('idPreview');p.src=idImageUrl;p.hidden=false;}});
-        stopStream(idStream,video);idStream=null;this.hidden=true;
+        stopStream(idStream,video);idStream=null;this.hidden=true;if(window.__updateProfileContinueButtonStates)window.__updateProfileContinueButtonStates();
       });
       document.getElementById('idUpload').addEventListener('change',function(){
-        var file=this.files&&this.files[0];if(!file)return;if(idImageUrl)URL.revokeObjectURL(idImageUrl);idImageUrl=URL.createObjectURL(file);
-        var p=document.getElementById('idPreview');p.src=idImageUrl;p.hidden=false;
+        var file=this.files&&this.files[0];if(!file){if(idImageUrl)URL.revokeObjectURL(idImageUrl);idImageUrl=null;document.getElementById('idPreview').hidden=true;if(window.__updateProfileContinueButtonStates)window.__updateProfileContinueButtonStates();return;}if(idImageUrl)URL.revokeObjectURL(idImageUrl);idImageUrl=URL.createObjectURL(file);
+        var p=document.getElementById('idPreview');p.src=idImageUrl;p.hidden=false;if(window.__updateProfileContinueButtonStates)window.__updateProfileContinueButtonStates();
       });
-      document.getElementById('idDone').addEventListener('click',function(){if(!idImageUrl){if(!confirm('No document image is selected. Continue without adding one?'))return;}stopStream(idStream,document.getElementById('idVideo'));idStream=null;showVerifyStep(2);document.getElementById('verificationCard').scrollIntoView({behavior:'smooth',block:'start'});});
+      document.getElementById('idDone').addEventListener('click',function(){if(!idImageUrl)return;stopStream(idStream,document.getElementById('idVideo'));idStream=null;showVerifyStep(2);document.getElementById('verificationCard').scrollIntoView({behavior:'smooth',block:'start'});});
       document.querySelectorAll('[data-back-step]').forEach(function(b){b.addEventListener('click',function(){showVerifyStep(Number(b.getAttribute('data-back-step')))});});
       var faceScanTimer=null,faceDirectionIndex=0,faceScanComplete=false;
       var faceDirections=[{label:'Turn to the right',arrow:'➜',cls:''},{label:'Turn to the left',arrow:'➜',cls:'left'},{label:'Look up',arrow:'↑',cls:'up'},{label:'Look down',arrow:'↓',cls:'down'}];
@@ -665,12 +706,12 @@ var siteVietnamnText = {
       document.getElementById('faceDirectionArrow').addEventListener('click',function(){if(!faceStream||faceScanComplete)return;faceDirectionIndex++;if(faceDirectionIndex>=faceDirections.length){stopFaceSequence();faceScanComplete=true;document.getElementById('facePrompt').textContent='Movement steps complete';document.getElementById('faceStatus').textContent='You have completed the guided movements. Tap Done to continue.';this.style.display='none';document.getElementById('faceDone').classList.add('visible');}else showFaceDirection();});
       var baseShowVerifyStep=showVerifyStep;showVerifyStep=function(n){baseShowVerifyStep(n);if(n===2){beginFaceScan();}else{stopFaceSequence();if(faceStream){stopStream(faceStream,document.getElementById('faceVideo'));faceStream=null;}}};
       document.getElementById('faceDone').addEventListener('click',function(){if(!faceScanComplete)return;stopFaceSequence();stopStream(faceStream,document.getElementById('faceVideo'));faceStream=null;showVerifyStep(3);document.getElementById('verificationCard').scrollIntoView({behavior:'smooth',block:'start'});});
-      document.getElementById('verificationFinish').addEventListener('click',function(){showVerifyStep(0);document.getElementById('profilePhotoCard').scrollIntoView({behavior:'smooth',block:'start'});});
+      document.getElementById('verificationFinish').addEventListener('click',function(){if(!faceScanComplete)return;showVerifyStep(0);document.getElementById('profilePhotoCard').scrollIntoView({behavior:'smooth',block:'start'});});
       document.getElementById('profilePhotoUpload').addEventListener('change',function(){
-        var file=this.files&&this.files[0];if(!file)return;if(profileImageUrl)URL.revokeObjectURL(profileImageUrl);profileImageUrl=URL.createObjectURL(file);
-        var img=document.getElementById('profilePhotoPreview');img.src=profileImageUrl;img.hidden=false;document.getElementById('photoSelection').textContent='✓ '+file.name+' selected';
+        var file=this.files&&this.files[0];if(!file){if(profileImageUrl)URL.revokeObjectURL(profileImageUrl);profileImageUrl=null;document.getElementById('profilePhotoPreview').hidden=true;document.getElementById('photoSelection').textContent='';if(window.__updateProfileContinueButtonStates)window.__updateProfileContinueButtonStates();return;}if(profileImageUrl)URL.revokeObjectURL(profileImageUrl);profileImageUrl=URL.createObjectURL(file);
+        var img=document.getElementById('profilePhotoPreview');img.src=profileImageUrl;img.hidden=false;document.getElementById('photoSelection').textContent='✓ '+file.name+' selected';if(window.__updateProfileContinueButtonStates)window.__updateProfileContinueButtonStates();
       });
-      document.getElementById('saveProfilePhoto').addEventListener('click',function(){document.getElementById('photoSelection').textContent=document.getElementById('profilePhotoUpload').files.length?'Photo selected for this session.':'You can add a photo later.';document.getElementById('profileSettingsMenu').hidden=false;document.getElementById('profileSubpanel').hidden=true;document.getElementById('profileSettingsCard').scrollIntoView({behavior:'smooth',block:'start'});});
+      document.getElementById('saveProfilePhoto').addEventListener('click',function(){if(!document.getElementById('profilePhotoUpload').files.length)return;document.getElementById('photoSelection').textContent='Photo selected for this session.';document.getElementById('profileSettingsMenu').hidden=false;document.getElementById('profileSubpanel').hidden=true;document.getElementById('profileSettingsCard').scrollIntoView({behavior:'smooth',block:'start'});});
       var panelContent={
         myProperty:['My Property','<div class="profile-substeps"><div class="profile-substep active" data-panel-step="0"><div id="myPropertyDisplay"><p class="profile-muted">🏡</p><h4 id="myPropertyTitle">Your house is almost getting ready</h4><p id="myPropertyName"></p><p id="myPropertyLocation"></p></div><button class="profile-btn primary" type="button" data-panel-next>Continue</button></div><div class="profile-substep" data-panel-step="1"><h4>Property preferences</h4><label class="profile-field">Property goal<select id="propGoal"><option>Buy a property</option><option>Rent an apartment</option><option>Rent a house or villa</option></select></label><label class="profile-field">City<select id="propCity"><option>Ho Chi Minh City</option><option>Da Nang</option><option>Hai Phong</option><option>Can Tho</option><option>Hanoi</option><option>Hue</option><option>Nha Trang</option><option>Vung Tau</option><option>Other city in Vietnam</option></select></label><label class="profile-field">Property type<select id="propType"><option>House</option><option>Apartment</option><option>Villa</option><option>Townhouse</option><option>Penthouse</option><option>Mansion</option></select></label><label class="profile-field">Bedrooms<select id="propBeds"><option>Any</option><option>Studio</option><option>1 bedroom</option><option>2 bedrooms</option><option>3 bedrooms</option><option>4+ bedrooms</option></select></label><label class="profile-field">Budget (optional)<input id="propBudget" placeholder="Enter amount in VND"></label><button class="profile-btn secondary" type="button" data-panel-prev>Back</button> <button class="profile-btn primary" type="button" data-panel-save>Save preferences</button><p class="profile-status" hidden>Preferences saved for this session.</p></div></div>'],
         booking:['My Booking','<div class="profile-substeps"><div class="profile-substep active" data-panel-step="0"><div id="myBookingDisplay"><p class="profile-muted">🛏️</p><h4 id="myBookingTitle">Your room is almost getting ready</h4><p id="myBookingName"></p><p id="myBookingDate"></p></div><button class="profile-btn primary" type="button" data-panel-next>Continue</button></div><div class="profile-substep" data-panel-step="1"><h4>Viewing or room booking details</h4><label class="profile-field">Property or room name<input id="bookingListing" placeholder="Enter property or room name"></label><label class="profile-field">Date<input type="date" id="bookingDate"></label><label class="profile-field">Time<input type="time" id="bookingTime"></label><button class="profile-btn secondary" type="button" data-panel-prev>Back</button> <button class="profile-btn primary" type="button" data-panel-save>Save details</button><p class="profile-status" hidden>Details saved for this browser session.</p></div></div>'],
