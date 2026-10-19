@@ -974,7 +974,7 @@ cover.addEventListener('error',function(){if(!cover.dataset.fallback){cover.data
   var root=document.getElementById('profileView');
   if(!root)return;
   var storagePrefix='vinhomes-saved-fields-v1:';
-  function sectionFor(el){return el.closest('.profile-substep')||el.closest('.profile-card')||el.closest('form')||el.parentElement;}
+  function sectionFor(el){return el.closest('.profile-substep')||el.closest('.profile-step')||el.closest('.profile-card')||el.closest('form')||el.parentElement;}
   function sectionKey(section){
     if(section.id)return section.id;
     var card=section.closest('.profile-card');
@@ -996,12 +996,15 @@ cover.addEventListener('error',function(){if(!cover.dataset.fallback){cover.data
       var data=JSON.parse(raw);
       fieldsIn(section).forEach(function(el){var k=el.name||el.id;if(k&&Object.prototype.hasOwnProperty.call(data,k))el.value=data[k];});
       section.dataset.fieldsSaved='1';
+      var savedButton=section.querySelector('button[type="submit"],button.profile-btn.primary,button[data-panel-save]');
+      if(savedButton)setSavedUI(section,savedButton);
+      else lockFields(section,true);
     }catch(e){}
   }
   function lockFields(section,locked){
     fieldsIn(section).forEach(function(el){
       if(el.tagName==='SELECT'){el.style.pointerEvents=locked?'none':'';el.setAttribute('aria-readonly',locked?'true':'false');}
-      else if(el.type==='checkbox'||el.type==='radio'){el.disabled=locked;}
+      else if(el.type==='checkbox'||el.type==='radio'){el.style.pointerEvents=locked?'none':'';el.setAttribute('aria-readonly',locked?'true':'false');}
       else el.readOnly=locked;
       el.classList.toggle('field-saved',locked);
     });
