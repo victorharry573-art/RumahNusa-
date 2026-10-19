@@ -966,6 +966,99 @@ else{box.innerHTML='<h3>Rental application review</h3><p>Your personal details a
 }
 document.getElementById('apartmentRentYes').addEventListener('click',function(){rentalData={};rentalIndex=0;showRentalField();document.getElementById('apartmentStartStep').scrollIntoView({behavior:'smooth',block:'start'});});
 cover.addEventListener('error',function(){if(!cover.dataset.fallback){cover.dataset.fallback='1';cover.src=base+'IMG-20261016-WA0000.jpg';}});update();
+
+/* Saved-field behaviour: keep entered text on this device, show a Saved state,
+   and expose Update when the customer wants to edit it again. Sensitive file
+   uploads and identity/face images are deliberately not persisted here. */
+(function(){
+  var root=document.getElementById('profileView');
+  if(!root)return;
+  var storagePrefix='vinhomes-saved-fields-v1:';
+  function sectionFor(el){return el.closest('.profile-substep')||el.closest('.profile-card')||el.closest('form')||el.parentElement;}
+  function sectionKey(section){
+    if(section.id)return section.id;
+    var card=section.closest('.profile-card');
+    var base=card?(card.id||card.querySelector('h3')?.textContent.trim()||'profile-card'):'profile-section';
+    var step=section.getAttribute('data-panel-step');
+    if(step!==null)return base+':step:'+step;
+    var idx=Array.prototype.indexOf.call(root.querySelectorAll('.profile-substep'),section);
+    return base+(idx>=0?':substep:'+idx:'');
+  }
+  function fieldsIn(section){return Array.from(section.querySelectorAll('input:not([type=file]):not([type=password]),textarea,select')).filter(function(el){return !el.disabled;});}
+  function saveValues(section){
+    var data={};
+    fieldsIn(section).forEach(function(el){if(el.name||el.id)data[el.name||el.id]=el.value;});
+    try{localStorage.setItem(storagePrefix+sectionKey(section),JSON.stringify(data));}catch(e){}
+  }
+  function restoreValues(section){
+    try{
+      var raw=localStorage.getItem(storagePrefix+sectionKey(section));if(!raw)return;
+      var data=JSON.parse(raw);
+      fieldsIn(section).forEach(function(el){var k=el.name||el.id;if(k&&Object.prototype.hasOwnProperty.call(data,k))el.value=data[k];});
+      section.dataset.fieldsSaved='1';
+    }catch(e){}
+  }
+  function lockFields(section,locked){
+    fieldsIn(section).forEach(function(el){
+      if(el.tagName==='SELECT'){el.style.pointerEvents=locked?'none':'';el.setAttribute('aria-readonly',locked?'true':'false');}
+      else if(el.type==='checkbox'||el.type==='radio'){el.disabled=locked;}
+      else el.readOnly=locked;
+      el.classList.toggle('field-saved',locked);
+    });
+    section.classList.toggle('fields-saved',locked);
+  }
+  function buttonText(btn){return btn.dataset.originalButtonText||btn.textContent.trim();}
+  function setSavedUI(section,button){
+    if(!section||!button)return;
+    button.dataset.originalButtonText=buttonText(button);
+    button.textContent='Saved ✓';
+    button.classList.add('saved-confirmation');
+    var status=section.querySelector(':scope > .saved-fields-status');
+    if(!status){status=document.createElement('p');status.className='saved-fields-status';status.setAttribute('aria-live','polite');status.textContent='Saved on this device.';section.appendChild(status);}
+    status.hidden=false;
+    var update=section.querySelector(':scope > .saved-fields-update');
+    if(!update){update=document.createElement('button');update.type='button';update.className='profile-btn secondary saved-fields-update';update.textContent='Update';section.appendChild(update);}
+    update.hidden=false;
+    lockFields(section,true);
+    section.dataset.fieldsSaved='1';
+  }
+  function unlockSection(section){
+    lockFields(section,false);
+    section.dataset.fieldsSaved='0';
+    var status=section.querySelector(':scope > .saved-fields-status');if(status)status.hidden=true;
+    var update=section.querySelector(':scope > .saved-fields-update');if(update)update.hidden=true;
+    var btn=section.querySelector('button.saved-confirmation');
+    if(btn){btn.textContent=buttonText(btn);btn.classList.remove('saved-confirmation');}
+    section.querySelectorAll('button[data-original-button-text]').forEach(function(b){if(b.classList.contains('saved-confirmation')){b.textContent=b.dataset.originalButtonText;b.classList.remove('saved-confirmation');}});
+  }
+  function validSection(section){
+    var fields=Array.from(section.querySelectorAll('input[required],textarea[required],select[required]')).filter(function(el){return !el.disabled;});
+    if(fields.some(function(el){return !String(el.value||'').trim();}))return false;
+    var email=section.querySelector('input[type=email]');
+    return !email||email.checkValidity();
+  }
+  // Restore saved text values across profile sections when they are present.
+  root.querySelectorAll('.profile-card, .profile-substep').forEach(restoreValues);
+  root.addEventListener('click',function(e){
+    var update=e.target.closest('.saved-fields-update');
+    if(update){e.preventDefault();unlockSection(sectionFor(update));return;}
+    var btn=e.target.closest('button');
+    if(!btn||btn.classList.contains('saved-fields-update'))return;
+    var label=(btn.textContent||'').trim().toLowerCase();
+    if(!/^(continue|save details and continue|save changes and continue|save preferences|save details|save notification choices|done|save)$/.test(label))return;
+    var section=sectionFor(btn);if(!section||!root.contains(section))return;
+    if(!validSection(section))return;
+    saveValues(section);
+    setSavedUI(section,btn);
+  });
+  // Keep saved sections visibly marked while the customer is reviewing them.
+  root.addEventListener('focusin',function(e){
+    var section=sectionFor(e.target);
+    if(section&&section.dataset.fieldsSaved==='1'){
+      var status=section.querySelector(':scope > .saved-fields-status');if(status)status.textContent='Saved on this device. Tap Update to change these details.';
+    }
+  });
+})();
 })();
 </script>
 </body>
