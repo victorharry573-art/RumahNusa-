@@ -10,6 +10,8 @@
     html{width:100%;min-height:100%;overflow-x:hidden;overflow-y:auto;scroll-behavior:smooth}
     body{margin:0;width:100%;min-height:100vh;padding-bottom:84px;overflow-x:hidden;overflow-y:auto;font-family:Arial,Helvetica,sans-serif;color:#222;background:#f5f7fa;line-height:1.6;-webkit-overflow-scrolling:touch}
     header{background:#c9232b;color:#fff;padding:20px clamp(18px,5vw,56px)}
+    .site-language-control{display:flex;align-items:center;gap:10px;width:max-content;max-width:100%;margin-top:14px;font-size:14px;font-weight:700}
+    .site-language-control select{min-height:42px;max-width:100%;padding:8px 34px 8px 12px;border:1px solid rgba(255,255,255,.65);border-radius:10px;background:#fff;color:#243746;font:inherit;font-weight:700}
     .brand{margin:0;font-size:clamp(26px,5vw,38px);line-height:1.2;font-weight:800}
     .tagline{margin:6px 0 0;font-size:14px}
     main{width:100%;max-width:1180px;padding:clamp(16px,4vw,40px);margin:0 auto}
@@ -134,6 +136,12 @@
   <header>
     <h1 class="brand">Vinhomes Group Real Estate Developer 🇻🇳</h1>
     <p class="tagline">Real Estate · Vietnam</p>
+    <label class="site-language-control" for="siteLanguage"><span>Language</span>
+      <select id="siteLanguage" aria-label="Website language">
+        <option value="en">English</option>
+        <option value="vi">Tiếng Việt</option>
+      </select>
+    </label>
   </header>
   <main>
     <section class="hero" aria-labelledby="welcome-title">
@@ -398,7 +406,7 @@ var siteVietnameseText={
 var siteVietnamnText = {
 "Vinhomes Group Real Estate Developer | Vietnam":"Vinhomes Group Real Estate Developer | Bất động sản Việt Nam","Explore homes, villas, apartments and property communities across Vietnam with Vinhomes Group Real Estate Developer.":"Khám phá nhà ở, biệt thự, căn hộ và khu dân cư trên khắp Việt Nam cùng Vinhomes Group Real Estate Developer.","Real Estate · Vietnam":"Bất động sản · Việt Nam","A place to belong":"Nơi chốn thuộc về bạn","Welcome to Vinhomes Group Real Estate Developer":"Chào mừng đến với Vinhomes Group Real Estate Developer","Explore beautiful homes, villas, apartments and residential communities across Vietnam.":"Khám phá nhà đẹp, biệt thự, căn hộ và khu dân cư trên khắp Việt Nam.","Explore the collection":"Khám phá bộ sưu tập","Featured Properties":"Bất động sản nổi bật","Explore Our Properties":"Khám phá bất động sản","Across the country":"Trên khắp cả nước","Property Communities in Vietnam":"Khu dân cư tại Việt Nam","Explore the cities where Vinhomes Group Real Estate Developer plans to feature properties.":"Khám phá các thành phố nơi Vinhomes Group Real Estate Developer dự kiến giới thiệu bất động sản.","More than a home":"Không chỉ là một ngôi nhà","Spaces for Every Lifestyle":"Không gian cho mọi phong cách sống","Beautiful Interiors":"Nội thất đẹp","Room-by-Room Views":"Khám phá từng phòng","Community Facilities":"Tiện ích khu dân cư","City living":"Cuộc sống thành thị","Luxury Apartment Communities in Ho Chi Minh City":"Khu căn hộ cao cấp tại Thành phố Hồ Chí Minh","Where do you want to live?":"Bạn muốn sống ở đâu?","Type a city or area, e.g. Ho Chi Minh City or Hanoi":"Nhập thành phố hoặc khu vực, ví dụ Thành phố Hồ Chí Minh hoặc Hà Nội","Type a city to see its districts and nearby cities, then tap the exact area you want.":"Nhập tên thành phố để xem các quận và khu vực lân cận, sau đó chọn khu vực bạn muốn.","Property type":"Loại bất động sản","All property types":"Tất cả loại bất động sản","What are you looking for?":"Bạn đang tìm gì?","Buy or rent":"Mua hoặc thuê","Buy a property":"Mua bất động sản","Rent a property":"Thuê bất động sản","Bedrooms":"Phòng ngủ","Bathrooms":"Phòng tắm","Minimum price (VND)":"Giá thấp nhất (VND)","Maximum price (VND)":"Giá cao nhất (VND)","Price range":"Khoảng giá","Choose a range":"Chọn khoảng giá","Buying":"Mua","Renting · per year":"Thuê · mỗi năm","Rental term":"Thời hạn thuê","Choose if renting":"Chọn nếu thuê","Facilities and features":"Tiện nghi và đặc điểm","Swimming pool":"Hồ bơi","Parking":"Bãi đỗ xe","Furnished property":"Bất động sản có nội thất","Garden":"Khu vườn","Security":"An ninh","Gym":"Phòng tập thể dục","Balcony":"Ban công","Large living room":"Phòng khách rộng","Modern kitchen":"Nhà bếp hiện đại","Family-friendly community":"Khu dân cư phù hợp cho gia đình","Search Properties":"Tìm bất động sản","Clear filters":"Xóa bộ lọc","Property results":"Kết quả tìm kiếm bất động sản","Choose your location and filters, then tap Search Properties.":"Chọn vị trí và bộ lọc, sau đó nhấn Tìm bất động sản.","Rent apartment · Ho Chi Chi Minh City, Vietnam":"Thuê căn hộ · Thành phố Hồ Chí Minh, Việt Nam","Rent apartment · Ho Chi Minh City, Vietnam":"Thuê căn hộ · Thành phố Hồ Chí Minh, Việt Nam","Luxury Apartment — First Room":"Căn hộ cao cấp — Phòng đầu tiên","View rooms":"Xem phòng","View rooms and photos ↗":"Xem phòng và ảnh ↗","Confirm your details to continue renting":"Xác nhận thông tin để tiếp tục thuê","Do you want to rent this apartment?":"Bạn có muốn thuê căn hộ này không?","Yes, continue":"Có, tiếp tục","No":"Không","Full legal name":"Họ và tên đầy đủ","Phone number":"Số điện thoại","Gender":"Giới tính","Email address":"Địa chỉ email","Date of birth":"Ngày sinh","Property name":"Tên bất động sản","Current residential address":"Địa chỉ cư trú hiện tại","Nationality":"Quốc tịch","Rental start date":"Ngày bắt đầu thuê","Rental end date":"Ngày kết thúc thuê","Number of occupants":"Số người ở","Purpose of renting":"Mục đích thuê","Additional details":"Thông tin bổ sung","Payment terms":"Điều khoản thanh toán","Choose identity document":"Chọn giấy tờ tùy thân","Select identity document photo":"Chọn ảnh giấy tờ tùy thân","Select personal photo":"Chọn ảnh cá nhân","Payment currency":"Đơn vị tiền tệ thanh toán","Thank you":"Xin cảm ơn","Language":"Ngôn ngữ","Settings":"Cài đặt","My Property":"Bất động sản của tôi","My Booking":"Đặt lịch của tôi","Security Settings":"Cài đặt bảo mật","Notifications":"Thông báo","Log Out":"Đăng xuất","Choose an option":"Chọn một tùy chọn","Yes":"Có","Choose Yes or No":"Vui lòng chọn Có hoặc Không","Please choose Yes or No.":"Vui lòng chọn Có hoặc Không","Logging out…":"Đang đăng xuất…","Property preferences":"Tùy chọn bất động sản","What do you want to do?":"Bạn muốn làm gì?","Choose your preferred location":"Chọn vị trí mong muốn","Choose property type":"Chọn loại bất động sản","Budget (optional)":"Ngân sách (không bắt buộc)","Enter amount in VND":"Nhập số tiền bằng VND","Save preferences":"Lưu tùy chọn","Viewing appointments":"Lịch hẹn xem nhà","Property or room name":"Tên bất động sản hoặc phòng","Preferred viewing time":"Thời gian xem mong muốn","Review request":"Xem lại yêu cầu","Save viewing request":"Lưu yêu cầu xem nhà"
       };
-      Object.assign(siteVietnameseText, siteVietnameseExtras, {
+      Object.assign(siteVietnameseText, siteVietnameseExtras, siteVietnamnText, {
         "These categories are placed at the end of Home, as requested.":"Khám phá các danh mục bất động sản.",
         "Explore living rooms, bedrooms, kitchens and bathrooms through clear property photography.":"Khám phá phòng khách, phòng ngủ, nhà bếp và phòng tắm qua hình ảnh bất động sản rõ nét.",
         "Browse photos of each room and its features when available.":"Xem ảnh từng phòng và các tiện ích khi có.",
@@ -481,13 +489,17 @@ var siteVietnamnText = {
           records.forEach(function(record) {
             record.addedNodes && record.addedNodes.forEach(function(added) {
               if (added.nodeType === Node.TEXT_NODE) {
-                var raw = added.nodeValue, trimmed = raw.trim();
-                if (dict[trimmed]) added.nodeValue = raw.replace(trimmed, dict[trimmed]);
+                if (typeof added.__siteEnglish === 'undefined') added.__siteEnglish = added.nodeValue;
+                var raw = added.__siteEnglish, trimmed = raw.trim();
+                if (window.__vinhomesCurrentLanguage === 'vi' && dict[trimmed]) added.nodeValue = raw.replace(trimmed, dict[trimmed]);
+                else added.nodeValue = raw;
               } else if (added.nodeType === Node.ELEMENT_NODE) {
                 var walker = document.createTreeWalker(added, NodeFilter.SHOW_TEXT), textNode;
                 while ((textNode = walker.nextNode())) {
-                  var rawText = textNode.nodeValue, key = rawText.trim();
-                  if (dict[key]) textNode.nodeValue = rawText.replace(key, dict[key]);
+                  if (typeof textNode.__siteEnglish === 'undefined') textNode.__siteEnglish = textNode.nodeValue;
+                  var rawText = textNode.__siteEnglish, key = rawText.trim();
+                  if (window.__vinhomesCurrentLanguage === 'vi' && dict[key]) textNode.nodeValue = rawText.replace(key, dict[key]);
+                  else textNode.nodeValue = rawText;
                 }
                 ['placeholder','aria-label','alt','title'].forEach(function(attr) {
                   if (added.hasAttribute && added.hasAttribute(attr)) {
@@ -513,7 +525,7 @@ var siteVietnamnText = {
         try { sessionStorage.setItem('vinhomes-profile-language', lang); } catch(e) {}
       }
 
-      var galleryFiles = ["IMG-20261018-WA0016.jpg","IMG-20261018-WA0008.jpg","IMG-20261018-WA0009.jpg","IMG-20261018-WA0010.jpg","IMG-20261018-WA0011.jpg","IMG-20261018-WA0012.jpg","IMG-20261018-WA0013.jpg","IMG-20261018-WA0014.jpg","IMG-20261018-WA0014 (1).jpg","IMG-20261018-WA0017.jpg","IMG-20261018-WA0018.jpg","IMG-20261018-WA0019.jpg","IMG-20261018-WA0019 (1).jpg","IMG-20261018-WA0020.jpg","IMG-20261018-WA0021.jpg"];
+      var galleryFiles = ["IMG-20261018-WA0001 (1).jpg","IMG-20261018-WA0001.jpg","IMG-20261018-WA0002 (1).jpg","IMG-20261018-WA0002.jpg","IMG-20261018-WA0003.jpg","IMG-20261018-WA0004.jpg","IMG-20261018-WA0005.jpg","IMG-20261018-WA0006.jpg","IMG-20261018-WA0007.jpg","IMG-20261018-WA0008 (1).jpg","IMG-20261018-WA0008.jpg","IMG-20261018-WA0009.jpg","IMG-20261018-WA0010.jpg","IMG-20261018-WA0011.jpg","IMG-20261018-WA0012.jpg","IMG-20261018-WA0013.jpg","IMG-20261018-WA0014 (1).jpg","IMG-20261018-WA0014.jpg","IMG-20261018-WA0016.jpg","IMG-20261018-WA0017.jpg","IMG-20261018-WA0018.jpg","IMG-20261018-WA0019 (1).jpg","IMG-20261018-WA0019.jpg","IMG-20261018-WA0020.jpg","IMG-20261018-WA0021.jpg","IMG-20261018-WA0022.jpg","IMG-20261018-WA0024.jpg","IMG-20261018-WA0025.jpg","IMG-20261018-WA0026.jpg","IMG-20261018-WA0027.jpg","IMG-20261018-WA0028.jpg","IMG-20261018-WA0029.jpg","IMG-20261018-WA0033 (1).jpg","IMG-20261018-WA0033.jpg","IMG-20261018-WA0036 (1).jpg","IMG-20261018-WA0036.jpg","IMG-20261018-WA0037.jpg","IMG-20261018-WA0038.jpg","IMG-20261018-WA0040.jpg","IMG-20261018-WA0042.jpg","IMG-20261018-WA0043.jpg","IMG-20261018-WA0044.jpg","IMG-20261018-WA0045 (1).jpg","IMG-20261018-WA0045.jpg","IMG-20261018-WA0046.jpg","IMG-20261018-WA0047 (1).jpg","IMG-20261018-WA0047 (2).jpg","IMG-20261018-WA0047.jpg","IMG-20261018-WA0049.jpg","IMG-20261018-WA0050.jpg","IMG-20261018-WA0051.jpg","IMG-20261018-WA0052 (1).jpg","IMG-20261018-WA0052.jpg","IMG-20261018-WA0053.jpg","IMG-20261018-WA0054.jpg","IMG-20261018-WA0055.jpg","IMG-20261018-WA0056 (1).jpg","IMG-20261018-WA0056.jpg","IMG-20261018-WA0057 (1).jpg","IMG-20261018-WA0057.jpg","IMG-20261018-WA0058.jpg","IMG-20261018-WA0061.jpg","IMG-20261018-WA0062 (1).jpg","IMG-20261018-WA0062.jpg","IMG-20261018-WA0063.jpg","IMG-20261018-WA0064.jpg","IMG-20261018-WA0065.jpg","IMG-20261018-WA0066.jpg","IMG-20261018-WA0067.jpg","IMG-20261018-WA0068.jpg","IMG-20261018-WA0069.jpg","IMG-20261018-WA0070.jpg","IMG-20261018-WA0071.jpg","IMG-20261018-WA0072.jpg","IMG-20261018-WA0073.jpg","IMG-20261018-WA0074.jpg","IMG-20261018-WA0076 (1).jpg","IMG-20261018-WA0076.jpg","IMG-20261018-WA0077.jpg","IMG-20261018-WA0078 (1).jpg","IMG-20261018-WA0078.jpg","IMG-20261018-WA0079.jpg","IMG-20261018-WA0080.jpg","IMG-20261018-WA0081.jpg","IMG-20261018-WA0082 (1).jpg","IMG-20261018-WA0082.jpg","IMG-20261018-WA0084.jpg","IMG-20261018-WA0086.jpg","IMG-20261018-WA0087 (1).jpg","IMG-20261018-WA0087.jpg","IMG-20261018-WA0090.jpg","IMG-20261018-WA0095.jpg","IMG-20261018-WA0097 (1).jpg","IMG-20261018-WA0097.jpg","IMG-20261018-WA0098.jpg","IMG-20261018-WA0099.jpg","IMG-20261018-WA0100.jpg","IMG-20261018-WA0101.jpg","IMG-20261018-WA0102.jpg","IMG-20261018-WA0103.jpg","IMG-20261018-WA0104 (1).jpg","IMG-20261018-WA0104.jpg","IMG-20261018-WA0105.jpg","IMG-20261018-WA0106 (1).jpg","IMG-20261018-WA0106.jpg","IMG-20261018-WA0107.jpg","IMG-20261018-WA0108.jpg","IMG-20261018-WA0109.jpg","IMG-20261018-WA0110.jpg","IMG-20261018-WA0113.jpg","IMG-20261018-WA0114 (1).jpg","IMG-20261018-WA0114.jpg","IMG-20261018-WA0117.jpg","IMG-20261018-WA0119.jpg","IMG-20261018-WA0120.jpg","IMG-20261018-WA0121.jpg","IMG-20261018-WA0122 (1).jpg","IMG-20261018-WA0122 (2).jpg","IMG-20261018-WA0122.jpg","IMG-20261018-WA0123.jpg","IMG-20261018-WA0124.jpg","IMG-20261018-WA0125.jpg","IMG-20261018-WA0126.jpg","IMG-20261018-WA0128.jpg"];
       var galleryBase = 'https://vuhrkijzjmnbsaqnpdmg.supabase.co/storage/v1/object/public/property-images/';
       var galleryIndex = 0;
       var galleryImage = document.getElementById('propertyGalleryImage');
@@ -598,8 +610,21 @@ var siteVietnamnText = {
         nat.value='';phone.value='+62';
       }
       fillCountries();
-      document.getElementById('profileLanguage').addEventListener('change',function(){setProfileLanguage(this.value)});
-      try {var savedLang=sessionStorage.getItem('vinhomes-profile-language');if(savedLang){if(savedLang==='id')savedLang='en';document.getElementById('profileLanguage').value=savedLang;setProfileLanguage(savedLang)}}catch(e){}
+      var siteLanguageControl = document.getElementById('siteLanguage');
+      function applySiteLanguage(lang){
+        lang = lang === 'vi' ? 'vi' : 'en';
+        siteLanguageControl.value = lang;
+        document.getElementById('profileLanguage').value = lang;
+        setProfileLanguage(lang);
+        try { localStorage.setItem('vinhomes-site-language', lang); } catch(e) {}
+      }
+      siteLanguageControl.addEventListener('change',function(){applySiteLanguage(this.value);});
+      document.getElementById('profileLanguage').addEventListener('change',function(){applySiteLanguage(this.value);});
+      try {
+        var savedLang = localStorage.getItem('vinhomes-site-language') || sessionStorage.getItem('vinhomes-profile-language') || 'en';
+        if(savedLang === 'id') savedLang = 'en';
+        applySiteLanguage(savedLang);
+      } catch(e) { applySiteLanguage('en'); }
       profileForm.addEventListener('submit',function(e){
         e.preventDefault();var required=Array.from(profileForm.querySelectorAll('[required]'));var missing=required.some(function(el){return !String(el.value||'').trim()});
         if(missing){profileError.classList.add('show');required.forEach(function(el){el.style.borderColor=String(el.value||'').trim()?'#cfd6dc':'#c9232b'});return;}
