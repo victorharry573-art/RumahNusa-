@@ -1113,6 +1113,7 @@ cover.addEventListener('error',function(){if(!cover.dataset.fallback){cover.data
 (function(){
 'use strict';
 var api='https://vuhrkijzjmnbsaqnpdmg.supabase.co', key='sb_publishable_UCcVEEukXPp_pxklYhSM2w_fVl6GYK9';
+var reviewerRole=false;
 var wizard=document.getElementById('promoteWizard'),form=document.getElementById('promoteListingForm'),steps=Array.from(document.querySelectorAll('[data-promote-step]')),step=0,kind='property',files=[],mainPhoto=0,editingId=null,user=null,loaded=false;
 var $=function(id){return document.getElementById(id);};
 var fields={type:$('promoType'),title:$('promoTitle'),propertyType:$('promoPropertyType'),goal:$('promoGoal'),city:$('promoCity'),district:$('promoDistrict'),vnd:$('promoPriceVnd'),usd:$('promoPriceUsd'),bedrooms:$('promoBedrooms'),bathrooms:$('promoBathrooms'),area:$('promoArea'),years:$('promoRentalYears'),description:$('promoDescription'),photos:$('promoPhotos')};
@@ -1215,6 +1216,13 @@ function localDraft(){
 }
 function restoreLocalDraft(){try{var d=JSON.parse(localStorage.getItem('vinhomes-promotion-draft')||'null');if(!d)return;Object.keys({type:1,title:1,propertyType:1,goal:1,city:1,district:1,vnd:1,usd:1,bedrooms:1,bathrooms:1,area:1,years:1,description:1}).forEach(function(k){var map={type:fields.type,title:fields.title,propertyType:fields.propertyType,goal:fields.goal,city:fields.city,district:fields.district,vnd:fields.vnd,usd:fields.usd,bedrooms:fields.bedrooms,bathrooms:fields.bathrooms,area:fields.area,years:fields.years,description:fields.description};if(d[k]!==undefined)map[k].value=d[k];});document.querySelectorAll('.promote-facilities input').forEach(function(el){el.checked=(d.features||[]).includes(el.value);});updateGoal();}catch(e){}}
 function statusLabel(s){return ({draft:'Draft',pending_review:'Pending review',approved:'Approved',rejected:'Rejected',published:'Published'})[s]||s;}
+async function reviewStatus(row,status){
+ var note='';
+ if(status==='rejected'){note=prompt('Reason for rejection (shown to the customer):','Please update the listing details or photographs.');if(note===null)return;}
+ var res=await fetch(api+'/rest/v1/property_promotions?id=eq.'+row.id,{method:'PATCH',headers:headers(currentToken()),body:JSON.stringify({status:status,review_note:note,updated_at:new Date().toISOString()})});
+ if(!res.ok){var e=await res.json().catch(function(){return {}});alert(e.message||'Could not update review status. Check your reviewer permissions.');return;}
+ loadPromotions();
+}
 async function loadPromotions(){
  var list=$('myPromotionsList');if(!user){list.innerHTML='<p>Sign in to see promotions connected to your account.</p>';return;}
  list.innerHTML='<p>Loading your promotions…</p>';
@@ -1234,8 +1242,18 @@ async function loadPromotions(){
    var view=document.createElement('button');view.type='button';view.textContent='View';view.addEventListener('click',function(){alert(row.title+'\n'+row.city+', '+row.district+', Vietnam\n'+money(row.price_vnd)+'\n\n'+row.description);});actions.appendChild(view);
    if(['draft','rejected','pending_review'].includes(row.status)){var edit=document.createElement('button');edit.type='button';edit.textContent='Update';edit.addEventListener('click',function(){editPromotion(row);});actions.appendChild(edit);}
    if(['draft','rejected'].includes(row.status)){var del=document.createElement('button');del.type='button';del.textContent='Remove';del.addEventListener('click',async function(){if(!confirm('Remove this promotion?'))return;var dr=await fetch(api+'/rest/v1/property_promotions?id=eq.'+row.id,{method:'DELETE',headers:{'apikey':key,'Authorization':'Bearer '+currentToken()}});if(dr.ok)loadPromotions();else alert('Could not remove this promotion.');});actions.appendChild(del);}
+   if(reviewerRole){
+    if(row.status==='pending_review'||row.status==='rejected'){var approve=document.createElement('button');approve.type='button';approve.textContent='Approve';approve.addEventListener('click',function(){reviewStatus(row,'approved');});actions.appendChild(approve);}
+    if(row.status==='pending_review'||row.status==='approved'){var reject=document.createElement('button');reject.type='button';reject.textContent='Reject';reject.addEventListener('click',function(){reviewStatus(row,'rejected');});actions.appendChild(reject);}
+    if(row.status==='approved'){var publish=document.createElement('button');publish.type='button';publish.textContent='Publish';publish.addEventListener('click',function(){reviewStatus(row,'published');});actions.appendChild(publish);}
+   }
    body.appendChild(actions);item.appendChild(body);list.appendChild(item);
   });
+  try{
+   var local=JSON.parse(localStorage.getItem('vinhomes-promotion-draft')||'null');
+   if(local){var draft=document.createElement('article');draft.className='promotion-row';var thumb=document.createElement('div');thumb.style.cssText='display:grid;place-items:center;background:#f0f2f4;border-radius:10px;font-size:30px';thumb.textContent='📝';draft.appendChild(thumb);var detail=document.createElement('div');detail.innerHTML='<h4>'+escapeHtml(local.title||'Untitled local draft')+'</h4><p>Saved on this device · '+escapeHtml(local.city||'Location not chosen')+'</p><span class="promotion-status">Draft · This device only</span><div class="promotion-row-actions"><button type="button" id="resumeLocalPromotionDraft">Resume draft</button><button type="button" id="removeLocalPromotionDraft">Remove draft</button></div>';draft.appendChild(detail);list.prepend(draft);detail.querySelector('#resumeLocalPromotionDraft').addEventListener('click',function(){restoreLocalDraft();openWizard(local.kind||'property');restoreLocalDraft();});detail.querySelector('#removeLocalPromotionDraft').addEventListener('click',function(){if(confirm('Remove this draft from this device?')){localStorage.removeItem('vinhomes-promotion-draft');draft.remove();}});
+  }
+  }catch(e){}
  }catch(e){list.textContent=e.message||'Could not load your promotions. Please sign in again.';}
 }
 function editPromotion(row){
@@ -1253,7 +1271,7 @@ $('promoteBackToList').addEventListener('click',function(){wizard.hidden=true;$(
 document.querySelectorAll('[data-promote-kind]').forEach(function(btn){btn.addEventListener('click',function(){openWizard(btn.dataset.promoteKind);});});
 $('openMyPromotions').addEventListener('click',function(){$('myPromotionsPanel').hidden=false;wizard.hidden=true;loadPromotions();$('myPromotionsPanel').scrollIntoView({behavior:'smooth'});});
 $('refreshMyPromotions').addEventListener('click',loadPromotions);
-window.__initPromoteSection=function(){if(loaded)return;loaded=true;var s=tokenFromStorage();if(s&&s.access_token&&s.user)user=s.user;syncAuthUI();restoreLocalDraft();updateGoal();};
+window.__initPromoteSection=function(){if(loaded){var s2=tokenFromStorage();if(s2&&s2.access_token&&s2.user&&!user){user=s2.user;syncAuthUI();loadPromotions();}return;}loaded=true;var s=tokenFromStorage();if(s&&s.access_token&&s.user)user=s.user;syncAuthUI();restoreLocalDraft();updateGoal();if(user){fetch(api+'/rest/v1/profiles?id=eq.'+encodeURIComponent(user.id)+'&select=role',{headers:{'apikey':key,'Authorization':'Bearer '+currentToken()}}).then(function(r){return r.ok?r.json():[]}).then(function(rows){reviewerRole=!!(rows&&rows[0]&&['agent','admin'].includes(rows[0].role));}).catch(function(){});}};
 })();
 </script>
 </body>
