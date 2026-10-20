@@ -192,7 +192,8 @@
 .message-btn.secondary{background:#eef2f5;color:#243746;border:1px solid #dce3e8}
 .message-btn:disabled{opacity:.5;cursor:not-allowed}
 .message-status{padding:12px 14px;color:#586671;font-size:14px}.message-status.error{color:#b51d28;font-weight:700}
-.message-auth{padding:16px}.message-fields{display:grid;gap:12px}.message-field{display:grid;gap:5px;font-size:14px;font-weight:700;color:#34424c}
+.message-quick-actions{display:flex;flex-wrap:wrap;gap:8px;padding:14px 16px 0}.message-quick-actions .message-btn{flex:1 1 145px}.message-quick-actions[hidden]{display:none!important}
+    .message-auth{padding:16px}.message-fields{display:grid;gap:12px}.message-field{display:grid;gap:5px;font-size:14px;font-weight:700;color:#34424c}
 .message-field input,.message-field select,.message-field textarea,.message-composer textarea{width:100%;min-width:0;border:1px solid #d7dfe5;border-radius:10px;padding:11px 12px;background:#fff;color:#243746;font:inherit}
 .message-field textarea{min-height:78px;resize:vertical}
 .message-thread{display:flex;flex-direction:column;min-height:410px}
@@ -536,6 +537,10 @@
         <div class="message-layout">
           <div class="message-card">
             <div class="message-card-head"><h3 id="messageInboxHeading">Your inbox</h3><button type="button" class="message-btn secondary" id="messageRefresh">Refresh</button></div>
+            <div class="message-quick-actions" id="messageQuickActions">
+              <button type="button" class="message-btn" id="messageQuickAgent">＋ Message an agent</button>
+              <button type="button" class="message-btn secondary" id="messageQuickSupport">Contact Vinhomes Support</button>
+            </div>
             <div class="message-preferences" id="messagePreferences">
               <strong>Notifications</strong>
               <label><input type="checkbox" id="messageInAppNotifications" checked> In-app and browser notifications</label>
@@ -1508,7 +1513,7 @@ function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(ch){retu
 function fmtDate(v){if(!v)return '';try{return new Date(v).toLocaleString([], {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});}catch(e){return '';}}
 function setSignedIn(s){session=s; $('messageConnectNotice').hidden=!!s; $('messageWorkspace').hidden=!s;if(!s){activeId=null;activeRow=null;currentRole='customer';$('messageAgentDashboard').hidden=true;$('messageStream').innerHTML='<div class="message-empty">Your private conversations will appear here automatically when your existing Promote account is connected.</div>';return;} setupRealtime();loadRoleAndInbox();}
 var currentRole='customer';
-async function loadRoleAndInbox(){try{var rows=await apiJson('/rest/v1/profiles?select=role&id=eq.'+encodeURIComponent(session.user.id));currentRole=rows&&rows[0]&&['agent','admin'].includes(rows[0].role)?rows[0].role:'customer';$('messageAgentDashboard').hidden=currentRole==='customer';var inboxTitle=$('messageInboxHeading');if(inboxTitle)inboxTitle.textContent=currentRole==='customer'?'Your inbox':'Customer inbox';var startBox=document.querySelector('.message-compose-new');if(startBox)startBox.hidden=currentRole!=='customer';var threadSubtitle=$('messageThreadSubtitle');if(threadSubtitle&&!activeRow)threadSubtitle.textContent=currentRole==='customer'?'Your private messages will appear here.':'Open a customer conversation to reply.';}catch(e){currentRole='customer';}loadDirectory();loadInbox();}
+async function loadRoleAndInbox(){try{var role=await rpc('message_current_user_role',{});currentRole=Array.isArray(role)?role[0]:role;if(!['agent','admin'].includes(currentRole))currentRole='customer';$('messageAgentDashboard').hidden=currentRole==='customer';var inboxTitle=$('messageInboxHeading');if(inboxTitle)inboxTitle.textContent=currentRole==='customer'?'My conversations':'Customer inbox';var startBox=document.querySelector('.message-compose-new');if(startBox)startBox.hidden=currentRole!=='customer';var quickActions=$('messageQuickActions');if(quickActions)quickActions.hidden=currentRole!=='customer';var threadSubtitle=$('messageThreadSubtitle');if(threadSubtitle&&!activeRow)threadSubtitle.textContent=currentRole==='customer'?'Open a conversation or contact an agent below.':'Open a customer conversation to reply.';}catch(e){currentRole='customer';status('messageAuthStatus','Could not connect to messaging. Please reopen the Message section and try again: '+e.message,true);}loadDirectory();loadInbox();}
 function showIncomingBrowserNotification(message){
  try{
   if(!$('messageInAppNotifications').checked||!('Notification' in window)||Notification.permission!=='granted')return;
@@ -1645,6 +1650,8 @@ async function startConversation(targetId,property,firstBody,imageFile){
   }catch(e){status('messageComposeStatus',e.message,true);}
  }
  $('messageRefresh').addEventListener('click',function(){loadInbox();if(activeId)loadMessages(activeId);});
+ $('messageQuickAgent').addEventListener('click',function(){var box=document.querySelector('.message-compose-new');if(box)box.scrollIntoView({behavior:'smooth',block:'start'});window.setTimeout(function(){var sel=$('messageRecipient');if(sel)sel.focus();},250);});
+ $('messageQuickSupport').addEventListener('click',function(){var box=document.querySelector('.message-compose-new');if(box)box.scrollIntoView({behavior:'smooth',block:'start'});window.setTimeout(function(){var field=$('messageFirstBody');if(field){field.focus();field.placeholder='Write your message for Vinhomes Support…';}},250);status('messageComposeStatus','Write your message below, then tap Contact Vinhomes Support.');});
 document.addEventListener('click',function(e){var b=e.target.closest('[data-message-property]');if(!b)return;var nav=document.querySelector('.nav-button[data-section="Message"]');if(nav)nav.click();window.setTimeout(function(){var field=$('messagePropertyName');if(field)field.value=b.getAttribute('data-message-property')||'';},180);});
 document.querySelectorAll('[data-message-question]').forEach(function(btn){btn.addEventListener('click',function(){var field=$('messageFirstBody');if(!field)return;var q=btn.getAttribute('data-message-question')||'';field.value=field.value.trim()?field.value.trim()+'\n'+q:q;field.focus();});});
 $('messageStartConversation').addEventListener('click',function(){
