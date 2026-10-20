@@ -192,7 +192,8 @@
 .message-btn.secondary{background:#eef2f5;color:#243746;border:1px solid #dce3e8}
 .message-btn:disabled{opacity:.5;cursor:not-allowed}
 .message-status{padding:12px 14px;color:#586671;font-size:14px}.message-status.error{color:#b51d28;font-weight:700}
-.message-quick-actions{display:flex;flex-wrap:wrap;gap:8px;padding:14px 16px 0}.message-quick-actions .message-btn{flex:1 1 145px}.message-quick-actions[hidden]{display:none!important}
+.message-access-guide{padding:16px;border:1px solid #f4c9a5;border-radius:14px;background:#fff7ef;color:#35271d;margin-top:10px}.message-access-guide strong{display:block;margin-bottom:6px}.message-access-guide p{margin:0 0 14px;color:#625044}.message-access-guide .message-btn{background:#f47719;color:#fff}
+    .message-quick-actions{display:flex;flex-wrap:wrap;gap:8px;padding:14px 16px 0}.message-quick-actions .message-btn{flex:1 1 145px}.message-quick-actions[hidden]{display:none!important}
     .message-auth{padding:16px}.message-fields{display:grid;gap:12px}.message-field{display:grid;gap:5px;font-size:14px;font-weight:700;color:#34424c}
 .message-field input,.message-field select,.message-field textarea,.message-composer textarea{width:100%;min-width:0;border:1px solid #d7dfe5;border-radius:10px;padding:11px 12px;background:#fff;color:#243746;font:inherit}
 .message-field textarea{min-height:78px;resize:vertical}
@@ -529,8 +530,13 @@
       <div class="message-card" id="messageConnectNotice">
         <div class="message-card-head"><h3>Private messages</h3></div>
         <div class="message-auth">
-          <p class="section-intro">Private conversations with property agents and Vinhomes Support appear here. Start a conversation to ask about a property.</p>
-          <p class="message-status" id="messageAuthStatus" role="status" aria-live="polite"></p>
+          <p class="section-intro">Message property agents and Vinhomes Support, and keep every reply in one private conversation.</p>
+          <div class="message-access-guide">
+            <strong>One quick step before messaging</strong>
+            <p>Sign in using the existing account area in <b>Promote</b>. Then return to Message. There is no separate inbox login.</p>
+            <button type="button" class="message-btn" id="messageGoPromote">Go to Promote sign in</button>
+          </div>
+          <p class="message-status" id="messageAuthStatus" role="status" aria-live="polite">Your private conversations will appear here after you connect through Promote.</p>
         </div>
       </div>
       <div id="messageWorkspace" hidden>
@@ -1650,6 +1656,7 @@ async function startConversation(targetId,property,firstBody,imageFile){
   }catch(e){status('messageComposeStatus',e.message,true);}
  }
  $('messageRefresh').addEventListener('click',function(){loadInbox();if(activeId)loadMessages(activeId);});
+ $('messageGoPromote').addEventListener('click',function(){var nav=document.querySelector('.nav-button[data-section="Promote"]');if(nav)nav.click();else{var promote=document.getElementById('promoteView')||document.querySelector('[data-section-view="Promote"]');if(promote)promote.scrollIntoView({behavior:'smooth',block:'start'});}});
  $('messageQuickAgent').addEventListener('click',function(){var box=document.querySelector('.message-compose-new');if(box)box.scrollIntoView({behavior:'smooth',block:'start'});window.setTimeout(function(){var sel=$('messageRecipient');if(sel)sel.focus();},250);});
  $('messageQuickSupport').addEventListener('click',function(){var box=document.querySelector('.message-compose-new');if(box)box.scrollIntoView({behavior:'smooth',block:'start'});window.setTimeout(function(){var field=$('messageFirstBody');if(field){field.focus();field.placeholder='Write your message for Vinhomes Support…';}},250);status('messageComposeStatus','Write your message below, then tap Contact Vinhomes Support.');});
 document.addEventListener('click',function(e){var b=e.target.closest('[data-message-property]');if(!b)return;var nav=document.querySelector('.nav-button[data-section="Message"]');if(nav)nav.click();window.setTimeout(function(){var field=$('messagePropertyName');if(field)field.value=b.getAttribute('data-message-property')||'';},180);});
