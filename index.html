@@ -484,7 +484,7 @@
             <div class="message-thread-head"><h3 id="messageThreadTitle">Choose a conversation</h3><p id="messageThreadSubtitle">Your private messages will appear here.</p></div>
             <div class="message-stream" id="messageStream" aria-live="polite"><div class="message-empty">Choose a conversation from your inbox, or start a new one.</div></div>
             <form class="message-composer" id="messageComposer">
-              <textarea id="messageReplyBody" maxlength="5000" rows="2" placeholder="Write a private message…" aria-label="Write a private message" disabled required></textarea>
+              <textarea id="messageReplyBody" maxlength="5000" rows="2" placeholder="Choose a conversation before writing…" aria-label="Write a private message" readonly required></textarea>
               <button type="submit" class="message-btn" id="messageSendButton" disabled>Send</button>
             </form>
             <div class="message-security-note">Private conversation · Messages are stored securely and access is restricted to participants.</div>
@@ -1463,10 +1463,10 @@ function renderInbox(){
  });
 }
 function renderThreadHeading(){
- if(!activeRow)return;
+ if(!activeRow){$('messageReplyBody').readOnly=true;$('messageReplyBody').placeholder='Choose a conversation before writing…';$('messageSendButton').disabled=true;return;}
  $('messageThreadTitle').textContent=activeRow.other_name||'Private conversation';
  $('messageThreadSubtitle').textContent=(activeRow.property_name||'General enquiry')+' · '+(activeRow.other_email||'Private conversation');
- $('messageReplyBody').disabled=false;$('messageSendButton').disabled=false;
+ $('messageReplyBody').readOnly=false;$('messageReplyBody').placeholder='Write a private message…';$('messageSendButton').disabled=false;
 }
 async function openConversation(row){
  activeId=row.id;activeRow=row;renderInbox();renderThreadHeading();await loadMessages(row.id);
@@ -1543,6 +1543,12 @@ $('messageContactSupport').addEventListener('click',async function(){
   $('messageFirstBody').value='';status('messageComposeStatus','Your message has been sent to Vinhomes Support.');await loadInbox();
   var row=inboxRows.find(function(x){return x.id===id;});if(row)openConversation(row);
  }catch(e){status('messageComposeStatus',e.message,true);}
+});
+$('messageReplyBody').addEventListener('click',function(){
+ if(!activeId){
+  status('messageComposeStatus','To reply, first start a conversation using the form above, or choose an existing conversation from Your inbox.',true);
+  $('messageComposeStatus').scrollIntoView({behavior:'smooth',block:'center'});
+ }
 });
 $('messageComposer').addEventListener('submit',async function(e){
  e.preventDefault();if(!session||!activeId)return;var body=$('messageReplyBody').value.trim();if(!body)return;
