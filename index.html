@@ -540,6 +540,11 @@
         </div>
       </div>
       <div id="messageWorkspace" hidden>
+        <div class="message-access-guide" id="messageSessionPrompt" hidden>
+          <strong>Your private message inbox</strong>
+          <p>To load your private conversations and send messages, sign in through the existing Promote section. No separate inbox login is required.</p>
+          <button type="button" class="message-btn" id="messageWorkspaceGoPromote">Go to Promote</button>
+        </div>
         <div class="message-layout">
           <div class="message-card">
             <div class="message-card-head"><h3 id="messageInboxHeading">Your inbox</h3><button type="button" class="message-btn secondary" id="messageRefresh">Refresh</button></div>
@@ -1517,7 +1522,7 @@ async function apiJson(path,opts){
 async function rpc(name,args){return apiJson('/rest/v1/rpc/'+name,{method:'POST',body:JSON.stringify(args||{})});}
 function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
 function fmtDate(v){if(!v)return '';try{return new Date(v).toLocaleString([], {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});}catch(e){return '';}}
-function setSignedIn(s){session=s; $('messageConnectNotice').hidden=!!s; $('messageWorkspace').hidden=!s;if(!s){activeId=null;activeRow=null;currentRole='customer';$('messageAgentDashboard').hidden=true;$('messageStream').innerHTML='<div class="message-empty">Your private conversations will appear here automatically when your existing Promote account is connected.</div>';return;} setupRealtime();loadRoleAndInbox();}
+function setSignedIn(s){session=s; $('messageConnectNotice').hidden=true; $('messageWorkspace').hidden=false;$('messageSessionPrompt').hidden=!!s;if(!s){activeId=null;activeRow=null;currentRole='customer';$('messageAgentDashboard').hidden=true;$('messageInboxHeading').textContent='My conversations';$('messageInbox').innerHTML='<div class="message-empty">Sign in through Promote to load your private conversations. Your conversations will appear here.</div>';$('messageStream').innerHTML='<div class="message-empty">Choose a conversation from your inbox, or contact an agent after signing in through Promote.</div>';$('messageSendButton').disabled=true;$('messageRecipient').disabled=true;$('messageStartConversation').disabled=true;$('messageContactSupport').disabled=true;return;}$('messageRecipient').disabled=false;$('messageStartConversation').disabled=false;$('messageContactSupport').disabled=false;setupRealtime();loadRoleAndInbox();}
 var currentRole='customer';
 async function loadRoleAndInbox(){try{var role=await rpc('message_current_user_role',{});currentRole=Array.isArray(role)?role[0]:role;if(!['agent','admin'].includes(currentRole))currentRole='customer';$('messageAgentDashboard').hidden=currentRole==='customer';var inboxTitle=$('messageInboxHeading');if(inboxTitle)inboxTitle.textContent=currentRole==='customer'?'My conversations':'Customer inbox';var startBox=document.querySelector('.message-compose-new');if(startBox)startBox.hidden=currentRole!=='customer';var quickActions=$('messageQuickActions');if(quickActions)quickActions.hidden=currentRole!=='customer';var threadSubtitle=$('messageThreadSubtitle');if(threadSubtitle&&!activeRow)threadSubtitle.textContent=currentRole==='customer'?'Open a conversation or contact an agent below.':'Open a customer conversation to reply.';}catch(e){currentRole='customer';status('messageAuthStatus','Could not connect to messaging. Please reopen the Message section and try again: '+e.message,true);}loadDirectory();loadInbox();}
 function showIncomingBrowserNotification(message){
@@ -1656,7 +1661,9 @@ async function startConversation(targetId,property,firstBody,imageFile){
   }catch(e){status('messageComposeStatus',e.message,true);}
  }
  $('messageRefresh').addEventListener('click',function(){loadInbox();if(activeId)loadMessages(activeId);});
- $('messageGoPromote').addEventListener('click',function(){var nav=document.querySelector('.nav-button[data-section="Promote"]');if(nav)nav.click();else{var promote=document.getElementById('promoteView')||document.querySelector('[data-section-view="Promote"]');if(promote)promote.scrollIntoView({behavior:'smooth',block:'start'});}});
+ function openPromoteFromMessages(){var nav=document.querySelector('.nav-button[data-section="Promote"]');if(nav)nav.click();else{var promote=document.getElementById('promoteView')||document.querySelector('[data-section-view="Promote"]');if(promote)promote.scrollIntoView({behavior:'smooth',block:'start');}}
+ $('messageGoPromote').addEventListener('click',openPromoteFromMessages);
+ $('messageWorkspaceGoPromote').addEventListener('click',openPromoteFromMessages);
  $('messageQuickAgent').addEventListener('click',function(){var box=document.querySelector('.message-compose-new');if(box)box.scrollIntoView({behavior:'smooth',block:'start'});window.setTimeout(function(){var sel=$('messageRecipient');if(sel)sel.focus();},250);});
  $('messageQuickSupport').addEventListener('click',function(){var box=document.querySelector('.message-compose-new');if(box)box.scrollIntoView({behavior:'smooth',block:'start'});window.setTimeout(function(){var field=$('messageFirstBody');if(field){field.focus();field.placeholder='Write your message for Vinhomes Support…';}},250);status('messageComposeStatus','Write your message below, then tap Contact Vinhomes Support.');});
 document.addEventListener('click',function(e){var b=e.target.closest('[data-message-property]');if(!b)return;var nav=document.querySelector('.nav-button[data-section="Message"]');if(nav)nav.click();window.setTimeout(function(){var field=$('messagePropertyName');if(field)field.value=b.getAttribute('data-message-property')||'';},180);});
