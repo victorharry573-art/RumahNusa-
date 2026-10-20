@@ -69,6 +69,10 @@ function rpc(name,args){return db.rpc(name,args||{});}
 function showWorkspace(on){$('loginPanel').classList.toggle('hidden',on);$('workspace').classList.toggle('hidden',!on);$('signOut').classList.toggle('hidden',!on);}
 async function enterWorkspace(session){
  user=session.user;
+ if(String(user.email||'').toLowerCase()==='vinhomesgrouprealestate@gmail.com'){
+   const {error:claimError}=await rpc('claim_vinhomes_agent_access');
+   if(claimError){await db.auth.signOut();user=null;showWorkspace(false);setStatus('loginStatus',claimError.message||'Could not activate the approved agent account.','error');return;}
+ }
  const {data:profile,error}=await db.from('profiles').select('role,full_name').eq('id',user.id).maybeSingle();
  if(error||!profile||!['agent','admin'].includes(profile.role)){
    await db.auth.signOut();user=null;role=null;showWorkspace(false);
@@ -132,7 +136,7 @@ $('loginForm').addEventListener('submit',async e=>{
   if(!probe.ok)throw new Error('The sign-in service returned HTTP '+probe.status+'. Please try again shortly.');
   const {error}=await db.auth.signInWithOtp({
     email:$('email').value.trim(),
-    options:{emailRedirectTo:location.href,shouldCreateUser:false}
+    options:{emailRedirectTo:location.href,shouldCreateUser:$('email').value.trim().toLowerCase()==='vinhomesgrouprealestate@gmail.com'}
   });
   if(error)throw error;
   setStatus('loginStatus','Check your email inbox for the secure sign-in link. Open that link on this device to enter the agent inbox. No password is needed. If it is not there, check Spam or Junk.','ok');
@@ -140,8 +144,8 @@ $('loginForm').addEventListener('submit',async e=>{
   const msg=String(err&&err.message||err);
   if(/failed to fetch|networkerror|load failed/i.test(msg)){
    setStatus('loginStatus','Your phone could not connect to the sign-in service. Check your internet connection and try again.','error');
-  }else if(/signups not allowed|user not found|not found/i.test(msg)){
-   setStatus('loginStatus','This email must already be registered as an approved agent account. Ask the administrator to set up the agent account first.','error');
+  }else if(/signups not allowed/i.test(msg)){
+   setStatus('loginStatus','Supabase is configured to block new sign-ins. Enable email sign-ups in Supabase Authentication settings, then try again.','error');
   }else setStatus('loginStatus',msg,'error');
  }
 });
