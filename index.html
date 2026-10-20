@@ -137,6 +137,21 @@
 
 /* Suggested message questions */
 .message-question-prompts{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px}.message-question-prompts button{border:1px solid #d7e0e6;background:#f4f7f9;color:#243746;border-radius:999px;padding:10px 13px;font:inherit;font-size:.92rem;cursor:pointer}.message-question-prompts button:active{background:#e3edf3}.message-question-prompts button:focus-visible{outline:2px solid #c8232c;outline-offset:2px}
+/* Agent inbox dashboard */
+.message-agent-dashboard{background:#fff;border:1px solid #dce5ea;border-radius:16px;padding:20px;margin:0 0 18px;box-shadow:0 4px 15px rgba(20,35,50,.05)}
+.message-agent-dashboard[hidden]{display:none!important}
+.message-agent-dashboard-title{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
+.message-agent-dashboard-title h3{font-size:clamp(21px,3vw,28px);color:#243746;margin:3px 0 8px}
+.message-agent-dashboard-title p{color:#5d6871;max-width:720px}
+.message-agent-eyebrow{font-size:11px;font-weight:800;letter-spacing:.12em;color:#c9232b}
+.message-agent-status{white-space:nowrap;border-radius:999px;background:#edf8f0;color:#246b3a;padding:8px 11px;font-size:12px;font-weight:800}
+.message-agent-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}
+.message-agent-steps>div{display:flex;align-items:flex-start;gap:10px;background:#f5f7f9;border-radius:12px;padding:12px}
+.message-agent-steps>div>b{display:flex;align-items:center;justify-content:center;flex:0 0 28px;height:28px;border-radius:50%;background:#c9232b;color:#fff}
+.message-agent-steps strong,.message-agent-steps small{display:block}
+.message-agent-steps strong{font-size:13px;color:#243746}
+.message-agent-steps small{font-size:12px;color:#68737d;margin-top:3px}
+@media(max-width:600px){.message-agent-dashboard-title{display:block}.message-agent-status{display:inline-block;margin:0 0 10px}.message-agent-steps{grid-template-columns:1fr}}
 /* Private messaging section */
 #messageView{max-width:1180px;padding:clamp(16px,4vw,40px);margin:0 auto 34px}#messageView[hidden]{display:none!important}
 .message-hero{background:linear-gradient(135deg,#243746,#385568);color:#fff;border-radius:18px;padding:clamp(20px,4vw,34px);margin-bottom:18px}
@@ -454,6 +469,10 @@
         <p class="eyebrow" style="color:#ffd4d4">Private property conversations</p>
         <h2 id="messageTitle">Messages</h2>
         <p>Ask property agents questions, contact Vinhomes Support, and keep each conversation in one private place. Your messages are visible only to the people in that conversation.</p>
+      </div>
+      <div class="message-agent-dashboard" id="messageAgentDashboard" hidden>
+        <div class="message-agent-dashboard-title"><div><span class="message-agent-eyebrow">STAFF WORKSPACE</span><h3>Agent inbox dashboard</h3><p>Customer questions assigned to your account appear in the inbox below. Open a conversation to read the customer's message and reply in the same private thread.</p></div><div class="message-agent-status">● Signed in as staff</div></div>
+        <div class="message-agent-steps"><div><b>1</b><span><strong>Open a customer message</strong><small>Tap a conversation in Customer inbox.</small></span></div><div><b>2</b><span><strong>Reply privately</strong><small>Write your answer and tap Send.</small></span></div><div><b>3</b><span><strong>Follow up</strong><small>Return to the thread to continue the conversation.</small></span></div></div>
       </div>
       <div class="message-card" id="messageAuthCard">
         <div class="message-card-head"><h3>Sign in to your messages</h3></div>
@@ -1412,9 +1431,9 @@ async function apiJson(path,opts){
 async function rpc(name,args){return apiJson('/rest/v1/rpc/'+name,{method:'POST',body:JSON.stringify(args||{})});}
 function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
 function fmtDate(v){if(!v)return '';try{return new Date(v).toLocaleString([], {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});}catch(e){return '';}}
-function setSignedIn(s){session=s; $('messageAuthCard').hidden=!!s; $('messageWorkspace').hidden=!s;if(!s){activeId=null;activeRow=null;currentRole='customer';$('messageStream').innerHTML='<div class="message-empty">Sign in to view your private conversations.</div>';return;} setupRealtime();loadRoleAndInbox();}
+function setSignedIn(s){session=s; $('messageAuthCard').hidden=!!s; $('messageWorkspace').hidden=!s;if(!s){activeId=null;activeRow=null;currentRole='customer';$('messageAgentDashboard').hidden=true;$('messageStream').innerHTML='<div class="message-empty">Sign in to view your private conversations.</div>';return;} setupRealtime();loadRoleAndInbox();}
 var currentRole='customer';
-async function loadRoleAndInbox(){try{var rows=await apiJson('/rest/v1/profiles?select=role&id=eq.'+encodeURIComponent(session.user.id));currentRole=rows&&rows[0]&&['agent','admin'].includes(rows[0].role)?rows[0].role:'customer';var inboxTitle=document.querySelector('#messageInbox')&&document.querySelector('#messageInbox').parentElement.querySelector('h3');if(inboxTitle)inboxTitle.textContent=currentRole==='customer'?'Your inbox':'Customer inbox';var startBox=document.querySelector('.message-compose-new');if(startBox)startBox.hidden=currentRole!=='customer';var threadSubtitle=$('messageThreadSubtitle');if(threadSubtitle&&!activeRow)threadSubtitle.textContent=currentRole==='customer'?'Your private messages will appear here.':'Open a customer conversation to reply.';}catch(e){currentRole='customer';}loadDirectory();loadInbox();}
+async function loadRoleAndInbox(){try{var rows=await apiJson('/rest/v1/profiles?select=role&id=eq.'+encodeURIComponent(session.user.id));currentRole=rows&&rows[0]&&['agent','admin'].includes(rows[0].role)?rows[0].role:'customer';$('messageAgentDashboard').hidden=currentRole==='customer';var inboxTitle=document.querySelector('#messageInbox')&&document.querySelector('#messageInbox').parentElement.querySelector('h3');if(inboxTitle)inboxTitle.textContent=currentRole==='customer'?'Your inbox':'Customer inbox';var startBox=document.querySelector('.message-compose-new');if(startBox)startBox.hidden=currentRole!=='customer';var threadSubtitle=$('messageThreadSubtitle');if(threadSubtitle&&!activeRow)threadSubtitle.textContent=currentRole==='customer'?'Your private messages will appear here.':'Open a customer conversation to reply.';}catch(e){currentRole='customer';}loadDirectory();loadInbox();}
 function setupRealtime(){
  if(!session||!window.supabase||!window.supabase.createClient)return;
  try{
