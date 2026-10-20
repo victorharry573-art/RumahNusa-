@@ -40,7 +40,7 @@ button,input,textarea{font:inherit}button{cursor:pointer}
 <header class="top"><div><div class="brand">Vinhomes <span>Agent Inbox</span></div><div class="top-sub">Private customer conversations · Vietnam</div></div><div class="top-actions"><span id="staffPill" class="pill">Agent workspace</span><button id="signOut" class="btn secondary hidden" type="button">Sign out</button></div></header>
 <main class="wrap">
 <section id="loginPanel" class="panel auth">
-<h1>Agent inbox</h1><p class="muted">There is no separate inbox login. Open the Promote section on the main website and sign in there. This inbox will use that existing account automatically.</p>
+<h1>Agent inbox</h1><p class="muted">This inbox uses the account already connected through the main website. Customer conversations will appear here automatically.</p>
 <div id="loginStatus" class="status" role="status"></div>
 </section>
 <section id="workspace" class="hidden">
@@ -128,15 +128,7 @@ function subscribeLive(){
   .on('postgres_changes',{event:'*',schema:'public',table:'conversations'},async()=>loadInbox())
   .subscribe(status=>{if(status==='SUBSCRIBED')setStatus('appStatus','Live inbox connected · New messages appear automatically.','ok');});
 }
-async function connectPromoteSession(){
- try{
-  const {data,error}=await db.auth.getSession();
-  if(error)throw error;
-  if(data&&data.session){await enterWorkspace(data.session);}
-  else setStatus('loginStatus','No Promote account is connected on this device yet. Sign in through Promote on the main website, then reopen this inbox.','');
- }catch(err){setStatus('loginStatus',err.message||'Could not connect to the existing Promote account.','error');}
-}
-$('signOut').addEventListener('click',async()=>{if(channel)await db.removeChannel(channel);if(refreshLoop)clearInterval(refreshLoop);await db.auth.signOut();user=null;role=null;selectedId=null;showWorkspace(false);setStatus('loginStatus','You have signed out. To reopen the inbox, connect your account through Promote.');});
+$('signOut').addEventListener('click',async()=>{if(channel)await db.removeChannel(channel);if(refreshLoop)clearInterval(refreshLoop);await db.auth.signOut();user=null;role=null;selectedId=null;showWorkspace(false);setStatus('loginStatus','No account is connected to this inbox.');});
 $('refresh').addEventListener('click',loadInbox);
 $('filter').addEventListener('input',renderList);
 $('backToInbox').addEventListener('click',()=>$('layout').classList.remove('chat-open'));
