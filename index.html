@@ -170,6 +170,10 @@
 @media(max-width:650px){.message-layout{grid-template-columns:1fr}.message-inbox{max-height:300px}.message-thread{min-height:55vh}.message-stream{min-height:300px;max-height:52vh}.message-composer{gap:6px;padding:8px}.message-attach-button{padding:10px 8px;font-size:12px}.message-image-name{max-width:55px}}
 /* Private messaging section */
 #messageView{max-width:1180px;padding:clamp(16px,4vw,40px);margin:0 auto 34px}#messageView[hidden]{display:none!important}
+    /* Leave enough scrollable space below the message composer so the fixed bottom navigation never covers it. */
+    #messageView{box-sizing:border-box;padding-bottom:calc(150px + env(safe-area-inset-bottom));scroll-margin-bottom:calc(100px + env(safe-area-inset-bottom))}
+    #messageView .message-thread{scroll-margin-bottom:calc(100px + env(safe-area-inset-bottom))}
+    @media(max-width:720px){#messageView{padding-bottom:calc(170px + env(safe-area-inset-bottom))}}
 .message-hero{background:linear-gradient(135deg,#243746,#385568);color:#fff;border-radius:18px;padding:clamp(20px,4vw,34px);margin-bottom:18px}
 .message-hero h2{margin-bottom:8px}.message-hero p{color:#eef4f7;max-width:760px}
 .message-layout{display:grid;grid-template-columns:minmax(230px,.82fr) minmax(0,1.6fr);gap:16px;align-items:stretch}
