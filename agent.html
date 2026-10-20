@@ -58,7 +58,7 @@ button,input,textarea{font:inherit}button{cursor:pointer}
 (function(){
 'use strict';
 const URL='https://vuhrkijzjmnbsaqnpdmg.supabase.co';
-const KEY='sb_publishable_UCcVEEukXPp_pxklYhSM2w_fVl6GYK9';
+const KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZ1aHJraWp6am1uYnNhcW5wZG1nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTAxNzEzMjMsImV4cCI6MjEwNTc0NzMyM30.l95Zuczww_EgNFciXVTONGWXqv76mIrnWxXjEghdYcY';
 const db=window.supabase.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 const $=id=>document.getElementById(id);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -126,10 +126,20 @@ function subscribeLive(){
   .subscribe(status=>{if(status==='SUBSCRIBED')setStatus('appStatus','Live inbox connected · New messages appear automatically.','ok');});
 }
 $('loginForm').addEventListener('submit',async e=>{
- e.preventDefault();setStatus('loginStatus','Signing in…');
- const {data,error}=await db.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});
- if(error){setStatus('loginStatus',error.message,'error');return;}
- await enterWorkspace(data.session);
+ e.preventDefault();setStatus('loginStatus','Connecting securely to the sign-in service…');
+ try{
+  const probe=await fetch(URL+'/auth/v1/health',{method:'GET',headers:{'apikey':KEY},cache:'no-store'});
+  if(!probe.ok)throw new Error('The sign-in service returned HTTP '+probe.status+'. Please try again shortly.');
+  setStatus('loginStatus','Signing in…');
+  const {data,error}=await db.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});
+  if(error){setStatus('loginStatus',error.message,'error');return;}
+  await enterWorkspace(data.session);
+ }catch(err){
+  const msg=String(err&&err.message||err);
+  if(/failed to fetch|networkerror|load failed/i.test(msg)){
+   setStatus('loginStatus','Your phone could not connect to Supabase. Check your internet connection, then open this page directly in Chrome (not the in-app browser) and try again. If it still fails, try switching between Wi-Fi and mobile data.','error');
+  }else setStatus('loginStatus',msg,'error');
+ }
 });
 $('signOut').addEventListener('click',async()=>{if(channel)await db.removeChannel(channel);if(refreshLoop)clearInterval(refreshLoop);await db.auth.signOut();user=null;role=null;selectedId=null;showWorkspace(false);setStatus('loginStatus','You have signed out.');});
 $('refresh').addEventListener('click',loadInbox);
