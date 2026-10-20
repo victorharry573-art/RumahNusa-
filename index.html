@@ -1517,7 +1517,7 @@ function renderInbox(){
  inboxRows.forEach(function(row){
   var b=document.createElement('button');b.type='button';b.className='message-thread-button'+(row.id===activeId?' active':'');
   var title=row.other_name||'Property contact', preview=row.last_body||'No messages yet';
-  b.innerHTML='<span class="message-thread-title"><span>'+esc(title)+'</span>'+(Number(row.unread_count)>0?'<span class="message-unread">'+esc(row.unread_count)+'</span>':'')+'</span><span class="message-thread-property">'+esc(row.property_name||'General enquiry')+'</span><span class="message-thread-preview">'+esc(preview)+'</span><span class="message-thread-preview">'+esc(fmtDate(row.last_created_at||row.updated_at))+'</span>';
+  b.innerHTML='<span class="message-thread-title"><span>'+esc(title)+'</span>'+(Number(row.unread_count)>0?'<span class="message-unread">'+esc(row.unread_count)+'</span>':'')+'</span>'+(row.other_email?'<span class="message-thread-property">Customer email: '+esc(row.other_email)+'</span>':'')+'<span class="message-thread-property">'+esc(row.property_name||'General enquiry')+'</span><span class="message-thread-preview">'+esc(preview)+'</span><span class="message-thread-preview">'+esc(fmtDate(row.last_created_at||row.updated_at))+'</span>';
   b.addEventListener('click',function(){openConversation(row);});box.appendChild(b);
  });
 }
