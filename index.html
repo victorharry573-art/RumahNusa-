@@ -527,23 +527,15 @@
         <div class="message-agent-dashboard-title"><div><span class="message-agent-eyebrow">STAFF WORKSPACE</span><h3>Agent inbox dashboard</h3><p>Customer questions assigned to your account appear in the inbox below. Open a conversation to read the customer's message and reply in the same private thread.</p></div><div class="message-agent-status">● Signed in as staff</div></div>
         <div class="message-agent-steps"><div><b>1</b><span><strong>Open a customer message</strong><small>Tap a conversation in Customer inbox.</small></span></div><div><b>2</b><span><strong>Reply privately</strong><small>Write your answer and tap Send.</small></span></div><div><b>3</b><span><strong>Follow up</strong><small>Return to the thread to continue the conversation.</small></span></div></div>
       </div>
-      <div class="message-card" id="messageConnectNotice">
-        <div class="message-card-head"><h3>Private messages</h3></div>
-        <div class="message-auth">
-          <p class="section-intro">Message property agents and Vinhomes Support, and keep every reply in one private conversation.</p>
-          <div class="message-access-guide">
-            <strong>One quick step before messaging</strong>
-            <p>Sign in using the existing account area in <b>Promote</b>. Then return to Message. There is no separate inbox login.</p>
-            <button type="button" class="message-btn" id="messageGoPromote">Go to Promote sign in</button>
-          </div>
-          <p class="message-status" id="messageAuthStatus" role="status" aria-live="polite">Your private conversations will appear here after you connect through Promote.</p>
-        </div>
+      <div class="message-card" id="messageConnectNotice" hidden>
+        <p class="message-status" id="messageAuthStatus" role="status" aria-live="polite"></p>
+        <button type="button" id="messageGoPromote" hidden></button>
       </div>
-      <div id="messageWorkspace" hidden>
+      <div id="messageWorkspace">
         <div class="message-access-guide" id="messageSessionPrompt" hidden>
-          <strong>Your private message inbox</strong>
-          <p>To load your private conversations and send messages, sign in through the existing Promote section. No separate inbox login is required.</p>
-          <button type="button" class="message-btn" id="messageWorkspaceGoPromote">Go to Promote</button>
+          <strong>Private messages</strong>
+          <p>Sign in to your account to view your conversations and send private messages.</p>
+          <button type="button" class="message-btn" id="messageWorkspaceGoPromote" hidden></button>
         </div>
         <div class="message-layout">
           <div class="message-card">
@@ -1522,7 +1514,7 @@ async function apiJson(path,opts){
 async function rpc(name,args){return apiJson('/rest/v1/rpc/'+name,{method:'POST',body:JSON.stringify(args||{})});}
 function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch];});}
 function fmtDate(v){if(!v)return '';try{return new Date(v).toLocaleString([], {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});}catch(e){return '';}}
-function setSignedIn(s){session=s; $('messageConnectNotice').hidden=true; $('messageWorkspace').hidden=false;$('messageSessionPrompt').hidden=!!s;if(!s){activeId=null;activeRow=null;currentRole='customer';$('messageAgentDashboard').hidden=true;$('messageInboxHeading').textContent='My conversations';$('messageInbox').innerHTML='<div class="message-empty">Sign in through Promote to load your private conversations. Your conversations will appear here.</div>';$('messageStream').innerHTML='<div class="message-empty">Choose a conversation from your inbox, or contact an agent after signing in through Promote.</div>';$('messageSendButton').disabled=true;$('messageRecipient').disabled=true;$('messageStartConversation').disabled=true;$('messageContactSupport').disabled=true;return;}$('messageRecipient').disabled=false;$('messageStartConversation').disabled=false;$('messageContactSupport').disabled=false;setupRealtime();loadRoleAndInbox();}
+function setSignedIn(s){session=s;$('messageConnectNotice').hidden=true;$('messageWorkspace').hidden=false;$('messageSessionPrompt').hidden=!!s;if(!s){activeId=null;activeRow=null;currentRole='customer';$('messageAgentDashboard').hidden=true;$('messageInboxHeading').textContent='My conversations';$('messageInbox').innerHTML='<div class="message-empty">Your conversations will appear here.</div>';$('messageStream').innerHTML='<div class="message-empty">Choose a conversation to read messages and reply.</div>';$('messageSendButton').disabled=true;$('messageRecipient').disabled=true;$('messageStartConversation').disabled=true;$('messageContactSupport').disabled=true;return;}$('messageRecipient').disabled=false;$('messageStartConversation').disabled=false;$('messageContactSupport').disabled=false;setupRealtime();loadRoleAndInbox();}
 var currentRole='customer';
 async function loadRoleAndInbox(){try{var role=await rpc('message_current_user_role',{});currentRole=Array.isArray(role)?role[0]:role;if(!['agent','admin'].includes(currentRole))currentRole='customer';$('messageAgentDashboard').hidden=currentRole==='customer';var inboxTitle=$('messageInboxHeading');if(inboxTitle)inboxTitle.textContent=currentRole==='customer'?'My conversations':'Customer inbox';var startBox=document.querySelector('.message-compose-new');if(startBox)startBox.hidden=currentRole!=='customer';var quickActions=$('messageQuickActions');if(quickActions)quickActions.hidden=currentRole!=='customer';var threadSubtitle=$('messageThreadSubtitle');if(threadSubtitle&&!activeRow)threadSubtitle.textContent=currentRole==='customer'?'Open a conversation or contact an agent below.':'Open a customer conversation to reply.';}catch(e){currentRole='customer';status('messageAuthStatus','Could not connect to messaging. Please reopen the Message section and try again: '+e.message,true);}loadDirectory();loadInbox();}
 function showIncomingBrowserNotification(message){
@@ -1661,15 +1653,15 @@ async function startConversation(targetId,property,firstBody,imageFile){
   }catch(e){status('messageComposeStatus',e.message,true);}
  }
  $('messageRefresh').addEventListener('click',function(){loadInbox();if(activeId)loadMessages(activeId);});
- function openPromoteFromMessages(){var nav=document.querySelector('.nav-button[data-section="Promote"]');if(nav)nav.click();else{var promote=document.getElementById('promoteView')||document.querySelector('[data-section-view="Promote"]');if(promote)promote.scrollIntoView({behavior:'smooth',block:'start');}}
- $('messageGoPromote').addEventListener('click',openPromoteFromMessages);
- $('messageWorkspaceGoPromote').addEventListener('click',openPromoteFromMessages);
+ function openPromoteFromMessages(){var nav=document.querySelector('.nav-button[data-section="Promote"]');if(nav)nav.click();else{var promote=document.getElementById('promoteView')||document.querySelector('[data-section-view="Promote"]');if(promote)promote.scrollIntoView({behavior:'smooth',block:'start'});}}
+ $('messageGoPromote').addEventListener('click',function(){});
+ $('messageWorkspaceGoPromote').addEventListener('click',function(){});
  $('messageQuickAgent').addEventListener('click',function(){var box=document.querySelector('.message-compose-new');if(box)box.scrollIntoView({behavior:'smooth',block:'start'});window.setTimeout(function(){var sel=$('messageRecipient');if(sel)sel.focus();},250);});
  $('messageQuickSupport').addEventListener('click',function(){var box=document.querySelector('.message-compose-new');if(box)box.scrollIntoView({behavior:'smooth',block:'start'});window.setTimeout(function(){var field=$('messageFirstBody');if(field){field.focus();field.placeholder='Write your message for Vinhomes Support…';}},250);status('messageComposeStatus','Write your message below, then tap Contact Vinhomes Support.');});
 document.addEventListener('click',function(e){var b=e.target.closest('[data-message-property]');if(!b)return;var nav=document.querySelector('.nav-button[data-section="Message"]');if(nav)nav.click();window.setTimeout(function(){var field=$('messagePropertyName');if(field)field.value=b.getAttribute('data-message-property')||'';},180);});
 document.querySelectorAll('[data-message-question]').forEach(function(btn){btn.addEventListener('click',function(){var field=$('messageFirstBody');if(!field)return;var q=btn.getAttribute('data-message-question')||'';field.value=field.value.trim()?field.value.trim()+'\n'+q:q;field.focus();});});
 $('messageStartConversation').addEventListener('click',function(){
- if(!session){status('messageComposeStatus','Connect your existing account in the Promote section before sending a private message.',true);$('messageConnectNotice').scrollIntoView({behavior:'smooth',block:'center'});return;}
+ if(!session){status('messageComposeStatus','Sign in to send a private message.',true);$('messageConnectNotice').scrollIntoView({behavior:'smooth',block:'center'});return;}
  var target=$('messageRecipient').value,first=$('messageFirstBody').value,property=$('messagePropertyName').value.trim();
  if(!target){status('messageComposeStatus','No agent is selected. Open the contact list and choose an available agent.',true);$('messageRecipient').focus();return;}
  if(!first.trim()){status('messageComposeStatus','Write your first message before starting the conversation.',true);$('messageFirstBody').focus();return;}
@@ -1677,7 +1669,7 @@ $('messageStartConversation').addEventListener('click',function(){
  startConversation(target,property,first,pendingMessageImage).finally(function(){button.disabled=false;});
 });
 $('messageContactSupport').addEventListener('click',async function(){
- if(!session){status('messageComposeStatus','Connect your existing account in the Promote section before contacting Vinhomes Support.',true);$('messageConnectNotice').scrollIntoView({behavior:'smooth',block:'center'});return;}var first=$('messageFirstBody').value,property=$('messagePropertyName').value.trim();
+ if(!session){status('messageComposeStatus','Sign in to contact Vinhomes Support.',true);$('messageConnectNotice').scrollIntoView({behavior:'smooth',block:'center'});return;}var first=$('messageFirstBody').value,property=$('messagePropertyName').value.trim();
  if(!first.trim()){status('messageComposeStatus','Write a message for Vinhomes Support first.',true);return;}
  status('messageComposeStatus','Opening a private support conversation…');
  try{
