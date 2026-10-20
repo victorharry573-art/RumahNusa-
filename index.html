@@ -1486,12 +1486,27 @@ function setupRealtime(){
  refreshTimer=setInterval(function(){if(session){loadInbox();if(activeId)loadMessages(activeId);}},10000);
 }
 async function loadDirectory(){
+ var sel=$('messageRecipient');
+ sel.innerHTML='<option value="">Loading available contacts…</option>';
+ sel.disabled=true;
  try{
   var rows=await rpc('message_agent_directory',{});
-  var sel=$('messageRecipient');sel.innerHTML='<option value="">Choose an agent or support</option>';
+  sel.innerHTML='';
+  if(!rows||!rows.length){
+   sel.innerHTML='<option value="">No agent is available yet</option>';
+   status('messageComposeStatus','No agent accounts are available yet. The website administrator must add an agent account in Supabase.',true);
+   return;
+  }
+  var placeholder=document.createElement('option');placeholder.value='';placeholder.textContent='Choose an agent';sel.appendChild(placeholder);
   rows.forEach(function(row){var o=document.createElement('option');o.value=row.id;o.textContent=(row.role==='admin'?'Vinhomes Support':'Property Agent')+' · '+(row.full_name||'Team member');sel.appendChild(o);});
-  if(!rows.length){status('messageComposeStatus','No agent accounts are available yet. The website administrator must add agent accounts in Supabase.',true);}
- }catch(e){status('messageComposeStatus',e.message,true);}
+  // Select the only available contact automatically, so customers can send without an extra confusing step.
+  if(rows.length===1){sel.value=rows[0].id;}
+  else {sel.value='';}
+  status('messageComposeStatus',rows.length===1?'Ready to message '+(rows[0].full_name||'the property agent')+'.':'Choose the agent you want to contact.');
+ }catch(e){
+  sel.innerHTML='<option value="">Could not load agents — tap Refresh</option>';
+  status('messageComposeStatus','Could not load agents: '+e.message,true);
+ }finally{sel.disabled=false;}
 }
 async function loadInbox(){
  if(!session)return;
@@ -1595,14 +1610,15 @@ $('messageRefresh').addEventListener('click',function(){loadInbox();if(activeId)
 document.addEventListener('click',function(e){var b=e.target.closest('[data-message-property]');if(!b)return;var nav=document.querySelector('.nav-button[data-section="Message"]');if(nav)nav.click();window.setTimeout(function(){var field=$('messagePropertyName');if(field)field.value=b.getAttribute('data-message-property')||'';},180);});
 document.querySelectorAll('[data-message-question]').forEach(function(btn){btn.addEventListener('click',function(){var field=$('messageFirstBody');if(!field)return;var q=btn.getAttribute('data-message-question')||'';field.value=field.value.trim()?field.value.trim()+'\n'+q:q;field.focus();});});
 $('messageStartConversation').addEventListener('click',function(){
- if(!session)return;
+ if(!session){status('messageComposeStatus','Please sign in first to send a private message.',true);$('messageAuthCard').scrollIntoView({behavior:'smooth',block:'center'});return;}
  var target=$('messageRecipient').value,first=$('messageFirstBody').value,property=$('messagePropertyName').value.trim();
- if(!target){status('messageComposeStatus','Choose an agent or support recipient first.',true);return;}
- if(!first.trim()){status('messageComposeStatus','Write your first message before starting the conversation.',true);return;}
- startConversation(target,property,first);
+ if(!target){status('messageComposeStatus','No agent is selected. Open the contact list and choose an available agent.',true);$('messageRecipient').focus();return;}
+ if(!first.trim()){status('messageComposeStatus','Write your first message before starting the conversation.',true);$('messageFirstBody').focus();return;}
+ var button=$('messageStartConversation');button.disabled=true;
+ startConversation(target,property,first).finally(function(){button.disabled=false;});
 });
 $('messageContactSupport').addEventListener('click',async function(){
- if(!session)return;var first=$('messageFirstBody').value,property=$('messagePropertyName').value.trim();
+ if(!session){status('messageComposeStatus','Please sign in first to contact Vinhomes Support.',true);$('messageAuthCard').scrollIntoView({behavior:'smooth',block:'center'});return;}var first=$('messageFirstBody').value,property=$('messagePropertyName').value.trim();
  if(!first.trim()){status('messageComposeStatus','Write a message for Vinhomes Support first.',true);return;}
  status('messageComposeStatus','Opening a private support conversation…');
  try{
