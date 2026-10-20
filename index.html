@@ -7,8 +7,9 @@
   <meta name="description" content="Explore homes, villas, apartments and property communities across Vietnam with Vinhomes Group Real Estate Developer.">
   <style>
     *{box-sizing:border-box}
-    html{width:100%;min-height:100%;overflow-x:hidden;overflow-y:auto;scroll-behavior:smooth}
-    body{margin:0;width:100%;min-height:100vh;padding-bottom:84px;overflow-x:hidden;overflow-y:auto;font-family:Arial,Helvetica,sans-serif;color:#222;background:#f5f7fa;line-height:1.6;-webkit-overflow-scrolling:touch}
+    html{width:100%;min-height:100%;height:auto;overflow-x:clip;overflow-y:auto;scroll-behavior:smooth;overscroll-behavior-y:auto;touch-action:pan-y}
+    body{display:block;margin:0;width:100%;min-height:100vh;height:auto;padding-bottom:calc(84px + env(safe-area-inset-bottom));overflow-x:clip;overflow-y:visible;font-family:Arial,Helvetica,sans-serif;color:#222;background:#f5f7fa;line-height:1.6;-webkit-overflow-scrolling:touch;overscroll-behavior-y:auto;touch-action:pan-y}
+    body.scroll-recovery{overflow-y:visible!important;height:auto!important;position:static!important}
     header{background:#c9232b;color:#fff;padding:20px clamp(18px,5vw,56px)}
     .site-language-control{display:flex;align-items:center;gap:10px;width:max-content;max-width:100%;margin-top:14px;font-size:14px;font-weight:700}
     .site-language-control select{min-height:42px;max-width:100%;padding:8px 34px 8px 12px;border:1px solid rgba(255,255,255,.65);border-radius:10px;background:#fff;color:#243746;font:inherit;font-weight:700}
@@ -771,6 +772,26 @@ var siteVietnamnText = {
       attachSwipe(stage); attachSwipe(lightbox);
       showGalleryImage(0);
 
+      // Mobile scroll recovery: keep the document as the page scroll container.
+      function restorePageScrolling(){
+        var viewer=document.getElementById('propertyGalleryLightbox');
+        var roomViewer=document.getElementById('roomLightbox');
+        if((viewer&&viewer.classList.contains('open'))||(roomViewer&&roomViewer.classList.contains('open')))return;
+        document.documentElement.style.setProperty('overflow-y','auto','important');
+        document.documentElement.style.setProperty('height','auto','important');
+        document.body.classList.add('scroll-recovery');
+        document.body.style.removeProperty('overflow');
+        document.body.style.removeProperty('height');
+        document.body.style.removeProperty('position');
+        document.body.style.setProperty('touch-action','pan-y');
+      }
+      restorePageScrolling();
+      window.addEventListener('pageshow',restorePageScrolling);
+      window.addEventListener('focus',restorePageScrolling);
+      document.addEventListener('visibilitychange',function(){if(!document.hidden)restorePageScrolling();});
+      document.addEventListener('click',function(e){
+        if(e.target.closest('.nav-button'))window.setTimeout(restorePageScrolling,80);
+      },true);
       var profileView = document.getElementById('profileView');
       var mainSections = Array.from(document.querySelectorAll('main > section')).filter(function(s){return s.id !== 'profileView';});
       var profileForm = document.getElementById('profileDetailsForm');
