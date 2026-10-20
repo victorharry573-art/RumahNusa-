@@ -1734,7 +1734,8 @@ async function sendMessage(body,imageFile){
  if('Notification' in window&&Notification.permission==='granted'&&$('messageInAppNotifications').checked){/* New-message browser alerts are shown on incoming events below. */}
 }
 $$('messageComposer').addEventListener('submit',async function(e){
-  e.preventDefault();if(!session){status('messageComposeStatus','Connect your existing account in the Promote section before sending a private message.',true);return;}
+  e.preventDefault();
+  if(!session){try{await ensureCustomerSession();}catch(authErr){status('messageComposeStatus',authErr.message,true);return;}}
   var body=$('messageReplyBody').value.trim(),image=pendingMessageImage;
   if(!body&&!image){status('messageComposeStatus','Write a message or attach a picture first.',true);return;}
   $('messageSendButton').disabled=true;
@@ -1742,9 +1743,9 @@ $$('messageComposer').addEventListener('submit',async function(e){
    if(!activeId){
     if(currentRole!=='customer'){status('messageComposeStatus','Choose a customer conversation in your inbox before replying.',true);return;}
     var target=$('messageRecipient').value,property=$('messagePropertyName').value.trim();
-    if(!target){status('messageComposeStatus','No agent is available yet. Please tap Refresh and try again.',true);return;}
+    if(!target){status('messageComposeStatus','Please choose an available agent above. If the list is empty or still loading, tap Refresh and check the message status.',true);$('messageRecipient').scrollIntoView({behavior:'smooth',block:'center'});return;}
     await startConversation(target,property,body,image);
-    $('messageReplyBody').value='';
+    $('messageReplyBody').value='';$('messageFirstBody').value='';
    }else{
     await sendMessage(body,image);$('messageReplyBody').value='';$('messageImageInput').value='';$('messageImageName').textContent='';pendingMessageImage=null;var preview=$('messageComposerImagePreview');if(preview)preview.remove();await loadMessages(activeId);await loadInbox();
    }
