@@ -1481,6 +1481,24 @@ var $=function(id){return document.getElementById(id);}, session=null, activeId=
 function status(id,msg,isError){var el=$(id);if(el){el.textContent=msg||'';el.classList.toggle('error',!!isError);}}
 function tokenStoreKey(){return 'sb-vuhrkijzjmnbsaqnpdmg-auth-token';}
 function readSession(){try{var s=JSON.parse(localStorage.getItem(tokenStoreKey())||'null');return s&&s.access_token&&s.user?s:null;}catch(e){return null;}}
+var guestSessionPromise=null;
+async function ensureCustomerSession(){
+ if(session&&session.access_token&&session.user)return session;
+ var stored=readSession();if(stored){setSignedIn(stored);return stored;}
+ if(guestSessionPromise)return guestSessionPromise;
+ guestSessionPromise=(async function(){
+  status('messageComposeStatus','Preparing your private message session…');
+  var r=await fetch(api+'/auth/v1/signup',{method:'POST',headers:{'apikey':key,'Content-Type':'application/json'},body:JSON.stringify({data:{display_name:'Website visitor'}})});
+  var d=await r.json().catch(function(){return {};});
+  if(!r.ok||!d.access_token||!d.user){
+   var detail=d.msg||d.message||d.error_description||'';
+   if(/anonymous|email|password|signup/i.test(detail))throw new Error('Automatic private messaging is not enabled on the messaging service yet. The website owner needs to enable anonymous sign-ins in Supabase. No separate email login is needed.');
+   throw new Error(detail||'Could not prepare private messaging. Please try again.');
+  }
+  d.token_type=d.token_type||'bearer';session=d;localStorage.setItem(tokenStoreKey(),JSON.stringify(d));setSignedIn(d);return d;
+ })();
+ try{return await guestSessionPromise;}finally{guestSessionPromise=null;}
+}
 function authHeaders(){return {'apikey':key,'Authorization':'Bearer '+(session&&session.access_token||''),'Content-Type':'application/json','Prefer':'return=representation'};}
 var refreshPromise=null;
 async function refreshAuthSession(){
@@ -1661,7 +1679,7 @@ async function startConversation(targetId,property,firstBody,imageFile){
 document.addEventListener('click',function(e){var b=e.target.closest('[data-message-property]');if(!b)return;var nav=document.querySelector('.nav-button[data-section="Message"]');if(nav)nav.click();window.setTimeout(function(){var field=$('messagePropertyName');if(field)field.value=b.getAttribute('data-message-property')||'';},180);});
 document.querySelectorAll('[data-message-question]').forEach(function(btn){btn.addEventListener('click',function(){var field=$('messageFirstBody');if(!field)return;var q=btn.getAttribute('data-message-question')||'';field.value=field.value.trim()?field.value.trim()+'\n'+q:q;field.focus();});});
 $('messageStartConversation').addEventListener('click',function(){
- if(!session){status('messageComposeStatus','Sign in to send a private message.',true);$('messageConnectNotice').scrollIntoView({behavior:'smooth',block:'center'});return;}
+ if(!session){try{await ensureCustomerSession();}catch(authErr){status('messageComposeStatus',authErr.message,true);return;}}
  var target=$('messageRecipient').value,first=$('messageFirstBody').value,property=$('messagePropertyName').value.trim();
  if(!target){status('messageComposeStatus','No agent is selected. Open the contact list and choose an available agent.',true);$('messageRecipient').focus();return;}
  if(!first.trim()){status('messageComposeStatus','Write your first message before starting the conversation.',true);$('messageFirstBody').focus();return;}
@@ -1669,7 +1687,7 @@ $('messageStartConversation').addEventListener('click',function(){
  startConversation(target,property,first,pendingMessageImage).finally(function(){button.disabled=false;});
 });
 $('messageContactSupport').addEventListener('click',async function(){
- if(!session){status('messageComposeStatus','Sign in to contact Vinhomes Support.',true);$('messageConnectNotice').scrollIntoView({behavior:'smooth',block:'center'});return;}var first=$('messageFirstBody').value,property=$('messagePropertyName').value.trim();
+ if(!session){try{await ensureCustomerSession();}catch(authErr){status('messageComposeStatus',authErr.message,true);return;}}var first=$('messageFirstBody').value,property=$('messagePropertyName').value.trim();
  if(!first.trim()){status('messageComposeStatus','Write a message for Vinhomes Support first.',true);return;}
  status('messageComposeStatus','Opening a private support conversation…');
  try{
@@ -1733,8 +1751,8 @@ $$('messageComposer').addEventListener('submit',async function(e){
   }catch(err){status('messageComposeStatus',err.message,true);}finally{$('messageSendButton').disabled=false;}
  });
  window.__initMessageSection=function(){
- if(!initialized){initialized=true;var s=readSession();if(s){setSignedIn(s);}else{setSignedIn(null);}}
- else if(!session){var stored=readSession();if(stored)setSignedIn(stored);}
+ if(!initialized){initialized=true;var s=readSession();if(s){setSignedIn(s);}else{ensureCustomerSession().catch(function(e){status('messageComposeStatus',e.message,true);});}}
+ else if(!session){var stored=readSession();if(stored)setSignedIn(stored);else ensureCustomerSession().catch(function(e){status('messageComposeStatus',e.message,true);});}
 };
 })();
 </script>
