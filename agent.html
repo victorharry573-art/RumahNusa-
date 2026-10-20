@@ -40,8 +40,7 @@ button,input,textarea{font:inherit}button{cursor:pointer}
 <header class="top"><div><div class="brand">Vinhomes <span>Agent Inbox</span></div><div class="top-sub">Private customer conversations · Vietnam</div></div><div class="top-actions"><span id="staffPill" class="pill">Agent workspace</span><button id="signOut" class="btn secondary hidden" type="button">Sign out</button></div></header>
 <main class="wrap">
 <section id="loginPanel" class="panel auth">
-<h1>Agent sign in</h1><p class="muted">Enter your approved agent email. We’ll send you a secure sign-in link—no password needed.</p>
-<form id="loginForm"><label class="field">Agent email<input id="email" type="email" autocomplete="email" required placeholder="agent@example.com"></label><button class="btn" type="submit" style="width:100%">Email me a sign-in link</button></form>
+<h1>Agent inbox</h1><p class="muted">There is no separate inbox login. Open the Promote section on the main website and sign in there. This inbox will use that existing account automatically.</p>
 <div id="loginStatus" class="status" role="status"></div>
 </section>
 <section id="workspace" class="hidden">
@@ -129,27 +128,15 @@ function subscribeLive(){
   .on('postgres_changes',{event:'*',schema:'public',table:'conversations'},async()=>loadInbox())
   .subscribe(status=>{if(status==='SUBSCRIBED')setStatus('appStatus','Live inbox connected · New messages appear automatically.','ok');});
 }
-$('loginForm').addEventListener('submit',async e=>{
- e.preventDefault();setStatus('loginStatus','Sending a secure sign-in link to your email…');
+async function connectPromoteSession(){
  try{
-  const probe=await fetch(URL+'/auth/v1/health',{method:'GET',headers:{'apikey':KEY},cache:'no-store'});
-  if(!probe.ok)throw new Error('The sign-in service returned HTTP '+probe.status+'. Please try again shortly.');
-  const {error}=await db.auth.signInWithOtp({
-    email:$('email').value.trim(),
-    options:{emailRedirectTo:location.href,shouldCreateUser:$('email').value.trim().toLowerCase()==='vinhomesgrouprealestate@gmail.com'}
-  });
+  const {data,error}=await db.auth.getSession();
   if(error)throw error;
-  setStatus('loginStatus','Check your email inbox for the secure sign-in link. Open that link on this device to enter the agent inbox. No password is needed. If it is not there, check Spam or Junk.','ok');
- }catch(err){
-  const msg=String(err&&err.message||err);
-  if(/failed to fetch|networkerror|load failed/i.test(msg)){
-   setStatus('loginStatus','Your phone could not connect to the sign-in service. Check your internet connection and try again.','error');
-  }else if(/signups not allowed/i.test(msg)){
-   setStatus('loginStatus','Supabase is configured to block new sign-ins. Enable email sign-ups in Supabase Authentication settings, then try again.','error');
-  }else setStatus('loginStatus',msg,'error');
- }
-});
-$('signOut').addEventListener('click',async()=>{if(channel)await db.removeChannel(channel);if(refreshLoop)clearInterval(refreshLoop);await db.auth.signOut();user=null;role=null;selectedId=null;showWorkspace(false);setStatus('loginStatus','You have signed out.');});
+  if(data&&data.session){await enterWorkspace(data.session);}
+  else setStatus('loginStatus','No Promote account is connected on this device yet. Sign in through Promote on the main website, then reopen this inbox.','');
+ }catch(err){setStatus('loginStatus',err.message||'Could not connect to the existing Promote account.','error');}
+}
+$('signOut').addEventListener('click',async()=>{if(channel)await db.removeChannel(channel);if(refreshLoop)clearInterval(refreshLoop);await db.auth.signOut();user=null;role=null;selectedId=null;showWorkspace(false);setStatus('loginStatus','You have signed out. To reopen the inbox, connect your account through Promote.');});
 $('refresh').addEventListener('click',loadInbox);
 $('filter').addEventListener('input',renderList);
 $('backToInbox').addEventListener('click',()=>$('layout').classList.remove('chat-open'));
