@@ -165,6 +165,7 @@
 .message-image-name{font-size:11px;max-width:90px;overflow-wrap:anywhere;color:#56636d}
 .message-attachment-note{font-size:11px;color:#7b8790;margin:0;padding:0 14px 12px;background:#f5f7f8}
 .message-image-preview{display:block;max-width:min(260px,100%);max-height:260px;border-radius:12px;margin:0 0 7px;object-fit:contain;cursor:pointer}
+    .message-composer-image-preview{grid-column:1/-1;max-width:min(220px,100%);max-height:180px;margin:4px 0 0;border:1px solid #dfe5e9;background:#fff;padding:4px}
 .message-bubble{overflow-wrap:anywhere}
 .message-bubble a{color:inherit}
 @media(max-width:650px){.message-layout{grid-template-columns:1fr}.message-inbox{max-height:300px}.message-thread{min-height:55vh}.message-stream{min-height:300px;max-height:52vh}.message-composer{gap:6px;padding:8px}.message-attach-button{padding:10px 8px;font-size:12px}.message-image-name{max-width:55px}}
@@ -1598,21 +1599,27 @@ async function loadMessages(id){
   }
  }catch(e){$('messageStream').innerHTML='<div class="message-empty">'+esc(e.message)+'</div>';}
 }
-async function startConversation(targetId,property,firstBody){
- status('messageComposeStatus','Starting your private conversation…');
- try{
-  var id=await rpc('start_message_conversation',{p_target_id:targetId,p_property_name:property||null});
-  if(typeof id!=='string')id=Array.isArray(id)?id[0]:id;
-  if(firstBody.trim()){
-   await apiJson('/rest/v1/messages',{method:'POST',body:JSON.stringify({conversation_id:id,sender_id:session.user.id,sender_role:'customer',body:firstBody.trim()})});
-  }
-  status('messageComposeStatus','Your question has been sent to the agent. You can return to this conversation to read their reply.');
-  $('messageFirstBody').value='';await loadInbox();
-  var row=inboxRows.find(function(x){return x.id===id;});if(row)openConversation(row);
-  else {activeId=id;await loadInbox();row=inboxRows.find(function(x){return x.id===id;});if(row)openConversation(row);}
- }catch(e){status('messageComposeStatus',e.message,true);}
-}
-$('messageAuthForm').addEventListener('submit',async function(e){
+async function startConversation(targetId,property,firstBody,imageFile){
+  status('messageComposeStatus','Starting your private conversation…');
+  try{
+   var id=await rpc('start_message_conversation',{p_target_id:targetId,p_property_name:property||null});
+   if(typeof id!=='string')id=Array.isArray(id)?id[0]:id;
+   var payload={conversation_id:id,sender_id:session.user.id,sender_role:'customer',body:firstBody.trim()};
+   if(imageFile){
+    var ext=(imageFile.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'');
+    var path=id+'/'+session.user.id+'/'+Date.now()+'-'+Math.random().toString(36).slice(2)+'.'+ext;
+    var upload=await fetch(api+'/storage/v1/object/private-message-images/'+path.split('/').map(encodeURIComponent).join('/'),{method:'POST',headers:{'apikey':key,'Authorization':'Bearer '+session.access_token,'Content-Type':imageFile.type,'x-upsert':'false'},body:imageFile});
+    if(!upload.ok){var ud=await upload.json().catch(function(){return {};});throw new Error(ud.message||'Picture upload failed.');}
+    payload.attachment_path=path;payload.attachment_name=imageFile.name;payload.attachment_content_type=imageFile.type;
+   }
+   await apiJson('/rest/v1/messages',{method:'POST',body:JSON.stringify(payload)});
+   status('messageComposeStatus','Your question has been sent to the agent. You can return to this conversation to read their reply.');
+   $('messageFirstBody').value='';$('messageImageInput').value='';$('messageImageName').textContent='';pendingMessageImage=null;var preview=$('messageComposerImagePreview');if(preview)preview.remove();await loadInbox();
+   var row=inboxRows.find(function(x){return x.id===id;});if(row)openConversation(row);
+   else {activeId=id;await loadInbox();row=inboxRows.find(function(x){return x.id===id;});if(row)openConversation(row);}
+  }catch(e){status('messageComposeStatus',e.message,true);}
+ }
+ $('messageAuthForm').addEventListener('submit',async function(e){
  e.preventDefault();status('messageAuthStatus','Signing in…');
  try{
   var r=await fetch(api+'/auth/v1/token?grant_type=password',{method:'POST',headers:{'apikey':key,'Content-Type':'application/json'},body:JSON.stringify({email:$('messageAuthEmail').value.trim(),password:$('messageAuthPassword').value})});
@@ -1640,7 +1647,7 @@ $('messageStartConversation').addEventListener('click',function(){
  if(!target){status('messageComposeStatus','No agent is selected. Open the contact list and choose an available agent.',true);$('messageRecipient').focus();return;}
  if(!first.trim()){status('messageComposeStatus','Write your first message before starting the conversation.',true);$('messageFirstBody').focus();return;}
  var button=$('messageStartConversation');button.disabled=true;
- startConversation(target,property,first).finally(function(){button.disabled=false;});
+ startConversation(target,property,first,pendingMessageImage).finally(function(){button.disabled=false;});
 });
 $('messageContactSupport').addEventListener('click',async function(){
  if(!session){status('messageComposeStatus','Please sign in first to contact Vinhomes Support.',true);$('messageAuthCard').scrollIntoView({behavior:'smooth',block:'center'});return;}var first=$('messageFirstBody').value,property=$('messagePropertyName').value.trim();
@@ -1656,15 +1663,17 @@ $('messageContactSupport').addEventListener('click',async function(){
 });
 $('messageReplyBody').addEventListener('click',function(){
  if(!activeId){
-  status('messageComposeStatus','To reply, first start a conversation using the form above, or choose an existing conversation from Your inbox.',true);
-  $('messageComposeStatus').scrollIntoView({behavior:'smooth',block:'center'});
+  status('messageComposeStatus','First write your opening message in the form above and choose an agent. This box becomes editable after a conversation starts.',true);
+  var first=$('messageFirstBody');if(first){first.scrollIntoView({behavior:'smooth',block:'center'});window.setTimeout(function(){first.focus();},350);}
  }
 });
 var pendingMessageImage=null;
 $('messageImageInput').addEventListener('change',function(){
  var f=this.files&&this.files[0];pendingMessageImage=f||null;
+ var oldPreview=$('messageComposerImagePreview');if(oldPreview)oldPreview.remove();
  if(f&&(!/^image\/(jpeg|png|webp|gif)$/i.test(f.type)||f.size>8*1024*1024)){pendingMessageImage=null;this.value='';$('messageImageName').textContent='';status('messageComposeStatus','Choose a JPG, PNG, WEBP or GIF image up to 8 MB.',true);return;}
  $('messageImageName').textContent=f?f.name:'';
+ if(f){var preview=document.createElement('img');preview.id='messageComposerImagePreview';preview.className='message-image-preview message-composer-image-preview';preview.alt='Selected picture preview';preview.src=URL.createObjectURL(f);$('messageComposer').insertBefore(preview,$('messageReplyBody'));if(!activeId)status('messageComposeStatus','Picture selected. To send it, choose an agent and write your first message above, then tap Send question to agent.',false);}
 });
 $('messageInAppNotifications').addEventListener('change',async function(){
  if(!session)return;
@@ -1691,7 +1700,7 @@ $('messageComposer').addEventListener('submit',async function(e){
  e.preventDefault();if(!session||!activeId)return;var body=$('messageReplyBody').value.trim(),image=pendingMessageImage;if(!body&&!image)return;
  $('messageSendButton').disabled=true;
  try{
-  await sendMessage(body,image);$('messageReplyBody').value='';$('messageImageInput').value='';$('messageImageName').textContent='';pendingMessageImage=null;await loadMessages(activeId);await loadInbox();
+  await sendMessage(body,image);$('messageReplyBody').value='';$('messageImageInput').value='';$('messageImageName').textContent='';pendingMessageImage=null;var preview=$('messageComposerImagePreview');if(preview)preview.remove();await loadMessages(activeId);await loadInbox();
  }catch(err){status('messageComposeStatus',err.message,true);}finally{$('messageSendButton').disabled=false;}
 });
 window.__initMessageSection=function(){
