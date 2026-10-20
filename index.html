@@ -1374,8 +1374,14 @@ window.__initPromoteSection=function(){if(loaded){var s2=tokenFromStorage();if(s
     try{localStorage.setItem(storageKey,JSON.stringify(data));}catch(e){message('Please enable browser storage so the website can remember your sign-in.',true);return false;}
     return true;
   }
+  async function fetchWithTimeout(url,options){
+    var controller=new AbortController();
+    var timer=setTimeout(function(){controller.abort();},8000);
+    try{return await fetch(url,Object.assign({},options||{},{signal:controller.signal}));}
+    finally{clearTimeout(timer);}
+  }
   async function auth(path,body){
-    var res=await fetch(api+'/auth/v1/'+path,{method:'POST',headers:{apikey:key,'Content-Type':'application/json'},body:JSON.stringify(body)});
+    var res=await fetchWithTimeout(api+'/auth/v1/'+path,{method:'POST',headers:{apikey:key,'Content-Type':'application/json'},body:JSON.stringify(body)});
     var data=await res.json().catch(function(){return {};});
     if(!res.ok)throw new Error(data.msg||data.message||data.error_description||data.error||say('generic'));
     return data;
@@ -1392,7 +1398,7 @@ window.__initPromoteSection=function(){if(loaded){var s2=tokenFromStorage();if(s
     if(!saved||!saved.access_token||!saved.refresh_token)return false;
     message(say('session'));
     try{
-      var res=await fetch(api+'/auth/v1/user',{headers:{apikey:key,Authorization:'Bearer '+saved.access_token}});
+      var res=await fetchWithTimeout(api+'/auth/v1/user',{headers:{apikey:key,Authorization:'Bearer '+saved.access_token}});
       if(res.ok){var u=await res.json();saved.user=u;store(saved);return true;}
     }catch(e){}
     try{
