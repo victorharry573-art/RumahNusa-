@@ -1,230 +1,152 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RumahNusa Agent Inbox</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Vinhomes Agent Inbox</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f9fc;color:#102a43}
-header{background:#075985;color:white;padding:20px 5%;display:flex;justify-content:space-between;align-items:center;gap:12px}
-.logo{font-size:25px;font-weight:700}.logo span{color:#7dd3fc}
-main{max-width:1250px;margin:22px auto;padding:0 14px}
-.panel{background:white;border:1px solid #d9e2ec;border-radius:16px;padding:16px;box-shadow:0 5px 20px rgba(16,42,67,.08)}
-.layout{display:grid;grid-template-columns:360px minmax(0,1fr);gap:16px}
-.list{display:grid;gap:8px;max-height:72vh;overflow:auto}
-.conv{width:100%;text-align:left;background:#f8fbfd;color:#183b56;border:1px solid #d9e2ec;border-radius:10px;padding:13px;cursor:pointer}
-.conv.active{border-color:#0ea5e9;background:#eef8ff}
-.email{font-weight:700;word-break:break-word}.meta{font-size:11px;color:#627d98;margin-top:5px}
-.thread{height:58vh;min-height:320px;overflow:auto;border:1px solid #d9e2ec;border-radius:10px;padding:12px;background:#f8fbfd}
-.msg{padding:12px 14px;border-radius:13px;margin:8px 0;max-width:90%;white-space:normal}.customer{background:#e0f2fe;margin-left:auto}.agent{background:white;border:1px solid #d9e2ec}
-textarea{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:9px;font:inherit;min-height:90px;resize:vertical}
-button{border:0;border-radius:9px;padding:12px 16px;font-weight:700;cursor:pointer;background:#0879bd;color:white}
-button.secondary{background:#e5edf4;color:#183b56}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.status{margin-top:8px;color:#627d98}.live{color:#15803d;font-weight:700}.error{color:#b91c1c;font-weight:700}
-.badge{display:inline-block;padding:5px 9px;border-radius:20px;background:#e0f2fe;color:#075985;font-size:12px;font-weight:700}
+:root{--green:#075e54;--green2:#128c7e;--pale:#e7f5ee;--ink:#182b2a;--muted:#667976;--line:#dbe6e2;--bg:#eef3f1}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,Helvetica,sans-serif}
+button,input,textarea{font:inherit}button{cursor:pointer}
+.top{background:var(--green);color:white;padding:18px clamp(16px,4vw,32px);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-size:clamp(21px,4vw,29px);font-weight:800}.brand span{color:#b7f0d7}.top-sub{font-size:13px;color:#e0f4ed;margin-top:4px}
+.top-actions{display:flex;gap:8px;align-items:center}.pill{border-radius:999px;background:#dff6ec;color:#075e54;padding:9px 12px;font-weight:800;font-size:12px}
+.wrap{max-width:1280px;margin:20px auto;padding:0 14px 28px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 4px 18px #12342b0c}
+.auth{max-width:480px;margin:38px auto;padding:24px}.auth h1{margin:0 0 8px;font-size:26px}.muted{color:var(--muted);line-height:1.5}
+.field{display:block;font-weight:700;font-size:14px;margin:16px 0}.field input{display:block;width:100%;margin-top:7px;padding:13px;border:1px solid #cad8d2;border-radius:10px;min-height:48px}
+.btn{border:0;border-radius:10px;background:var(--green2);color:white;font-weight:800;padding:12px 16px;min-height:45px}.btn.secondary{background:#e6efeb;color:#254b42}.btn:disabled{opacity:.55;cursor:not-allowed}
+.status{font-size:13px;color:var(--muted);margin-top:12px;white-space:pre-wrap}.status.error{color:#b4232d;font-weight:700}.status.ok{color:#16834b;font-weight:700}
+.app-head{padding:18px 20px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;gap:12px}.app-head h1{font-size:24px;margin:0 0 4px}.app-head p{margin:0;color:var(--muted)}
+.layout{display:grid;grid-template-columns:minmax(270px,370px) minmax(0,1fr);gap:14px}
+.inbox{overflow:hidden}.inbox-head{padding:16px;border-bottom:1px solid var(--line)}.inbox-head h2{margin:0 0 5px;font-size:20px}.inbox-head p{margin:0;color:var(--muted);font-size:13px}
+.search{width:100%;margin-top:12px;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:#f7faf8}
+.list{max-height:70vh;overflow:auto}.conv{display:flex;gap:11px;width:100%;padding:14px;text-align:left;border:0;border-bottom:1px solid #edf1ef;background:white;color:inherit}.conv.active{background:#eaf6f0}.avatar{flex:0 0 44px;height:44px;border-radius:50%;display:grid;place-items:center;background:#dcefe6;color:var(--green);font-weight:800}.conv-main{min-width:0;flex:1}.conv-row{display:flex;justify-content:space-between;gap:8px;align-items:center}.email{font-weight:800;overflow-wrap:anywhere;font-size:13px}.time{font-size:10px;color:var(--muted);white-space:nowrap}.preview{font-size:12px;color:var(--muted);margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.property{font-size:11px;color:#35695b;margin-top:4px}.unread{display:inline-grid;place-items:center;min-width:20px;height:20px;border-radius:50%;background:var(--green2);color:white;font-size:11px;font-weight:800;padding:0 5px}
+.chat{overflow:hidden;display:flex;flex-direction:column;min-height:640px}.chat-head{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line);background:#fff}.chat-head .person{min-width:0;flex:1}.chat-head h2{font-size:16px;margin:0 0 3px;overflow-wrap:anywhere}.chat-head p{font-size:12px;color:var(--muted);margin:0;overflow-wrap:anywhere}.back{display:none}
+.thread{flex:1;min-height:360px;max-height:65vh;overflow:auto;padding:18px;background-color:#eaf1ed;background-image:radial-gradient(#d7e4dc 0.7px,transparent .7px);background-size:15px 15px}
+.empty{color:var(--muted);text-align:center;padding:30px 14px;line-height:1.5}
+.bubble{width:fit-content;max-width:min(82%,640px);padding:10px 12px;margin:8px 0;border-radius:12px;background:white;box-shadow:0 1px 1px #0000000b;overflow-wrap:anywhere;white-space:pre-wrap;line-height:1.4}
+.bubble.customer{margin-left:auto;background:#d7f8c6;border-top-right-radius:3px}.bubble.agent{margin-right:auto;border-top-left-radius:3px}
+.bubble small{display:block;text-align:right;color:#64776c;font-size:10px;margin-top:5px}
+.composer{display:flex;align-items:flex-end;gap:9px;padding:12px;border-top:1px solid var(--line);background:#f8fbf9}
+.composer textarea{flex:1;min-width:0;min-height:48px;max-height:150px;resize:vertical;border:1px solid #d4e0da;border-radius:12px;padding:13px;background:white}
+.composer .btn{border-radius:999px;min-width:76px}
+.note{font-size:11px;color:var(--muted);padding:9px 14px;background:white;border-top:1px solid #edf1ef}
 .hidden{display:none!important}
-@media(max-width:800px){.layout{grid-template-columns:1fr}.list{max-height:300px}.thread{height:48vh}}
+@media(max-width:760px){.wrap{margin:12px auto;padding:0 9px 18px}.layout{display:block}.app-head{align-items:flex-start;padding:15px}.app-head h1{font-size:21px}.list{max-height:none}.chat{min-height:calc(100dvh - 160px)}.thread{max-height:none;min-height:48vh}.layout.chat-open .inbox{display:none}.layout:not(.chat-open) .chat{display:none}.back{display:inline-block}.top{padding:14px}.pill{font-size:10px;padding:8px}.bubble{max-width:90%}}
 </style>
 </head>
 <body>
-<header><div class="logo">Rumah<span>Nusa</span> Agent Inbox</div><div class="badge">Agent Workspace</div></header>
-<main>
-<section id="app">
-<div class="panel">
-<span class="badge">RumahNusa Agent Inbox</span>
-<h2>Customer Requests</h2>
-<p class="status">New requests and previous conversations appear here. Messages are monitored in real time.</p>
-<div class="actions"><button id="refresh" class="secondary">Refresh</button></div>
-<div id="status" class="status">Connecting to live messages...</div>
-</div>
-<div class="layout">
-<section class="panel">
-<h3>Customers</h3>
-<p class="status">Click an email to open that customer's conversation.</p>
-<div id="list" class="list"></div>
+<header class="top"><div><div class="brand">Vinhomes <span>Agent Inbox</span></div><div class="top-sub">Private customer conversations · Vietnam</div></div><div class="top-actions"><span id="staffPill" class="pill">Agent workspace</span><button id="signOut" class="btn secondary hidden" type="button">Sign out</button></div></header>
+<main class="wrap">
+<section id="loginPanel" class="panel auth">
+<h1>Agent sign in</h1><p class="muted">Sign in with your approved agent account to receive customer questions and reply privately.</p>
+<form id="loginForm"><label class="field">Agent email<input id="email" type="email" autocomplete="username" required placeholder="agent@example.com"></label><label class="field">Password<input id="password" type="password" autocomplete="current-password" required placeholder="Your password"></label><button class="btn" type="submit" style="width:100%">Sign in to inbox</button></form>
+<div id="loginStatus" class="status" role="status"></div>
 </section>
-<section class="panel">
-<h3 id="title">Select a customer email</h3>
-<div id="customerEmail" class="status"></div>
-<div id="thread" class="thread">No customer selected.</div>
-<div class="actions"><button id="claim" class="secondary hidden">Claim conversation</button></div>
-<div style="margin-top:12px"><textarea id="reply" placeholder="Write a reply to the customer..."></textarea><div class="actions"><button id="send">Send Reply</button></div></div>
-</section>
+<section id="workspace" class="hidden">
+<div class="panel app-head"><div><h1>Customer messages</h1><p id="workspaceSub">Choose a customer email to open the conversation.</p></div><button id="refresh" class="btn secondary" type="button">Refresh</button></div>
+<div id="layout" class="layout">
+<section class="panel inbox"><div class="inbox-head"><h2>Customer inbox <span id="totalUnread"></span></h2><p>Tap a customer's registered email to read and reply.</p><input id="filter" class="search" type="search" placeholder="Search customer email or message"></div><div id="list" class="list"><div class="empty">Loading customer messages…</div></div></section>
+<section class="panel chat"><div class="chat-head"><button id="backToInbox" class="btn secondary back" type="button">← Inbox</button><div class="avatar">V</div><div class="person"><h2 id="chatTitle">Select a customer email</h2><p id="chatSub">Their messages will appear here.</p></div></div><div id="thread" class="thread"><div class="empty">Select a customer from the inbox to open the conversation.</div></div><form id="composer" class="composer"><textarea id="reply" rows="1" maxlength="5000" placeholder="Write a reply…" aria-label="Write a reply" disabled></textarea><button id="send" class="btn" type="submit" disabled>Send</button></form><div class="note">Private conversation · Only the customer and authorized staff can access this thread.</div></section>
 </div>
-</section>
-</div>
+<div id="appStatus" class="status" role="status"></div>
 </section>
 </main>
-<script src="supabase-config.js?v=20261001"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (function(){
-const URL=window.RUMAHNUSA_SUPABASE_URL||'https://vuhrkijzjmnbsaqnpdmg.supabase.co';
-const KEY=window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY;
+'use strict';
+const URL='https://vuhrkijzjmnbsaqnpdmg.supabase.co';
+const KEY='sb_publishable_UCcVEEukXPp_pxklYhSM2w_fVl6GYK9';
+const db=window.supabase.createClient(URL,KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
 const $=id=>document.getElementById(id);
-const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/\n/g,'<br>');
-if(!KEY){
-  $('status').textContent='Supabase configuration is still loading. Please refresh once.';
-  setTimeout(function(){
-    const retryKey=window.RUMAHNUSA_SUPABASE_PUBLISHABLE_KEY;
-    if(retryKey){ location.reload(); }
-    else { $('status').textContent='Supabase configuration is not available. Please refresh the page again.'; }
-  },1200);
-  return
-}
-const db=window.supabase.createClient(URL,KEY);
-let user=null,selected=null,liveChannel=null,messageChannel=null,lastConversationRefresh=0;
-
-function setStatus(text,live=false,error=false){
- $('status').textContent=text;
- $('status').className='status '+(live?'live ':'')+(error?'error':'');
-}
-
-async function loadConversations(){
- if(!user){setStatus('No active agent session. Please open the inbox from the agent device session.',false,true);return}
- const {data,error}=await db.from('conversations')
-   .select('*')
-   .or('agent_id.eq.'+user.id+',agent_id.is.null')
-   .order('updated_at',{ascending:false});
- if(error){
-   setStatus('Unable to load conversations: '+error.message,false,true);
-   return;
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let user=null,role=null,conversations=[],selectedId=null,channel=null,refreshLoop=null,busy=false;
+function setStatus(id,msg,type){const el=$(id);el.textContent=msg||'';el.className='status '+(type||'');}
+function dateText(v){if(!v)return '';try{return new Date(v).toLocaleString([], {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});}catch(e){return '';}}
+function rpc(name,args){return db.rpc(name,args||{});}
+function showWorkspace(on){$('loginPanel').classList.toggle('hidden',on);$('workspace').classList.toggle('hidden',!on);$('signOut').classList.toggle('hidden',!on);}
+async function enterWorkspace(session){
+ user=session.user;
+ const {data:profile,error}=await db.from('profiles').select('role,full_name').eq('id',user.id).maybeSingle();
+ if(error||!profile||!['agent','admin'].includes(profile.role)){
+   await db.auth.signOut();user=null;role=null;showWorkspace(false);
+   setStatus('loginStatus','This account is not approved as an agent or administrator. Ask the website administrator to assign the correct staff role.', 'error');return;
  }
- const rows=data||[];
- await renderConversations(rows);
- if(selected){
-   const fresh=rows.find(x=>x.id===selected.id);
-   if(fresh){selected=fresh;await loadMessages();}
- } else if(rows.length){
-   // Automatically open the newest customer conversation so a new message
-   // is visible without requiring the agent to tap another control first.
-   selected=rows[0];
-   $('title').textContent=customerDisplayProperty(selected)||'Customer conversation';
-   const profiles=await getProfileEmails([selected]);
-   $('customerEmail').textContent='Email: '+(customerEmail(selected)||profiles[selected.customer_id]?.email||'Email unavailable');
-   $('claim').classList.toggle('hidden',!!selected.agent_id);
-   await loadMessages();
-   subscribeToMessages();
- }
- lastConversationRefresh=Date.now();
+ role=profile.role;
+ $('staffPill').textContent=profile.role==='admin'?'Administrator workspace':'Agent workspace';
+ $('workspaceSub').textContent='Signed in as '+(profile.full_name||user.email)+' · New messages refresh automatically.';
+ showWorkspace(true);await loadInbox();subscribeLive();
+ if(refreshLoop)clearInterval(refreshLoop);
+ refreshLoop=setInterval(()=>{if(document.visibilityState==='visible'&&!busy)loadInbox();},8000);
 }
-
-function customerEmail(c){
- const direct=c.customer_email || c.email || c.customerEmail || '';
- if(direct) return direct;
- const label=String(c.property_name||'');
- const separator=label.indexOf(' | ');
- if(separator>0){
-   const candidate=label.slice(0,separator).trim();
-   if(candidate.includes('@')) return candidate;
- }
- return '';
+async function loadInbox(){
+ if(!user||busy)return;busy=true;
+ try{
+  const {data,error}=await rpc('agent_conversation_inbox');
+  if(error)throw error;
+  conversations=data||[];renderList();
+  if(selectedId){const row=conversations.find(c=>c.id===selectedId);if(row){renderSelectedSummary(row);await loadThread();}else{selectedId=null;showNoSelection();}}
+  setStatus('appStatus',conversations.length?('Inbox updated · '+conversations.length+' conversation'+(conversations.length===1?'':'s')):'No customer messages yet. New customer questions will appear here.','ok');
+ }catch(e){setStatus('appStatus',e.message||'Could not load the agent inbox.','error');}
+ finally{busy=false;}
 }
-function customerDisplayProperty(c){
- const label=String(c.property_name||'');
- const separator=label.indexOf(' | ');
- return separator>0 ? label.slice(separator+3).trim() : label;
+function renderList(){
+ const filter=$('filter').value.trim().toLowerCase();
+ const visible=conversations.filter(c=>[c.customer_email,c.customer_name,c.property_name,c.last_body].some(x=>String(x||'').toLowerCase().includes(filter)));
+ const total=conversations.reduce((n,c)=>n+Number(c.unread_count||0),0);
+ $('totalUnread').textContent=total?'· '+total+' unread':'';
+ if(!visible.length){$('list').innerHTML='<div class="empty">'+(conversations.length?'No matching conversations.':'No customer conversations yet. When a customer sends a question, their registered email and message will appear here.')+'</div>';return;}
+ $('list').innerHTML=visible.map(c=>'<button type="button" class="conv '+(selectedId===c.id?'active':'')+'" data-id="'+esc(c.id)+'"><div class="avatar">'+esc((c.customer_name||c.customer_email||'C').slice(0,1).toUpperCase())+'</div><div class="conv-main"><div class="conv-row"><span class="email">'+esc(c.customer_email||'Email unavailable')+'</span><span class="time">'+esc(dateText(c.updated_at))+'</span></div><div class="preview">'+esc(c.last_body||'Conversation started')+'</div><div class="conv-row"><span class="property">'+esc(c.property_name||'General property enquiry')+'</span>'+(Number(c.unread_count)>0?'<span class="unread">'+esc(c.unread_count)+'</span>':'')+'</div></div></button>').join('');
+ $('list').querySelectorAll('[data-id]').forEach(b=>b.addEventListener('click',()=>selectConversation(b.dataset.id)));
 }
-
-async function getProfileEmails(rows){
- const ids=[...new Set(rows.map(c=>c.customer_id).filter(Boolean))];
- if(!ids.length)return {};
- const {data}=await db.from('profiles').select('id,email,full_name').in('id',ids);
- const map={};(data||[]).forEach(p=>map[p.id]=p);return map;
+function renderSelectedSummary(c){$('chatTitle').textContent=c.customer_email||c.customer_name||'Customer conversation';$('chatSub').textContent=(c.customer_name||'Customer')+' · '+(c.property_name||'General enquiry');}
+function showNoSelection(){$('chatTitle').textContent='Select a customer email';$('chatSub').textContent='Their messages will appear here.';$('thread').innerHTML='<div class="empty">Select a customer from the inbox to open the conversation.</div>';$('reply').disabled=true;$('send').disabled=true;}
+async function selectConversation(id){selectedId=id;const c=conversations.find(x=>x.id===id);if(!c)return;renderList();renderSelectedSummary(c);$('layout').classList.add('chat-open');$('reply').disabled=false;$('send').disabled=false;await loadThread();if(window.matchMedia('(max-width:760px)').matches)$('thread').scrollIntoView({behavior:'smooth',block:'start'});}
+async function loadThread(){
+ if(!selectedId)return;
+ try{
+  const {data,error}=await rpc('agent_conversation_messages',{p_conversation_id:selectedId});
+  if(error)throw error;
+  const rows=data||[];
+  $('thread').innerHTML=rows.length?rows.map(m=>'<div class="bubble '+(m.sender_id===user.id?'agent':'customer')+'">'+esc(m.body)+'<small>'+esc(m.sender_id===user.id?'You · Agent':(m.sender_role==='admin'?'Vinhomes Support':'Customer'))+' · '+esc(dateText(m.created_at))+(m.sender_id===user.id?(m.read_at?' · Read':' · Sent'):'')+'</small></div>').join(''):'<div class="empty">No messages in this conversation yet.</div>';
+  $('thread').scrollTop=$('thread').scrollHeight;
+  await rpc('agent_mark_messages_read',{p_conversation_id:selectedId});
+ }catch(e){$('thread').innerHTML='<div class="empty">'+esc(e.message||'Could not load this conversation.')+'</div>';}
 }
-
-async function renderConversations(rows){
- const list=$('list');
- if(!rows.length){list.innerHTML='<div class="status">No customer conversations yet.</div>';return}
- const profiles=await getProfileEmails(rows);
- list.innerHTML=rows.map(c=>{
-   const p=profiles[c.customer_id]||{};
-   const email=customerEmail(c)||p.email||'Customer email unavailable';
-   const name=p.full_name||'Customer';
-   const time=c.updated_at?new Date(c.updated_at).toLocaleString():'';
-   return '<button class="conv '+(selected&&selected.id===c.id?'active':'')+'" data-id="'+esc(c.id)+'"><div class="email">'+esc(email)+'</div><div><strong>'+esc(name)+'</strong></div><div class="meta">'+esc(time)+(c.agent_id?' · Assigned':' · New')+'</div></button>';
- }).join('');
- list.querySelectorAll('.conv').forEach(btn=>btn.onclick=async()=>selectConversation(rows.find(x=>x.id===btn.dataset.id)));
+function subscribeLive(){
+ if(channel)db.removeChannel(channel);
+ channel=db.channel('vh-agent-inbox-'+user.id)
+  .on('postgres_changes',{event:'*',schema:'public',table:'messages'},async payload=>{
+    if(selectedId&&payload.new&&payload.new.conversation_id===selectedId)await loadThread();
+    await loadInbox();
+  })
+  .on('postgres_changes',{event:'*',schema:'public',table:'conversations'},async()=>loadInbox())
+  .subscribe(status=>{if(status==='SUBSCRIBED')setStatus('appStatus','Live inbox connected · New messages appear automatically.','ok');});
 }
-
-async function selectConversation(conv){
- if(!conv)return;
- selected=conv;
- const rows=await getCurrentConversations();
- await renderConversations(rows);
- $('title').textContent=customerDisplayProperty(conv)||'Customer conversation';
- const profiles=await getProfileEmails([conv]);
- $('customerEmail').textContent='Email: '+(customerEmail(conv)||profiles[conv.customer_id]?.email||'Email unavailable');
- $('claim').classList.toggle('hidden',!!conv.agent_id);
- await loadMessages();
- subscribeToMessages();
-}
-
-async function getCurrentConversations(){
- const {data}=await db.from('conversations').select('*').or('agent_id.eq.'+user.id+',agent_id.is.null').order('updated_at',{ascending:false});
- return data||[];
-}
-
-async function loadMessages(){
- if(!selected)return;
- const {data,error}=await db.from('messages').select('*').eq('conversation_id',selected.id).order('created_at',{ascending:true});
- if(error){setStatus('Unable to load messages: '+error.message,false,true);return}
- $('thread').innerHTML=data&&data.length?data.map(m=>'<div class="msg '+(m.sender_role==='customer'?'customer':'agent')+'">'+esc(m.body)+'<div class="meta">'+esc(m.sender_role)+' · '+esc(new Date(m.created_at).toLocaleString())+'</div></div>').join(''):'No messages yet.';
- $('thread').scrollTop=$('thread').scrollHeight;
-}
-
-function subscribeToMessages(){
- if(messageChannel)db.removeChannel(messageChannel);
- if(!selected)return;
- messageChannel=db.channel('agent-messages-'+selected.id)
- .on('postgres_changes',{event:'INSERT',schema:'public',table:'messages',filter:'conversation_id=eq.'+selected.id},async payload=>{
-   await loadMessages();
-   await loadConversations();
- })
- .subscribe();
-}
-
-function subscribeToInbox(){
- if(liveChannel)db.removeChannel(liveChannel);
- liveChannel=db.channel('agent-inbox-live')
- .on('postgres_changes',{event:'INSERT',schema:'public',table:'conversations'},async()=>{await loadConversations()})
- .on('postgres_changes',{event:'UPDATE',schema:'public',table:'conversations'},async()=>{await loadConversations()})
- .on('postgres_changes',{event:'INSERT',schema:'public',table:'messages'},async payload=>{
-   if(selected&&payload.new&&payload.new.conversation_id===selected.id)await loadMessages();
-   await loadConversations();
- })
- .subscribe(status=>{
-   if(status==='SUBSCRIBED')setStatus('Live connection active — new customer messages appear immediately.',true);
- });
-}
-
-$('refresh').onclick=loadConversations;
-$('claim').onclick=async()=>{
- if(!selected||!user)return;
- const {data,error}=await db.from('conversations').update({agent_id:user.id,updated_at:new Date().toISOString()}).eq('id',selected.id).is('agent_id',null).select('*').single();
- if(error){setStatus(error.message,false,true);return}
- selected=data;$('claim').classList.add('hidden');await loadConversations();await loadMessages();subscribeToMessages();
-};
-$('send').onclick=async()=>{
- const body=$('reply').value.trim();if(!body||!selected||!user)return;
- const {error}=await db.from('messages').insert({conversation_id:selected.id,sender_id:user.id,sender_role:'agent',body});
- if(error){setStatus(error.message,false,true);return}
- await db.from('conversations').update({updated_at:new Date().toISOString()}).eq('id',selected.id);
- $('reply').value='';await loadMessages();await loadConversations();
-};
-
-async function startAgent(){
- const {data:{session}}=await db.auth.getSession();
- user=session?.user||null;
- if(!user){setStatus('No active agent session. Please open the inbox from the agent device session.',false,true);return}
- await loadConversations();
- subscribeToInbox();
- if(selected) subscribeToMessages();
- // Realtime is primary. The 1-second fallback also checks for newly created
- // conversations so messages remain visible on mobile networks.
- setInterval(()=>{if(document.visibilityState==='visible'&&Date.now()-lastConversationRefresh>=1000)loadConversations()},1000);
-}
-startAgent().catch(e=>setStatus(e.message||'Unable to open the inbox.',false,true));
+$('loginForm').addEventListener('submit',async e=>{
+ e.preventDefault();setStatus('loginStatus','Signing in…');
+ const {data,error}=await db.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});
+ if(error){setStatus('loginStatus',error.message,'error');return;}
+ await enterWorkspace(data.session);
+});
+$('signOut').addEventListener('click',async()=>{if(channel)await db.removeChannel(channel);if(refreshLoop)clearInterval(refreshLoop);await db.auth.signOut();user=null;role=null;selectedId=null;showWorkspace(false);setStatus('loginStatus','You have signed out.');});
+$('refresh').addEventListener('click',loadInbox);
+$('filter').addEventListener('input',renderList);
+$('backToInbox').addEventListener('click',()=>$('layout').classList.remove('chat-open'));
+$('composer').addEventListener('submit',async e=>{
+ e.preventDefault();const body=$('reply').value.trim();if(!body||!selectedId||!user)return;
+ $('send').disabled=true;
+ try{
+  const {error}=await rpc('agent_send_message',{p_conversation_id:selectedId,p_body:body});
+  if(error)throw error;
+  $('reply').value='';await loadThread();await loadInbox();setStatus('appStatus','Reply sent to the customer.','ok');
+ }catch(err){setStatus('appStatus',err.message||'Could not send reply.','error');}
+ finally{$('send').disabled=!selectedId;}
+});
+db.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'){user=null;role=null;showWorkspace(false);} });
+(async()=>{const {data:{session}}=await db.auth.getSession();if(session)await enterWorkspace(session);else showWorkspace(false);})();
 })();
 </script>
 </body>
