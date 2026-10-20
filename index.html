@@ -535,7 +535,7 @@
               <label class="message-attach-button" for="messageImageInput" title="Attach a picture" aria-label="Attach a picture">＋ Photo</label>
               <input id="messageImageInput" type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden>
               <span class="message-image-name" id="messageImageName" aria-live="polite"></span>
-              <textarea id="messageReplyBody" maxlength="5000" rows="2" placeholder="Write a message…" aria-label="Write a private message" readonly required></textarea>
+              <textarea id="messageReplyBody" maxlength="5000" rows="2" placeholder="Write a message…" aria-label="Write a private message"></textarea>
               <button type="submit" class="message-btn" id="messageSendButton" disabled>Send</button>
             </form>
             <p class="message-attachment-note">You can send JPG, PNG, WEBP or GIF pictures (maximum 8 MB).</p>
@@ -1563,7 +1563,7 @@ function renderInbox(){
  });
 }
 function renderThreadHeading(){
- if(!activeRow){$('messageReplyBody').readOnly=true;$('messageReplyBody').placeholder='Choose a conversation before writing…';$('messageSendButton').disabled=true;return;}
+ if(!activeRow){$('messageReplyBody').readOnly=false;$('messageReplyBody').placeholder=currentRole==='customer'?'Write a message to start a new conversation…':'Choose a customer conversation to reply…';$('messageSendButton').disabled=!session;return;}
  $('messageThreadTitle').textContent=activeRow.other_name||'Private conversation';
  $('messageThreadSubtitle').textContent=(activeRow.property_name||'General enquiry')+' · '+(activeRow.other_email||'Private conversation');
  $('messageReplyBody').readOnly=false;$('messageReplyBody').placeholder='Write a private message…';$('messageSendButton').disabled=false;
@@ -1696,14 +1696,24 @@ async function sendMessage(body,imageFile){
  await apiJson('/rest/v1/messages',{method:'POST',body:JSON.stringify(payload)});
  if('Notification' in window&&Notification.permission==='granted'&&$('messageInAppNotifications').checked){/* New-message browser alerts are shown on incoming events below. */}
 }
-$('messageComposer').addEventListener('submit',async function(e){
- e.preventDefault();if(!session||!activeId)return;var body=$('messageReplyBody').value.trim(),image=pendingMessageImage;if(!body&&!image)return;
- $('messageSendButton').disabled=true;
- try{
-  await sendMessage(body,image);$('messageReplyBody').value='';$('messageImageInput').value='';$('messageImageName').textContent='';pendingMessageImage=null;var preview=$('messageComposerImagePreview');if(preview)preview.remove();await loadMessages(activeId);await loadInbox();
- }catch(err){status('messageComposeStatus',err.message,true);}finally{$('messageSendButton').disabled=false;}
-});
-window.__initMessageSection=function(){
+$$('messageComposer').addEventListener('submit',async function(e){
+  e.preventDefault();if(!session){status('messageComposeStatus','Please sign in before sending a private message.',true);return;}
+  var body=$('messageReplyBody').value.trim(),image=pendingMessageImage;
+  if(!body&&!image){status('messageComposeStatus','Write a message or attach a picture first.',true);return;}
+  $('messageSendButton').disabled=true;
+  try{
+   if(!activeId){
+    if(currentRole!=='customer'){status('messageComposeStatus','Choose a customer conversation in your inbox before replying.',true);return;}
+    var target=$('messageRecipient').value,property=$('messagePropertyName').value.trim();
+    if(!target){status('messageComposeStatus','No agent is available yet. Please tap Refresh and try again.',true);return;}
+    await startConversation(target,property,body,image);
+    $('messageReplyBody').value='';
+   }else{
+    await sendMessage(body,image);$('messageReplyBody').value='';$('messageImageInput').value='';$('messageImageName').textContent='';pendingMessageImage=null;var preview=$('messageComposerImagePreview');if(preview)preview.remove();await loadMessages(activeId);await loadInbox();
+   }
+  }catch(err){status('messageComposeStatus',err.message,true);}finally{$('messageSendButton').disabled=false;}
+ });
+ window.__initMessageSection=function(){
  if(!initialized){initialized=true;var s=readSession();if(s){setSignedIn(s);}else{setSignedIn(null);}}
  else if(!session){var stored=readSession();if(stored)setSignedIn(stored);}
 };
