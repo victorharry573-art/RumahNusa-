@@ -152,6 +152,21 @@
 .message-agent-steps strong{font-size:13px;color:#243746}
 .message-agent-steps small{font-size:12px;color:#68737d;margin-top:3px}
 @media(max-width:600px){.message-agent-dashboard-title{display:block}.message-agent-status{display:inline-block;margin:0 0 10px}.message-agent-steps{grid-template-columns:1fr}}
+/* Comfortable chat, notification preferences and image attachments */
+.message-preferences{padding:12px 16px;border-bottom:1px solid #edf0f2;background:#fbfcfd;font-size:13px;color:#53616c}
+.message-preferences strong{display:block;margin-bottom:7px;color:#243746}
+.message-preferences label{display:flex;align-items:center;gap:8px;cursor:pointer}
+.message-preferences input{width:18px;height:18px;accent-color:#16845b}
+.message-preferences p{margin:5px 0 0;font-size:11px;color:#7b8790}
+.message-composer{display:flex;align-items:flex-end;gap:8px;padding:12px;background:#f5f7f8;border-top:1px solid #e8ecef}
+.message-composer textarea{flex:1;min-width:0;border:1px solid #dfe5e9;border-radius:20px;padding:12px 14px;max-height:130px;resize:vertical;background:#fff}
+.message-attach-button{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;padding:11px 12px;border:1px solid #d8e1e5;border-radius:18px;background:#fff;color:#285a48;font-weight:700;cursor:pointer}
+.message-image-name{font-size:11px;max-width:90px;overflow-wrap:anywhere;color:#56636d}
+.message-attachment-note{font-size:11px;color:#7b8790;margin:0;padding:0 14px 12px;background:#f5f7f8}
+.message-image-preview{display:block;max-width:min(260px,100%);max-height:260px;border-radius:12px;margin:0 0 7px;object-fit:contain;cursor:pointer}
+.message-bubble{overflow-wrap:anywhere}
+.message-bubble a{color:inherit}
+@media(max-width:650px){.message-layout{grid-template-columns:1fr}.message-inbox{max-height:300px}.message-thread{min-height:55vh}.message-stream{min-height:300px;max-height:52vh}.message-composer{gap:6px;padding:8px}.message-attach-button{padding:10px 8px;font-size:12px}.message-image-name{max-width:55px}}
 /* Private messaging section */
 #messageView{max-width:1180px;padding:clamp(16px,4vw,40px);margin:0 auto 34px}#messageView[hidden]{display:none!important}
 .message-hero{background:linear-gradient(135deg,#243746,#385568);color:#fff;border-radius:18px;padding:clamp(20px,4vw,34px);margin-bottom:18px}
@@ -489,7 +504,12 @@
       <div id="messageWorkspace" hidden>
         <div class="message-layout">
           <div class="message-card">
-            <div class="message-card-head"><h3>Your inbox</h3><button type="button" class="message-btn secondary" id="messageRefresh">Refresh</button></div>
+            <div class="message-card-head"><h3 id="messageInboxHeading">Your inbox</h3><button type="button" class="message-btn secondary" id="messageRefresh">Refresh</button></div>
+            <div class="message-preferences" id="messagePreferences">
+              <strong>Notifications</strong>
+              <label><input type="checkbox" id="messageInAppNotifications" checked> In-app and browser notifications</label>
+              <p id="messageNotificationHint">You can turn notifications on or off at any time.</p>
+            </div>
             <div class="message-inbox" id="messageInbox"><div class="message-empty">Your conversations will appear here.</div></div>
             <div class="message-compose-new">
               <h3>Start a conversation</h3>
@@ -506,9 +526,13 @@
             <div class="message-thread-head"><h3 id="messageThreadTitle">Choose a conversation</h3><p id="messageThreadSubtitle">Your private messages will appear here.</p></div>
             <div class="message-stream" id="messageStream" aria-live="polite"><div class="message-empty">Choose a conversation from your inbox, or start a new one.</div></div>
             <form class="message-composer" id="messageComposer">
-              <textarea id="messageReplyBody" maxlength="5000" rows="2" placeholder="Choose a conversation before writing…" aria-label="Write a private message" readonly required></textarea>
+              <label class="message-attach-button" for="messageImageInput" title="Attach a picture" aria-label="Attach a picture">＋ Photo</label>
+              <input id="messageImageInput" type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden>
+              <span class="message-image-name" id="messageImageName" aria-live="polite"></span>
+              <textarea id="messageReplyBody" maxlength="5000" rows="2" placeholder="Write a message…" aria-label="Write a private message" readonly required></textarea>
               <button type="submit" class="message-btn" id="messageSendButton" disabled>Send</button>
             </form>
+            <p class="message-attachment-note">You can send JPG, PNG, WEBP or GIF pictures (maximum 8 MB).</p>
             <div class="message-security-note">Private conversation · Messages are stored securely and access is restricted to participants.</div>
           </div>
         </div>
@@ -1433,7 +1457,16 @@ function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(ch){retu
 function fmtDate(v){if(!v)return '';try{return new Date(v).toLocaleString([], {month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});}catch(e){return '';}}
 function setSignedIn(s){session=s; $('messageAuthCard').hidden=!!s; $('messageWorkspace').hidden=!s;if(!s){activeId=null;activeRow=null;currentRole='customer';$('messageAgentDashboard').hidden=true;$('messageStream').innerHTML='<div class="message-empty">Sign in to view your private conversations.</div>';return;} setupRealtime();loadRoleAndInbox();}
 var currentRole='customer';
-async function loadRoleAndInbox(){try{var rows=await apiJson('/rest/v1/profiles?select=role&id=eq.'+encodeURIComponent(session.user.id));currentRole=rows&&rows[0]&&['agent','admin'].includes(rows[0].role)?rows[0].role:'customer';$('messageAgentDashboard').hidden=currentRole==='customer';var inboxTitle=document.querySelector('#messageInbox')&&document.querySelector('#messageInbox').parentElement.querySelector('h3');if(inboxTitle)inboxTitle.textContent=currentRole==='customer'?'Your inbox':'Customer inbox';var startBox=document.querySelector('.message-compose-new');if(startBox)startBox.hidden=currentRole!=='customer';var threadSubtitle=$('messageThreadSubtitle');if(threadSubtitle&&!activeRow)threadSubtitle.textContent=currentRole==='customer'?'Your private messages will appear here.':'Open a customer conversation to reply.';}catch(e){currentRole='customer';}loadDirectory();loadInbox();}
+async function loadRoleAndInbox(){try{var rows=await apiJson('/rest/v1/profiles?select=role&id=eq.'+encodeURIComponent(session.user.id));currentRole=rows&&rows[0]&&['agent','admin'].includes(rows[0].role)?rows[0].role:'customer';$('messageAgentDashboard').hidden=currentRole==='customer';var inboxTitle=$('messageInboxHeading');if(inboxTitle)inboxTitle.textContent=currentRole==='customer'?'Your inbox':'Customer inbox';var startBox=document.querySelector('.message-compose-new');if(startBox)startBox.hidden=currentRole!=='customer';var threadSubtitle=$('messageThreadSubtitle');if(threadSubtitle&&!activeRow)threadSubtitle.textContent=currentRole==='customer'?'Your private messages will appear here.':'Open a customer conversation to reply.';}catch(e){currentRole='customer';}loadDirectory();loadInbox();}
+function showIncomingBrowserNotification(message){
+ try{
+  if(!$('messageInAppNotifications').checked||!('Notification' in window)||Notification.permission!=='granted')return;
+  var title=currentRole==='customer'?'New message from Vinhomes':'New customer message';
+  var body=message&&message.body?String(message.body).slice(0,120):'You received a picture.';
+  var note=new Notification(title,{body:body,tag:'vh-message-'+message.id});
+  note.onclick=function(){window.focus();var nav=document.querySelector('.nav-button[data-section="Message"]');if(nav)nav.click();};
+ }catch(e){}
+}
 function setupRealtime(){
  if(!session||!window.supabase||!window.supabase.createClient)return;
  try{
@@ -1443,6 +1476,7 @@ function setupRealtime(){
   channel=client.channel('private-messages-'+session.user.id)
     .on('postgres_changes',{event:'*',schema:'public',table:'messages'},function(payload){
       if(payload.new&&payload.new.conversation_id===activeId)loadMessages(activeId);
+      if(payload.new&&payload.new.sender_id!==session.user.id)showIncomingBrowserNotification(payload.new);
       loadInbox();
     })
     .on('postgres_changes',{event:'*',schema:'public',table:'conversations'},function(){loadInbox();})
@@ -1464,8 +1498,17 @@ async function loadInbox(){
  try{
   inboxRows=await rpc('message_conversation_inbox',{});
   renderInbox();
+  await loadNotificationPreference();
   if(activeId){var row=inboxRows.find(function(x){return x.id===activeId;});if(row){activeRow=row;renderThreadHeading();}}
  }catch(e){$('messageInbox').innerHTML='<div class="message-empty">'+esc(e.message)+'</div>';}
+}
+async function loadNotificationPreference(){
+ try{
+  var rows=await apiJson('/rest/v1/message_notification_preferences?select=in_app_enabled&user_id=eq.'+encodeURIComponent(session.user.id));
+  var enabled=!rows.length||rows[0].in_app_enabled!==false;$('messageInAppNotifications').checked=enabled;
+  if(!enabled)$('messageNotificationHint').textContent='Notifications are off. Turn them on to receive browser alerts while this site is open.';
+  else $('messageNotificationHint').textContent='Browser alerts can appear while this site is open. Email alerts require email delivery to be configured.';
+ }catch(e){/* keep the default on if the preference has not been saved yet */}
 }
 function renderInbox(){
  var box=$('messageInbox');box.innerHTML='';
@@ -1490,14 +1533,23 @@ async function openConversation(row){
 async function loadMessages(id){
  if(!session||!id)return;
  try{
-  var rows=await apiJson('/rest/v1/messages?select=id,conversation_id,sender_id,sender_role,body,created_at,read_at&conversation_id=eq.'+encodeURIComponent(id)+'&order=created_at.asc');
+  var rows=await apiJson('/rest/v1/messages?select=id,conversation_id,sender_id,sender_role,body,attachment_path,attachment_name,attachment_content_type,created_at,read_at&conversation_id=eq.'+encodeURIComponent(id)+'&order=created_at.asc');
   var stream=$('messageStream');stream.innerHTML='';
   if(!rows.length)stream.innerHTML='<div class="message-empty">This conversation is ready. Send the first message below.</div>';
-  rows.forEach(function(m){
-   var bubble=document.createElement('div');bubble.className='message-bubble'+(m.sender_id===session.user.id?' mine':'');
-   bubble.innerHTML=esc(m.body)+'<small>'+esc(m.sender_id===session.user.id?'You':(m.sender_role==='admin'?'Vinhomes Support':m.sender_role==='agent'?'Property Agent':'Customer'))+' · '+esc(fmtDate(m.created_at))+(m.sender_id===session.user.id?(m.read_at?' · ✓✓ Read':' · ✓ Sent'):'')+'</small>';
+  for(var mi=0;mi<rows.length;mi++){
+   var m=rows[mi], bubble=document.createElement('div');bubble.className='message-bubble'+(m.sender_id===session.user.id?' mine':'');
+   if(m.attachment_path){
+    try{
+     var signed=await apiJson('/storage/v1/object/sign/private-message-images/'+m.attachment_path.split('/').map(encodeURIComponent).join('/'),{method:'POST',body:JSON.stringify({expiresIn:3600})});
+     var imageUrl=signed.signedURL||signed.signedUrl||'';
+     if(imageUrl&&!/^https?:/i.test(imageUrl))imageUrl=api+imageUrl;
+     if(imageUrl){var img=document.createElement('img');img.className='message-image-preview';img.src=imageUrl;img.alt=m.attachment_name||'Picture shared in this conversation';img.loading='lazy';img.addEventListener('click',function(){window.open(this.src,'_blank','noopener');});bubble.appendChild(img);}
+    }catch(imageErr){var unavailable=document.createElement('div');unavailable.textContent='Picture attachment could not be loaded.';bubble.appendChild(unavailable);}
+   }
+   if(m.body){var bodyEl=document.createElement('div');bodyEl.textContent=m.body;bubble.appendChild(bodyEl);}
+   var meta=document.createElement('small');meta.textContent=(m.sender_id===session.user.id?'You':(m.sender_role==='admin'?'Vinhomes Support':m.sender_role==='agent'?'Property Agent':'Customer'))+' · '+fmtDate(m.created_at)+(m.sender_id===session.user.id?(m.read_at?' · ✓✓ Read':' · ✓ Sent'):'');bubble.appendChild(meta);
    stream.appendChild(bubble);
-  });
+  }
   stream.scrollTop=stream.scrollHeight;
   var unread=rows.filter(function(m){return m.sender_id!==session.user.id&&!m.read_at;}).map(function(m){return m.id;});
   if(unread.length){
@@ -1556,7 +1608,7 @@ $('messageContactSupport').addEventListener('click',async function(){
  try{
   var id=await rpc('start_support_conversation',{p_property_name:property||null});
   if(typeof id!=='string')id=Array.isArray(id)?id[0]:id;
-  await apiJson('/rest/v1/messages',{method:'POST',body:JSON.stringify({conversation_id:id,sender_id:session.user.id,sender_role:'customer',body:first.trim()})});
+  await apiJson('/rest/v1/messages',{method:'POST',body:JSON.stringify({conversation_id:id,sender_id:session.user.id,sender_role:currentRole,body:first.trim()})});
   $('messageFirstBody').value='';status('messageComposeStatus','Your message has been sent to Vinhomes Support.');await loadInbox();
   var row=inboxRows.find(function(x){return x.id===id;});if(row)openConversation(row);
  }catch(e){status('messageComposeStatus',e.message,true);}
@@ -1567,12 +1619,38 @@ $('messageReplyBody').addEventListener('click',function(){
   $('messageComposeStatus').scrollIntoView({behavior:'smooth',block:'center'});
  }
 });
+var pendingMessageImage=null;
+$('messageImageInput').addEventListener('change',function(){
+ var f=this.files&&this.files[0];pendingMessageImage=f||null;
+ if(f&&(!/^image\/(jpeg|png|webp|gif)$/i.test(f.type)||f.size>8*1024*1024)){pendingMessageImage=null;this.value='';$('messageImageName').textContent='';status('messageComposeStatus','Choose a JPG, PNG, WEBP or GIF image up to 8 MB.',true);return;}
+ $('messageImageName').textContent=f?f.name:'';
+});
+$('messageInAppNotifications').addEventListener('change',async function(){
+ if(!session)return;
+ var enabled=this.checked;
+ try{
+  await apiJson('/rest/v1/message_notification_preferences?on_conflict=user_id',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify({user_id:session.user.id,in_app_enabled:enabled,updated_at:new Date().toISOString()})});
+  if(enabled&&'Notification' in window&&Notification.permission==='default'){try{await Notification.requestPermission();}catch(e){}}
+  status('messageComposeStatus',enabled?'Notifications are turned on.':'Notifications are turned off.');
+ }catch(e){this.checked=!enabled;status('messageComposeStatus','Could not save notification preference: '+e.message,true);}
+});
+async function sendMessage(body,imageFile){
+ var payload={conversation_id:activeId,sender_id:session.user.id,sender_role:currentRole,body:body||''};
+ if(imageFile){
+  var ext=(imageFile.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'');
+  var path=activeId+'/'+session.user.id+'/'+Date.now()+'-'+Math.random().toString(36).slice(2)+'.'+ext;
+  var upload=await fetch(api+'/storage/v1/object/private-message-images/'+path.split('/').map(encodeURIComponent).join('/'),{method:'POST',headers:{'apikey':key,'Authorization':'Bearer '+session.access_token,'Content-Type':imageFile.type,'x-upsert':'false'},body:imageFile});
+  if(!upload.ok){var ud=await upload.json().catch(function(){return {};});throw new Error(ud.message||'Picture upload failed.');}
+  payload.attachment_path=path;payload.attachment_name=imageFile.name;payload.attachment_content_type=imageFile.type;
+ }
+ await apiJson('/rest/v1/messages',{method:'POST',body:JSON.stringify(payload)});
+ if('Notification' in window&&Notification.permission==='granted'&&$('messageInAppNotifications').checked){/* New-message browser alerts are shown on incoming events below. */}
+}
 $('messageComposer').addEventListener('submit',async function(e){
- e.preventDefault();if(!session||!activeId)return;var body=$('messageReplyBody').value.trim();if(!body)return;
+ e.preventDefault();if(!session||!activeId)return;var body=$('messageReplyBody').value.trim(),image=pendingMessageImage;if(!body&&!image)return;
  $('messageSendButton').disabled=true;
  try{
-  await apiJson('/rest/v1/messages',{method:'POST',body:JSON.stringify({conversation_id:activeId,sender_id:session.user.id,sender_role:'customer',body:body})});
-  $('messageReplyBody').value='';await loadMessages(activeId);await loadInbox();
+  await sendMessage(body,image);$('messageReplyBody').value='';$('messageImageInput').value='';$('messageImageName').textContent='';pendingMessageImage=null;await loadMessages(activeId);await loadInbox();
  }catch(err){status('messageComposeStatus',err.message,true);}finally{$('messageSendButton').disabled=false;}
 });
 window.__initMessageSection=function(){
