@@ -447,7 +447,12 @@ var siteVietnamnText = {
         "Step 17: Select personal photo":"Chọn ảnh cá nhân",
         "Step 18: Payment currency":"Đơn vị tiền tệ thanh toán",
         "Bedrooms, Bathrooms, swimming pool, gym, building security, parking":"Phòng ngủ, phòng tắm, hồ bơi, phòng tập thể dục, an ninh tòa nhà và bãi đỗ xe",
-        "Home":"Trang chủ","Buy":"Mua","Search":"Tìm kiếm","Rentapartment":"Thuê căn hộ","Promote":"Đăng tin","Message":"Tin nhắn","Profile":"Hồ sơ"
+        "Home":"Trang chủ","Buy":"Mua","Search":"Tìm kiếm","Rentapartment":"Thuê căn hộ","Promote":"Đăng tin","Message":"Tin nhắn","Profile":"Hồ sơ",
+        "Property promotion · Vietnam":"Đăng tin bất động sản · Việt Nam","Promote Your Property":"Đăng tin bất động sản","Give your property the visibility it deserves. Submit a property or development for review.":"Tăng khả năng tiếp cận cho bất động sản của bạn. Gửi tin đăng để được xét duyệt.",
+        "Sign in to manage your promotions":"Đăng nhập để quản lý tin đăng","Your promotions are connected to your account so only you can edit your own submissions.":"Tin đăng được liên kết với tài khoản của bạn để chỉ bạn có thể chỉnh sửa.","Email address":"Địa chỉ email","Password":"Mật khẩu","Sign in":"Đăng nhập","Create account":"Tạo tài khoản","Sign in or create an account to submit and manage promotions.":"Đăng nhập hoặc tạo tài khoản để gửi và quản lý tin đăng.",
+        "Promote a Property":"Đăng tin bất động sản","House, apartment, villa, townhouse or other property.":"Nhà, căn hộ, biệt thự, nhà phố hoặc loại bất động sản khác.","Start property promotion →":"Bắt đầu đăng tin →","Promote a Property Development":"Đăng dự án bất động sản","Apartment buildings and residential communities.":"Tòa nhà căn hộ và khu dân cư.","Start development promotion →":"Bắt đầu đăng dự án →","My Promotions":"Tin đăng của tôi","View drafts, review decisions and published advertisements.":"Xem bản nháp, kết quả xét duyệt và tin đã đăng.","View my promotions →":"Xem tin đăng của tôi →",
+        "Property details":"Thông tin bất động sản","Step 1 of 5":"Bước 1/5","Promotion type":"Loại hình đăng tin","Property title":"Tiêu đề bất động sản","Property type":"Loại bất động sản","Choose property type":"Chọn loại bất động sản","Offer type":"Hình thức","Choose sale or rent":"Chọn bán hoặc cho thuê","For sale":"Đang bán","For rent":"Cho thuê","City in Vietnam":"Thành phố tại Việt Nam","Choose city":"Chọn thành phố","District / area":"Quận / khu vực","Enter district or general area":"Nhập quận hoặc khu vực chung","For customer privacy, the public advertisement shows only the city and district. Do not enter an exact street address here.":"Để bảo vệ quyền riêng tư, tin công khai chỉ hiển thị thành phố và quận. Không nhập địa chỉ đường phố cụ thể tại đây.",
+        "Price (VND)":"Giá (VND)","Optional price (USD)":"Giá tùy chọn (USD)","Bedrooms":"Phòng ngủ","Bathrooms":"Phòng tắm","Floor area (m²)":"Diện tích sàn (m²)","Rental term":"Thời hạn thuê","Choose term":"Chọn thời hạn","1 year":"1 năm","2 years":"2 năm","3 years":"3 năm","Facilities and features":"Tiện ích và đặc điểm","Property description":"Mô tả bất động sản","Property photographs":"Ảnh bất động sản","Review your advertisement":"Xem lại tin đăng","Your advertisement will not be published immediately. It will be sent for review first.":"Tin đăng chưa được xuất bản ngay mà sẽ được gửi để xét duyệt.","Submit for review":"Gửi xét duyệt","Save draft":"Lưu bản nháp","Cancel":"Hủy","Continue":"Tiếp tục","Back":"Quay lại","Promotion submitted":"Đã gửi tin đăng","Your submission is saved and awaiting review. You can follow its status under My Promotions.":"Tin đăng đã được lưu và đang chờ xét duyệt. Bạn có thể theo dõi trạng thái trong Tin đăng của tôi.","Open My Promotions":"Mở tin đăng của tôi","Refresh":"Làm mới","Draft":"Bản nháp","Pending review":"Chờ xét duyệt","Approved":"Đã duyệt","Rejected":"Bị từ chối","Published":"Đã đăng","View":"Xem","Update":"Cập nhật","Remove":"Xóa","Edit":"Chỉnh sửa","Make main photo":"Đặt làm ảnh chính","Main photo":"Ảnh chính","Public location":"Vị trí công khai","Property description":"Mô tả bất động sản","Create a property development":"Tạo tin đăng dự án bất động sản","Please sign in first.":"Vui lòng đăng nhập trước.","Please complete the required fields before continuing.":"Vui lòng điền đầy đủ thông tin bắt buộc trước khi tiếp tục.","Please add at least one property photo.":"Vui lòng thêm ít nhất một ảnh bất động sản.","Saved locally on this device. Sign in to submit your draft for review.":"Đã lưu trên thiết bị này. Đăng nhập để gửi bản nháp xét duyệt."
       });
       function translateWholeWebsite(lang) {
         var viMode = lang === 'vi';
@@ -1062,6 +1067,155 @@ cover.addEventListener('error',function(){if(!cover.dataset.fallback){cover.data
     }
   });
 })();
+})();
+</script>
+<script>
+(function(){
+'use strict';
+var api='https://vuhrkijzjmnbsaqnpdmg.supabase.co', key='sb_publishable_UCcVEEukXPp_pxklYhSM2w_fVl6GYK9';
+var wizard=document.getElementById('promoteWizard'),form=document.getElementById('promoteListingForm'),steps=Array.from(document.querySelectorAll('[data-promote-step]')),step=0,kind='property',files=[],mainPhoto=0,editingId=null,user=null,loaded=false;
+var $=function(id){return document.getElementById(id);};
+var fields={type:$('promoType'),title:$('promoTitle'),propertyType:$('promoPropertyType'),goal:$('promoGoal'),city:$('promoCity'),district:$('promoDistrict'),vnd:$('promoPriceVnd'),usd:$('promoPriceUsd'),bedrooms:$('promoBedrooms'),bathrooms:$('promoBathrooms'),area:$('promoArea'),years:$('promoRentalYears'),description:$('promoDescription'),photos:$('promoPhotos')};
+function tokenFromStorage(){
+ try{for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);if(k&&k.indexOf('auth-token')>=0){var v=JSON.parse(localStorage.getItem(k)||'{}');if(v.access_token&&v.user)return v;}}}catch(e){}
+ return null;
+}
+function headers(token){return {'apikey':key,'Authorization':'Bearer '+token,'Content-Type':'application/json','Prefer':'return=representation'};}
+function setMessage(el,msg,error){el.textContent=msg||'';el.classList.toggle('error',!!error);}
+function currentToken(){var s=tokenFromStorage();return s&&s.access_token?s.access_token:null;}
+async function requestAuth(path,body){
+ var res=await fetch(api+'/auth/v1/'+path,{method:'POST',headers:{'apikey':key,'Content-Type':'application/json'},body:JSON.stringify(body)});
+ var data=await res.json().catch(function(){return {};});
+ if(!res.ok)throw new Error(data.msg||data.message||data.error_description||data.error||'Authentication failed.');
+ if(data.access_token&&data.user){try{localStorage.setItem('sb-vuhrkijzjmnbsaqnpdmg-auth-token',JSON.stringify(data));}catch(e){}user=data.user;syncAuthUI();return data;}
+ return data;
+}
+function syncAuthUI(){
+ var panel=document.querySelector('.promote-account');
+ if(user){panel.querySelector('h3').textContent='Signed in';panel.querySelector('p').innerHTML='<span class="promote-signed-in">'+escapeHtml(user.email||'Account connected')+'</span> Your promotions are linked to this account.';$('promoteAuthForm').hidden=true;}
+ else{$('promoteAuthForm').hidden=false;}
+}
+function escapeHtml(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function money(n){return '₫'+Number(n||0).toLocaleString('en-US');}
+function updateGoal(){var renting=fields.goal.value==='rent';$('promoRentalYearsWrap').hidden=!renting;fields.years.required=renting;if(!renting)fields.years.value='';}
+function setStep(n){
+ step=Math.max(0,Math.min(4,n));steps.forEach(function(el){el.hidden=Number(el.dataset.promoteStep)!==step;});
+ $('promoteStepCounter').textContent='Step '+(step+1)+' of 5';
+ $('promoteStepTitle').textContent=['Property details','Price and features','Photographs','Review and submit','Submitted'][step];
+ $('promoteProgressBar').style.width=((step+1)*20)+'%';
+ $('promoteBack').hidden=step===0||step===4;$('promoteContinue').hidden=step>=3;$('promoteSubmit').hidden=step!==3;$('promoteSaveDraft').hidden=step===4;$('promoteCancel').hidden=step===4;$('promoteWizardActions').hidden=step===4;
+ if(step===3)renderReview();
+ setMessage($('promoteFormMessage'),'');
+}
+function chosenFeatures(){return Array.from(document.querySelectorAll('.promote-facilities input:checked')).map(function(el){return el.value;});}
+function sectionValid(n){
+ var list=n===0?[fields.title,fields.propertyType,fields.goal,fields.city,fields.district]:n===1?[fields.vnd,fields.bedrooms,fields.bathrooms,fields.area,fields.description].concat(fields.goal.value==='rent'?[fields.years]:[]):n===2?[]:[];
+ if(list.some(function(el){return !String(el.value||'').trim()||!el.checkValidity();}))return false;
+ if(n===1&&fields.description.value.trim().length<30)return false;
+ if(n===2&&files.length===0&&!editingId)return false;
+ if(n===2&&files.length>20)return false;
+ if(n===2&&files.some(function(f){return f.file&&f.file.size>10*1024*1024;}))return false;
+ return true;
+}
+function photoCard(file,i){
+ var wrap=document.createElement('div');wrap.className='promote-photo-item';var img=document.createElement('img');img.src=file.url;img.alt='Property photo '+(i+1);wrap.appendChild(img);
+ var actions=document.createElement('div');actions.className='photo-actions';
+ [['↑',function(){if(i>0){var tmp=files[i-1];files[i-1]=files[i];files[i]=tmp;if(mainPhoto===i)mainPhoto=i-1;else if(mainPhoto===i-1)mainPhoto=i;renderPhotos();}}],
+ ['↓',function(){if(i<files.length-1){var tmp=files[i+1];files[i+1]=files[i];files[i]=tmp;if(mainPhoto===i)mainPhoto=i+1;else if(mainPhoto===i+1)mainPhoto=i;renderPhotos();}}],
+ ['Make main photo',function(){mainPhoto=i;renderPhotos();}],
+ ['Remove',function(){if(files[i].url&&files[i].file)URL.revokeObjectURL(files[i].url);files.splice(i,1);if(mainPhoto>=files.length)mainPhoto=Math.max(0,files.length-1);renderPhotos();}]
+ ].forEach(function(pair){var b=document.createElement('button');b.type='button';b.textContent=pair[0];b.addEventListener('click',pair[1]);actions.appendChild(b);});
+ wrap.appendChild(actions);var label=document.createElement('span');label.className='main-photo-label';label.textContent=i===mainPhoto?'★ Main photo':'';wrap.appendChild(label);return wrap;
+}
+function renderPhotos(){var grid=$('promoPhotoGrid');grid.innerHTML='';files.forEach(function(f,i){grid.appendChild(photoCard(f,i));});}
+fields.photos.addEventListener('change',function(){
+ Array.from(this.files||[]).forEach(function(file){if(files.length>=20)return;if(!/^image\/(jpeg|png|webp|avif)$/.test(file.type)||file.size>10*1024*1024)return;files.push({file:file,url:URL.createObjectURL(file),existing:false});});
+ this.value='';renderPhotos();if(files.length===0)setMessage($('promoteFormMessage'),'Please choose JPG, PNG, WEBP or AVIF photos, each no larger than 10 MB.',true);
+});
+fields.goal.addEventListener('change',updateGoal);
+function renderReview(){
+ var cover=files[mainPhoto]&&files[mainPhoto].url||'';var rent=fields.goal.value==='rent';
+ $('promoteReviewCard').innerHTML=(cover?'<img src="'+escapeHtml(cover)+'" alt="Main property photo">':'')+'<div class="promote-review-body"><span class="pill">'+escapeHtml(rent?'For rent':'For sale')+'</span><h3>'+escapeHtml(fields.title.value)+'</h3><p>'+escapeHtml(fields.propertyType.value)+' · '+escapeHtml(fields.city.value)+', '+escapeHtml(fields.district.value)+', Vietnam</p><p class="promote-review-price">'+money(fields.vnd.value)+'</p>'+(fields.usd.value?'<p>Optional display: 
+</html>
++Number(fields.usd.value).toLocaleString('en-US')+' USD</p>':'')+'<p>'+escapeHtml(fields.bedrooms.value)+' bedrooms · '+escapeHtml(fields.bathrooms.value)+' bathrooms · '+escapeHtml(fields.area.value)+' m²</p>'+(rent?'<p>Rental term: '+escapeHtml(fields.years.value)+' year(s)</p>':'')+'<p>'+escapeHtml(fields.description.value)+'</p><p>Facilities: '+escapeHtml(chosenFeatures().join(', ')||'Not specified')+'</p><p>'+files.length+' photo(s) · Main photo selected</p><p><strong>Public location:</strong> '+escapeHtml(fields.city.value)+', '+escapeHtml(fields.district.value)+', Vietnam</p><span class="promotion-status pending_review">Pending review after submission</span></div>';
+}
+function payload(status,urls){
+ return {owner_id:user.id,promotion_type:fields.type.value,title:fields.title.value.trim(),property_type:fields.propertyType.value,listing_goal:fields.goal.value,city:fields.city.value,district:fields.district.value,price_vnd:Number(fields.vnd.value),price_usd:fields.usd.value?Number(fields.usd.value):null,bedrooms:Number(fields.bedrooms.value||0),bathrooms:Number(fields.bathrooms.value||0),area_sqm:Number(fields.area.value),rental_years:fields.goal.value==='rent'?Number(fields.years.value):null,description:fields.description.value.trim(),facilities:chosenFeatures(),photo_urls:urls,main_photo_url:urls[mainPhoto]||urls[0]||null,status:status,submitted_at:status==='pending_review'?new Date().toISOString():null,updated_at:new Date().toISOString()};
+}
+async function uploadPhotos(){
+ var urls=[];
+ for(var i=0;i<files.length;i++){
+  var f=files[i];if(f.existing){urls.push(f.url);continue;}
+  var path=user.id+'/'+(editingId||crypto.randomUUID())+'/'+Date.now()+'-'+i+'-'+f.file.name.replace(/[^a-zA-Z0-9._-]/g,'_');
+  var res=await fetch(api+'/storage/v1/object/promotion-photos/'+path,{method:'POST',headers:{'apikey':key,'Authorization':'Bearer '+currentToken(),'Content-Type':f.file.type,'x-upsert':'true'},body:f.file});
+  if(!res.ok){var err=await res.json().catch(function(){return {}});throw new Error(err.message||'A photo could not be uploaded. Please try again.');}
+  urls.push(api+'/storage/v1/object/public/promotion-photos/'+path);
+ }
+ return urls;
+}
+async function submitPromotion(status){
+ if(!user){setMessage($('promoteFormMessage'),'Please sign in before submitting a promotion.',true);return;}
+ if(!sectionValid(0)||!sectionValid(1)||!sectionValid(2)){setMessage($('promoteFormMessage'),'Please complete all required details and add at least one photo before submitting.',true);return;}
+ $('promoteSubmit').disabled=true;$('promoteContinue').disabled=true;setMessage($('promoteFormMessage'),'Uploading photographs and saving your promotion…');
+ try{
+  var urls=await uploadPhotos(),data=payload(status,urls),url=api+'/rest/v1/property_promotions';
+  var res=await fetch(url+(editingId?'?id=eq.'+encodeURIComponent(editingId):''),{method:editingId?'PATCH':'POST',headers:headers(currentToken()),body:JSON.stringify(data)});
+  var result=await res.json().catch(function(){return []});if(!res.ok)throw new Error(result.message||result.details||result.hint||'Could not save this promotion. Please sign in again and try once more.');
+  editingId=null;setStep(4);loadPromotions();
+ }catch(e){setMessage($('promoteFormMessage'),e.message||'Something went wrong. Please try again.',true);}
+ finally{$('promoteSubmit').disabled=false;$('promoteContinue').disabled=false;}
+}
+function clearForm(){
+ form.reset();files.forEach(function(f){if(f.file&&f.url)URL.revokeObjectURL(f.url);});files=[];mainPhoto=0;editingId=null;renderPhotos();updateGoal();setStep(0);
+}
+function openWizard(k){
+ kind=k||'property';clearForm();fields.type.value=kind;wizard.hidden=false;$('myPromotionsPanel').hidden=true;$('promoteWizard').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function localDraft(){
+ var data={kind:fields.type.value,title:fields.title.value,propertyType:fields.propertyType.value,goal:fields.goal.value,city:fields.city.value,district:fields.district.value,vnd:fields.vnd.value,usd:fields.usd.value,bedrooms:fields.bedrooms.value,bathrooms:fields.bathrooms.value,area:fields.area.value,years:fields.years.value,description:fields.description.value,features:chosenFeatures(),savedAt:new Date().toISOString()};
+ try{localStorage.setItem('vinhomes-promotion-draft',JSON.stringify(data));setMessage($('promoteFormMessage'),'Draft saved on this device. Sign in and submit when you are ready.');}catch(e){setMessage($('promoteFormMessage'),'Could not save a local draft on this device.',true);}
+}
+function restoreLocalDraft(){try{var d=JSON.parse(localStorage.getItem('vinhomes-promotion-draft')||'null');if(!d)return;Object.keys({type:1,title:1,propertyType:1,goal:1,city:1,district:1,vnd:1,usd:1,bedrooms:1,bathrooms:1,area:1,years:1,description:1}).forEach(function(k){var map={type:fields.type,title:fields.title,propertyType:fields.propertyType,goal:fields.goal,city:fields.city,district:fields.district,vnd:fields.vnd,usd:fields.usd,bedrooms:fields.bedrooms,bathrooms:fields.bathrooms,area:fields.area,years:fields.years,description:fields.description};if(d[k]!==undefined)map[k].value=d[k];});document.querySelectorAll('.promote-facilities input').forEach(function(el){el.checked=(d.features||[]).includes(el.value);});updateGoal();}catch(e){}}
+function statusLabel(s){return ({draft:'Draft',pending_review:'Pending review',approved:'Approved',rejected:'Rejected',published:'Published'})[s]||s;}
+async function loadPromotions(){
+ var list=$('myPromotionsList');if(!user){list.innerHTML='<p>Sign in to see promotions connected to your account.</p>';return;}
+ list.innerHTML='<p>Loading your promotions…</p>';
+ try{
+  var res=await fetch(api+'/rest/v1/property_promotions?select=*&order=created_at.desc',{headers:{'apikey':key,'Authorization':'Bearer '+currentToken()}});
+  var rows=await res.json();if(!res.ok)throw new Error(rows.message||'Could not load promotions.');
+  if(!rows.length){list.innerHTML='<p>You have not submitted any promotions yet. Choose “Promote a Property” or “Promote a Property Development” to get started.</p>';return;}
+  list.innerHTML='';
+  rows.forEach(function(row){
+   var item=document.createElement('article');item.className='promotion-row';
+   var img=document.createElement('img');img.src=row.main_photo_url||((row.photo_urls||[])[0])||'';img.alt='Property cover';item.appendChild(img);
+   var body=document.createElement('div');var title=document.createElement('h4');title.textContent=row.title;body.appendChild(title);
+   var p=document.createElement('p');p.textContent=row.city+', '+row.district+' · '+money(row.price_vnd);body.appendChild(p);
+   var badge=document.createElement('span');badge.className='promotion-status '+row.status;badge.textContent=statusLabel(row.status);body.appendChild(badge);
+   if(row.review_note){var note=document.createElement('p');note.textContent='Review note: '+row.review_note;body.appendChild(note);}
+   var actions=document.createElement('div');actions.className='promotion-row-actions';
+   var view=document.createElement('button');view.type='button';view.textContent='View';view.addEventListener('click',function(){alert(row.title+'\n'+row.city+', '+row.district+', Vietnam\n'+money(row.price_vnd)+'\n\n'+row.description);});actions.appendChild(view);
+   if(['draft','rejected','pending_review'].includes(row.status)){var edit=document.createElement('button');edit.type='button';edit.textContent='Update';edit.addEventListener('click',function(){editPromotion(row);});actions.appendChild(edit);}
+   if(['draft','rejected'].includes(row.status)){var del=document.createElement('button');del.type='button';del.textContent='Remove';del.addEventListener('click',async function(){if(!confirm('Remove this promotion?'))return;var dr=await fetch(api+'/rest/v1/property_promotions?id=eq.'+row.id,{method:'DELETE',headers:{'apikey':key,'Authorization':'Bearer '+currentToken()}});if(dr.ok)loadPromotions();else alert('Could not remove this promotion.');});actions.appendChild(del);}
+   body.appendChild(actions);item.appendChild(body);list.appendChild(item);
+  });
+ }catch(e){list.textContent=e.message||'Could not load your promotions. Please sign in again.';}
+}
+function editPromotion(row){
+ clearForm();editingId=row.id;fields.type.value=row.promotion_type;fields.title.value=row.title;fields.propertyType.value=row.property_type;fields.goal.value=row.listing_goal;fields.city.value=row.city;fields.district.value=row.district;fields.vnd.value=row.price_vnd;fields.usd.value=row.price_usd||'';fields.bedrooms.value=row.bedrooms;fields.bathrooms.value=row.bathrooms;fields.area.value=row.area_sqm;fields.years.value=row.rental_years||'';fields.description.value=row.description;document.querySelectorAll('.promote-facilities input').forEach(function(el){el.checked=(row.facilities||[]).includes(el.value);});
+ files=(row.photo_urls||[]).map(function(url){return {url:url,file:null,existing:true};});mainPhoto=Math.max(0,files.indexOf(files.find(function(f){return f.url===row.main_photo_url;})));renderPhotos();updateGoal();wizard.hidden=false;$('myPromotionsPanel').hidden=true;setStep(0);$('promoteFormMessage').textContent='Editing your promotion. Changes will be saved to your account.';wizard.scrollIntoView({behavior:'smooth',block:'start'});
+}
+$('promoteAuthForm').addEventListener('submit',async function(e){e.preventDefault();var msg=$('promoteAuthMessage');try{setMessage(msg,'Signing in…');await requestAuth('token?grant_type=password',{email:$('promoteAuthEmail').value.trim(),password:$('promoteAuthPassword').value});setMessage(msg,'Signed in successfully.');loadPromotions();}catch(err){setMessage(msg,err.message,true);}});
+$('promoteSignUp').addEventListener('click',async function(){var msg=$('promoteAuthMessage');var email=$('promoteAuthEmail').value.trim(),password=$('promoteAuthPassword').value;if(!email||password.length<6){setMessage(msg,'Enter a valid email and a password of at least 6 characters.',true);return;}try{setMessage(msg,'Creating your account…');var data=await requestAuth('signup',{email:email,password:password});if(!data.access_token)setMessage(msg,'Account created. Check your email for a confirmation link, then return here and sign in.');else setMessage(msg,'Account created and signed in.');}catch(err){setMessage(msg,err.message,true);}});
+$('promoteContinue').addEventListener('click',function(){if(!sectionValid(step)){setMessage($('promoteFormMessage'),step===2?'Please add at least one photo.':'Please complete the required fields before continuing.',true);return;}if(step===0&&fields.goal.value==='rent'&&!fields.years.value){setMessage($('promoteFormMessage'),'Choose a rental term of 1, 2 or 3 years.',true);return;}setStep(step+1);});
+$('promoteBack').addEventListener('click',function(){setStep(step-1);});
+$('promoteCancel').addEventListener('click',function(){if(confirm('Cancel this promotion form? Your saved local draft will remain available.')){wizard.hidden=true;clearForm();}});
+$('promoteSaveDraft').addEventListener('click',localDraft);
+$('promoteSubmit').addEventListener('click',function(){submitPromotion('pending_review');});
+$('promoteBackToList').addEventListener('click',function(){wizard.hidden=true;$('myPromotionsPanel').hidden=false;loadPromotions();$('myPromotionsPanel').scrollIntoView({behavior:'smooth'});});
+document.querySelectorAll('[data-promote-kind]').forEach(function(btn){btn.addEventListener('click',function(){openWizard(btn.dataset.promoteKind);});});
+$('openMyPromotions').addEventListener('click',function(){$('myPromotionsPanel').hidden=false;wizard.hidden=true;loadPromotions();$('myPromotionsPanel').scrollIntoView({behavior:'smooth'});});
+$('refreshMyPromotions').addEventListener('click',loadPromotions);
+window.__initPromoteSection=function(){if(loaded)return;loaded=true;var s=tokenFromStorage();if(s&&s.access_token&&s.user)user=s.user;syncAuthUI();restoreLocalDraft();updateGoal();};
 })();
 </script>
 </body>
