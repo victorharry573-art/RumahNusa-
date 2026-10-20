@@ -207,7 +207,7 @@
           </div>
           <div class="gallery-caption"><span>Explore Our Properties</span><span class="gallery-count" id="propertyGalleryCount">1 / 42</span></div>
         </div>
-        <article class="card"><img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=900&q=85" alt="Tropical villa with swimming pool"><div class="card-body"><span class="pill">Villa</span><h3>Tropical Private Villa</h3><p>Example property style · Vietnam</p></div></article>
+        <article class="card"><img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=900&q=85" alt="Tropical villa with swimming pool"><div class="card-body"><span class="pill">Villa</span><h3>Tropical Private Villa</h3><p>Example property style · Vietnam</p><button type="button" class="message-btn" data-message-property="Tropical Private Villa, Vietnam">Message Agent</button></div></article>
       </div>
       <div class="gallery-lightbox" id="propertyGalleryLightbox" role="dialog" aria-modal="true" aria-label="Property photo viewer">
         <button class="lightbox-close" type="button" id="propertyGalleryClose" aria-label="Close photo viewer">×</button>
@@ -1488,6 +1488,7 @@ $('messageCreateAccount').addEventListener('click',async function(){
  }catch(err){status('messageAuthStatus',err.message,true);}
 });
 $('messageRefresh').addEventListener('click',function(){loadInbox();if(activeId)loadMessages(activeId);});
+document.addEventListener('click',function(e){var b=e.target.closest('[data-message-property]');if(!b)return;var nav=document.querySelector('.nav-button[data-section="Message"]');if(nav)nav.click();window.setTimeout(function(){var field=$('messagePropertyName');if(field)field.value=b.getAttribute('data-message-property')||'';},180);});
 $('messageStartConversation').addEventListener('click',function(){
  if(!session)return;
  var target=$('messageRecipient').value,first=$('messageFirstBody').value,property=$('messagePropertyName').value.trim();
