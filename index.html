@@ -1213,7 +1213,10 @@ else if(f.type==='textarea'){input=document.createElement('textarea');input.rows
 else{input=document.createElement('input');input.type=f.type;input.placeholder=f.placeholder||'';if(f.type==='number'){input.min='1';input.max='50';}}
 input.id='rentalStepAnswer';input.style.cssText='display:block;width:100%;box-sizing:border-box;min-height:50px;padding:14px;border:1px solid #cbd3da;border-radius:10px;font:inherit;background:#fff;color:#243746;margin:12px 0';
 input.value=rentalData[f.key]!==undefined?rentalData[f.key]:(f.value||'');
- if(f.key==='end'&&!input.value&&rentalData.start){var sd=new Date(rentalData.start);if(!isNaN(sd)){sd.setFullYear(sd.getFullYear()+duration);input.value=sd.getFullYear()+'-'+String(sd.getMonth()+1).padStart(2,'0')+'-'+String(sd.getDate()).padStart(2,'0')+'T'+String(sd.getHours()).padStart(2,'0')+':'+String(sd.getMinutes()).padStart(2,'0');}}
+if(f.key==='end'){
+ input.readOnly=true; input.setAttribute('aria-readonly','true'); input.style.background='#f1f5f9'; input.style.cursor='not-allowed'; input.placeholder='Set automatically from check-in date and rental duration';
+ if(rentalData.start){var sd=new Date(rentalData.start);if(!isNaN(sd)){sd.setFullYear(sd.getFullYear()+duration);input.value=sd.getFullYear()+'-'+String(sd.getMonth()+1).padStart(2,'0')+'-'+String(sd.getDate()).padStart(2,'0')+'T'+String(sd.getHours()).padStart(2,'0')+':'+String(sd.getMinutes()).padStart(2,'0');rentalData.end=input.value;}}
+}
 if(f.key==='phone'){
  var countrySelect=document.createElement('select');countrySelect.id='rentalPhoneCountry';countrySelect.setAttribute('aria-label','Country calling code');countrySelect.style.cssText='display:block;width:100%;box-sizing:border-box;min-height:50px;padding:12px;border:1px solid #cbd3da;border-radius:10px;font:inherit;background:#fff;color:#243746;margin:12px 0';
  var loadingOption=document.createElement('option');loadingOption.value='+84';loadingOption.textContent='Loading country calling codes… (+84 Vietnam)';countrySelect.appendChild(loadingOption);holder.appendChild(countrySelect);
@@ -1233,8 +1236,9 @@ if(f.key==='meetingAddress'){
  var stepNext=document.getElementById('rentalStepNext');
  var savedLabel=document.createElement('p');savedLabel.className='apartment-note';savedLabel.setAttribute('aria-live','polite');document.getElementById('rentalStepSave').parentNode.insertAdjacentElement('afterend',savedLabel);
  function syncStepReady(){stepNext.hidden=!String(input.value||'').trim();}
- input.addEventListener('input',syncStepReady);input.addEventListener('change',syncStepReady);syncStepReady();
- document.getElementById('rentalStepSave').addEventListener('click',function(){if(!String(input.value||'').trim()){document.getElementById('rentalStepError').textContent='Please complete this field before saving.';return;}rentalData[f.key]=input.value.trim();savedLabel.textContent='Saved';});
+ input.addEventListener('input',function(){if(f.key==='start'&&input.value){var ci=new Date(input.value);if(!isNaN(ci)){ci.setFullYear(ci.getFullYear()+duration);rentalData.end=ci.getFullYear()+'-'+String(ci.getMonth()+1).padStart(2,'0')+'-'+String(ci.getDate()).padStart(2,'0')+'T'+String(ci.getHours()).padStart(2,'0')+':'+String(ci.getMinutes()).padStart(2,'0');}}syncStepReady();});
+input.addEventListener('change',function(){if(f.key==='start'&&input.value){var ci=new Date(input.value);if(!isNaN(ci)){ci.setFullYear(ci.getFullYear()+duration);rentalData.end=ci.getFullYear()+'-'+String(ci.getMonth()+1).padStart(2,'0')+'-'+String(ci.getDate()).padStart(2,'0')+'T'+String(ci.getHours()).padStart(2,'0')+':'+String(ci.getMinutes()).padStart(2,'0');}}syncStepReady();});syncStepReady();
+ document.getElementById('rentalStepSave').addEventListener('click',function(){if(!String(input.value||'').trim()){document.getElementById('rentalStepError').textContent='Please complete this field before saving.';return;}rentalData[f.key]=input.value.trim();if(f.key==='start'){var ci=new Date(input.value);if(!isNaN(ci)){ci.setFullYear(ci.getFullYear()+duration);rentalData.end=ci.getFullYear()+'-'+String(ci.getMonth()+1).padStart(2,'0')+'-'+String(ci.getDate()).padStart(2,'0')+'T'+String(ci.getHours()).padStart(2,'0')+':'+String(ci.getMinutes()).padStart(2,'0');savedLabel.textContent='Check-in saved. Matching check-out: '+rentalData.end.replace('T',' ');}else savedLabel.textContent='Saved';}else savedLabel.textContent='Saved';});
 document.getElementById('rentalStepNext').textContent=rentalIndex===rentalFields.length-1?'Finish details':'Continue';
 document.getElementById('rentalStepBack').addEventListener('click',function(){
 rentalData[f.key]=document.getElementById('rentalStepAnswer').value;
