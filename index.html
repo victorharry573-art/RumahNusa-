@@ -1196,9 +1196,10 @@ if(f.key==='phone'){
 }else{holder.appendChild(input);}
 if(f.key==='meetingAddress'){
  var mapWrap=document.createElement('div');mapWrap.style.cssText='margin-top:12px;border:1px solid #dfe5ea;border-radius:12px;overflow:hidden';
- mapWrap.innerHTML='<p style="padding:10px 12px;margin:0;font-weight:700">Map preview — adjust the address above</p><iframe title="Meeting address map" style="width:100%;height:250px;border:0" loading="lazy" referrerpolicy="no-referrer"></iframe>';
+ mapWrap.innerHTML='<p style="padding:10px 12px;margin:0;font-weight:700">Meeting location map</p><p style="padding:0 12px;margin:0 0 10px;color:#66717b;font-size:13px">Enter the meeting address above, then review the map. Save the address only when the map points to the place you want.</p><iframe title="Meeting address map" style="width:100%;height:280px;border:0" loading="lazy" referrerpolicy="no-referrer"></iframe><div style="display:flex;gap:8px;flex-wrap:wrap;padding:10px 12px"><a id="rentalAdjustMap" href="#" target="_blank" rel="noopener" class="profile-btn secondary" style="text-decoration:none;display:inline-flex;align-items:center">Adjust map location ↗</a><button id="rentalSaveMap" type="button" class="profile-btn primary">Save map location</button></div><p id="rentalMapSaved" class="apartment-note" aria-live="polite" style="padding:0 12px"></p>';
  holder.appendChild(mapWrap);
- function updateMeetingMap(){var iframe=mapWrap.querySelector('iframe');if(input.value.trim().length>4)iframe.src='https://www.openstreetmap.org/export/embed.html?search='+encodeURIComponent(input.value.trim()+', Vietnam');}
+ function updateMeetingMap(){var iframe=mapWrap.querySelector('iframe'),adjust=mapWrap.querySelector('#rentalAdjustMap');var q=encodeURIComponent(input.value.trim()+', Vietnam');if(input.value.trim().length>4){iframe.src='https://maps.google.com/maps?q='+q+'&output=embed';adjust.href='https://www.google.com/maps/search/?api=1&query='+q;}else{iframe.removeAttribute('src');adjust.href='#';}}
+ mapWrap.querySelector('#rentalSaveMap').addEventListener('click',function(){if(input.value.trim().length<5){mapWrap.querySelector('#rentalMapSaved').textContent='Enter the meeting address first.';return;}rentalData.meetingMapAddress=input.value.trim();mapWrap.querySelector('#rentalMapSaved').textContent='Meeting map location saved. You can adjust it and save again.';});
  input.addEventListener('input',updateMeetingMap);updateMeetingMap();
 }
  var stepNext=document.getElementById('rentalStepNext');
