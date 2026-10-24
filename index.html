@@ -411,7 +411,7 @@
 <div class="apartment-hero"><p class="eyebrow">Rent apartment · Vietnam</p><h2 id="rentApartmentTitle">Find an Apartment or Room</h2><p>Browse available apartments, search by city, choose how many bedrooms you need, and view room photographs.</p><div class="apartment-actions"><button type="button" class="profile-btn primary" id="browseApartmentsSearch">Browse rental apartments</button><button type="button" class="profile-btn secondary" id="searchRoomsButton">Search by bedrooms</button></div></div>
 <div class="apartment-listings-panel"><h3>Available apartments for rent</h3><p>Choose an apartment to view its details and room photos. Only published listings appear here.</p><div id="apartmentListings" aria-live="polite"><p>Loading available apartments…</p></div></div>
 <div class="apartment-layout"><div><div class="apartment-cover"><img id="apartmentCoverImage" src="https://vuhrkijzjmnbsaqnpdmg.supabase.co/storage/v1/object/public/property-images/IMG-20261017-WA0031.jpg" alt="Luxury apartment and room gallery" loading="eager"><button class="apartment-open-gallery" id="openApartmentGallery" type="button">View rooms and photos ↗</button></div><p class="apartment-note">Tap the photograph to open the large room viewer. Swipe left or right, or use the arrows to browse the available apartment pictures.</p></div>
-<div class="apartment-details"><span class="pill">For rent · Ho Chi Minh City</span><h3>Luxury Apartment</h3><p>Modern apartment in Vinhomes Group Real Estate Developer. Exact street address is shared privately by an agent with serious prospective customers.</p><div class="apartment-price">₫150,000,000</div><div class="apartment-subprice">Annual rent · price for one annual period</div>
+<div class="apartment-details"><span class="pill">For rent · Ho Chi Minh City</span><h3>Luxury Apartment</h3><p>Modern apartment in Vinhomes Group Real Estate Developer. Exact street address is shared privately by an agent with serious prospective customers.</p><div class="apartment-price">₫416,000,000</div><div class="apartment-subprice">Annual rent · price for one annual period</div>
 <div class="apartment-facilities"><div class="apartment-facility">🛏️ Bedrooms</div><div class="apartment-facility">🚿 Bathrooms</div><div class="apartment-facility">🏊 Swimming pool</div><div class="apartment-facility">🏋️ Gym</div><div class="apartment-facility">🛡️ Building security</div><div class="apartment-facility">🚗 Parking</div></div>
 <div class="duration-control" aria-label="Choose rental duration"><button type="button" id="apartmentDurationMinus" aria-label="Decrease rental duration">−</button><div class="duration-number"><span id="apartmentDurationValue">1</span><small id="apartmentDurationLabel">annual period</small></div><button type="button" id="apartmentDurationPlus" aria-label="Increase rental duration">+</button></div>
 <div class="duration-total"><span>Total rent for selected duration</span><strong id="apartmentTotalPrice">₫150,000,000</strong><small id="apartmentTotalCaption">1 annual period · security deposit calculated separately</small></div>
@@ -1104,12 +1104,12 @@ function openApartmentSearch(roomOnly){var nav=document.querySelector('.nav-butt
 (function(){
 var base='https://vuhrkijzjmnbsaqnpdmg.supabase.co/storage/v1/object/public/property-images/';
 var photos=['IMG-20261017-WA0031.jpg','IMG-20261017-WA0025.jpg','IMG-20261017-WA0026.jpg','IMG-20261017-WA0018.jpg','IMG-20261017-WA0021.jpg','IMG-20261017-WA0019.jpg','IMG-20261017-WA0020.jpg','IMG-20261017-WA0023.jpg','IMG-20261017-WA0028.jpg','IMG-20261017-WA0027.jpg','IMG-20261017-WA0029.jpg','IMG-20261017-WA0024.jpg','IMG-20261017-WA0022.jpg'];
-var duration=1,annualRent=150000000,index=0,viewed=false,modal=document.getElementById('apartmentRoomLightbox'),cover=document.getElementById('apartmentCoverImage'),image=document.getElementById('apartmentGalleryImage'),currentListing=null;
+var duration=1,annualRent=416000000,index=0,viewed=false,modal=document.getElementById('apartmentRoomLightbox'),cover=document.getElementById('apartmentCoverImage'),image=document.getElementById('apartmentGalleryImage'),currentListing=null;
  window.setRentalListing=function(p){
-  if(!p)return;currentListing=p;duration=1;annualRent=Number(p.price)||150000000;viewed=false;document.getElementById('apartmentStartStep').hidden=true;document.getElementById('apartmentContinue').hidden=true;
+  if(!p)return;currentListing=p;duration=1;annualRent=Number(p.price)||416000000;viewed=false;document.getElementById('apartmentStartStep').hidden=true;document.getElementById('apartmentContinue').hidden=true;
   document.getElementById('rentApartmentTitle').textContent=p.title||'Apartment for rent';
   document.querySelector('#rentApartmentView .apartment-hero .eyebrow').textContent='Rent apartment · '+(p.city||'Vietnam')+', Vietnam';
-  document.querySelector('#rentApartmentView .apartment-hero p:not(.eyebrow)').textContent='View the property photograph and explore the available room gallery. Choose a rental duration from one to three years.';
+  document.querySelector('#rentApartmentView .apartment-hero p:not(.eyebrow)').textContent='View the property photograph and explore the available room gallery. Choose a rental duration of one, two, or three annual periods.';
   var details=document.querySelector('#rentApartmentView .apartment-details h3');if(details)details.textContent=p.title||'Apartment';
   var pill=document.querySelector('#rentApartmentView .apartment-details .pill');if(pill)pill.textContent='For rent · '+(p.city||'Vietnam');
   var desc=document.querySelector('#rentApartmentView .apartment-details p');if(desc)desc.textContent=(p.description||'Apartment listing in Vietnam.')+' Exact street address is shared privately by an agent with serious prospective customers.';
@@ -1134,14 +1134,22 @@ var rentalFields=[
 {key:'phone',title:'Phone number',prompt:'Enter your phone number, including country code.',type:'tel',placeholder:'+62 …'},
 {key:'gender',title:'Gender',prompt:'Choose your gender.',type:'select',options:['Choose gender','Male','Female']},
 {key:'email',title:'Email address',prompt:'Enter your email address.',type:'email',placeholder:'Email address'},
-{key:'dob',title:'Date of birth',prompt:'Select your date of birth.',type:'date'},
+{key:'dob',title:'Confirm your age',prompt:'Select your date of birth.',type:'date'},
+ {key:'relationship',title:'Relationship status',prompt:'Choose Married, Single, or In a relationship.',type:'select',options:['Choose status','Married','Single','In a relationship']},
+ {key:'children',title:'Do you have children?',prompt:'This question is for customers who selected Married.',type:'select',options:['Choose an answer','Yes','No'],optional:true},
+ {key:'childrenCount',title:'How many children do you have?',prompt:'Enter the number of children.',type:'number',placeholder:'Number of children',optional:true},
 {key:'property',title:'Property name',prompt:'Confirm the apartment you want to rent.',type:'text',placeholder:'Luxury Apartment — First Room',value:'Luxury Apartment — First Room'},
 {key:'address',title:'Current residential address',prompt:'Enter your current residential address.',type:'textarea',placeholder:'Current residential address'},
 {key:'nationality',title:'Nationality',prompt:'Enter your nationality.',type:'text',placeholder:'Nationality'},
-{key:'start',title:'Rental start date',prompt:'Choose the date you want the rental to start.',type:'date'},
-{key:'end',title:'Rental end date',prompt:'Choose the date you want the rental to end.',type:'date'},
+{key:'start',title:'Check-in date and time',prompt:'Choose the date and time you want to check in.',type:'datetime-local'},
+ {key:'end',title:'Check-out date and time',prompt:'Choose the matching check-out date and time for your annual rental term.',type:'datetime-local'},
+ {key:'meetingTime',title:'Agent meeting date and time',prompt:'Choose when you would like to meet the agent after your enquiry.',type:'datetime-local'},
+ {key:'meetingAddress',title:'Agent meeting address',prompt:'Enter the address where you would like to meet the agent.',type:'textarea',placeholder:'Building, street, district, city, Vietnam'}
+{key:'end',title:'Rental end date',prompt:'Choose the check-out date and time for the selected annual rental term.',type:'date'},
 {key:'occupants',title:'Number of occupants',prompt:'How many people will live in the apartment?',type:'number',placeholder:'Number of occupants'},
-{key:'purpose',title:'Purpose of renting',prompt:'Choose the main purpose of renting.',type:'select',options:['Choose purpose','Personal residence','Family residence','Work','Study','Other']},
+{key:'duration',title:'Rental duration',prompt:'Choose the annual rental term.',type:'select',options:['Choose duration','1 annual','2 annual','3 annual']},
+ {key:'paymentFrequency',title:'Preferred payment schedule',prompt:'Choose the payment schedule to discuss with the agent.',type:'select',options:['Choose schedule','Full annual payment','Monthly reference payment','Quarterly reference payment']},
+ {key:'purpose',title:'Purpose of renting',prompt:'Choose the main purpose of renting.',type:'select',options:['Choose purpose','Personal residence','Family residence','Work','Study','Other']},
 {key:'description',title:'Additional details',prompt:'Add any other details for the agent (optional).',type:'textarea',placeholder:'Additional details',optional:true}
 ];
 var rentalData={},rentalIndex=0;
@@ -1179,7 +1187,7 @@ var rentalExtraIndex=0,rentalExtraValues={terms:false,idType:'',currency:'VND'},
 function renderRentalExtraStep(index){
 rentalExtraIndex=index;var box=document.getElementById('apartmentStartStep');
 var steps=[
-{title:'Payment terms',prompt:'Annual rent is ₫150,000,000 per annual period. Your selected duration is '+(document.getElementById('apartmentDurationCount')?document.getElementById('apartmentDurationCount').textContent:'the selected duration')+'. The security deposit is ₫5,000,000. The full rent for your selected duration plus the deposit must be paid before check-in. Monthly reference: ₫12,500,000; quarterly reference: ₫37,000,000. Confirm the final schedule with the agent before paying.',kind:'terms'},
+{title:'Payment terms',prompt:'Annual rent is ₫150,000,000 per annual period. Your selected duration is '+(document.getElementById('apartmentDurationCount')?document.getElementById('apartmentDurationCount').textContent:'the selected duration')+'. The security deposit is ₫20,000,000. The full rent for your selected duration plus the deposit must be paid before check-in. Monthly reference: ₫34,667,000; quarterly reference: ₫104,000,000. Confirm the final schedule with the agent before paying.',kind:'terms'},
 {title:'Identity document type',prompt:'Choose the document you would use for identity verification.',kind:'idtype'},
 {title:'Select identity document photo',prompt:'Choose a photo from your device.',kind:'idphoto'},
 {title:'Select personal photo',prompt:'Choose a personal photo from your device.',kind:'selfie'},
@@ -1193,7 +1201,7 @@ holder.innerHTML='<p><strong>Annual rent:</strong> ₫150,000,000 per annual per
 document.getElementById('rentalTermsAgree').checked=!!rentalExtraValues.terms;
 }else if(st.kind==='idtype'){
 var sel=document.createElement('select');sel.id='rentalIdType';sel.style.cssText='width:100%;padding:14px;border:1px solid #cbd3da;border-radius:10px;font:inherit';
-['Choose identity document','KTP — National Identity Card','Passport','KITAS','KITAP','SIM — Driving License','Student ID Card','Family Card (Kartu Keluarga/KK)','NIK — Population Identification Number'].forEach(function(v,i){var o=document.createElement('option');o.value=i?v:'';o.textContent=v;sel.appendChild(o);});sel.value=rentalExtraValues.idType;holder.appendChild(sel);
+['Choose identity document','Citizen identity card','Old citizen identity card','Passport','Birth certificate','Driver’s license','Permanent residence card','Temporary residence card','Personal identification number','Electronic identity card','Personal identity confirmation certificate'].forEach(function(v,i){var o=document.createElement('option');o.value=i?v:'';o.textContent=v;sel.appendChild(o);});sel.value=rentalExtraValues.idType;holder.appendChild(sel);
 }else if(st.kind==='idphoto'||st.kind==='selfie'){
 var inp=document.createElement('input');inp.type='file';inp.accept='image/*';inp.id='rentalPrivateFile';inp.style.cssText='display:block;width:100%;padding:14px;border:1px solid #cbd3da;border-radius:10px;font:inherit';holder.appendChild(inp);
 if(rentalLocalFiles[index-2]){var note=document.createElement('p');note.textContent='A photo is selected on this page.';holder.appendChild(note);}
