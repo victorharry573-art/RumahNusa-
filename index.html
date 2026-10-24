@@ -260,6 +260,11 @@
   .apartment-listings-panel .search-result-card>div{padding:14px}
 }
 .apartment-card-amenities{font-weight:700;color:#394954;background:#f4f6f8;border-radius:12px;padding:10px 12px;line-height:1.8}
+
+/* Mobile fix: keep rental-duration controls above decorative/overlapping layers and make taps reliable. */
+#rentApartmentView .duration-control{position:relative!important;z-index:30!important;isolation:isolate;pointer-events:auto!important;touch-action:manipulation!important}
+#rentApartmentView .duration-control button{position:relative!important;z-index:31!important;pointer-events:auto!important;touch-action:manipulation!important;-webkit-tap-highlight-color:rgba(255,255,255,.25);user-select:none}
+#rentApartmentView .duration-control .duration-number{pointer-events:none!important}
 </style>
 </head>
 <body id="top">
@@ -1975,5 +1980,31 @@ $('messageComposer').addEventListener('submit',async function(e){
 })();
 </script>
 
+<script id="APARTMENT-DURATION-MOBILE-TAP-FIX">
+(function(){
+ function bind(){
+  var view=document.getElementById('rentApartmentView');
+  var plus=document.getElementById('apartmentDurationPlus');
+  var minus=document.getElementById('apartmentDurationMinus');
+  if(!view||!plus||!minus)return;
+  [plus,minus].forEach(function(btn){
+   if(btn.dataset.durationTapFix)return;
+   btn.dataset.durationTapFix='1';
+   btn.addEventListener('pointerup',function(e){
+    if(e.pointerType==='mouse')return;
+    e.preventDefault();
+    e.stopPropagation();
+    btn.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true,view:window}));
+   },{capture:true,passive:false});
+   btn.addEventListener('touchend',function(e){
+    e.preventDefault();
+    e.stopPropagation();
+    btn.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true,view:window}));
+   },{capture:true,passive:false});
+  });
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();
+})();
+</script>
 </body>
 </html>
