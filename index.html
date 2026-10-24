@@ -242,6 +242,23 @@
     .message-bubble.mine,.message-bubble.sent,.message-mine{background:#fff0df}
     @media(prefers-reduced-motion:no-preference){.profile-progress span{transition:width .2s}}
 
+
+/* Apartment section polish: keep the price compact and the room card tappable on phones. */
+#apartmentStickyBooking{width:min(260px,calc(100vw - 24px))!important;right:12px!important;bottom:calc(88px + env(safe-area-inset-bottom))!important;padding:10px 12px!important;border-radius:18px!important;z-index:100001!important}
+#apartmentStickyPriceValue{font-size:clamp(20px,5.2vw,25px)!important;overflow-wrap:anywhere}
+#apartmentStickyBooking button{min-height:40px;touch-action:manipulation}
+.apartment-cover{position:relative;cursor:pointer;isolation:isolate}
+.apartment-cover img{display:block;width:100%;object-fit:cover;object-position:center;cursor:pointer}
+.apartment-open-gallery{z-index:2;touch-action:manipulation}
+.apartment-facility{min-width:0;overflow-wrap:anywhere}
+#apartmentRoomLightbox[hidden]{display:none!important}
+@media(max-width:480px){
+  #apartmentStickyBooking{width:min(238px,calc(100vw - 24px))!important;right:10px!important;bottom:calc(88px + env(safe-area-inset-bottom))!important}
+  #apartmentStickyBooking strong{font-size:20px!important}
+  .apartment-listings-panel .search-result-card{display:block}
+  .apartment-listings-panel .search-result-card>img{width:100%;height:230px;object-fit:cover}
+  .apartment-listings-panel .search-result-card>div{padding:14px}
+}
 </style>
 </head>
 <body id="top">
@@ -411,7 +428,7 @@
 <section id="rentApartmentView" hidden aria-labelledby="rentApartmentTitle">
 <div class="apartment-hero"><p class="eyebrow">Rent apartment · Vietnam</p><h2 id="rentApartmentTitle">Find an Apartment or Room</h2><p>Browse available apartments, search by city, choose how many bedrooms you need, and view room photographs.</p><div class="apartment-actions"><button type="button" class="profile-btn primary" id="browseApartmentsSearch">Browse rental apartments</button><button type="button" class="profile-btn secondary" id="searchRoomsButton">Search by bedrooms</button></div></div>
 <div class="apartment-listings-panel"><h3>Available apartments for rent</h3><p>Choose an apartment to view its details and room photos. Only published listings appear here.</p><div id="apartmentListings" aria-live="polite"><p>Loading available apartments…</p></div></div>
-<div class="apartment-layout"><div><div class="apartment-cover"><img id="apartmentCoverImage" onclick="window.openApartmentRoomViewer(event)" src="https://vuhrkijzjmnbsaqnpdmg.supabase.co/storage/v1/object/public/property-images/IMG-20261018-WA0100.jpg" alt="Luxury apartment bedroom photograph" loading="eager" style="cursor:pointer;pointer-events:auto"><button class="apartment-open-gallery" id="openApartmentGallery" onclick="window.openApartmentRoomViewer(event)" type="button" style="pointer-events:auto;touch-action:manipulation">View rooms and photos ↗</button></div><p class="apartment-note">Tap the photograph to open the large room viewer. Swipe left or right, or use the arrows to browse the available apartment pictures.</p></div>
+<div class="apartment-layout"><div><div class="apartment-cover"><img id="apartmentCoverImage" onclick="window.openApartmentRoomViewer(event)" src="https://vuhrkijzjmnbsaqnpdmg.supabase.co/storage/v1/object/public/property-images/IMG-20261018-WA0101.jpg" alt="Luxury apartment bedroom photograph" loading="eager" style="cursor:pointer;pointer-events:auto"><button class="apartment-open-gallery" id="openApartmentGallery" onclick="window.openApartmentRoomViewer(event)" type="button" style="pointer-events:auto;touch-action:manipulation">View rooms and photos ↗</button></div><p class="apartment-note">Tap the photograph to open the large room viewer. Swipe left or right, or use the arrows to browse the available apartment pictures.</p></div>
 <div class="apartment-details"><span class="pill">For rent · Ho Chi Minh City</span><h3>Luxury Apartment</h3><p>Modern apartment in Vinhomes Group Real Estate Developer. Exact street address is shared privately by an agent with serious prospective customers.</p><div class="apartment-price">₫416,000,000</div><div class="apartment-subprice">Annual rent · price for one annual period</div>
 <div class="apartment-facilities" id="apartmentAmenities"><div class="apartment-facility">🛏️ 1 bedroom</div><div class="apartment-facility">🛋️ 1 parlor</div><div class="apartment-facility">❄️ AC</div><div class="apartment-facility">🛝 Playground</div><div class="apartment-facility">🎾 Tennis court</div><div class="apartment-facility">🛗 Elevator</div><div class="apartment-facility">🍽️ Kitchen utensils</div><div class="apartment-facility">🛏️ Spring bed</div><div class="apartment-facility">👔 Wardrobe</div><div class="apartment-facility">🚿 Water heater</div><div class="apartment-facility">🛋️ Sofa bed</div><div class="apartment-facility">🏋️ Gym</div><div class="apartment-facility">🏊 Swimming pool</div><div class="apartment-facility">📺 Smart TV</div><div class="apartment-facility">🏀 Basketball court</div><div class="apartment-facility">🌇 Balcony</div><div class="apartment-facility">🔥 Gas stove</div><div class="apartment-facility">🧊 Refrigerator</div><div class="apartment-facility">🍚 Rice cooker</div><div class="apartment-facility">🌬️ Cooker hood</div><div class="apartment-facility">🫖 Electric kettle</div><div class="apartment-facility">🚿 Jet shower</div><div class="apartment-facility">🪞 Mirror</div><div class="apartment-facility">💨 Exhaust fan</div><div class="apartment-facility">💡 Ceiling-mounted lighting</div><div class="apartment-facility">🪑 Chairs</div><div class="apartment-facility">🛡️ Building security</div><div class="apartment-facility">🚗 Parking</div></div>
 <div class="duration-control" aria-label="Choose rental duration"><button type="button" id="apartmentDurationMinus" aria-label="Decrease rental duration">−</button><div class="duration-number"><span id="apartmentDurationValue">1</span><small id="apartmentDurationLabel">annual period</small></div><button type="button" id="apartmentDurationPlus" aria-label="Increase rental duration">+</button></div>
@@ -1061,7 +1078,7 @@ var siteVietnamnText = {
  try{await loadSearchListings();}catch(err){host.innerHTML='<p>Listings could not be loaded. Please try again in a moment.</p>';return;}
  var items=searchListings.filter(function(p){return String(p.type||'').toLowerCase().includes('apartment')&&p.status==='rent';});
  if(!items.length){host.innerHTML='<div class="message-empty"><strong>No published apartments yet.</strong><p>Submit an apartment listing, add clear photos and room details, then publish it after review. Published apartments will appear here and in Search automatically.</p><button type="button" class="profile-btn primary" id="apartmentGoSearch">Search apartments</button></div>';var go=document.getElementById('apartmentGoSearch');if(go)go.addEventListener('click',function(){openApartmentSearch(false);});return;}
- host.innerHTML=items.map(function(p){var safe=function(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});};return '<article class="search-result-card"><img src="'+safe(p.image||'https://images.unsplash.com/photo-1600607687920-4e2a09cf159a?auto=format&fit=crop&w=1200&q=85')+'" alt="'+safe(p.title)+'" loading="lazy"><div><h3>'+safe(p.title)+'</h3><p>Apartment · For rent</p><p>'+safe(p.city)+', Vietnam</p><p>'+p.bedrooms+' bedrooms · '+p.bathrooms+' bathrooms · '+p.areaSqm+' m²</p><p class="search-result-price">₫'+Number(p.price||0).toLocaleString('en-US')+' / year</p><p>'+safe(p.description)+'</p><p>Exact street address available privately from an agent.</p><button type="button" class="profile-btn primary" data-apartment-listing="'+safe(p.id)+'">View apartment and rooms</button></div></article>';}).join('');
+ host.innerHTML=items.map(function(p){var safe=function(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});};return '<article class="search-result-card"><img src="'+safe(p.image||'https://vuhrkijzjmnbsaqnpdmg.supabase.co/storage/v1/object/public/property-images/IMG-20261018-WA0101.jpg')+'" alt="'+safe(p.title)+'" loading="lazy"><div><h3>'+safe(p.title)+'</h3><p>Apartment · For rent</p><p>'+safe(p.city)+', Vietnam</p><p>'+p.bedrooms+' bedrooms · '+p.bathrooms+' bathrooms · '+p.areaSqm+' m²</p><p class="search-result-price">₫'+Number(p.price||0).toLocaleString('en-US')+' / year</p><p>'+safe(p.description)+'</p><p>Exact street address available privately from an agent.</p><button type="button" class="profile-btn primary" data-apartment-listing="'+safe(p.id)+'">View apartment and rooms</button></div></article>';}).join('');
  host.querySelectorAll('[data-apartment-listing]').forEach(function(btn){btn.addEventListener('click',function(){var p=searchListings.find(function(x){return x.id===btn.getAttribute('data-apartment-listing');});if(p&&window.setRentalListing)window.setRentalListing(p);var top=document.querySelector('#rentApartmentView .apartment-layout');if(top)top.scrollIntoView({behavior:'smooth',block:'start'});});});
 };
 function openApartmentSearch(roomOnly){var nav=document.querySelector('.nav-button[data-section="Search"]');if(nav)nav.click();searchForm.elements.type.value='Apartment';searchForm.elements.goal.value='rent';searchForm.elements.term.value='1';if(roomOnly){searchForm.elements.bedrooms.focus();searchForm.elements.bedrooms.scrollIntoView({behavior:'smooth',block:'center'});propertySearchResults.innerHTML='<h3>Choose the room size</h3><p>Select Studio, 1 bedroom, 2 bedrooms or more, then tap Search Properties.</p>';}else{searchForm.requestSubmit();}}
@@ -1899,50 +1916,59 @@ $('messageComposer').addEventListener('submit',async function(e){
 
 <script id="APARTMENT-GALLERY-OPEN-FIX-20261024">
 (function(){
-  var files=["IMG-20261018-WA0100.jpg","IMG-20261018-WA0101.jpg","IMG-20261018-WA0102.jpg","IMG-20261018-WA0103.jpg","IMG-20261018-WA0104.jpg","IMG-20261018-WA0105.jpg","IMG-20261018-WA0106.jpg","IMG-20261018-WA0107.jpg","IMG-20261018-WA0108.jpg","IMG-20261018-WA0109.jpg","IMG-20261018-WA0110.jpg","IMG-20261018-WA0113.jpg","IMG-20261018-WA0114.jpg","IMG-20261018-WA0117.jpg","IMG-20261018-WA0119.jpg","IMG-20261018-WA0120.jpg","IMG-20261018-WA0121.jpg","IMG-20261018-WA0122.jpg","IMG-20261018-WA0123.jpg","IMG-20261018-WA0124.jpg"];
+  /* Start with the next uploaded apartment photo, not the community master-plan image. */
+  var files=["IMG-20261018-WA0101.jpg","IMG-20261018-WA0102.jpg","IMG-20261018-WA0103.jpg","IMG-20261018-WA0104.jpg","IMG-20261018-WA0105.jpg","IMG-20261018-WA0106.jpg","IMG-20261018-WA0107.jpg","IMG-20261018-WA0108.jpg","IMG-20261018-WA0109.jpg","IMG-20261018-WA0110.jpg","IMG-20261018-WA0113.jpg","IMG-20261018-WA0114.jpg","IMG-20261018-WA0117.jpg","IMG-20261018-WA0119.jpg","IMG-20261018-WA0120.jpg","IMG-20261018-WA0121.jpg","IMG-20261018-WA0122.jpg","IMG-20261018-WA0123.jpg","IMG-20261018-WA0124.jpg","IMG-20261018-WA0100.jpg"];
   var base="https://vuhrkijzjmnbsaqnpdmg.supabase.co/storage/v1/object/public/property-images/";
-  var index=0;
+  var index=0, startX=null, startY=null, backArmed=false;
   function get(id){return document.getElementById(id);}
   function show(n){
     index=(n+files.length)%files.length;
     var img=get("apartmentGalleryImage");
-    if(img){img.src=base+encodeURIComponent(files[index]).replace(/%2F/gi,"/");img.style.display="block";img.style.pointerEvents="auto";}
+    if(img){img.src=base+encodeURIComponent(files[index]).replace(/%2F/gi,"/");img.style.display="block";img.style.pointerEvents="auto";img.alt="Apartment room photograph "+(index+1);}
     var count=get("apartmentGalleryCount");if(count)count.textContent=(index+1)+" / "+files.length;
   }
+  function isOpen(){var m=get("apartmentRoomLightbox");return !!(m&&m.classList.contains("open"));}
   window.openApartmentRoomViewer=function(ev){
     if(ev){ev.preventDefault();ev.stopPropagation();}
-    var modal=get("apartmentRoomLightbox");
-    if(!modal)return false;
-    show(0);
-    modal.classList.add("open");
-    modal.hidden=false;
-    modal.style.setProperty("display","flex","important");
-    modal.style.setProperty("position","fixed","important");
-    modal.style.setProperty("inset","0","important");
-    modal.style.setProperty("z-index","2147483647","important");
-    modal.style.setProperty("pointer-events","auto","important");
-    modal.setAttribute("aria-hidden","false");
+    var modal=get("apartmentRoomLightbox");if(!modal)return false;
+    show(0);modal.classList.add("open");modal.hidden=false;
+    modal.style.setProperty("display","flex","important");modal.style.setProperty("position","fixed","important");
+    modal.style.setProperty("inset","0","important");modal.style.setProperty("z-index","2147483647","important");
+    modal.style.setProperty("pointer-events","auto","important");modal.setAttribute("aria-hidden","false");
     document.body.style.overflow="hidden";
+    if(!backArmed){try{history.pushState({apartmentRoomViewer:true},"","#apartment-photos");backArmed=true;}catch(e){}}
     return false;
   };
-  function close(){
+  function close(fromPop){
     var modal=get("apartmentRoomLightbox");if(!modal)return;
-    modal.classList.remove("open");modal.style.setProperty("display","none","important");modal.setAttribute("aria-hidden","true");document.body.style.overflow="";
+    modal.classList.remove("open");modal.hidden=true;modal.style.setProperty("display","none","important");modal.setAttribute("aria-hidden","true");
+    document.body.style.overflow="";document.documentElement.style.overflowY="auto";
+    if(!fromPop&&backArmed){backArmed=false;try{if(location.hash==="#apartment-photos")history.back();}catch(e){}}
+    else backArmed=false;
   }
   function attach(){
     var b=get("openApartmentGallery"),cover=get("apartmentCoverImage"),view=get("apartmentViewRooms");
-    [b,cover,view].forEach(function(el){if(!el)return;el.style.pointerEvents="auto";el.style.touchAction="manipulation";el.addEventListener("pointerup",window.openApartmentRoomViewer,{passive:false});});
+    [b,cover,view].forEach(function(el){if(!el||el.dataset.roomViewerBound)return;el.dataset.roomViewerBound="1";el.style.pointerEvents="auto";el.style.touchAction="manipulation";el.addEventListener("click",window.openApartmentRoomViewer);});
     var prev=get("apartmentGalleryPrev"),next=get("apartmentGalleryNext"),x=get("apartmentGalleryClose");
-    if(prev)prev.addEventListener("click",function(e){e.preventDefault();e.stopPropagation();show(index-1);});
-    if(next)next.addEventListener("click",function(e){e.preventDefault();e.stopPropagation();show(index+1);});
-    if(x)x.addEventListener("click",function(e){e.preventDefault();e.stopPropagation();close();});
+    if(prev&&!prev.dataset.bound){prev.dataset.bound="1";prev.addEventListener("click",function(e){e.preventDefault();e.stopPropagation();show(index-1);});}
+    if(next&&!next.dataset.bound){next.dataset.bound="1";next.addEventListener("click",function(e){e.preventDefault();e.stopPropagation();show(index+1);});}
+    if(x&&!x.dataset.bound){x.dataset.bound="1";x.addEventListener("click",function(e){e.preventDefault();e.stopPropagation();close(false);});}
     var modal=get("apartmentRoomLightbox");
     if(modal&&!modal.dataset.gallerySwipeBound){
-      modal.dataset.gallerySwipeBound="1";var startX=null,startY=null;
+      modal.dataset.gallerySwipeBound="1";
       modal.addEventListener("touchstart",function(e){if(e.touches.length===1){startX=e.touches[0].clientX;startY=e.touches[0].clientY;}},{passive:true});
-      modal.addEventListener("touchend",function(e){if(startX===null||!e.changedTouches.length)return;var dx=e.changedTouches[0].clientX-startX,dy=e.changedTouches[0].clientY-startY;if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy))show(index+(dx<0?1:-1));startX=null;startY=null;},{passive:true});
+      modal.addEventListener("touchend",function(e){
+        if(startX===null||!e.changedTouches.length)return;
+        var dx=e.changedTouches[0].clientX-startX,dy=e.changedTouches[0].clientY-startY;
+        if(Math.abs(dx)>55&&Math.abs(dx)>Math.abs(dy)*1.2){
+          if(e.target&&e.target.closest&&e.target.closest("#apartmentGalleryImage"))show(index+(dx<0?1:-1));
+          else close(false);
+        }
+        startX=null;startY=null;
+      },{passive:true});
     }
   }
+  window.addEventListener("popstate",function(){if(isOpen())close(true);});
   if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",attach);else attach();
 })();
 </script>
