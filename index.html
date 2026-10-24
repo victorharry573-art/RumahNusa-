@@ -1752,7 +1752,7 @@ async function startConversation(targetId,property,firstBody,imageFile){
  $('messageQuickSupport').addEventListener('click',function(){var box=document.querySelector('.message-compose-new');if(box)box.scrollIntoView({behavior:'smooth',block:'start'});window.setTimeout(function(){var field=$('messageFirstBody');if(field){field.focus();field.placeholder='Write your message for Vinhomes Support…';}},250);status('messageComposeStatus','Write your message below, then tap Contact Vinhomes Support.');});
 document.addEventListener('click',function(e){var b=e.target.closest('[data-message-property]');if(!b)return;var nav=document.querySelector('.nav-button[data-section="Message"]');if(nav)nav.click();window.setTimeout(function(){var field=$('messagePropertyName');if(field)field.value=b.getAttribute('data-message-property')||'';},180);});
 document.querySelectorAll('[data-message-question]').forEach(function(btn){btn.addEventListener('click',function(){var field=$('messageFirstBody');if(!field)return;var q=btn.getAttribute('data-message-question')||'';field.value=field.value.trim()?field.value.trim()+'\n'+q:q;field.focus();});});
-$('messageStartConversation').addEventListener('click',function(){
+$('messageStartConversation').addEventListener('click',async function(){
  if(!session){try{await ensureCustomerSession();}catch(authErr){status('messageComposeStatus',authErr.message,true);return;}}
  var target=$('messageRecipient').value,first=$('messageFirstBody').value,property=$('messagePropertyName').value.trim();
  if(!target){status('messageComposeStatus','No agent is selected. Open the contact list and choose an available agent.',true);$('messageRecipient').focus();return;}
