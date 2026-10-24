@@ -1156,7 +1156,7 @@ var rentalData={},rentalIndex=0;
 function showRentalField(){
 var f=rentalFields[rentalIndex],box=document.getElementById('apartmentStartStep');
 box.hidden=false;
-box.innerHTML='<h3 id="rentalStepTitle"></h3><p id="rentalStepPrompt"></p><div id="rentalStepInput"></div><p class="apartment-note" id="rentalStepError" role="alert"></p><div class="apartment-actions"><button type="button" class="profile-btn secondary" id="rentalStepBack">Previous</button><button type="button" class="profile-btn primary" id="rentalStepNext">Continue</button></div><p class="apartment-note" id="rentalStepCount"></p>';
+box.innerHTML='<h3 id="rentalStepTitle"></h3><p id="rentalStepPrompt"></p><div id="rentalStepInput"></div><p class="apartment-note" id="rentalStepError" role="alert"></p><div class="apartment-actions"><button type="button" class="profile-btn secondary" id="rentalStepBack">Previous</button><button type="button" class="profile-btn secondary" id="rentalStepSave">Save</button><button type="button" class="profile-btn primary" id="rentalStepNext" hidden>Continue</button></div><p class="apartment-note" id="rentalStepCount"></p>';
 document.getElementById('rentalStepTitle').textContent=f.title;
 document.getElementById('rentalStepPrompt').textContent=f.prompt;
 document.getElementById('rentalStepCount').textContent='Step '+(rentalIndex+1)+' of '+rentalFields.length;
@@ -1166,6 +1166,7 @@ else if(f.type==='textarea'){input=document.createElement('textarea');input.rows
 else{input=document.createElement('input');input.type=f.type;input.placeholder=f.placeholder||'';if(f.type==='number'){input.min='1';input.max='50';}}
 input.id='rentalStepAnswer';input.style.cssText='display:block;width:100%;box-sizing:border-box;min-height:50px;padding:14px;border:1px solid #cbd3da;border-radius:10px;font:inherit;background:#fff;color:#243746;margin:12px 0';
 input.value=rentalData[f.key]!==undefined?rentalData[f.key]:(f.value||'');
+ if(f.key==='end'&&!input.value&&rentalData.start){var sd=new Date(rentalData.start);if(!isNaN(sd)){sd.setFullYear(sd.getFullYear()+1);input.value=sd.getFullYear()+'-'+String(sd.getMonth()+1).padStart(2,'0')+'-'+String(sd.getDate()).padStart(2,'0')+'T'+String(sd.getHours()).padStart(2,'0')+':'+String(sd.getMinutes()).padStart(2,'0');}}
 holder.appendChild(input);
 document.getElementById('rentalStepNext').textContent=rentalIndex===rentalFields.length-1?'Finish details':'Continue';
 document.getElementById('rentalStepBack').addEventListener('click',function(){
@@ -1177,7 +1178,7 @@ document.getElementById('rentalStepNext').addEventListener('click',function(){
 var value=document.getElementById('rentalStepAnswer').value.trim();
 if(!value&&!f.optional){document.getElementById('rentalStepError').textContent='Please complete this field before continuing.';return;}
 if(f.key==='email'&&value&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)){document.getElementById('rentalStepError').textContent='Please enter a valid email address.';return;}
-if(f.key==='end'&&rentalData.start&&value<rentalData.start){document.getElementById('rentalStepError').textContent='The end date must be on or after the start date.';return;}
+if(f.key==='end'&&rentalData.start&&value<=rentalData.start){document.getElementById('rentalStepError').textContent='The end date must be on or after the start date.';return;}
 rentalData[f.key]=value;
 if(rentalIndex<rentalFields.length-1){rentalIndex++;showRentalField();box.scrollIntoView({behavior:'smooth',block:'start'});}
 else{renderRentalExtraStep(0);}
