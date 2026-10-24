@@ -1781,7 +1781,7 @@ async function sendMessage(body,imageFile){
  await apiJson('/rest/v1/messages',{method:'POST',body:JSON.stringify(payload)});
  if('Notification' in window&&Notification.permission==='granted'&&$('messageInAppNotifications').checked){/* New-message browser alerts are shown on incoming events below. */}
 }
-$$('messageComposer').addEventListener('submit',async function(e){
+$('messageComposer').addEventListener('submit',async function(e){
   e.preventDefault();
   if(!session){try{await ensureCustomerSession();}catch(authErr){status('messageComposeStatus',authErr.message,true);return;}}
   var body=$('messageReplyBody').value.trim(),image=pendingMessageImage;
