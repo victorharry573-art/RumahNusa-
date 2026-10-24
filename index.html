@@ -1983,6 +1983,7 @@ $('messageComposer').addEventListener('submit',async function(e){
 <script id="APARTMENT-DURATION-MOBILE-TAP-FIX">
 (function(){
  function bind(){
+  var lastDurationTap=0;
   var view=document.getElementById('rentApartmentView');
   var plus=document.getElementById('apartmentDurationPlus');
   var minus=document.getElementById('apartmentDurationMinus');
@@ -1992,11 +1993,14 @@ $('messageComposer').addEventListener('submit',async function(e){
    btn.dataset.durationTapFix='1';
    btn.addEventListener('pointerup',function(e){
     if(e.pointerType==='mouse')return;
+    lastDurationTap=Date.now();
     e.preventDefault();
     e.stopPropagation();
     btn.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true,view:window}));
    },{capture:true,passive:false});
    btn.addEventListener('touchend',function(e){
+    if(Date.now()-lastDurationTap<500)return;
+    lastDurationTap=Date.now();
     e.preventDefault();
     e.stopPropagation();
     btn.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true,view:window}));
