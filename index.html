@@ -1993,6 +1993,7 @@ $('messageComposer').addEventListener('submit',async function(e){
    btn.dataset.durationTapFix='1';
    btn.addEventListener('pointerup',function(e){
     if(e.pointerType==='mouse')return;
+    if(Date.now()-lastDurationTap<500)return;
     lastDurationTap=Date.now();
     e.preventDefault();
     e.stopPropagation();
