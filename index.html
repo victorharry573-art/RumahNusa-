@@ -1145,7 +1145,7 @@ var rentalFields=[
  {key:'end',title:'Check-out date and time',prompt:'Choose the matching check-out date and time for your annual rental term.',type:'datetime-local'},
  {key:'meetingTime',title:'Agent meeting date and time',prompt:'Choose when you would like to meet the agent after your enquiry.',type:'datetime-local'},
  {key:'meetingAddress',title:'Agent meeting address',prompt:'Enter the address where you would like to meet the agent.',type:'textarea',placeholder:'Building, street, district, city, Vietnam'}
-{key:'end',title:'Rental end date',prompt:'Choose the check-out date and time for the selected annual rental term.',type:'date'},
+
 {key:'occupants',title:'Number of occupants',prompt:'How many people will live in the apartment?',type:'number',placeholder:'Number of occupants'},
 {key:'duration',title:'Rental duration',prompt:'Choose the annual rental term.',type:'select',options:['Choose duration','1 annual','2 annual','3 annual']},
  {key:'paymentFrequency',title:'Preferred payment schedule',prompt:'Choose the payment schedule to discuss with the agent.',type:'select',options:['Choose schedule','Full annual payment','Monthly reference payment','Quarterly reference payment']},
@@ -1168,6 +1168,11 @@ input.id='rentalStepAnswer';input.style.cssText='display:block;width:100%;box-si
 input.value=rentalData[f.key]!==undefined?rentalData[f.key]:(f.value||'');
  if(f.key==='end'&&!input.value&&rentalData.start){var sd=new Date(rentalData.start);if(!isNaN(sd)){sd.setFullYear(sd.getFullYear()+1);input.value=sd.getFullYear()+'-'+String(sd.getMonth()+1).padStart(2,'0')+'-'+String(sd.getDate()).padStart(2,'0')+'T'+String(sd.getHours()).padStart(2,'0')+':'+String(sd.getMinutes()).padStart(2,'0');}}
 holder.appendChild(input);
+ var stepNext=document.getElementById('rentalStepNext');
+ var savedLabel=document.createElement('p');savedLabel.className='apartment-note';savedLabel.setAttribute('aria-live','polite');document.getElementById('rentalStepSave').parentNode.insertAdjacentElement('afterend',savedLabel);
+ function syncStepReady(){stepNext.hidden=!String(input.value||'').trim();}
+ input.addEventListener('input',syncStepReady);input.addEventListener('change',syncStepReady);syncStepReady();
+ document.getElementById('rentalStepSave').addEventListener('click',function(){if(!String(input.value||'').trim()){document.getElementById('rentalStepError').textContent='Please complete this field before saving.';return;}rentalData[f.key]=input.value.trim();savedLabel.textContent='Saved';});
 document.getElementById('rentalStepNext').textContent=rentalIndex===rentalFields.length-1?'Finish details':'Continue';
 document.getElementById('rentalStepBack').addEventListener('click',function(){
 rentalData[f.key]=document.getElementById('rentalStepAnswer').value;
