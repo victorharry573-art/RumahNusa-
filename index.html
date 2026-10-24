@@ -1214,7 +1214,7 @@ var steps=[
 {title:'Payment currency',prompt:'Choose the currency you prefer to use when discussing payment with the agent.',kind:'currency'}
 ];
 var st=steps[index];box.hidden=false;
-box.innerHTML='<h3>'+st.title+'</h3><p>'+st.prompt+'</p><div id="rentalExtraInput"></div><p class="apartment-note" id="rentalExtraError" role="alert"></p><div class="apartment-actions"><button type="button" class="profile-btn secondary" id="rentalExtraBack">Previous</button><button type="button" class="profile-btn secondary" id="rentalExtraSave">Save</button><button type="button" class="profile-btn primary" id="rentalExtraNext">'+(index===steps.length-1?'Review application':'Continue')+'</button></div><p class="apartment-note">Step '+(14+index)+' of 18</p>';
+box.innerHTML='<h3>'+st.title+'</h3><p>'+st.prompt+'</p><div id="rentalExtraInput"></div><p class="apartment-note" id="rentalExtraError" role="alert"></p><div class="apartment-actions"><button type="button" class="profile-btn secondary" id="rentalExtraBack">Previous</button><button type="button" class="profile-btn secondary" id="rentalExtraSave">Save</button><button type="button" class="profile-btn primary" id="rentalExtraNext">'+(index===steps.length-1?'Review application':'Continue')+'</button></div><p class="apartment-note" id="rentalExtraSaved" aria-live="polite"></p><p class="apartment-note">Step '+(14+index)+' of 18</p>';
 var holder=document.getElementById('rentalExtraInput');
  document.getElementById('rentalExtraSave').addEventListener('click',function(){
   if(st.kind==='terms')rentalExtraValues.terms=document.getElementById('rentalTermsAgree').checked;
