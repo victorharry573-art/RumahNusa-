@@ -1808,64 +1808,51 @@ $('messageComposer').addEventListener('submit',async function(e){
 
 
 <script id="NAV-RECOVERY-FIX-20261024">
-/* Independent navigation recovery: keeps Search and Rentapartment usable even if an earlier script fails. */
-(function () {
-  function byId(id) { return document.getElementById(id); }
-  function showOnly(section) {
-    var navButtons = document.querySelectorAll('.nav-button');
-    navButtons.forEach(function (b) {
-      var active = b.getAttribute('data-section') === section;
-      b.classList.toggle('active', active);
-      if (active) b.setAttribute('aria-current', 'page');
-      else b.removeAttribute('aria-current');
-    });
-    var main = Array.prototype.slice.call(document.querySelectorAll('main > section')).filter(function (el) {
-      return el.id !== 'profileView';
-    });
-    main.forEach(function (el) { el.style.display = ''; });
-    var profile = byId('profileView');
-    if (profile) profile.classList.remove('visible');
-    ['searchView','rentApartmentView','promoteView','messageView'].forEach(function (id) {
-      var el = byId(id);
-      if (el) { el.hidden = true; el.style.display = 'none'; }
-    });
-    if (section === 'Home' || section === 'Buy') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
+/* Direct button handlers: bypass earlier navigation listeners that may be conflicting. */
+(function(){
+  function el(id){return document.getElementById(id);}
+  function navigate(section){
+    var mainSections=Array.prototype.slice.call(document.querySelectorAll('main > section')).filter(function(x){return x.id!=='profileView';});
+    var profile=el('profileView');
+    var ids=['searchView','rentApartmentView','promoteView','messageView'];
+    ids.forEach(function(id){var x=el(id);if(x){x.hidden=true;x.style.display='none';}});
+    if(profile)profile.classList.remove('visible');
+    document.querySelectorAll('.nav-button').forEach(function(b){var active=b.getAttribute('data-section')===section;b.classList.toggle('active',active);if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
+    if(section==='Home'){
+      mainSections.forEach(function(x){x.style.display='';});
+      window.scrollTo(0,0);return;
     }
-    main.forEach(function (el) { el.style.display = 'none'; });
-    if (section === 'Search') {
-      var search = byId('searchView');
-      if (search) { search.hidden = false; search.style.display = 'block'; }
-    } else if (section === 'Rentapartment') {
-      var rent = byId('rentApartmentView');
-      if (rent) { rent.hidden = false; rent.style.display = 'block'; }
-      if (typeof window.loadApartmentListings === 'function') window.loadApartmentListings();
-    } else if (section === 'Promote') {
-      var promote = byId('promoteView');
-      if (promote) { promote.hidden = false; promote.style.display = 'block'; }
-      if (typeof window.__initPromoteSection === 'function') window.__initPromoteSection();
-    } else if (section === 'Message') {
-      var messages = byId('messageView');
-      if (messages) { messages.hidden = false; messages.style.display = 'block'; }
-      if (typeof window.__initMessageSection === 'function') window.__initMessageSection();
-    } else if (section === 'Profile') {
-      if (profile) profile.classList.add('visible');
-      var title = byId('profileTitle');
-      if (title) { try { title.focus({ preventScroll: true }); } catch (_) {} }
+    if(section==='Buy'){
+      mainSections.forEach(function(x){x.style.display='none';});
+      var search=el('searchView');if(search){search.hidden=false;search.style.display='block';}
+      var form=el('propertySearchForm');if(form){form.elements.goal.value='sale';form.elements.term.value='';}
+      window.scrollTo(0,0);return;
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    mainSections.forEach(function(x){x.style.display='none';});
+    if(section==='Profile'){
+      if(profile){profile.classList.add('visible');profile.style.display='block';}
+    }else{
+      var target=el(section==='Search'?'searchView':section==='Rentapartment'?'rentApartmentView':section==='Promote'?'promoteView':section==='Message'?'messageView':'');
+      if(target){target.hidden=false;target.style.display='block';}
+      if(section==='Rentapartment'&&typeof window.loadApartmentListings==='function')window.loadApartmentListings();
+      if(section==='Promote'&&typeof window.__initPromoteSection==='function')window.__initPromoteSection();
+      if(section==='Message'&&typeof window.__initMessageSection==='function')window.__initMessageSection();
+    }
+    window.scrollTo(0,0);
   }
-  document.addEventListener('click', function (event) {
-    var button = event.target && event.target.closest ? event.target.closest('.nav-button[data-section]') : null;
-    if (!button) return;
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    showOnly(button.getAttribute('data-section'));
-  }, true);
-  var style = document.createElement('style');
-  style.textContent = '.bottom-nav{position:fixed!important;z-index:99999!important;pointer-events:auto!important}.bottom-nav .nav-button{pointer-events:auto!important;touch-action:manipulation}#searchView[hidden],#rentApartmentView[hidden],#promoteView[hidden],#messageView[hidden]{display:none!important}';
-  document.head.appendChild(style);
+  window.__recoverNavigate=navigate;
+  function attach(){
+    document.querySelectorAll('.bottom-nav .nav-button[data-section]').forEach(function(button){
+      button.onclick=function(event){event.preventDefault();event.stopPropagation();navigate(button.getAttribute('data-section'));};
+      button.style.pointerEvents='auto';
+      button.style.touchAction='manipulation';
+    });
+    var nav=document.querySelector('.bottom-nav');
+    if(nav){nav.style.zIndex='2147483000';nav.style.pointerEvents='auto';}
+  }
+  attach();
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',attach);
+  window.addEventListener('pageshow',attach);
 })();
 </script>
 
