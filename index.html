@@ -1126,10 +1126,16 @@ function openGallery(){viewed=true;document.getElementById('apartmentContinue').
 function closeGallery(fromPop){modal.classList.remove('open');document.body.style.overflow='';if(!fromPop&&location.hash==='#apartment-rooms'){try{history.back();}catch(e){}}if(viewed)document.getElementById('apartmentContinue').hidden=false;}
 document.getElementById('apartmentDurationMinus').addEventListener('click',function(){if(duration>1){duration--;update();}});document.getElementById('apartmentDurationPlus').addEventListener('click',function(){if(duration<3){duration++;update();}});
 document.getElementById('openApartmentGallery').addEventListener('click',openGallery);document.getElementById('apartmentViewRooms').addEventListener('click',openGallery);cover.addEventListener('click',openGallery);
-// Reliable mobile tap handling: handle taps on the cover and its overlay button before other page listeners.
+// Reliable mobile tap handling: open the room viewer when the cover or its button is tapped.
 [cover,document.getElementById('openApartmentGallery')].forEach(function(el){el.style.setProperty('pointer-events','auto','important');el.style.setProperty('touch-action','manipulation','important');});
-document.addEventListener('click',function(e){var target=e.target;if(target&&target.closest){var trigger=target.closest('#openApartmentGallery, #apartmentCoverImage');if(trigger){e.preventDefault();e.stopPropagation();openGallery();}},true);
-document.addEventListener('pointerup',function(e){var target=e.target;if(target&&target.closest){var trigger=target.closest('#openApartmentGallery, #apartmentCoverImage');if(trigger){e.preventDefault();openGallery();}},true);
+document.addEventListener('click',function(e){
+  var target=e.target;
+  if(!target||!target.closest)return;
+  var trigger=target.closest('#openApartmentGallery, #apartmentCoverImage');
+  if(!trigger)return;
+  e.preventDefault();e.stopPropagation();
+  if(!modal.classList.contains('open'))openGallery();
+},true);
 document.getElementById('apartmentGalleryPrev').addEventListener('click',function(){showPhoto(index-1);});document.getElementById('apartmentGalleryNext').addEventListener('click',function(){showPhoto(index+1);});document.getElementById('apartmentGalleryClose').addEventListener('click',function(){closeGallery(false);});
 window.addEventListener('popstate',function(){if(modal.classList.contains('open'))closeGallery(true);});document.addEventListener('keydown',function(e){if(!modal.classList.contains('open'))return;if(e.key==='ArrowLeft')showPhoto(index-1);if(e.key==='ArrowRight')showPhoto(index+1);if(e.key==='Escape')closeGallery(false);});
 var start=null;modal.addEventListener('touchstart',function(e){if(e.touches.length===1)start={x:e.touches[0].clientX,y:e.touches[0].clientY};},{passive:true});modal.addEventListener('touchend',function(e){if(!start||!e.changedTouches.length)return;var dx=e.changedTouches[0].clientX-start.x,dy=e.changedTouches[0].clientY-start.y;if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)*1.2)showPhoto(index+(dx<0?1:-1));start=null;},{passive:true});
