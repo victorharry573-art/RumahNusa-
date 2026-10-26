@@ -1741,7 +1741,7 @@ async function openConversation(row){
 async function loadMessages(id){
  if(!session||!id)return;
  try{
-  var rows=await apiJson('/rest/v1/messages?select=id,conversation_id,sender_id,sender_role,body,attachment_path,attachment_name,attachment_content_type,created_at,read_at&conversation_id=eq.'+encodeURIComponent(id)+'&order=created_at.asc');
+  var rows=await apiJson('/rest/v1/messages?select=id,conversation_id,sender_id,sender_role,body,attachment_path,attachment_name,attachment_content_type,created_at,agent_read_at,customer_read_at&conversation_id=eq.'+encodeURIComponent(id)+'&order=created_at.asc');
   var stream=$('messageStream');stream.innerHTML='';
   if(!rows.length)stream.innerHTML='<div class="message-empty">This conversation is ready. Send the first message below.</div>';
   for(var mi=0;mi<rows.length;mi++){
@@ -1755,13 +1755,13 @@ async function loadMessages(id){
     }catch(imageErr){var unavailable=document.createElement('div');unavailable.textContent='Picture attachment could not be loaded.';bubble.appendChild(unavailable);}
    }
    if(m.body){var bodyEl=document.createElement('div');bodyEl.textContent=m.body;bubble.appendChild(bodyEl);}
-   var meta=document.createElement('small');meta.textContent=(m.sender_id===session.user.id?'You':(m.sender_role==='admin'?'Vinhomes Support':m.sender_role==='agent'?'Property Agent':'Customer'))+' · '+fmtDate(m.created_at)+(m.sender_id===session.user.id?(m.read_at?' · ✓✓ Read':' · ✓ Sent'):'');bubble.appendChild(meta);
+   var meta=document.createElement('small');meta.textContent=(m.sender_id===session.user.id?'You':(m.sender_role==='admin'?'Vinhomes Support':m.sender_role==='agent'?'Property Agent':'Customer'))+' · '+fmtDate(m.created_at);bubble.appendChild(meta);
    stream.appendChild(bubble);
   }
   stream.scrollTop=stream.scrollHeight;
-  var unread=rows.filter(function(m){return m.sender_id!==session.user.id&&!m.read_at;}).map(function(m){return m.id;});
+  var unread=rows.filter(function(m){return m.sender_id!==session.user.id&&!m.customer_read_at;}).map(function(m){return m.id;});
   if(unread.length){
-   await apiJson('/rest/v1/messages?id=in.('+unread.join(',')+')',{method:'PATCH',body:JSON.stringify({read_at:new Date().toISOString()})});
+   await apiJson('/rest/v1/messages?id=in.('+unread.join(',')+')',{method:'PATCH',body:JSON.stringify({customer_read_at:new Date().toISOString()})});
    loadInbox();
   }
  }catch(e){$('messageStream').innerHTML='<div class="message-empty">'+esc(e.message)+'</div>';}
