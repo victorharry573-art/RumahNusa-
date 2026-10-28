@@ -2144,5 +2144,39 @@ window.addEventListener('popstate',function(){if(!$('apartmentJourneyModal').hid
 })();
 </script>
 
+<script id="APARTMENT-DURATION-TOUCH-FIX-20261028">
+(function(){
+  function wireDurationButtons(){
+    var minus=document.getElementById('apartmentDurationMinus');
+    var plus=document.getElementById('apartmentDurationPlus');
+    if(!minus||!plus||document.documentElement.dataset.durationTouchFix==='1')return;
+    document.documentElement.dataset.durationTouchFix='1';
+    [minus,plus].forEach(function(btn){
+      btn.style.setProperty('position','relative','important');
+      btn.style.setProperty('z-index','5','important');
+      btn.style.setProperty('pointer-events','auto','important');
+      btn.style.setProperty('touch-action','manipulation','important');
+      btn.style.setProperty('user-select','none','important');
+    });
+    document.addEventListener('click',function(e){
+      var target=e.target&&e.target.closest?e.target.closest('#apartmentDurationMinus, #apartmentDurationPlus'):null;
+      if(!target)return;
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      if(typeof duration!=='undefined') {
+        if(target.id==='apartmentDurationPlus'&&duration<3)duration++;
+        if(target.id==='apartmentDurationMinus'&&duration>1)duration--;
+        if(typeof update==='function')update();
+      }
+      var value=document.getElementById('apartmentDurationValue');
+      var price=document.getElementById('apartmentTotalPrice');
+      var sticky=document.getElementById('apartmentStickyPriceValue');
+      if(value&&price&&sticky)sticky.textContent=price.textContent;
+    },true);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',wireDurationButtons,{once:true});
+  else wireDurationButtons();
+})();
+</script>
 </body>
 </html>
