@@ -2115,14 +2115,14 @@ function renderStep(){
   function initMap(lat,lng,withMarker){
    if(!window.L||!mapNode)return;
    if(!leafletMap){
-    var opts={center:[lat,lng],zoom:withMarker?16:5,scrollWheelZoom:true};
+    var opts={center:[lat,lng],zoom:withMarker?17:6,scrollWheelZoom:true,dragging:false,worldCopyJump:true};
     if(L.GestureHandling){opts.gestureHandling=true;opts.gestureHandlingOptions={text:{touch:'Use two fingers to move the map',scroll:'Use Ctrl + scroll to zoom the map',scrollMac:'Use ⌘ + scroll to zoom the map'}};}
     leafletMap=L.map(mapNode,opts);
-    L.tileLayer('https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',{subdomains:'abc',maxZoom:19,attribution:'© OpenStreetMap contributors, HOT'}).addTo(leafletMap);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'}).addTo(leafletMap);
     if(withMarker){meetingMarker=L.marker([lat,lng],{draggable:true}).addTo(leafletMap);attachMarkerEvents();}
     mapReady=true;
    }else{
-    leafletMap.setView([lat,lng],withMarker?16:5);
+    leafletMap.setView([lat,lng],withMarker?17:6);
     if(withMarker){if(!meetingMarker){meetingMarker=L.marker([lat,lng],{draggable:true}).addTo(leafletMap);attachMarkerEvents();}else meetingMarker.setLatLng([lat,lng]);}
    }
    setTimeout(function(){leafletMap.invalidateSize();},200);
@@ -2131,7 +2131,7 @@ function renderStep(){
    meetingMarker.on('dragend',function(){var p=meetingMarker.getLatLng();savedPoint={lat:p.lat,lng:p.lng,address:input.value.trim()};saveLocation.disabled=false;savedLabel.textContent=mapText('Marker adjusted. Tap Save location to confirm.','Đã điều chỉnh ghim. Nhấn Lưu vị trí để xác nhận.');cont.hidden=true;cont.disabled=true;});
    leafletMap.on('click',function(e){if(!meetingMarker)return;meetingMarker.setLatLng(e.latlng);savedPoint={lat:e.latlng.lat,lng:e.latlng.lng,address:input.value.trim()};saveLocation.disabled=false;savedLabel.textContent=mapText('Marker moved. Tap Save location to confirm.','Đã di chuyển ghim. Nhấn Lưu vị trí để xác nhận.');cont.hidden=true;cont.disabled=true;});
   }
-  loadLeaflet(function(){loadGesturePlugin(function(){initMap(16,106, false);setMapStatus(mapText('Enter the full address, then tap Find address on map.','Nhập địa chỉ đầy đủ, sau đó nhấn Tìm địa chỉ trên bản đồ.'));});});
+  loadLeaflet(function(){loadGesturePlugin(function(){initMap(16.2,106.0, false);setMapStatus(mapText('Enter the full address, then tap Find address on map.','Nhập địa chỉ đầy đủ, sau đó nhấn Tìm địa chỉ trên bản đồ.'));});});
   $('meetingFindOnMap').addEventListener('click',function(){
    var q=input.value.trim();if(!q){setMapStatus(mapText('Please enter the meeting address first.','Vui lòng nhập địa chỉ gặp mặt trước.'));input.focus();return;}
    var searchQ=/vietnam|việt nam/i.test(q)?q:q+', Vietnam';
