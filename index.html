@@ -1161,7 +1161,7 @@ function openApartmentSearch(roomOnly){var nav=document.querySelector('.nav-butt
 <script>
 (function(){
 var base='https://vuhrkijzjmnbsaqnpdmg.supabase.co/storage/v1/object/public/property-images/';
-var photos=["IMG-20261018-WA0101.jpg","IMG-20261018-WA0102.jpg","IMG-20261018-WA0103.jpg","IMG-20261018-WA0104.jpg","IMG-20261018-WA0105.jpg","IMG-20261018-WA0106.jpg","IMG-20261018-WA0107.jpg","IMG-20261018-WA0108.jpg","IMG-20261018-WA0109.jpg","IMG-20261018-WA0110.jpg","IMG-20261018-WA0113.jpg","IMG-20261018-WA0114.jpg","IMG-20261018-WA0117.jpg","IMG-20261018-WA0119.jpg","IMG-20261018-WA0120.jpg","IMG-20261018-WA0121.jpg","IMG-20261018-WA0122.jpg","IMG-20261018-WA0123.jpg","IMG-20261018-WA0124.jpg"];
+var photos=["IMG-20261018-WA0101.jpg","IMG-20261018-WA0102.jpg","IMG-20261018-WA0103.jpg","IMG-20261018-WA0104.jpg","IMG-20261018-WA0105.jpg","IMG-20261018-WA0106.jpg","IMG-20261018-WA0107.jpg","IMG-20261018-WA0108.jpg","IMG-20261018-WA0109.jpg","IMG-20261018-WA0110.jpg","IMG-20261018-WA0113.jpg","IMG-20261018-WA0114.jpg","IMG-20261018-WA0117.jpg","IMG-20261018-WA0119.jpg","IMG-20261018-WA0120.jpg","IMG-20261018-WA0121.jpg","IMG-20261018-WA0122.jpg","IMG-20261018-WA0123.jpg"];
 var duration=1,annualRent=416000000,index=0,viewed=false,modal=document.getElementById('apartmentRoomLightbox'),cover=document.getElementById('apartmentCoverImage'),image=document.getElementById('apartmentGalleryImage'),currentListing=null;
  window.setRentalListing=function(p){
   if(!p)return;currentListing=p;duration=1;annualRent=Number(p.price)||416000000;viewed=false;document.getElementById('apartmentStartStep').hidden=true;document.getElementById('apartmentContinue').hidden=true;
