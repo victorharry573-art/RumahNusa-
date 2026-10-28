@@ -2115,7 +2115,7 @@ function renderStep(){
   function initMap(lat,lng,withMarker){
    if(!window.L||!mapNode)return;
    if(!leafletMap){
-    var opts={center:[lat,lng],zoom:withMarker?17:6,scrollWheelZoom:true,dragging:false,worldCopyJump:true};
+    var opts={center:[lat,lng],zoom:withMarker?17:5,scrollWheelZoom:true,dragging:true,worldCopyJump:false};
     if(L.GestureHandling){opts.gestureHandling=true;opts.gestureHandlingOptions={text:{touch:'Use two fingers to move the map',scroll:'Use Ctrl + scroll to zoom the map',scrollMac:'Use ⌘ + scroll to zoom the map'}};}
     leafletMap=L.map(mapNode,opts);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors',crossOrigin:true}).addTo(leafletMap);
@@ -2132,14 +2132,14 @@ function renderStep(){
    meetingMarker.on('dragend',function(){var p=meetingMarker.getLatLng();savedPoint={lat:p.lat,lng:p.lng,address:input.value.trim()};saveLocation.disabled=false;savedLabel.textContent=mapText('Marker adjusted. Tap Save location to confirm.','Đã điều chỉnh ghim. Nhấn Lưu vị trí để xác nhận.');cont.hidden=true;cont.disabled=true;});
    if(!leafletMap._meetingClickBound){leafletMap._meetingClickBound=true;leafletMap.on('click',function(e){if(!meetingMarker)return;meetingMarker.setLatLng(e.latlng);savedPoint={lat:e.latlng.lat,lng:e.latlng.lng,address:input.value.trim()};saveLocation.disabled=false;savedLabel.textContent=mapText('Marker moved. Tap Save location to confirm.','Đã di chuyển ghim. Nhấn Lưu vị trí để xác nhận.');cont.hidden=true;cont.disabled=true;});}
   }
-  loadLeaflet(function(){loadGesturePlugin(function(){initMap(16.2,107.8,false);setMapStatus(mapText('Enter the full address, then tap Find address on map.','Nhập địa chỉ đầy đủ, sau đó nhấn Tìm địa chỉ trên bản đồ.'));});});
+  loadLeaflet(function(){loadGesturePlugin(function(){initMap(16.2,107.8,false);if(leafletMap){leafletMap.setMinZoom(4);leafletMap.setMaxBounds([[7.5,101.5],[24.5,115.5]]);leafletMap.options.maxBoundsViscosity=0.8;leafletMap.setView([16.2,107.8],5);}setMapStatus(mapText('Map is centred on Vietnam. Enter the full Vietnamese address, then tap Find address on map.','Bản đồ được căn giữa Việt Nam. Nhập địa chỉ đầy đủ tại Việt Nam, sau đó nhấn Tìm địa chỉ trên bản đồ.'));});});
   $('meetingFindOnMap').addEventListener('click',function(){
    var q=input.value.trim();if(!q){setMapStatus(mapText('Please enter the meeting address first.','Vui lòng nhập địa chỉ gặp mặt trước.'));input.focus();return;}
    var lines=q.split(/[\\n,]+/).map(function(x){return x.trim();}).filter(Boolean);
-   var searchQueries=[q,lines.length>1?lines.slice(1).join(', '):q];
+   var searchQueries=[q,lines.length>1?lines.slice(1).join(', '):q,lines.slice(-3).join(', ')];
    var idx=0;
    function searchNext(){
-    if(idx>=searchQueries.length){setMapStatus(mapText('No matching address was found in Vietnam. Check the street, district and city, then try again.','Không tìm thấy địa chỉ phù hợp tại Việt Nam. Hãy kiểm tra tên đường, quận và thành phố rồi thử lại.'));return;}
+    if(idx>=searchQueries.length){if(leafletMap){leafletMap.setView([16.2,107.8],5);setTimeout(function(){leafletMap.invalidateSize(true);},200);}setMapStatus(mapText('No exact match was found. The map has returned to Vietnam. Add the city and district to the address, then search again.','Không tìm thấy kết quả chính xác. Bản đồ đã trở về Việt Nam. Hãy thêm thành phố và quận/huyện vào địa chỉ rồi tìm lại.'));return;}
     var searchQ=searchQueries[idx++];if(!/vietnam|việt nam/i.test(searchQ))searchQ+=', Vietnam';
     setMapStatus(mapText('Searching for the address in Vietnam…','Đang tìm địa chỉ tại Việt Nam…'));
     var url='https://nominatim.openstreetmap.org/search?format=json&limit=8&addressdetails=1&countrycodes=vn&accept-language='+(isVietnamese()?'vi':'en')+'&q='+encodeURIComponent(searchQ);
