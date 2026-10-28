@@ -2124,7 +2124,7 @@ function renderStep(){
    if(galleryButton)galleryButton.addEventListener('click',function(e){
     e.preventDefault();e.stopPropagation();
     input.removeAttribute('capture');
-    input.setAttribute('accept','image/*,.jpg,.jpeg,.png,.webp');
+    input.setAttribute('accept','image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp');
     try{if(typeof input.showPicker==='function'){input.showPicker();return;}}catch(err){}
     input.click();
    });
