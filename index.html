@@ -2028,7 +2028,7 @@ var fieldsRent=[
  {key:'checkin',title:'Choose your check-in date and time',type:'datetime-local',help:'Choose when you plan to arrive. Save your preferred check-in time.'},
  {key:'checkout',title:'Choose your check-out date and time',type:'datetime-local',help:'For a one-annual-period stay, choose the same calendar date and time in the next year. For longer stays, choose the matching end date for your selected rental duration.',validate:function(v){if(!formData.checkin)return 'Choose a check-in time first.';if(new Date(v)<=new Date(formData.checkin))return 'Check-out must be after check-in.';return ''}},
  {key:'agentTime',title:'When would you like to meet the agent?',type:'datetime-local',help:'Choose a convenient future date and time to meet the property agent.'},
- {key:'meetingAddress',title:'Where would you like to meet the agent?',type:'textarea',help:'Enter the complete meeting address, including the venue or building name and any directions that will help the agent find you.'},
+ {key:'meetingAddress',title:'Where would you like to meet the agent?',type:'map-address',help:'Enter the address, find it on the map, adjust the marker to the exact meeting area, then save the location.'},
  {key:'fullName',title:'Confirm your full legal name',type:'text',help:'Enter your name as it appears on your identity document.'},
  {key:'phone',title:'Confirm your phone number',type:'tel',help:'Include your country calling code, for example +84 for Vietnam.'},
  {key:'email',title:'Confirm your email address',type:'email',help:'We will use this to continue your property conversation.'},
@@ -2084,13 +2084,41 @@ function renderStep(){
  var val=formData[def.key]||'',html='<div class="apartment-journey-step-card"><h3>'+escapeHtml(def.title)+'</h3><p class="help">'+escapeHtml(def.help||'Complete this field to continue.')+'</p>';
  if(def.type==='duration'){html+='<div class="apartment-duration-inline"><button type="button" id="durationMinus" aria-label="Reduce annual periods">−</button><strong><span id="durationNumber">'+rentDuration+'</span> annual period(s)<br><span class="apartment-price-summary" id="durationPrice">'+(650000000*rentDuration).toLocaleString('en-US')+' ₫ total rent</span></strong><button type="button" id="durationPlus" aria-label="Increase annual periods">+</button></div><p class="help">Security deposit is separate: 20,000,000 ₫.</p>';}
  else if(def.type==='select'){html+='<label class="apartment-journey-field"><span>'+escapeHtml(def.title)+'</span><select id="journeyField"><option value="">Choose an option</option>'+def.options.map(function(o){return '<option'+(val===o?' selected':'')+'>'+escapeHtml(o)+'</option>';}).join('')+'</select></label>';}
- else if(def.type==='textarea'){html+='<label class="apartment-journey-field"><span>'+escapeHtml(def.title)+'</span><textarea id="journeyField" placeholder="Type here…">'+escapeHtml(val)+'</textarea></label>';}
+ else if(def.type==='map-address'){html+='<div class="apartment-journey-field"><span>'+escapeHtml(def.title)+'</span><textarea id="journeyField" placeholder="Venue, building, street, district, city">'+escapeHtml(val||'')+'</textarea><div class="apartment-choice-row" style="margin-top:8px"><button type="button" id="meetingFindOnMap">Find address on map</button></div><p id="meetingMapStatus" class="help">Enter the address, then tap Find address on map.</p><div id="meetingMap" style="height:300px;width:100%;border:1px solid #ccd3da;border-radius:12px;overflow:hidden;background:#edf1f4;touch-action:pan-y"></div><div class="apartment-choice-row" style="margin-top:10px"><button type="button" id="meetingSaveLocation" disabled>Save location</button></div><p id="meetingSavedLabel" class="help"></p></div>';}else if(def.type==='textarea'){html+='<label class="apartment-journey-field"><span>'+escapeHtml(def.title)+'</span><textarea id="journeyField" placeholder="Type here…">'+escapeHtml(val)+'</textarea></label>';}
  else if(def.type==='terms'){html+='<div class="apartment-price-summary">Annual rent: 650,000,000 ₫<br>Monthly equivalent: approximately 54,166,667 ₫<br>Quarterly equivalent: 162,500,000 ₫<br>Security deposit: 20,000,000 ₫<br>Total for one annual period plus deposit: 670,000,000 ₫</div><p>To reserve the apartment, the annual rent and security deposit are payable upfront unless the agent confirms another written agreement. Monthly and quarterly figures are comparison equivalents and are not a promise that instalments are available. Please agree the exact terms with the agent before sending any money.</p><div class="apartment-choice-row"><button type="button" id="journeyAgree">Agree and continue</button><button type="button" id="journeyDisagree">Disagree</button></div>';}
  else if(def.type==='checkbox'){html+='<label class="apartment-journey-field"><span><input id="journeyField" type="checkbox" '+(val?'checked':'')+'> I agree to the rental terms and conditions</span></label>';}
  else if(def.type==='file'){html+='<div class="apartment-journey-field"><span>'+escapeHtml(def.title)+'</span><div class="apartment-choice-row"><button type="button" id="journeyChooseGallery">Choose from gallery / files</button><button type="button" id="journeyChooseCamera">Take a photo</button></div><input id="journeyField" data-journey-file="'+def.key+'" type="file" accept="image/*" style="position:absolute;left:-9999px;width:1px;height:1px"><small class="help">Choose from your phone gallery or file manager, or use the camera button to take a new picture.</small><span id="journeyFileName">'+escapeHtml(val&&val.name?val.name:'No file selected')+'</span></div>';}
  else {html+='<label class="apartment-journey-field"><span>'+escapeHtml(def.title)+'</span><input id="journeyField" type="'+(def.type==='datetime-local'?'datetime-local':def.type==='date'?'date':def.type==='number'?'number':def.type==='email'?'email':def.type==='tel'?'tel':'text')+'" value="'+escapeHtml(val)+'" placeholder="Enter '+escapeHtml(def.title.toLowerCase())+'"></label>';}
  html+='</div>';$('apartmentJourneyStep').innerHTML=html;
  var input=$('journeyField'),cont=$('apartmentJourneyContinue');
+ if(def.type==='map-address'){
+  cont.hidden=true;cont.disabled=true;
+  var mapStatus=$('meetingMapStatus'),saveLocation=$('meetingSaveLocation'),savedLabel=$('meetingSavedLabel'),mapNode=$('meetingMap');
+  var savedPoint=null,leafletMap=null,meetingMarker=null,mapReady=false;
+  function setMapStatus(t){if(mapStatus)mapStatus.textContent=t;}
+  function loadLeaflet(done){
+   if(window.L){done();return;}
+   if(!document.getElementById('meetingLeafletCss')){var css=document.createElement('link');css.id='meetingLeafletCss';css.rel='stylesheet';css.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';document.head.appendChild(css);}
+   var js=document.getElementById('meetingLeafletJs');
+   if(js){js.addEventListener('load',done,{once:true});return;}
+   js=document.createElement('script');js.id='meetingLeafletJs';js.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';js.onload=done;js.onerror=function(){setMapStatus('The map could not load. Check your internet connection and try again.');};document.head.appendChild(js);
+  }
+  function initMap(lat,lng){
+   if(!window.L||!mapNode)return;
+   if(!leafletMap){leafletMap=L.map(mapNode).setView([lat,lng],15);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'}).addTo(leafletMap);meetingMarker=L.marker([lat,lng],{draggable:true}).addTo(leafletMap);meetingMarker.on('dragend',function(){var p=meetingMarker.getLatLng();savedPoint={lat:p.lat,lng:p.lng,address:input.value.trim()};saveLocation.disabled=false;savedLabel.textContent='Marker adjusted. Tap Save location to confirm.';cont.hidden=true;});leafletMap.on('click',function(e){meetingMarker.setLatLng(e.latlng);savedPoint={lat:e.latlng.lat,lng:e.latlng.lng,address:input.value.trim()};saveLocation.disabled=false;savedLabel.textContent='Marker moved. Tap Save location to confirm.';cont.hidden=true;});mapReady=true;}
+   else{leafletMap.setView([lat,lng],16);meetingMarker.setLatLng([lat,lng]);}
+   setTimeout(function(){leafletMap.invalidateSize();},150);
+  }
+  loadLeaflet(function(){initMap(10.8231,106.6297);setMapStatus('Map ready. Search your address to place the marker, then drag it to the correct spot.');});
+  $('meetingFindOnMap').addEventListener('click',function(){
+   var q=input.value.trim();if(!q){setMapStatus('Please enter the meeting address first.');input.focus();return;}
+   setMapStatus('Searching for this address…');
+   fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&q='+encodeURIComponent(q)).then(function(res){return res.json();}).then(function(items){if(!items||!items.length){setMapStatus('Address not found. Add the district and city, then search again.');return;}var p=items[0];loadLeaflet(function(){initMap(Number(p.lat),Number(p.lon));savedPoint={lat:Number(p.lat),lng:Number(p.lon),address:q};saveLocation.disabled=false;cont.hidden=true;savedLabel.textContent='Check the marker. Drag it or tap the map to adjust the location.';setMapStatus('Address found. Adjust the marker to the exact meeting area, then save.');});}).catch(function(){setMapStatus('Could not search the address. Check your internet connection and try again.');});
+  });
+  input.addEventListener('input',function(){savedPoint=null;saveLocation.disabled=true;cont.hidden=true;cont.disabled=true;if(savedLabel)savedLabel.textContent='Address changed. Search and save the location again.';});
+  saveLocation.addEventListener('click',function(){if(!mapReady||!meetingMarker||!input.value.trim()){setMapStatus('Enter an address and place the marker first.');return;}var p=meetingMarker.getLatLng();savedPoint={lat:p.lat,lng:p.lng,address:input.value.trim()};formData.meetingAddress=savedPoint.address;formData.meetingLatitude=p.lat;formData.meetingLongitude=p.lng;savedLabel.textContent='Location saved: '+p.lat.toFixed(5)+', '+p.lng.toFixed(5);setMapStatus('Location saved. You can now continue.');cont.hidden=false;cont.disabled=false;});
+  return;
+ }
  if(def.type==='duration'){
   var minus=$('durationMinus'),plus=$('durationPlus');
   cont.disabled=false;
