@@ -2121,8 +2121,19 @@ function renderStep(){
  if(input){
   if(def.type==='file'){
    var galleryButton=$('journeyChooseGallery'),cameraButton=$('journeyChooseCamera');
-   if(galleryButton)galleryButton.addEventListener('click',function(){input.removeAttribute('capture');input.accept='image/*';input.click();});
-   if(cameraButton)cameraButton.addEventListener('click',function(){input.accept='image/*';input.setAttribute('capture','environment');input.click();});
+   if(galleryButton)galleryButton.addEventListener('click',function(e){
+    e.preventDefault();e.stopPropagation();
+    input.removeAttribute('capture');
+    input.setAttribute('accept','image/*,.jpg,.jpeg,.png,.webp');
+    try{if(typeof input.showPicker==='function'){input.showPicker();return;}}catch(err){}
+    input.click();
+   });
+   if(cameraButton)cameraButton.addEventListener('click',function(e){
+    e.preventDefault();e.stopPropagation();
+    input.setAttribute('accept','image/*');
+    input.setAttribute('capture','environment');
+    input.click();
+   });
   }
   input.addEventListener('input',function(){if(def.type==='file'){var f=input.files&&input.files[0];if(f){formData[def.key]=f;$('journeyFileName').textContent=f.name;}else formData[def.key]=null;}else formData[def.key]=input.type==='checkbox'?input.checked:input.value;validate();});
   input.addEventListener('change',function(){if(def.type==='file'){var f=input.files&&input.files[0];formData[def.key]=f||null;if($('journeyFileName'))$('journeyFileName').textContent=f?f.name:'No file selected';}else formData[def.key]=input.type==='checkbox'?input.checked:input.value;validate();});
