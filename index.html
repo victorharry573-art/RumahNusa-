@@ -2118,36 +2118,45 @@ function renderStep(){
     var opts={center:[lat,lng],zoom:withMarker?17:6,scrollWheelZoom:true,dragging:false,worldCopyJump:true};
     if(L.GestureHandling){opts.gestureHandling=true;opts.gestureHandlingOptions={text:{touch:'Use two fingers to move the map',scroll:'Use Ctrl + scroll to zoom the map',scrollMac:'Use ⌘ + scroll to zoom the map'}};}
     leafletMap=L.map(mapNode,opts);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'}).addTo(leafletMap);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors',crossOrigin:true}).addTo(leafletMap);
     if(withMarker){meetingMarker=L.marker([lat,lng],{draggable:true}).addTo(leafletMap);attachMarkerEvents();}
     mapReady=true;
    }else{
     leafletMap.setView([lat,lng],withMarker?17:6);
     if(withMarker){if(!meetingMarker){meetingMarker=L.marker([lat,lng],{draggable:true}).addTo(leafletMap);attachMarkerEvents();}else meetingMarker.setLatLng([lat,lng]);}
    }
-   setTimeout(function(){leafletMap.invalidateSize();},200);
+   setTimeout(function(){leafletMap.invalidateSize(true);},250);
   }
   function attachMarkerEvents(){
+   meetingMarker.off('dragend');
    meetingMarker.on('dragend',function(){var p=meetingMarker.getLatLng();savedPoint={lat:p.lat,lng:p.lng,address:input.value.trim()};saveLocation.disabled=false;savedLabel.textContent=mapText('Marker adjusted. Tap Save location to confirm.','Đã điều chỉnh ghim. Nhấn Lưu vị trí để xác nhận.');cont.hidden=true;cont.disabled=true;});
-   leafletMap.on('click',function(e){if(!meetingMarker)return;meetingMarker.setLatLng(e.latlng);savedPoint={lat:e.latlng.lat,lng:e.latlng.lng,address:input.value.trim()};saveLocation.disabled=false;savedLabel.textContent=mapText('Marker moved. Tap Save location to confirm.','Đã di chuyển ghim. Nhấn Lưu vị trí để xác nhận.');cont.hidden=true;cont.disabled=true;});
+   if(!leafletMap._meetingClickBound){leafletMap._meetingClickBound=true;leafletMap.on('click',function(e){if(!meetingMarker)return;meetingMarker.setLatLng(e.latlng);savedPoint={lat:e.latlng.lat,lng:e.latlng.lng,address:input.value.trim()};saveLocation.disabled=false;savedLabel.textContent=mapText('Marker moved. Tap Save location to confirm.','Đã di chuyển ghim. Nhấn Lưu vị trí để xác nhận.');cont.hidden=true;cont.disabled=true;});}
   }
-  loadLeaflet(function(){loadGesturePlugin(function(){initMap(16.2,106.0, false);setMapStatus(mapText('Enter the full address, then tap Find address on map.','Nhập địa chỉ đầy đủ, sau đó nhấn Tìm địa chỉ trên bản đồ.'));});});
+  loadLeaflet(function(){loadGesturePlugin(function(){initMap(16.2,107.8,false);setMapStatus(mapText('Enter the full address, then tap Find address on map.','Nhập địa chỉ đầy đủ, sau đó nhấn Tìm địa chỉ trên bản đồ.'));});});
   $('meetingFindOnMap').addEventListener('click',function(){
    var q=input.value.trim();if(!q){setMapStatus(mapText('Please enter the meeting address first.','Vui lòng nhập địa chỉ gặp mặt trước.'));input.focus();return;}
-   var searchQ=/vietnam|việt nam/i.test(q)?q:q+', Vietnam';
-   setMapStatus(mapText('Searching for the address in Vietnam…','Đang tìm địa chỉ tại Việt Nam…'));
-   fetch('https://nominatim.openstreetmap.org/search?format=json&limit=8&addressdetails=1&countrycodes=vn&accept-language='+(isVietnamese()?'vi':'en')+'&q='+encodeURIComponent(searchQ)).then(function(res){return res.json();}).then(function(items){
-    if(!items||!items.length){setMapStatus(mapText('No matching place was found in Vietnam. Enter the venue name, district and city, then search again.','Không tìm thấy địa điểm phù hợp tại Việt Nam. Nhập tên địa điểm, quận/huyện và thành phố rồi tìm lại.'));return;}
-    var p=items[0],qNorm=q.toLowerCase().replace(/[^a-z0-9\u00c0-\u024f\u1e00-\u1eff]+/g,' ').trim();
-    var exact=items.find(function(x){var n=String(x.display_name||'').toLowerCase();return n.includes(q.toLowerCase());});
-    if(exact)p=exact;
-    loadLeaflet(function(){loadGesturePlugin(function(){initMap(Number(p.lat),Number(p.lon),true);savedPoint={lat:Number(p.lat),lng:Number(p.lon),address:q,displayName:p.display_name};saveLocation.disabled=false;cont.hidden=true;cont.disabled=true;savedLabel.textContent=mapText('Found place: '+p.display_name+'. Verify the marker is at the exact venue. Drag it or tap the map to adjust, then save.','Địa điểm tìm thấy: '+p.display_name+'. Kiểm tra ghim tại đúng địa điểm. Kéo ghim hoặc chạm bản đồ để điều chỉnh rồi lưu.');setMapStatus(mapText('Map centred on: '+p.display_name,'Bản đồ đã chuyển đến: '+p.display_name));});});
-   }).catch(function(){setMapStatus(mapText('Could not search the address. Check your internet connection and try again.','Không thể tìm địa chỉ. Vui lòng kiểm tra kết nối internet và thử lại.'));});
+   var lines=q.split(/[\\n,]+/).map(function(x){return x.trim();}).filter(Boolean);
+   var searchQueries=[q,lines.length>1?lines.slice(1).join(', '):q];
+   var idx=0;
+   function searchNext(){
+    if(idx>=searchQueries.length){setMapStatus(mapText('No matching address was found in Vietnam. Check the street, district and city, then try again.','Không tìm thấy địa chỉ phù hợp tại Việt Nam. Hãy kiểm tra tên đường, quận và thành phố rồi thử lại.'));return;}
+    var searchQ=searchQueries[idx++];if(!/vietnam|việt nam/i.test(searchQ))searchQ+=', Vietnam';
+    setMapStatus(mapText('Searching for the address in Vietnam…','Đang tìm địa chỉ tại Việt Nam…'));
+    var url='https://nominatim.openstreetmap.org/search?format=json&limit=8&addressdetails=1&countrycodes=vn&accept-language='+(isVietnamese()?'vi':'en')+'&q='+encodeURIComponent(searchQ);
+    fetch(url).then(function(res){if(!res.ok)throw new Error('Search failed');return res.json();}).then(function(items){
+     if(!items||!items.length){searchNext();return;}
+     var p=items[0],needle=searchQ.toLowerCase();
+     var match=items.find(function(x){return String(x.display_name||'').toLowerCase().includes(needle);});if(match)p=match;
+     var lat=Number(p.lat),lng=Number(p.lon);if(!isFinite(lat)||!isFinite(lng)){searchNext();return;}
+     loadLeaflet(function(){loadGesturePlugin(function(){initMap(lat,lng,true);savedPoint={lat:lat,lng:lng,address:q,displayName:p.display_name};saveLocation.disabled=false;cont.hidden=true;cont.disabled=true;savedLabel.textContent=mapText('Found: '+p.display_name+'. Check the marker, adjust it to the exact place, then save.','Đã tìm thấy: '+p.display_name+'. Kiểm tra ghim, điều chỉnh đúng địa điểm rồi lưu.');setMapStatus(mapText('Map centred on the matching address in Vietnam.','Bản đồ đã chuyển đến địa chỉ phù hợp tại Việt Nam.'));});});
+    }).catch(function(){searchNext();});
+   }
+   searchNext();
   });
   var langControl=document.getElementById('siteLanguage');
   if(langControl)langControl.addEventListener('change',function(){if(mapStatus)setMapStatus(mapText('Enter the full address, then tap Find address on map.','Nhập địa chỉ đầy đủ, sau đó nhấn Tìm địa chỉ trên bản đồ.'));if($('meetingFindOnMap'))$('meetingFindOnMap').textContent=mapText('Find address on map','Tìm địa chỉ trên bản đồ');if(saveLocation)saveLocation.textContent=mapText('Save location','Lưu vị trí');});
-  input.addEventListener('input',function(){savedPoint=null;saveLocation.disabled=true;cont.hidden=true;cont.disabled=true;if(savedLabel)savedLabel.textContent='Address changed. Search and save the location again.';});
-  saveLocation.addEventListener('click',function(){if(!mapReady||!meetingMarker||!input.value.trim()){setMapStatus('Enter an address and place the marker first.');return;}var p=meetingMarker.getLatLng();savedPoint={lat:p.lat,lng:p.lng,address:input.value.trim()};formData.meetingAddress=savedPoint.address;formData.meetingLatitude=p.lat;formData.meetingLongitude=p.lng;savedLabel.textContent='Location saved: '+p.lat.toFixed(5)+', '+p.lng.toFixed(5);setMapStatus('Location saved. You can now continue.');cont.hidden=false;cont.disabled=false;});
+  input.addEventListener('input',function(){savedPoint=null;saveLocation.disabled=true;cont.hidden=true;cont.disabled=true;if(savedLabel)savedLabel.textContent=mapText('Address changed. Search and save the location again.','Địa chỉ đã thay đổi. Hãy tìm kiếm và lưu vị trí lại.');});
+  saveLocation.addEventListener('click',function(){if(!mapReady||!meetingMarker||!input.value.trim()){setMapStatus(mapText('Enter an address and place the marker first.','Nhập địa chỉ và đặt ghim trước.'));return;}var p=meetingMarker.getLatLng();savedPoint={lat:p.lat,lng:p.lng,address:input.value.trim()};formData.meetingAddress=savedPoint.address;formData.meetingLatitude=p.lat;formData.meetingLongitude=p.lng;savedLabel.textContent='Location saved: '+p.lat.toFixed(5)+', '+p.lng.toFixed(5);setMapStatus(mapText('Location saved. You can now continue.','Đã lưu vị trí. Bạn có thể tiếp tục.'));cont.hidden=false;cont.disabled=false;});
   return;
  }
  if(def.type==='duration'){
