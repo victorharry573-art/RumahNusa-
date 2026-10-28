@@ -2091,6 +2091,20 @@ function renderStep(){
  else {html+='<label class="apartment-journey-field"><span>'+escapeHtml(def.title)+'</span><input id="journeyField" type="'+(def.type==='datetime-local'?'datetime-local':def.type==='date'?'date':def.type==='number'?'number':def.type==='email'?'email':def.type==='tel'?'tel':'text')+'" value="'+escapeHtml(val)+'" placeholder="Enter '+escapeHtml(def.title.toLowerCase())+'"></label>';}
  html+='</div>';$('apartmentJourneyStep').innerHTML=html;
  var input=$('journeyField'),cont=$('apartmentJourneyContinue');
+ if(def.type==='duration'){
+  var minus=$('durationMinus'),plus=$('durationPlus');
+  cont.disabled=false;
+  function refreshDuration(){
+   $('durationNumber').textContent=rentDuration;
+   $('durationPrice').textContent=(650000000*rentDuration).toLocaleString('en-US')+' ₫ total rent';
+   if(minus)minus.disabled=rentDuration<=1;
+   if(plus)plus.disabled=rentDuration>=3;
+   formData.duration=rentDuration;
+  }
+  if(minus)minus.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();if(rentDuration>1){rentDuration--;refreshDuration();}});
+  if(plus)plus.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();if(rentDuration<3){rentDuration++;refreshDuration();}});
+  refreshDuration();
+ }
  function validate(){
   var v=input?(input.type==='checkbox'?input.checked:input.type==='file'?(input.files&&input.files[0]||formData[def.key]||null):input.value.trim()):formData[def.key];
   var valid=!!v;
