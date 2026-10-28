@@ -2093,7 +2093,8 @@ function renderStep(){
  function validate(){
   var v=input?(input.type==='checkbox'?input.checked:input.type==='file'?(input.files&&input.files[0]||formData[def.key]||null):input.value.trim()):formData[def.key];
   var valid=!!v;
-  if(def.type==='file')valid=!!v;\n  if(def.type==='duration')valid=rentDuration>=1&&rentDuration<=3;
+  if(def.type==='file')valid=!!v;
+  if(def.type==='duration')valid=rentDuration>=1&&rentDuration<=3;
   if(def.type==='terms')valid=!!formData.depositTerms;
   if(def.type==='checkbox')valid=input.checked;
   if(def.type==='email'&&v)valid=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
