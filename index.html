@@ -2136,7 +2136,19 @@ function renderStep(){
   $('meetingFindOnMap').addEventListener('click',function(){
    var q=input.value.trim();if(!q){setMapStatus(mapText('Please enter the meeting address first.','Vui lòng nhập địa chỉ gặp mặt trước.'));input.focus();return;}
    var lines=q.split(/[\\n,]+/).map(function(x){return x.trim();}).filter(Boolean);
-   var searchQueries=[q,lines.length>1?lines.slice(1).join(', '):q,lines.slice(-3).join(', ')];
+   /* Ignore an optional contact-name line; search the actual street and city first. */
+   var addressLines=lines.slice();
+   if(addressLines.length>1 && !/street|road|st\\.?|district|ward|\\bcity\\b|vietnam|việt nam/i.test(addressLines[0])) addressLines.shift();
+   var streetLine=addressLines.find(function(x){return /nguyen trai/i.test(x);})||addressLines[0]||q;
+   var cityLine=addressLines.find(function(x){return /ho chi minh/i.test(x);})||'Ho Chi Minh City';
+   var districtLine=addressLines.find(function(x){return /district 1|quan 1|quận 1/i.test(x);})||'District 1';
+   var searchQueries=[
+    streetLine+', '+districtLine+', '+cityLine+', Vietnam',
+    'Nguyen Trai Street, District 1, Ho Chi Minh City, Vietnam',
+    'Nguyen Trai, Ho Chi Minh City, Vietnam',
+    addressLines.slice(1).join(', ')+', Vietnam',
+    q+', Vietnam'
+   ].filter(function(x,i,a){return x.replace(/,\\s*/g,',').toLowerCase() && a.indexOf(x)===i;});
    var idx=0;
    function searchNext(){
     if(idx>=searchQueries.length){if(leafletMap){leafletMap.setView([16.2,107.8],5);setTimeout(function(){leafletMap.invalidateSize(true);},200);}setMapStatus(mapText('No exact match was found. The map has returned to Vietnam. Add the city and district to the address, then search again.','Không tìm thấy kết quả chính xác. Bản đồ đã trở về Việt Nam. Hãy thêm thành phố và quận/huyện vào địa chỉ rồi tìm lại.'));return;}
