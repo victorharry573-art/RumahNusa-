@@ -2060,7 +2060,7 @@ var fieldsBuy=[
  {key:'maritalStatus',title:'Confirm your marital status',type:'select',options:['Single','Married','Divorced','Widowed'],help:'Choose one option.'},
  {key:'city',title:'Confirm your current city',type:'text',help:'Enter the city where you currently live.'},
  {key:'agentTime',title:'Choose date and time to meet the agent for signing',type:'datetime-local',help:'Choose a future appointment time.'},
- {key:'meetingAddress',title:'Where should the agent meet you?',type:'textarea',help:'Enter the meeting address. The exact street address is shared privately with the agent.'},
+ {key:'meetingAddress',title:'Where should the agent meet you?',type:'map-address',help:'Enter the meeting address, find it on the map, move the map until the exact meeting point is under the fixed red pin, then save.'},
  {key:'apartmentType',title:'Choose your apartment type',type:'select',options:['Luxury apartment','Penthouse','Family residence','Investment property','Other apartment'],help:'Choose the type you want to buy.'},
  {key:'bedrooms',title:'Confirm the number of bedrooms',type:'select',options:['1 bedroom','2 bedrooms','3 bedrooms'],help:'This featured residence is shown as a two-bedroom apartment.'},
  {key:'floor',title:'Confirm your preferred floor',type:'select',options:Array.from({length:20},function(_,i){return 'Floor '+(i+1)}),help:'Choose a floor from 1 to 20. The featured apartment is shown on floor 10.'},
@@ -2084,92 +2084,72 @@ function renderStep(){
  var val=formData[def.key]||'',html='<div class="apartment-journey-step-card"><h3>'+escapeHtml(def.title)+'</h3><p class="help">'+escapeHtml(def.help||'Complete this field to continue.')+'</p>';
  if(def.type==='duration'){html+='<div class="apartment-duration-inline"><button type="button" id="durationMinus" aria-label="Reduce annual periods">−</button><strong><span id="durationNumber">'+rentDuration+'</span> annual period(s)<br><span class="apartment-price-summary" id="durationPrice">'+(650000000*rentDuration).toLocaleString('en-US')+' ₫ total rent</span></strong><button type="button" id="durationPlus" aria-label="Increase annual periods">+</button></div><p class="help">Security deposit is separate: 20,000,000 ₫.</p>';}
  else if(def.type==='select'){html+='<label class="apartment-journey-field"><span>'+escapeHtml(def.title)+'</span><select id="journeyField"><option value="">Choose an option</option>'+def.options.map(function(o){return '<option'+(val===o?' selected':'')+'>'+escapeHtml(o)+'</option>';}).join('')+'</select></label>';}
- else if(def.type==='map-address'){html+='<div class="apartment-journey-field"><span>'+escapeHtml(def.title)+'</span><textarea id="journeyField" placeholder="Venue, building, street, district, city">'+escapeHtml(val||'')+'</textarea><div class="apartment-choice-row" style="margin-top:8px"><button type="button" id="meetingFindOnMap">Find address on map</button><button type="button" id="meetingAdjustAddress" hidden disabled>Adjust your address</button></div><p id="meetingMapStatus" class="help">Enter the address, then tap Find address on map.</p><div id="meetingMap" style="height:300px;width:100%;border:1px solid #ccd3da;border-radius:12px;overflow:hidden;background:#edf1f4;touch-action:pan-y"></div><div class="apartment-choice-row" style="margin-top:10px"><button type="button" id="meetingSaveLocation" disabled>Save location</button></div><p id="meetingSavedLabel" class="help"></p></div>';}else if(def.type==='textarea'){html+='<label class="apartment-journey-field"><span>'+escapeHtml(def.title)+'</span><textarea id="journeyField" placeholder="Type here…">'+escapeHtml(val)+'</textarea></label>';}
- else if(def.type==='terms'){html+='<div class="apartment-price-summary">Annual rent: 650,000,000 ₫<br>Monthly equivalent: approximately 54,166,667 ₫<br>Quarterly equivalent: 162,500,000 ₫<br>Security deposit: 20,000,000 ₫<br>Total for one annual period plus deposit: 670,000,000 ₫</div><p>To reserve the apartment, the annual rent and security deposit are payable upfront unless the agent confirms another written agreement. Monthly and quarterly figures are comparison equivalents and are not a promise that instalments are available. Please agree the exact terms with the agent before sending any money.</p><div class="apartment-choice-row"><button type="button" id="journeyAgree">Agree and continue</button><button type="button" id="journeyDisagree">Disagree</button></div>';}
- else if(def.type==='checkbox'){html+='<label class="apartment-journey-field"><span><input id="journeyField" type="checkbox" '+(val?'checked':'')+'> I agree to the rental terms and conditions</span></label>';}
- else if(def.type==='file'){html+='<div class="apartment-journey-field"><span>'+escapeHtml(def.title)+'</span><div class="apartment-choice-row"><button type="button" id="journeyChooseGallery">Choose from gallery / files</button><button type="button" id="journeyChooseCamera">Take a photo</button></div><input id="journeyField" data-journey-file="'+def.key+'" type="file" accept="image/*" style="position:absolute;left:-9999px;width:1px;height:1px"><small class="help">Choose from your phone gallery or file manager, or use the camera button to take a new picture.</small><span id="journeyFileName">'+escapeHtml(val&&val.name?val.name:'No file selected')+'</span></div>';}
- else {html+='<label class="apartment-journey-field"><span>'+escapeHtml(def.title)+'</span><input id="journeyField" type="'+(def.type==='datetime-local'?'datetime-local':def.type==='date'?'date':def.type==='number'?'number':def.type==='email'?'email':def.type==='tel'?'tel':'text')+'" value="'+escapeHtml(val)+'" placeholder="Enter '+escapeHtml(def.title.toLowerCase())+'"></label>';}
- html+='</div>';$('apartmentJourneyStep').innerHTML=html;
- var input=$('journeyField'),cont=$('apartmentJourneyContinue');
+ else if(def.type==='map-address'){html+='<div class="apartment-journey-field"><span>'+escapeHtml(def.title)+'</span><textarea id="journeyField" placeholder="Venue, building, street, district, city">'+escapeHtml(val||'')+'</textarea><div class="apartment-choice-row" style="margin-top:8px"><button type="button" id="meetingFindOnMap">Find address on map</button><button type="button" id="meetingAdjustAddress" hidden disabled>Adjust your address on map</button></div><p id="meetingMapStatus" class="help">Enter the meeting address, then find it on the map.</p><div style="position:relative;margin-top:8px"><div id="meetingMap" style="height:300px;width:100%;border:1px solid #ccd3da;border-radius:12px;overflow:hidden;background:#edf1f4;touch-action:pan-y"></div><div aria-hidden="true" style="position:absolute;left:50%;top:50%;z-index:500;transform:translate(-50%,-100%);pointer-events:none;font-size:38px;line-height:1;color:#e32636;text-shadow:0 1px 3px #fff,0 2px 5px #333">📍</div></div><p class="help">Move and zoom the map underneath the fixed red pin until the exact meeting place is under the pin.</p><div class="apartment-choice-row" style="margin-top:10px"><button type="button" id="meetingSaveLocation" disabled>Save location</button></div><p id="meetingSavedLabel" class="help" aria-live="polite"></p></div>';}else if(def.type==='textarea'){html+='<label class="apartment-journey-field"><span>'+escapeHtml(def.title)+'</span><textarea id="journeyField" placeholder="Type here…">'+escapeHtml(val)+'</textarea></label>';}
+
  if(def.type==='map-address'){
   cont.hidden=true;cont.disabled=true;
   var mapStatus=$('meetingMapStatus'),saveLocation=$('meetingSaveLocation'),savedLabel=$('meetingSavedLabel'),mapNode=$('meetingMap'),adjustAddress=$('meetingAdjustAddress');
-  var savedPoint=null,leafletMap=null,meetingMarker=null,mapReady=false;
+  var leafletMap=null,mapReady=false,savedPoint=null;
   function setMapStatus(t){if(mapStatus)mapStatus.textContent=t;}
+  function isVietnamese(){var el=document.getElementById('siteLanguage');return !!el&&el.value==='vi';}
+  function mapText(en,vi){return isVietnamese()?vi:en;}
   function loadLeaflet(done){
    if(window.L){done();return;}
    if(!document.getElementById('meetingLeafletCss')){var css=document.createElement('link');css.id='meetingLeafletCss';css.rel='stylesheet';css.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css';document.head.appendChild(css);}
    var js=document.getElementById('meetingLeafletJs');
    if(js){js.addEventListener('load',done,{once:true});return;}
-   js=document.createElement('script');js.id='meetingLeafletJs';js.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';js.onload=done;js.onerror=function(){setMapStatus('The map could not load. Check your internet connection and try again.');};document.head.appendChild(js);
+   js=document.createElement('script');js.id='meetingLeafletJs';js.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';js.onload=done;js.onerror=function(){setMapStatus(mapText('The map could not load. Check your internet connection and try again.','Không thể tải bản đồ. Vui lòng kiểm tra kết nối internet và thử lại.'));};document.head.appendChild(js);
   }
-  function isVietnamese(){var el=document.getElementById('siteLanguage');return !!el&&el.value==='vi';}
-  function mapText(en,vi){return isVietnamese()?vi:en;}
-  function loadGesturePlugin(done){
-   if(window.L&&L.GestureHandling){done();return;}
-   if(!document.getElementById('meetingGestureCss')){var css=document.createElement('link');css.id='meetingGestureCss';css.rel='stylesheet';css.href='https://unpkg.com/leaflet-gesture-handling@1.2.2/dist/leaflet-gesture-handling.min.css';document.head.appendChild(css);}
-   var js=document.getElementById('meetingGestureJs');
-   if(js){js.addEventListener('load',done,{once:true});return;}
-   js=document.createElement('script');js.id='meetingGestureJs';js.src='https://unpkg.com/leaflet-gesture-handling@1.2.2/dist/leaflet-gesture-handling.min.js';js.onload=done;js.onerror=done;document.head.appendChild(js);
-  }
-  function initMap(lat,lng,withMarker){
+  function initMap(lat,lng,zoom){
    if(!window.L||!mapNode)return;
    if(!leafletMap){
-    var opts={center:[lat,lng],zoom:withMarker?17:5,scrollWheelZoom:true,dragging:true,worldCopyJump:false};
-    if(L.GestureHandling){opts.gestureHandling=true;opts.gestureHandlingOptions={text:{touch:'Use two fingers to move the map',scroll:'Use Ctrl + scroll to zoom the map',scrollMac:'Use ⌘ + scroll to zoom the map'}};}
-    leafletMap=L.map(mapNode,opts);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors',crossOrigin:true}).addTo(leafletMap);
-    if(withMarker){meetingMarker=L.marker([lat,lng],{draggable:true}).addTo(leafletMap);attachMarkerEvents();}
-    mapReady=true;
-   }else{
-    leafletMap.setView([lat,lng],withMarker?17:6);
-    if(withMarker){if(!meetingMarker){meetingMarker=L.marker([lat,lng],{draggable:true}).addTo(leafletMap);attachMarkerEvents();}else meetingMarker.setLatLng([lat,lng]);}
-   }
-   setTimeout(function(){leafletMap.invalidateSize(true);},250);
+    leafletMap=L.map(mapNode,{center:[lat,lng],zoom:zoom||5,scrollWheelZoom:true,dragging:true,worldCopyJump:false});
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'}).addTo(leafletMap);
+    leafletMap.setMinZoom(4);leafletMap.setMaxZoom(19);leafletMap.setMaxBounds([[7.5,101.5],[24.5,115.5]]);leafletMap.options.maxBoundsViscosity=0.8;
+    leafletMap.on('movestart zoomstart',function(){savedPoint=null;saveLocation.disabled=true;cont.hidden=true;cont.disabled=true;if(savedLabel)savedLabel.textContent=mapText('Map adjusted. Save the location again when the red pin is over the right place.','Bản đồ đã được điều chỉnh. Hãy lưu lại khi ghim đỏ nằm đúng vị trí.');});
+    leafletMap.on('moveend zoomend',function(){if(mapReady)setMapStatus(mapText('Check the place under the fixed red pin, then tap Save location.','Kiểm tra địa điểm dưới ghim đỏ cố định, sau đó nhấn Lưu vị trí.'));});
+   }else{leafletMap.setView([lat,lng],zoom||16);}
+   mapReady=true;
+   setTimeout(function(){if(leafletMap)leafletMap.invalidateSize(true);},250);
   }
-  function attachMarkerEvents(){
-   meetingMarker.off('dragend');
-   meetingMarker.on('dragend',function(){var p=meetingMarker.getLatLng();savedPoint={lat:p.lat,lng:p.lng,address:input.value.trim()};saveLocation.disabled=false;savedLabel.textContent=mapText('Marker adjusted. Tap Save location to confirm.','Đã điều chỉnh ghim. Nhấn Lưu vị trí để xác nhận.');cont.hidden=true;cont.disabled=true;});
-   if(!leafletMap._meetingClickBound){leafletMap._meetingClickBound=true;leafletMap.on('click',function(e){if(!meetingMarker)return;meetingMarker.setLatLng(e.latlng);savedPoint={lat:e.latlng.lat,lng:e.latlng.lng,address:input.value.trim()};saveLocation.disabled=false;savedLabel.textContent=mapText('Marker moved. Tap Save location to confirm.','Đã di chuyển ghim. Nhấn Lưu vị trí để xác nhận.');cont.hidden=true;cont.disabled=true;});}
-  }
-  loadLeaflet(function(){loadGesturePlugin(function(){initMap(16.2,107.8,false);if(leafletMap){leafletMap.setMinZoom(4);leafletMap.setMaxBounds([[7.5,101.5],[24.5,115.5]]);leafletMap.options.maxBoundsViscosity=0.8;leafletMap.setView([16.2,107.8],5);}setMapStatus(mapText('Map is centred on Vietnam. Enter the full Vietnamese address, then tap Find address on map.','Bản đồ được căn giữa Việt Nam. Nhập địa chỉ đầy đủ tại Việt Nam, sau đó nhấn Tìm địa chỉ trên bản đồ.'));});});
+  loadLeaflet(function(){initMap(16.2,107.8,5);setMapStatus(mapText('Enter the full meeting address in Vietnam, then tap Find address on map.','Nhập đầy đủ địa chỉ gặp mặt tại Việt Nam, sau đó nhấn Tìm địa chỉ trên bản đồ.'));});
   $('meetingFindOnMap').addEventListener('click',function(){
-   var q=input.value.trim();if(!q){setMapStatus(mapText('Please enter the meeting address first.','Vui lòng nhập địa chỉ gặp mặt trước.'));input.focus();return;}
-   var lines=q.split(/[\\n,]+/).map(function(x){return x.trim();}).filter(Boolean);
-   /* Ignore an optional contact-name line; search the actual street and city first. */
-   var addressLines=lines.slice();
-   if(addressLines.length>1 && !/street|road|st\\.?|district|ward|\\bcity\\b|vietnam|việt nam/i.test(addressLines[0])) addressLines.shift();
-   var streetLine=addressLines.find(function(x){return /nguyen trai/i.test(x);})||addressLines[0]||q;
-   var cityLine=addressLines.find(function(x){return /ho chi minh/i.test(x);})||'Ho Chi Minh City';
-   var districtLine=addressLines.find(function(x){return /district 1|quan 1|quận 1/i.test(x);})||'District 1';
-   var searchQueries=[
-    streetLine+', '+districtLine+', '+cityLine+', Vietnam',
-    'Nguyen Trai Street, District 1, Ho Chi Minh City, Vietnam',
-    'Nguyen Trai, Ho Chi Minh City, Vietnam',
-    addressLines.slice(1).join(', ')+', Vietnam',
-    q+', Vietnam'
-   ].filter(function(x,i,a){return x.replace(/,\\s*/g,',').toLowerCase() && a.indexOf(x)===i;});
-   var idx=0;
-   function searchNext(){
-    if(idx>=searchQueries.length){if(leafletMap){leafletMap.setView([16.2,107.8],5);setTimeout(function(){leafletMap.invalidateSize(true);},200);}setMapStatus(mapText('No exact match was found. The map has returned to Vietnam. Add the city and district to the address, then search again.','Không tìm thấy kết quả chính xác. Bản đồ đã trở về Việt Nam. Hãy thêm thành phố và quận/huyện vào địa chỉ rồi tìm lại.'));return;}
-    var searchQ=searchQueries[idx++];if(!/vietnam|việt nam/i.test(searchQ))searchQ+=', Vietnam';
-    setMapStatus(mapText('Searching for the address in Vietnam…','Đang tìm địa chỉ tại Việt Nam…'));
-    var url='https://nominatim.openstreetmap.org/search?format=json&limit=8&addressdetails=1&countrycodes=vn&accept-language='+(isVietnamese()?'vi':'en')+'&q='+encodeURIComponent(searchQ);
-    fetch(url).then(function(res){if(!res.ok)throw new Error('Search failed');return res.json();}).then(function(items){
-     if(!items||!items.length){searchNext();return;}
-     var p=items[0],needle=searchQ.toLowerCase();
-     var match=items.find(function(x){return String(x.display_name||'').toLowerCase().includes(needle);});if(match)p=match;
-     var lat=Number(p.lat),lng=Number(p.lon);if(!isFinite(lat)||!isFinite(lng)){searchNext();return;}
-     loadLeaflet(function(){loadGesturePlugin(function(){initMap(lat,lng,true);savedPoint={lat:lat,lng:lng,address:q,displayName:p.display_name};saveLocation.disabled=true;cont.hidden=true;cont.disabled=true;if(adjustAddress){adjustAddress.hidden=false;adjustAddress.disabled=false;}savedLabel.textContent=mapText('Found: '+p.display_name+'. Tap Adjust your address to move the marker to the exact meeting point, then save.','Đã tìm thấy: '+p.display_name+'. Nhấn Điều chỉnh địa chỉ để di chuyển ghim đến đúng điểm gặp, sau đó lưu.');setMapStatus(mapText('Map centred on the matching address in Vietnam.','Bản đồ đã chuyển đến địa chỉ phù hợp tại Việt Nam.'));});});
-    }).catch(function(){searchNext();});
-   }
-   searchNext();
+   var q=input.value.trim();
+   if(!q){setMapStatus(mapText('Please enter the meeting address first.','Vui lòng nhập địa chỉ gặp mặt trước.'));input.focus();return;}
+   setMapStatus(mapText('Finding your address in Vietnam…','Đang tìm địa chỉ của bạn tại Việt Nam…'));
+   var url='https://nominatim.openstreetmap.org/search?format=jsonv2&limit=5&addressdetails=1&countrycodes=vn&accept-language='+(isVietnamese()?'vi':'en')+'&q='+encodeURIComponent(q);
+   fetch(url).then(function(res){if(!res.ok)throw new Error('Address search failed');return res.json();}).then(function(items){
+    if(!items||!items.length){setMapStatus(mapText('No match found. Add the building or venue, street, ward, district and city, then search again.','Không tìm thấy địa chỉ. Hãy thêm tên tòa nhà hoặc địa điểm, đường, phường, quận và thành phố rồi tìm lại.'));return;}
+    var p=items[0],lat=Number(p.lat),lng=Number(p.lon);
+    if(!isFinite(lat)||!isFinite(lng)){setMapStatus(mapText('The address result did not include valid map coordinates. Please try a more complete address.','Kết quả địa chỉ không có tọa độ bản đồ hợp lệ. Vui lòng thử địa chỉ đầy đủ hơn.'));return;}
+    loadLeaflet(function(){initMap(lat,lng,17);if(adjustAddress){adjustAddress.hidden=false;adjustAddress.disabled=false;}savedPoint=null;saveLocation.disabled=false;cont.hidden=true;cont.disabled=true;setMapStatus(mapText('Address found. Now move the map under the fixed red pin to choose the exact meeting point.','Đã tìm thấy địa chỉ. Bây giờ hãy di chuyển bản đồ bên dưới ghim đỏ cố định để chọn đúng điểm gặp.'));if(savedLabel)savedLabel.textContent=mapText('The red pin stays fixed in the centre while you move the map.','Ghim đỏ luôn cố định ở giữa khi bạn di chuyển bản đồ.');});
+   }).catch(function(){setMapStatus(mapText('Could not search the address right now. Check your connection and try again.','Hiện không thể tìm địa chỉ. Vui lòng kiểm tra kết nối và thử lại.'));});
+  });
+  if(adjustAddress)adjustAddress.addEventListener('click',function(){if(!leafletMap){setMapStatus(mapText('Find the address on the map first.','Trước tiên hãy tìm địa chỉ trên bản đồ.'));return;}setMapStatus(mapText('Adjust your address: move and zoom the map until the exact meeting place is under the red pin.','Điều chỉnh địa chỉ: di chuyển và phóng to bản đồ cho đến khi đúng điểm gặp nằm dưới ghim đỏ.'));});
+  input.addEventListener('input',function(){savedPoint=null;saveLocation.disabled=true;cont.hidden=true;cont.disabled=true;if(adjustAddress){adjustAddress.hidden=true;adjustAddress.disabled=true;}if(savedLabel)savedLabel.textContent=mapText('Address changed. Find it on the map again before saving.','Địa chỉ đã thay đổi. Hãy tìm lại trên bản đồ trước khi lưu.');});
+  saveLocation.addEventListener('click',function(){
+   if(!mapReady||!leafletMap||!input.value.trim()){setMapStatus(mapText('Enter an address and find it on the map first.','Nhập địa chỉ và tìm trên bản đồ trước.'));return;}
+   saveLocation.disabled=true;cont.hidden=true;cont.disabled=true;
+   var p=leafletMap.getCenter(),lat=p.lat,lng=p.lng;
+   setMapStatus(mapText('Saving the selected meeting point…','Đang lưu điểm gặp đã chọn…'));
+   var reverseUrl='https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat='+encodeURIComponent(lat)+'&lon='+encodeURIComponent(lng)+'&zoom=18&addressdetails=1&accept-language='+(isVietnamese()?'vi':'en');
+   fetch(reverseUrl).then(function(res){if(!res.ok)throw new Error('Reverse lookup failed');return res.json();}).then(function(place){
+    var address=(place&&place.display_name)||input.value.trim();
+    formData.meetingAddress=address;formData.meetingLatitude=lat;formData.meetingLongitude=lng;
+    savedPoint={lat:lat,lng:lng,address:address};
+    savedLabel.textContent=mapText('Saved ✓ '+address,'Đã lưu ✓ '+address);
+    setMapStatus(mapText('Location saved. Tap Continue to proceed to the next step.','Đã lưu vị trí. Nhấn Tiếp tục để sang bước tiếp theo.'));
+    cont.hidden=false;cont.disabled=false;
+   }).catch(function(){
+    formData.meetingAddress=input.value.trim();formData.meetingLatitude=lat;formData.meetingLongitude=lng;
+    savedPoint={lat:lat,lng:lng,address:input.value.trim()};
+    savedLabel.textContent=mapText('Saved ✓ Address text and GPS coordinates saved.','Đã lưu ✓ Đã lưu địa chỉ và tọa độ GPS.');
+    setMapStatus(mapText('Location saved. Tap Continue to proceed to the next step.','Đã lưu vị trí. Nhấn Tiếp tục để sang bước tiếp theo.'));
+    cont.hidden=false;cont.disabled=false;
+   });
   });
   var langControl=document.getElementById('siteLanguage');
-  if(langControl)langControl.addEventListener('change',function(){if(mapStatus)setMapStatus(mapText('Enter the full address, then tap Find address on map.','Nhập địa chỉ đầy đủ, sau đó nhấn Tìm địa chỉ trên bản đồ.'));if($('meetingFindOnMap'))$('meetingFindOnMap').textContent=mapText('Find address on map','Tìm địa chỉ trên bản đồ');if(adjustAddress)adjustAddress.textContent=mapText('Adjust your address','Điều chỉnh địa chỉ');if(saveLocation)saveLocation.textContent=mapText('Save location','Lưu vị trí');});
-  input.addEventListener('input',function(){savedPoint=null;saveLocation.disabled=true;cont.hidden=true;cont.disabled=true;if(adjustAddress){adjustAddress.hidden=true;adjustAddress.disabled=true;}if(savedLabel)savedLabel.textContent=mapText('Address changed. Search for it on the map and save the location again.','Địa chỉ đã thay đổi. Hãy tìm lại trên bản đồ và lưu vị trí.');});
-  if(adjustAddress)adjustAddress.addEventListener('click',function(){if(!leafletMap||!meetingMarker){setMapStatus(mapText('Find the address on the map first.','Hãy tìm địa chỉ trên bản đồ trước.'));return;}if(leafletMap.dragging)leafletMap.dragging.enable();if(meetingMarker.dragging)meetingMarker.dragging.enable();saveLocation.disabled=false;setMapStatus(mapText('Adjust your address: drag the marker or tap the exact meeting point on the map. When you are sure, tap Save location.','Điều chỉnh địa chỉ: kéo ghim hoặc chạm vào đúng điểm gặp trên bản đồ. Khi đã chắc chắn, nhấn Lưu vị trí.'));savedLabel.textContent=mapText('You can drag the marker or tap the map to move it.','Bạn có thể kéo ghim hoặc chạm bản đồ để di chuyển ghim.');cont.hidden=true;cont.disabled=true;});
-  saveLocation.addEventListener('click',function(){if(!mapReady||!meetingMarker||!input.value.trim()){setMapStatus(mapText('Enter an address and place the marker first.','Nhập địa chỉ và đặt ghim trước.'));return;}var p=meetingMarker.getLatLng();savedPoint={lat:p.lat,lng:p.lng,address:input.value.trim()};formData.meetingAddress=savedPoint.address;formData.meetingLatitude=p.lat;formData.meetingLongitude=p.lng;savedLabel.textContent=mapText('Saved','Đã lưu');setMapStatus(mapText('Saved. You can now continue.','Đã lưu. Bạn có thể tiếp tục.'));cont.hidden=false;cont.disabled=false;});
+  if(langControl)langControl.addEventListener('change',function(){if($('meetingFindOnMap'))$('meetingFindOnMap').textContent=mapText('Find address on map','Tìm địa chỉ trên bản đồ');if(adjustAddress)adjustAddress.textContent=mapText('Adjust your address on map','Điều chỉnh địa chỉ trên bản đồ');if(saveLocation)saveLocation.textContent=mapText('Save location','Lưu vị trí');});
   return;
  }
  if(def.type==='duration'){
