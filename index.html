@@ -2116,7 +2116,7 @@ function renderStep(){
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'}).addTo(leafletMap);
     leafletMap.setMinZoom(4);leafletMap.setMaxZoom(19);leafletMap.setMaxBounds([[7.5,101.5],[24.5,115.5]]);leafletMap.options.maxBoundsViscosity=0.8;
     leafletMap.on('movestart zoomstart',function(){savedPoint=null;saveLocation.disabled=true;cont.hidden=true;cont.disabled=true;if(savedLabel)savedLabel.textContent=mapText('Map adjusted. Save the location again when the red pin is over the right place.','Bản đồ đã được điều chỉnh. Hãy lưu lại khi ghim đỏ nằm đúng vị trí.');});
-    leafletMap.on('moveend zoomend',function(){if(mapReady)setMapStatus(mapText('Check the place under the fixed red pin, then tap Save location.','Kiểm tra địa điểm dưới ghim đỏ cố định, sau đó nhấn Lưu vị trí.'));});
+    leafletMap.on('moveend zoomend',function(){if(mapReady){if(saveLocation&&input.value.trim())saveLocation.disabled=false;setMapStatus(mapText('Map is ready. Check the place under the fixed red pin, then tap Save location.','Bản đồ đã sẵn sàng. Kiểm tra địa điểm dưới ghim đỏ cố định, sau đó nhấn Lưu vị trí.'));}});
    }else{leafletMap.setView([lat,lng],zoom||16);}
    mapReady=true;
    setTimeout(function(){if(leafletMap)leafletMap.invalidateSize(true);},250);
@@ -2139,6 +2139,7 @@ function renderStep(){
   if(adjustAddress)adjustAddress.addEventListener('click',function(){if(!leafletMap){setMapStatus(mapText('Find the address on the map first.','Trước tiên hãy tìm địa chỉ trên bản đồ.'));return;}setMapStatus(mapText('Adjust your address: move and zoom the map until the exact meeting place is under the red pin.','Điều chỉnh địa chỉ: di chuyển và phóng to bản đồ cho đến khi đúng điểm gặp nằm dưới ghim đỏ.'));});
   input.addEventListener('input',function(){savedPoint=null;saveLocation.disabled=true;cont.hidden=true;cont.disabled=true;if(adjustAddress){adjustAddress.hidden=true;adjustAddress.disabled=true;}if(savedLabel)savedLabel.textContent=mapText('Address changed. Find it on the map again before saving.','Địa chỉ đã thay đổi. Hãy tìm lại trên bản đồ trước khi lưu.');});
   saveLocation.addEventListener('click',function(){
+   if(saveLocation.disabled){setMapStatus(mapText('The map is still updating. Wait a moment, then tap Save location again.','Bản đồ vẫn đang cập nhật. Vui lòng đợi một chút rồi nhấn Lưu vị trí lần nữa.'));return;}
    if(!mapReady||!leafletMap||!input.value.trim()){setMapStatus(mapText('Enter an address and find it on the map first.','Nhập địa chỉ và tìm trên bản đồ trước.'));return;}
    var p=leafletMap.getCenter(),lat=p.lat,lng=p.lng;
    if(lat<7.5||lat>24.5||lng<101.5||lng>115.5){setMapStatus(mapText('Please select a point inside Vietnam. Search for your Vietnamese address again.','Vui lòng chọn một điểm bên trong Việt Nam. Hãy tìm lại địa chỉ tại Việt Nam.'));return;}
