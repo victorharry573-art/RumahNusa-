@@ -2342,5 +2342,42 @@ window.addEventListener('popstate',function(){if(!$('apartmentJourneyModal').hid
   new MutationObserver(enhance).observe(document.documentElement,{childList:true,subtree:true});
 })();
 </script>
+
+<style id="MOBILE-PAGE-SCROLL-RECOVERY-20261030">
+html,body{height:auto!important;min-height:100%!important;max-height:none!important;overflow-x:hidden!important;overflow-y:auto!important;touch-action:auto!important}
+body{position:static!important;-webkit-overflow-scrolling:touch!important;overscroll-behavior-y:auto!important}
+main,header,footer{touch-action:pan-y}
+</style>
+<script id="MOBILE-PAGE-SCROLL-RECOVERY-JS-20261030">
+(function(){
+ function unlockDocumentScroll(){
+  var root=document.documentElement,body=document.body;
+  if(!root||!body)return;
+  var openOverlay=document.querySelector('.gallery-lightbox.open,.room-lightbox.open,.apartment-journey-modal:not([hidden]),#apartmentStartStep:not([hidden])');
+  if(openOverlay)return;
+  root.style.setProperty('height','auto','important');
+  root.style.setProperty('min-height','100%','important');
+  root.style.setProperty('max-height','none','important');
+  root.style.setProperty('overflow-y','auto','important');
+  root.style.setProperty('overflow-x','hidden','important');
+  root.style.setProperty('touch-action','auto','important');
+  body.style.setProperty('height','auto','important');
+  body.style.setProperty('min-height','100vh','important');
+  body.style.setProperty('max-height','none','important');
+  body.style.setProperty('overflow-y','visible','important');
+  body.style.setProperty('overflow-x','hidden','important');
+  body.style.setProperty('position','static','important');
+  body.style.setProperty('touch-action','auto','important');
+  body.style.setProperty('-webkit-overflow-scrolling','touch','important');
+ }
+ unlockDocumentScroll();
+ document.addEventListener('DOMContentLoaded',unlockDocumentScroll);
+ window.addEventListener('load',unlockDocumentScroll);
+ window.addEventListener('pageshow',unlockDocumentScroll);
+ window.addEventListener('focus',unlockDocumentScroll);
+ window.addEventListener('orientationchange',function(){setTimeout(unlockDocumentScroll,150);});
+ document.addEventListener('visibilitychange',function(){if(!document.hidden)unlockDocumentScroll();});
+})();
+</script>
 </body>
 </html>
