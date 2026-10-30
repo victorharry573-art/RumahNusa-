@@ -2044,7 +2044,7 @@ var fieldsRent=[
  {key:'termsAgree',title:'Agree to the rental terms',type:'checkbox',help:'You must agree before continuing.'},
  {key:'identityType',title:'Choose your identity document',type:'select',options:['Citizen identity card','Old citizen identity card','Passport','Birth certificate','Driver’s license','Permanent residence card','Temporary residence card','Personal identification number','Electronic identity card','Personal identity confirmation certificate'],help:'Choose the type of identity document you have.'},
  {key:'idUpload',title:'Select an identity document for temporary review',type:'file',help:'You may choose a file or take a picture with your camera. This prototype keeps the selected file in this open form only; it does not send it to the agent inbox or upload it to storage.'},
- {key:'selfie',title:'Choose a photo of yourself (optional)',type:'file',help:'You may select a photo or use your camera. The file stays in this open form and is not sent to the agent inbox.'},
+ {key:'selfie',title:'Take a face photo (optional)',type:'file',help:'You can take a selfie with your front camera or choose a photo. This is a photo only, not automated facial recognition. You may skip this step and continue.'},
  {key:'description',title:'Message for the Vinhomes Grand Residence agent',type:'textarea',help:'Tell the agent any questions or requests you would like to discuss.'},
  {key:'currency',title:'Choose your preferred payment currency',type:'select',options:['VND (Vietnamese đồng)','USD (US dollars)'],help:'The agent will confirm the final amount and exchange basis before any payment.'}
 ];
@@ -2066,7 +2066,7 @@ var fieldsBuy=[
  {key:'floor',title:'Confirm your preferred floor',type:'select',options:Array.from({length:20},function(_,i){return 'Floor '+(i+1)}),help:'Choose a floor from 1 to 20. The featured apartment is shown on floor 10.'},
  {key:'identityType',title:'Choose your identity document',type:'select',options:['Citizen identity card','Passport','Electronic identity account','Birth certificate','Vietnamese military identity card','Police identity card','Driver license','ID card','Marriage certificate'],help:'Choose the identity document you have.'},
  {key:'idUpload',title:'Upload or take a picture of your identity document',type:'file',help:'This prototype does not upload identity documents to server storage or forward them to the agent.'},
- {key:'selfie',title:'Take a photo of yourself or choose one from your gallery (optional)',type:'file',help:'This photo remains in this open form only and is not sent to the agent.'},
+ {key:'selfie',title:'Take a face photo (optional)',type:'file',help:'You can take a selfie with your front camera or choose a photo. This is a photo only, not automated facial recognition. You may skip this step and continue.'},
  {key:'currency',title:'Choose your payment currency',type:'select',options:['VND (Vietnamese đồng)','USD (US dollars)'],help:'The agent will confirm the final sale price and currency basis before any payment.'},
  {key:'description',title:'Describe anything you want the Vinhomes Grand Residence agent to know',type:'textarea',help:'Share your questions, preferences or requests.'}
 ];
@@ -2088,7 +2088,7 @@ function renderStep(){
 
  else if(def.type==='terms'){html+='<div class="apartment-price-summary">Annual rent: 650,000,000 ₫<br>Monthly equivalent: approximately 54,166,667 ₫<br>Quarterly equivalent: 162,500,000 ₫<br>Security deposit: 20,000,000 ₫<br>Total for one annual period plus deposit: 670,000,000 ₫</div><p>To reserve the apartment, the annual rent and security deposit are payable upfront unless the agent confirms another written agreement. Monthly and quarterly figures are comparison equivalents and are not a promise that instalments are available. Please agree the exact terms with the agent before sending any money.</p><div class="apartment-choice-row"><button type="button" id="journeyAgree">Agree and continue</button><button type="button" id="journeyDisagree">Disagree</button></div>';}
  else if(def.type==='checkbox'){html+='<label class="apartment-journey-field"><span><input id="journeyField" type="checkbox" '+(val?'checked':'')+'> I agree to the rental terms and conditions</span></label>';}
- else if(def.type==='file'){html+='<div class="apartment-journey-field"><span>'+escapeHtml(def.title)+'</span><div class="apartment-choice-row"><button type="button" id="journeyChooseGallery">Choose from gallery / files</button><button type="button" id="journeyChooseCamera">Take a photo</button></div><input id="journeyField" data-journey-file="'+def.key+'" type="file" accept="image/*" style="position:absolute;left:-9999px;width:1px;height:1px"><small class="help">Choose from your phone gallery or file manager, or use the camera button to take a new picture.</small><span id="journeyFileName">'+escapeHtml(val&&val.name?val.name:'No file selected')+'</span></div>';}
+ else if(def.type==='file'){html+='<div class="apartment-journey-field"><span>'+escapeHtml(def.title)+'</span><div class="apartment-choice-row"><button type="button" id="journeyChooseGallery">Choose from gallery / files</button><button type="button" id="journeyChooseCamera">Take a photo</button></div><input id="journeyField" data-journey-file="'+def.key+'" type="file" accept="image/*" style="position:absolute;left:-9999px;width:1px;height:1px"><small class="help">Choose from your phone gallery or file manager, or use the camera button to take a new picture.</small>'+(def.key==='selfie'?'<button type="button" id="journeySkipSelfie">Skip this optional step</button>':'')+'<span id="journeyFileName">'+escapeHtml(val&&val.name?val.name:'No file selected')+'</span></div>';}
  else {html+='<label class="apartment-journey-field"><span>'+escapeHtml(def.title)+'</span><input id="journeyField" type="'+(def.type==='datetime-local'?'datetime-local':def.type==='date'?'date':def.type==='number'?'number':def.type==='email'?'email':def.type==='tel'?'tel':'text')+'" value="'+escapeHtml(val)+'" placeholder="Enter '+escapeHtml(def.title.toLowerCase())+'"></label>';}
  html+='</div>';
  $('apartmentJourneyStep').innerHTML=html;
@@ -2177,7 +2177,7 @@ function renderStep(){
  function validate(){
   var v=input?(input.type==='checkbox'?input.checked:input.type==='file'?(input.files&&input.files[0]||formData[def.key]||null):input.value.trim()):formData[def.key];
   var valid=!!v;
-  if(def.type==='file')valid=!!v;
+  if(def.type==='file')valid=def.key==='selfie'?true:!!v;
   if(def.type==='duration')valid=rentDuration>=1&&rentDuration<=3;
   if(def.type==='terms')valid=!!formData.depositTerms;
   if(def.type==='checkbox')valid=input.checked;
@@ -2189,6 +2189,7 @@ function renderStep(){
  }
  if(input){
   if(def.type==='file'){
+   var skipSelfie=$('journeySkipSelfie');if(skipSelfie)skipSelfie.addEventListener('click',function(){formData.selfie=null;stepIndex++;renderStep();});
    var galleryButton=$('journeyChooseGallery'),cameraButton=$('journeyChooseCamera');
    if(galleryButton)galleryButton.addEventListener('click',function(e){
     e.preventDefault();e.stopPropagation();
@@ -2200,7 +2201,7 @@ function renderStep(){
    if(cameraButton)cameraButton.addEventListener('click',function(e){
     e.preventDefault();e.stopPropagation();
     input.setAttribute('accept','image/*');
-    input.setAttribute('capture','environment');
+    input.setAttribute('capture',def.key==='selfie'?'user':'environment');
     input.click();
    });
   }
