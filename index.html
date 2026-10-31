@@ -1179,7 +1179,9 @@ function openApartmentSearch(roomOnly){var nav=document.querySelector('.nav-butt
           } else if (section === 'Message') {
             hideProfile(); document.getElementById('searchView').hidden=true; document.getElementById('rentApartmentView').hidden=true; document.getElementById('promoteView').hidden=true; mainSections.forEach(function(s){s.style.display='none'}); document.getElementById('messageView').hidden=false; window.scrollTo({top:0,behavior:'smooth'}); if(window.__initMessageSection)window.__initMessageSection();
           } else {
+            hideProfile();
             document.getElementById('messageView').hidden=true; document.getElementById('rentApartmentView').hidden=true; document.getElementById('searchView').hidden=true; document.getElementById('promoteView').hidden=true;
+            mainSections.forEach(function(s){s.style.display='';});
             var notice = document.createElement('div');
             notice.setAttribute('role', 'status');
             notice.style.cssText = 'position:fixed;z-index:30;left:12px;right:12px;bottom:85px;background:#243746;color:#fff;padding:14px 16px;border-radius:12px;box-shadow:0 4px 18px rgba(0,0,0,.2);text-align:center';
