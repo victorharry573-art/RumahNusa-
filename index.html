@@ -2109,6 +2109,7 @@ var fieldsBuy=[
  {key:'agentTime',title:'Choose date and time to meet the agent for signing',type:'datetime-local',help:'Choose a future appointment time.'},
  {key:'meetingAddress',title:'Where should the agent meet you?',type:'map-address',help:'Enter the meeting address, find it on the map, move the map until the exact meeting point is under the fixed red pin, then save.'},
  {key:'apartmentType',title:'Choose your apartment type',type:'select',options:['Luxury apartment','Penthouse','Family residence','Investment property','Other apartment'],help:'Choose the type you want to buy.'},
+ {key:'purchaseAmount',title:'Enter the amount you want to pay for this apartment (VND)',type:'number',help:'Write your proposed apartment purchase amount in Vietnamese đồng. Continue will appear after you enter a valid amount.',validate:function(v){return Number(v)>0?'Enter an amount greater than zero.':'';}},
  {key:'bedrooms',title:'Confirm the number of bedrooms',type:'select',options:['1 bedroom','2 bedrooms','3 bedrooms'],help:'This featured residence is shown as a two-bedroom apartment.'},
  {key:'floor',title:'Confirm your preferred floor',type:'select',options:Array.from({length:20},function(_,i){return 'Floor '+(i+1)}),help:'Choose a floor from 1 to 20. The featured apartment is shown on floor 10.'},
  {key:'identityType',title:'Choose your identity document',type:'select',options:['Citizen identity card','Passport','Electronic identity account','Birth certificate','Vietnamese military identity card','Police identity card','Driver license','ID card','Marriage certificate'],help:'Choose the identity document you have.'},
@@ -2136,7 +2137,7 @@ function renderStep(){
  else if(def.type==='terms'){html+='<div class="apartment-price-summary">Annual rent: 650,000,000 ₫<br>Monthly equivalent: approximately 54,166,667 ₫<br>Quarterly equivalent: 162,500,000 ₫<br>Security deposit: 20,000,000 ₫<br>Total for one annual period plus deposit: 670,000,000 ₫</div><p>To reserve the apartment, the annual rent and security deposit are payable upfront unless the agent confirms another written agreement. Monthly and quarterly figures are comparison equivalents and are not a promise that instalments are available. Please agree the exact terms with the agent before sending any money.</p><div class="apartment-choice-row"><button type="button" id="journeyAgree">Agree and continue</button><button type="button" id="journeyDisagree">Disagree</button></div>';}
  else if(def.type==='checkbox'){html+='<label class="apartment-journey-field"><span><input id="journeyField" type="checkbox" '+(val?'checked':'')+'> I agree to the rental terms and conditions</span></label>';}
  else if(def.type==='file'){html+='<div class="apartment-journey-field"><span>'+escapeHtml(def.title)+'</span><div class="apartment-choice-row"><button type="button" id="journeyChooseGallery">Choose from gallery / files</button><button type="button" id="journeyChooseCamera">Take a photo</button></div><input id="journeyField" data-journey-file="'+def.key+'" type="file" accept="image/*" style="position:absolute;left:-9999px;width:1px;height:1px"><small class="help">Choose from your phone gallery or file manager, or use the camera button to take a new picture.</small>'+(def.key==='selfie'&&flowType==='rent'?'<button type="button" id="journeySkipSelfie">Skip this optional step</button>':'')+'<span id="journeyFileName">'+escapeHtml(val&&val.name?val.name:'No file selected')+'</span></div>';}
- else {html+='<label class="apartment-journey-field"><span>'+escapeHtml(def.title)+'</span><input id="journeyField" type="'+(def.type==='datetime-local'?'datetime-local':def.type==='date'?'date':def.type==='number'?'number':def.type==='email'?'email':def.type==='tel'?'tel':'text')+'" value="'+escapeHtml(val)+'" placeholder="Enter '+escapeHtml(def.title.toLowerCase())+'"></label>';}
+ else {html+='<label class="apartment-journey-field"><span>'+escapeHtml(def.title)+'</span><input id="journeyField" type="'+(def.type==='datetime-local'?'datetime-local':def.type==='date'?'date':def.type==='number'?'number':def.type==='email'?'email':def.type==='tel'?'tel':'text')+'"'+(def.key==='purchaseAmount'?' min="1" step="1" inputmode="numeric"':'')+' value="'+escapeHtml(val)+'" placeholder="'+(def.key==='purchaseAmount'?'Enter amount in VND':'Enter '+escapeHtml(def.title.toLowerCase()))+'"></label>';}
  html+='</div>';
  $('apartmentJourneyStep').innerHTML=html;
  var input=$('journeyField'),cont=$('apartmentJourneyContinue');
@@ -2232,7 +2233,7 @@ function renderStep(){
   if(def.type==='datetime-local'&&v)valid=new Date(v)>new Date();
   if(def.validate&&v){var err=def.validate(v);if(err){valid=false;input.setCustomValidity(err);}else input.setCustomValidity('');}
   if(def.key==='dob'&&v){var age=(Date.now()-new Date(v).getTime())/31557600000;valid=valid&&age>=18;}
-  cont.disabled=!valid;return valid;
+  cont.disabled=!valid;if(def.key==='purchaseAmount')cont.hidden=!valid;return valid;
  }
  if(input){
   if(def.type==='file'){
@@ -2266,6 +2267,7 @@ function renderStep(){
 }
 function submitJourney(){
  var lines=['Vinhomes Grand Residence — '+(flowType==='buy'?'BUY ENQUIRY':'RENT ENQUIRY'),'Apartment: Luxury Two-Bedroom Residence','Bedrooms: 2','Parlor: 1','Floor: 10','Currency: '+(formData.currency||'Not selected')];
+ if(flowType==='buy'&&formData.purchaseAmount){lines.push('Customer proposed purchase amount: '+Number(formData.purchaseAmount).toLocaleString('en-US')+' VND');}
  if(flowType==='rent'){lines.push('Annual rent: 650,000,000 ₫','Rental duration: '+rentDuration+' annual period(s)','Total rent: '+(650000000*rentDuration).toLocaleString('en-US')+' ₫','Payment terms: '+(formData.paymentFrequency||'To confirm with agent'),'Security deposit: 20,000,000 ₫');}
  Object.keys(formData).forEach(function(k){if(k==='idUpload'||k==='selfie')return;var v=formData[k];if(v&&typeof v==='object'&&v.name)return;if(v!==undefined&&v!==null&&v!==''&&k!=='depositTerms')lines.push(k+': '+v);});
  var text=lines.join('\n');$('apartmentJourneyStep').hidden=false;$('apartmentJourneyStep').innerHTML='<div class="apartment-journey-step-card"><h3>Request prepared</h3><p>Your apartment choice and the details you entered are ready to be sent through the website message service.</p><label class="apartment-journey-field"><span>Review your message to the agent</span><textarea id="journeyFinalMessage">'+escapeHtml(text)+'</textarea></label><p class="help">Identity documents and photos are not included in this message.</p></div>';
