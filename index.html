@@ -1073,7 +1073,7 @@ var siteVietnamnText = {
           if(key3==='myProperty'){var values={goal:box.querySelector('#propGoal').value,city:box.querySelector('#propCity').value,type:box.querySelector('#propType').value,beds:box.querySelector('#propBeds').value,budget:box.querySelector('#propBudget').value};try{sessionStorage.setItem('nusantara-property-preferences',JSON.stringify(values));}catch(e){}}
           if(key3==='booking'){try{sessionStorage.setItem('nusantara-booking-draft',JSON.stringify({listing:box.querySelector('#bookingListing').value,date:box.querySelector('#bookingDate').value,time:box.querySelector('#bookingTime').value}));}catch(e){}}
           if(key3==='help'){try{sessionStorage.setItem('nusantara-help-draft',JSON.stringify({topic:box.querySelector('#helpTopic').value,message:box.querySelector('#helpMessage').value}));}catch(e){}}
-          if(status){status.hidden=false;status.textContent='Saved for this browser session only. This prototype is not connected to an account database.';}
+          if(status){status.hidden=true;status.textContent='';}
         });});
       })});
       document.getElementById('profileSubpanelBack').addEventListener('click',function(){closeProfilePanel(false);document.getElementById('profileSettingsMenu').hidden=false;document.getElementById('profileSettingsCard').scrollIntoView({behavior:'smooth',block:'start'});});
