@@ -1962,7 +1962,7 @@ $('messageComposer').addEventListener('submit',async function(e){
     var profile=el('profileView');
     var ids=['searchView','rentApartmentView','promoteView','messageView'];
     ids.forEach(function(id){var x=el(id);if(x){x.hidden=true;x.style.display='none';}});
-    if(profile)profile.classList.remove('visible');
+    if(profile){profile.classList.remove('visible');profile.hidden=true;profile.style.display='none';}
     document.querySelectorAll('.nav-button').forEach(function(b){var active=b.getAttribute('data-section')===section;b.classList.toggle('active',active);if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
     if(section==='Home'){
       mainSections.forEach(function(x){x.style.display='';});
@@ -1976,7 +1976,7 @@ $('messageComposer').addEventListener('submit',async function(e){
     }
     mainSections.forEach(function(x){x.style.display='none';});
     if(section==='Profile'){
-      if(profile){profile.classList.add('visible');profile.style.display='block';}
+      if(profile){profile.hidden=false;profile.classList.add('visible');profile.style.display='block';}
     }else{
       var target=el(section==='Search'?'searchView':section==='Rentapartment'?'rentApartmentView':section==='Promote'?'promoteView':section==='Message'?'messageView':'');
       if(target){target.hidden=false;target.style.display='block';}
