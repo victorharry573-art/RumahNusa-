@@ -521,9 +521,9 @@
         <div class="profile-step active" data-step="0">
           <h3 data-i18n="chooseId">Step 1 · Choose your identity document</h3>
           <label class="profile-field"><span data-i18n="identityType">Choose your identity type</span>
-            <select id="identityType" required>
+            <select id="identityType" name="identityType" required autocomplete="off" aria-label="Choose your identity document" style="position:relative;z-index:2;pointer-events:auto;appearance:auto;-webkit-appearance:menulist">
               <option value="">Choose document type</option>
-              <option>KTP (Kartu Tanda Penduduk)</option><option>Passport</option><option>KITAS</option><option>KITAP</option><option>Driver's license</option><option>National identity card</option><option>Residence permit</option><option>Tax Identification Number (NPWP)</option>
+              <option value="KTP (Kartu Tanda Penduduk)">KTP (Kartu Tanda Penduduk)</option><option value="Passport">Passport</option><option value="KITAS">KITAS</option><option value="KITAP">KITAP</option><option value="Driver license">Driver's license</option><option value="National identity card">National identity card</option><option value="Residence permit">Residence permit</option><option value="Tax Identification Number (NPWP)">Tax Identification Number (NPWP)</option>
             </select>
           </label>
           <div class="profile-actions"><button class="profile-btn primary" id="idTypeContinue" type="button" data-i18n="continue">Continue</button></div>
@@ -979,8 +979,15 @@ var siteVietnamnText = {
         document.getElementById('profileDetailsCard').hidden=true;document.getElementById('profilePhotoCard').hidden=false;
         document.getElementById('profilePhotoCard').scrollIntoView({behavior:'smooth',block:'start'});
       });
+      var identityTypeSelect=document.getElementById('identityType');
+      identityTypeSelect.addEventListener('change',function(){
+        this.style.borderColor=this.value?'#cfd6dc':'#c9232b';
+        try{sessionStorage.setItem('vinhomes-identity-type',this.value);}catch(e){}
+        if(window.__updateProfileContinueButtonStates)window.__updateProfileContinueButtonStates();
+      });
+      try{var savedIdentityType=sessionStorage.getItem('vinhomes-identity-type');if(savedIdentityType&&Array.from(identityTypeSelect.options).some(function(o){return o.value===savedIdentityType;}))identityTypeSelect.value=savedIdentityType;}catch(e){}
       document.getElementById('idTypeContinue').addEventListener('click',function(){
-        var t=document.getElementById('identityType').value;if(!t){document.getElementById('identityType').style.borderColor='#c9232b';if(window.__updateProfileContinueButtonStates)window.__updateProfileContinueButtonStates();return;}
+        var t=String(identityTypeSelect.value||'').trim();if(!t){identityTypeSelect.style.borderColor='#c9232b';identityTypeSelect.focus();if(window.__updateProfileContinueButtonStates)window.__updateProfileContinueButtonStates();return;}
         var guide=document.getElementById('idGuide');guide.className='id-guide'+(/passport/i.test(t)?' passport':'');
         document.getElementById('idGuideText').textContent='Align the '+t+' within this guide. Use a clear, well-lit image with all edges visible.';
         showVerifyStep(1);
