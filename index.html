@@ -334,6 +334,13 @@
 
 /* Remove the obstructive floating rental booking panel; keep the in-page booking controls. */
 #apartmentStickyBooking{display:none!important;visibility:hidden!important;pointer-events:none!important}
+
+/* Keep the fourth apartment journey controls visible above the fixed mobile navigation. */
+@media(max-width:720px){
+  .fourth-modal{align-items:flex-start;justify-content:center;padding:6px}
+  .fourth-modal-panel{max-height:calc(100dvh - 150px);overflow-y:auto;overscroll-behavior:contain}
+  .fourth-step-footer{position:sticky;bottom:-11px;z-index:6;background:#fff;padding:12px 0 calc(12px + env(safe-area-inset-bottom));border-top:1px solid #e1e6eb;box-shadow:0 -6px 12px rgba(0,0,0,.04)}
+}
 </style>
 </head>
 <body id="top">
