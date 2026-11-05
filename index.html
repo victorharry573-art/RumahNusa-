@@ -2558,6 +2558,9 @@ var rentSteps=[
  {key:'childrenCount',title:'How many children do you have?',type:'number',conditional:function(){return answers.relationship==='Married'&&answers.children==='Yes';}},
  {key:'occupants',title:'How many people will live in the apartment?',type:'number'},
  {key:'purpose',title:'What is the purpose of your rental?',type:'select',options:['Family residence','Work','Study','Long-term living','Other']},
+ {key:'towerChoice',title:'Choose your tower',type:'select',options:['AQUA 1 Tower','AQUA 2 Tower','AQUA 3 Tower','AQUA 4 Tower']},
+ {key:'apartmentFloor',title:'What is your floor?',type:'number',help:'Enter the floor number for the apartment.'},
+ {key:'agentWaitLocation',title:'Choose where to wait for the agent',type:'select',options:['Wait for agent inside lobby','Wait for agent outside lobby']},
  {key:'deposit',title:'Review the rental payment and security deposit',type:'terms',help:'Annual rent: 182,000,000 đ. Security deposit: 20,000,000 đ. The deposit is separate from rent.'},
  {key:'identityType',title:'Choose your identity document',type:'select',options:['Vietnamese citizen identity card (CCCD)','Passport','Birth certificate','Driver license','Residence card','Other government identity document']},
  {key:'idUpload',title:'Provide a picture of your identity document',type:'file',help:'Choose a clear picture from your gallery or take a new photo.'},
@@ -2579,6 +2582,9 @@ var buySteps=[
  {key:'selfie',title:'Take or choose a face photo',type:'file',help:'Choose a clear face photo or use your camera.'},
  {key:'conditions',title:'Review the purchase enquiry conditions',type:'terms',help:'This is an enquiry, not a payment. The agent will confirm the property documents, final price and purchase process with you.'},
  {key:'currentAddress',title:'What is your current residential address?',type:'textarea',help:'This is collected privately for the property team and will not be included in the message sent to the agent inbox.'},
+ {key:'towerChoice',title:'Choose your tower',type:'select',options:['AQUA 1 Tower','AQUA 2 Tower','AQUA 3 Tower','AQUA 4 Tower']},
+ {key:'apartmentFloor',title:'What is your floor?',type:'number',help:'Enter the floor number for the apartment.'},
+ {key:'agentWaitLocation',title:'Choose where to wait for the agent',type:'select',options:['Wait for agent inside lobby','Wait for agent outside lobby']},
  {key:'description',title:'Is there anything else you want the agent to know?',type:'textarea',help:'Write your questions or requests about buying this apartment.'}
 ];
 function setPhoto(n){photoIndex=(n+photos.length)%photos.length;$('fourthGalleryImage').src=base+encodeURIComponent(photos[photoIndex]);$('fourthPhotoCount').textContent=(photoIndex+1)+' / '+photos.length;var cover=$('fourthApartmentPhoto');if(cover)cover.querySelector('.fourth-photo-count').textContent='Bedroom photo · '+(photoIndex+1)+' / '+photos.length;}
