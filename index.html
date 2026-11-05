@@ -280,6 +280,57 @@
 .apartment-journey-modal[hidden]{display:none!important}.apartment-journey-modal{position:fixed;inset:0;z-index:2147483001;background:rgba(18,24,30,.78);display:flex;align-items:center;justify-content:center;padding:10px}.apartment-journey-panel{position:relative;background:#fff;width:min(760px,100%);max-height:94dvh;overflow:auto;border-radius:18px;padding:clamp(14px,3vw,24px);box-shadow:0 12px 48px #0005}.apartment-journey-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.apartment-journey-head h2{font-size:clamp(22px,5vw,30px);margin:4px 0 10px}.apartment-journey-head>button{width:42px;height:42px;border-radius:50%;font-size:27px;background:#f1f3f5;color:#26333d;flex-shrink:0}.apartment-journey-gallery{position:relative;background:#101820;border-radius:12px;overflow:hidden}.apartment-journey-gallery img{display:block;width:100%;height:clamp(230px,45vh,420px);object-fit:contain;touch-action:pan-y}.apartment-journey-gallery button{position:absolute;top:50%;transform:translateY(-50%);background:#ffffffde;color:#26333d;width:42px;height:46px;padding:0;font-size:30px}.apartment-journey-gallery button:first-of-type{left:8px}.apartment-journey-gallery button:nth-of-type(2){right:8px}.apartment-journey-gallery span{position:absolute;bottom:8px;right:8px;background:#111c;color:#fff;border-radius:7px;padding:5px 8px;font-size:12px}.apartment-journey-caption{font-size:12px;color:#697680;margin:8px 0 14px}.apartment-journey-choice,.apartment-journey-step-card{border:1px solid #f0d2b9;border-radius:13px;padding:16px;background:#fffaf5}.apartment-journey-choice h3{margin-bottom:8px}.apartment-journey-choice p{color:#5e6266}.apartment-journey-buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.apartment-journey-buttons button{min-height:50px;border-radius:11px;font-weight:900;background:#fff0df;color:#a84405;border:1px solid #f2c39c}.apartment-journey-buttons button:last-child{background:#f47719;color:white;border-color:#f47719}.apartment-journey-field{display:grid;gap:7px;margin:12px 0;font-weight:800;color:#35404a}.apartment-journey-field input,.apartment-journey-field select,.apartment-journey-field textarea{width:100%;min-height:46px;padding:12px;border:1px solid #ccd5dc;border-radius:10px;font:inherit;background:#fff;color:#243746}.apartment-journey-field textarea{min-height:120px;resize:vertical}.apartment-journey-footer{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-top:14px;position:sticky;bottom:0;padding-top:10px;background:#fff}.apartment-journey-footer span{font-size:12px;color:#68737d;margin-right:auto}.apartment-journey-footer button{min-height:44px;background:#f47719;color:#fff}.apartment-journey-footer button:disabled{background:#fff;color:#a84405;border:1px solid #f47719}.apartment-journey-footer #apartmentJourneyBack{background:#f0f2f4;color:#243746}.apartment-journey-step-card .help{font-size:13px;color:#65717b}.apartment-duration-inline{display:flex;align-items:center;gap:14px}.apartment-duration-inline button{min-width:46px;min-height:46px;background:#243746;color:#fff;font-size:25px}.apartment-duration-inline strong{font-size:18px}.apartment-price-summary{font-size:20px;font-weight:900;color:#b94b08;padding:12px;background:#fff0df;border-radius:10px}.apartment-choice-row{display:flex;flex-wrap:wrap;gap:8px}.apartment-choice-row button{background:#fff;border:1px solid #e0e5e9;color:#243746}.apartment-choice-row button.selected{background:#fff0df;border-color:#f47719;color:#a84405}
 @media(max-width:680px){.apartment-second-card{grid-template-columns:1fr}.apartment-second-photo,.apartment-second-photo img{min-height:240px;height:270px}.apartment-second-title{display:block}.apartment-second-price{text-align:left;margin-top:10px}.apartment-journey-modal{padding:0;align-items:stretch}.apartment-journey-panel{max-height:100dvh;height:100dvh;border-radius:0;padding:14px}.apartment-journey-gallery img{height:clamp(210px,34vh,340px)}.apartment-journey-buttons{grid-template-columns:1fr}.apartment-journey-footer{flex-wrap:wrap}.apartment-journey-footer span{width:100%}}
 
+
+/* Fourth apartment box — isolated styles; existing apartment cards remain untouched */
+.fourth-apartment-card{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(280px,.95fr);gap:0;margin:22px 0;background:#fff;border:1px solid #e1e6eb;border-radius:16px;overflow:hidden;box-shadow:0 4px 15px rgba(20,35,50,.05)}
+.fourth-apartment-photo{position:relative;min-height:300px;background:#e9edf0;cursor:pointer}
+.fourth-apartment-photo img{display:block;width:100%;height:100%;min-height:300px;max-height:470px;object-fit:cover}
+.fourth-photo-count{position:absolute;left:12px;bottom:12px;padding:7px 11px;border-radius:99px;background:rgba(20,32,42,.85);color:#fff;font-size:12px;font-weight:800}
+.fourth-apartment-info{padding:20px;min-width:0}
+.fourth-apartment-info h3{margin:5px 0 7px;color:#243746;font-size:22px}
+.fourth-apartment-meta{color:#5e6871;font-size:14px;margin:0 0 14px}
+.fourth-price-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.fourth-price-item{padding:13px;border-radius:12px;background:#f5f7f9;border:1px solid #e5e9ed}
+.fourth-price-item small{display:block;color:#65717b;font-size:12px;font-weight:700}
+.fourth-price-item strong{display:block;color:#243746;font-size:clamp(17px,3vw,22px);line-height:1.35;overflow-wrap:anywhere}
+.fourth-amenities{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:14px 0}
+.fourth-amenity{padding:9px 10px;border-radius:9px;background:#f5f7f9;color:#34414b;font-size:13px;font-weight:700}
+.fourth-amenities-extra[hidden]{display:none}
+.fourth-apartment-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:14px}
+.fourth-apartment-actions button{flex:1;min-width:120px}
+.fourth-modal[hidden]{display:none!important}
+.fourth-modal{position:fixed;inset:0;z-index:1300;background:rgba(8,13,18,.82);display:flex;align-items:center;justify-content:center;padding:12px}
+.fourth-modal-panel{width:min(900px,100%);max-height:94vh;overflow:auto;background:#fff;border-radius:16px;padding:16px;box-shadow:0 12px 40px #0005}
+.fourth-modal-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+.fourth-modal-head h2{font-size:22px;margin:0;color:#243746}
+.fourth-modal-close{width:42px;height:42px;border:0;border-radius:50%;background:#f0f2f4;font-size:26px;cursor:pointer}
+.fourth-gallery{position:relative;background:#101820;border-radius:12px;overflow:hidden}
+.fourth-gallery img{display:block;width:100%;height:clamp(230px,48vh,480px);object-fit:contain}
+.fourth-gallery button{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border:0;border-radius:50%;background:#fff;color:#243746;font-size:28px;cursor:pointer}
+#fourthPhotoPrev{left:10px}#fourthPhotoNext{right:10px}
+#fourthPhotoCount{position:absolute;right:10px;bottom:10px;background:#17232ddd;color:#fff;border-radius:99px;padding:5px 10px;font-size:12px;font-weight:800}
+.fourth-modal-caption{font-size:13px;color:#68737d;margin:8px 0 14px}
+.fourth-choice{padding:14px;border:1px solid #e1e6eb;border-radius:12px}
+.fourth-choice h3{margin-bottom:5px}
+.fourth-choice-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.fourth-choice-actions button{flex:1;min-width:130px}
+.fourth-step-card{padding:16px;border:1px solid #e1e6eb;border-radius:12px}
+.fourth-step-card h3{margin-bottom:5px}
+.fourth-step-card p{color:#64707a;font-size:14px}
+.fourth-step-field{display:block;margin-top:12px;font-weight:700;color:#34414b}
+.fourth-step-field input,.fourth-step-field select,.fourth-step-field textarea{display:block;width:100%;min-height:46px;margin-top:6px;padding:11px 12px;border:1px solid #cbd3da;border-radius:9px;background:#fff;color:#222;font:inherit}
+.fourth-step-field textarea{min-height:100px;resize:vertical}
+.fourth-step-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.fourth-step-actions button{flex:1;min-width:115px}
+.fourth-step-footer{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px}
+.fourth-step-footer button{min-width:110px}
+.fourth-step-status{font-size:12px;color:#68737d}
+.fourth-duration-control{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:12px 0;padding:12px;border:1px solid #e1e6eb;border-radius:12px}
+.fourth-duration-control button{width:44px;height:44px;border:0;border-radius:9px;background:#243746;color:#fff;font-size:25px}
+.fourth-duration-control strong{text-align:center}
+.fourth-file-note{font-size:12px;color:#68737d;margin-top:6px}
+@media(max-width:700px){.fourth-apartment-card{grid-template-columns:1fr}.fourth-apartment-photo,.fourth-apartment-photo img{min-height:230px;height:260px}.fourth-apartment-info{padding:15px}.fourth-modal{padding:6px}.fourth-modal-panel{padding:11px;max-height:96vh}.fourth-price-grid{grid-template-columns:1fr 1fr}}
+
 </style>
 </head>
 <body id="top">
@@ -504,6 +555,63 @@
 <div class="apartment-actions"><button type="button" class="profile-btn secondary" id="apartmentViewRooms">View rooms</button><button type="button" class="profile-btn primary" id="apartmentContinue" hidden>Continue</button></div><p class="apartment-note">Rental duration is limited to one, two, or three annual periods. The total updates when you tap + or −.</p>
 <div class="apartment-step-box" id="apartmentStartStep" hidden aria-live="polite"><h3>Confirm your details to continue renting</h3><p>Do you want to rent this apartment?</p><div class="apartment-actions"><button type="button" class="profile-btn secondary" id="apartmentRentNo">No</button><button type="button" class="profile-btn primary" id="apartmentRentYes">Yes, continue</button></div><p class="apartment-note" id="apartmentStartMessage"></p></div></div></div>
 <div class="room-lightbox" id="apartmentRoomLightbox" role="dialog" aria-modal="true" aria-label="Apartment room photographs"><div class="room-lightbox-inner"><div class="room-lightbox-top"><strong>Apartment rooms and photographs</strong><button type="button" id="apartmentGalleryClose" aria-label="Close room viewer">×</button></div><button type="button" class="room-lightbox-arrow room-lightbox-prev" id="apartmentGalleryPrev" aria-label="Previous photograph">‹</button><img id="apartmentGalleryImage" alt="Apartment room photograph"><button type="button" class="room-lightbox-arrow room-lightbox-next" id="apartmentGalleryNext" aria-label="Next photograph">›</button><div class="room-lightbox-count" id="apartmentGalleryCount">1 / 19</div><p class="room-lightbox-count">Swipe left or right to browse. Use the phone Back button to close.</p></div></div>
+
+<article class="fourth-apartment-card" id="fourthApartmentCard">
+ <div class="fourth-apartment-photo" id="fourthApartmentPhoto" role="button" tabindex="0" aria-label="Open Vinhomes Golden River apartment photo gallery">
+  <img src="https://vuhrkijzjmnbsaqnpdmg.supabase.co/storage/v1/object/public/property-images/IMG-20261104-WA0003.jpg" alt="Bedroom in Vinhomes Golden River Aqua 1 Tower" loading="eager">
+  <span class="fourth-photo-count">Bedroom photo · 1 / 33</span>
+ </div>
+ <div class="fourth-apartment-info">
+  <span class="pill">Vinhomes Golden River · Ho Chi Minh City</span>
+  <h3>Luxury Residence · Aqua 1 Tower</h3>
+  <p class="fourth-apartment-meta">1 bedroom · 1 parlor · Floor 32</p>
+  <p class="fourth-apartment-meta">Aqua 1 Tower, Vinhomes Golden River, Ho Chi Minh City, Vietnam</p>
+  <div class="fourth-price-grid">
+   <div class="fourth-price-item"><small>Annual rent</small><strong>182,000,000 đ</strong></div>
+   <div class="fourth-price-item"><small>Purchase price</small><strong>7,100,000,000 đ</strong></div>
+  </div>
+  <div class="fourth-amenities" aria-label="Apartment facilities">
+   <div class="fourth-amenity">🛏️ 1 bedroom</div><div class="fourth-amenity">🛋️ 1 parlor</div>
+   <div class="fourth-amenity">❄️ Air conditioning</div><div class="fourth-amenity">🛗 Elevator</div>
+   <div class="fourth-amenity">🏊 Swimming pool</div><div class="fourth-amenity">🏋️ Gym</div>
+  </div>
+  <div class="fourth-amenities-extra" id="fourthAmenitiesExtra" hidden>
+   <div class="fourth-amenities">
+    <div class="fourth-amenity">🛝 Playground</div><div class="fourth-amenity">🎾 Tennis court</div>
+    <div class="fourth-amenity">🍽️ Kitchen utensils</div><div class="fourth-amenity">🛏️ Spring bed</div>
+    <div class="fourth-amenity">👔 Wardrobe</div><div class="fourth-amenity">🚿 Water heater</div>
+    <div class="fourth-amenity">🛋️ Sofa bed</div><div class="fourth-amenity">📺 Smart TV</div>
+    <div class="fourth-amenity">🏀 Basketball court</div><div class="fourth-amenity">🌇 Balcony</div>
+    <div class="fourth-amenity">🔥 Gas stove</div><div class="fourth-amenity">🧊 Refrigerator</div>
+    <div class="fourth-amenity">🍚 Rice cooker</div><div class="fourth-amenity">🌬️ Cooker hood</div>
+    <div class="fourth-amenity">🫖 Electric kettle</div><div class="fourth-amenity">🚿 Jet shower</div>
+    <div class="fourth-amenity">🪞 Mirror</div><div class="fourth-amenity">💨 Exhaust fan</div>
+    <div class="fourth-amenity">💡 Ceiling-mounted lighting</div><div class="fourth-amenity">🪑 Chairs</div>
+   </div>
+  </div>
+  <button type="button" class="profile-btn secondary" id="fourthSeeAllAmenities">See all facilities</button>
+  <div class="fourth-apartment-actions">
+   <button type="button" class="profile-btn secondary" id="fourthRentButton">Rent apartment</button>
+   <button type="button" class="profile-btn primary" id="fourthBuyButton">Buy apartment</button>
+  </div>
+  <p class="apartment-note">Tap the bedroom photo to browse all 33 photographs. Choose Rent or Buy to continue inside this apartment box.</p>
+ </div>
+</article>
+<div class="fourth-modal" id="fourthApartmentModal" hidden role="dialog" aria-modal="true" aria-labelledby="fourthModalTitle">
+ <div class="fourth-modal-panel">
+  <div class="fourth-modal-head"><h2 id="fourthModalTitle">Vinhomes Golden River · Aqua 1 Tower</h2><button type="button" class="fourth-modal-close" id="fourthModalClose" aria-label="Close">×</button></div>
+  <div class="fourth-gallery"><img id="fourthGalleryImage" src="https://vuhrkijzjmnbsaqnpdmg.supabase.co/storage/v1/object/public/property-images/IMG-20261104-WA0003.jpg" alt="Apartment photograph"><button type="button" id="fourthPhotoPrev" aria-label="Previous photo">‹</button><button type="button" id="fourthPhotoNext" aria-label="Next photo">›</button><span id="fourthPhotoCount">1 / 33</span></div>
+  <p class="fourth-modal-caption">Swipe or use the arrows to view the bedroom, parlor, kitchen, bathrooms, tower and shared facilities.</p>
+  <div class="fourth-choice" id="fourthJourneyChoice">
+   <h3>Would you like to rent or buy this apartment?</h3>
+   <p>1 bedroom · 1 parlor · Floor 32 · Aqua 1 Tower</p>
+   <div class="fourth-choice-actions"><button type="button" class="profile-btn secondary" id="fourthChoiceRent">Rent · 182,000,000 đ per year</button><button type="button" class="profile-btn primary" id="fourthChoiceBuy">Buy · 7,100,000,000 đ</button></div>
+  </div>
+  <div id="fourthJourneyStep" hidden></div>
+  <div class="fourth-step-footer"><span class="fourth-step-status" id="fourthStepStatus">Choose Rent or Buy</span><button type="button" class="profile-btn secondary" id="fourthStepBack" hidden>Back</button><button type="button" class="profile-btn primary" id="fourthStepContinue" hidden disabled>Continue</button></div>
+ </div>
+</div>
+
 </section>
 <div id="apartmentStickyBooking" aria-label="Rental price and booking" style="position:fixed;z-index:99998;right:10px;bottom:calc(82px + env(safe-area-inset-bottom));width:min(310px,calc(100vw - 20px));background:#fff;border:1px solid #dce3e9;border-radius:14px;padding:12px 14px;box-shadow:0 5px 22px #0002;display:none"><button type="button" id="apartmentStickyPrice" style="display:block;width:100%;border:0;background:transparent;text-align:left;padding:0;color:#243746;font:inherit;cursor:pointer"><span style="display:block;font-size:12px;color:#64717c">Annual rent · Pay annually</span><strong id="apartmentStickyPriceValue" style="font-size:21px;line-height:1.3">650,000,000 đ</strong><span style="display:block;font-size:12px;color:#64717c">Select unit to continue booking</span></button><button type="button" id="apartmentStickyContinue" class="profile-btn primary" style="width:100%;margin-top:8px" hidden>Continue booking</button></div>
     <section class="profile-view" id="profileView" aria-labelledby="profileTitle">
@@ -2381,5 +2489,131 @@ window.addEventListener('popstate',function(){if(!$('apartmentJourneyModal').hid
   new MutationObserver(enhance).observe(document.documentElement,{childList:true,subtree:true});
 })();
 </script>
+
+<script id="VINHOMES-GOLDEN-RIVER-FOURTH-APARTMENT-20261105">
+(function(){
+'use strict';
+var base='https://vuhrkijzjmnbsaqnpdmg.supabase.co/storage/v1/object/public/property-images/';
+var photos=[
+'IMG-20261104-WA0003.jpg','IMG-20261104-WA0006 (1).jpg','IMG-20261104-WA0000.jpg',
+'IMG-20261104-WA0001.jpg','IMG-20261104-WA0002.jpg','IMG-20261104-WA0004.jpg',
+'IMG-20261104-WA0005.jpg','IMG-20261104-WA0017.jpg','IMG-20261104-WA0007.jpg',
+'IMG-20261104-WA0008 (1).jpg','IMG-20261104-WA0009.jpg','IMG-20261104-WA0010 (1).jpg',
+'IMG-20261104-WA0011.jpg','IMG-20261104-WA0012.jpg','IMG-20261104-WA0013 (1).jpg',
+'IMG-20261104-WA0014.jpg','IMG-20261104-WA0015.jpg','IMG-20261104-WA0016.jpg',
+'IMG-20261104-WA0019.jpg','IMG-20261104-WA0020.jpg','IMG-20261104-WA0021.jpg',
+'IMG-20261104-WA0023.jpg','IMG-20261104-WA0024.jpg','IMG-20261104-WA0025.jpg',
+'IMG-20261104-WA0026.jpg','IMG-20261104-WA0027.jpg','IMG-20261104-WA0028.jpg',
+'IMG-20261104-WA0029.jpg','IMG-20261105-WA0001.jpg','IMG-20261105-WA0004.jpg',
+'IMG-20261105-WA0005.jpg','IMG-20261105-WA0006.jpg','IMG-20261105-WA0000.jpg'
+];
+var $=function(id){return document.getElementById(id);},photoIndex=0,flow='',stepIndex=0,answers={},duration=1;
+var rentSteps=[
+ {key:'duration',title:'Choose your rental duration',type:'duration',help:'Choose 1, 2 or 3 years. Rent is 182,000,000 đ for each year.'},
+ {key:'checkin',title:'Choose your check-in date and time',type:'datetime-local',help:'Choose your arrival date and time.'},
+ {key:'checkout',title:'Check-out date and time',type:'datetime-local',help:'The check-out will be set to the same date and time after your selected rental duration.'},
+ {key:'fullName',title:'Confirm your full legal name',type:'text',help:'Enter your name as shown on your identity document.'},
+ {key:'phone',title:'Confirm your phone number',type:'tel',help:'Include your country calling code.'},
+ {key:'email',title:'Confirm your email address',type:'email',help:'Enter an email address you can access.'},
+ {key:'dob',title:'Confirm your date of birth',type:'date',help:'You must be an adult to continue.'},
+ {key:'gender',title:'Choose your gender',type:'select',options:['Male','Female']},
+ {key:'relationship',title:'What is your marital status?',type:'select',options:['Single','Married','In a relationship']},
+ {key:'children',title:'Do you have children?',type:'select',options:['Yes','No'],conditional:function(){return answers.relationship==='Married';}},
+ {key:'childrenCount',title:'How many children do you have?',type:'number',conditional:function(){return answers.relationship==='Married'&&answers.children==='Yes';}},
+ {key:'occupants',title:'How many people will live in the apartment?',type:'number'},
+ {key:'purpose',title:'What is the purpose of your rental?',type:'select',options:['Family residence','Work','Study','Long-term living','Other']},
+ {key:'deposit',title:'Review the rental payment and security deposit',type:'terms',help:'Annual rent: 182,000,000 đ. Security deposit: 20,000,000 đ. The deposit is separate from rent.'},
+ {key:'identityType',title:'Choose your identity document',type:'select',options:['Vietnamese citizen identity card (CCCD)','Passport','Birth certificate','Driver license','Residence card','Other government identity document']},
+ {key:'idUpload',title:'Provide a picture of your identity document',type:'file',help:'Choose a clear picture from your gallery or take a new photo.'},
+ {key:'selfie',title:'Provide a face photo',type:'file',help:'Take a face photo or choose one from your gallery.'},
+ {key:'currency',title:'Choose your preferred payment currency',type:'select',options:['VND (Vietnamese đồng)','USD (US dollars)']},
+ {key:'description',title:'Message for the Vinhomes agent',type:'textarea',help:'Add any questions or requests for the agent.'}
+];
+var buySteps=[
+ {key:'employment',title:'What is your current employment status?',type:'select',options:['Employed full-time','Employed part-time','Self-employed / business owner','Freelancer / contract worker','Retired','Student','Not currently employed','Other']},
+ {key:'incomeStatus',title:'Do you currently receive income?',type:'select',options:['Yes','No','Irregular income']},
+ {key:'incomeFrequency',title:'How often do you receive your income?',type:'select',options:['Weekly','Every two weeks','Monthly','Quarterly','Annually','Irregularly','Not applicable'],conditional:function(){return answers.incomeStatus!=='No';}},
+ {key:'proofType',title:'What proof of income can you provide?',type:'select',options:['Salary slip / payslip','Employment confirmation','Bank statement','Business registration / business income record','Tax return / tax document','Other document','I do not have proof'],conditional:function(){return answers.incomeStatus!=='No';}},
+ {key:'proofUpload',title:'Upload proof of income',type:'file',help:'Select a clear document from your phone. You may skip this step if you do not have a document.',skip:true,conditional:function(){return answers.incomeStatus!=='No'&&answers.proofType!=='I do not have proof';}},
+ {key:'currency',title:'Choose your preferred payment currency',type:'select',options:['VND (Vietnamese đồng)','USD (US dollars)']},
+ {key:'identityType',title:'Choose your identity document',type:'select',options:['Vietnamese citizen identity card (CCCD)','Passport','Electronic identity account','Birth certificate','Driver license','Residence card','Other government identity document']},
+ {key:'idUpload',title:'Upload a picture of your identity document',type:'file',help:'Choose a clear picture from your phone or take a new photo.'},
+ {key:'selfie',title:'Take or choose a face photo',type:'file',help:'Choose a clear face photo or use your camera.'},
+ {key:'conditions',title:'Review the purchase enquiry conditions',type:'terms',help:'This is an enquiry, not a payment. The agent will confirm the property documents, final price and purchase process with you.'},
+ {key:'currentAddress',title:'What is your current residential address?',type:'textarea',help:'This is collected privately for the property team and will not be included in the message sent to the agent inbox.'},
+ {key:'description',title:'Is there anything else you want the agent to know?',type:'textarea',help:'Write your questions or requests about buying this apartment.'}
+];
+function setPhoto(n){photoIndex=(n+photos.length)%photos.length;$('fourthGalleryImage').src=base+encodeURIComponent(photos[photoIndex]);$('fourthPhotoCount').textContent=(photoIndex+1)+' / '+photos.length;var cover=$('fourthApartmentPhoto');if(cover)cover.querySelector('.fourth-photo-count').textContent='Bedroom photo · '+(photoIndex+1)+' / '+photos.length;}
+function openModal(){ $('fourthApartmentModal').hidden=false;document.body.style.overflow='hidden';setPhoto(0);}
+function closeModal(){ $('fourthApartmentModal').hidden=true;document.body.style.overflow='';resetJourney();}
+function resetJourney(){flow='';stepIndex=0;answers={};duration=1;$('fourthJourneyChoice').hidden=false;$('fourthJourneyStep').hidden=true;$('fourthStepBack').hidden=true;$('fourthStepContinue').hidden=true;$('fourthStepContinue').disabled=true;$('fourthStepStatus').textContent='Choose Rent or Buy';}
+function list(){return flow==='rent'?rentSteps:buySteps;}
+function currentStep(){var a=list();while(stepIndex<a.length&&a[stepIndex].conditional&&!a[stepIndex].conditional())stepIndex++;return a[stepIndex]||null;}
+function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function valid(def,v){if(def.type==='file')return !!v;if(def.type==='terms')return !!v;if(def.key==='email')return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v||'');if(def.key==='dob')return !!v&&((Date.now()-new Date(v).getTime())/31557600000)>=18;if(def.key==='checkout')return !!answers.checkin&&new Date(v)>new Date(answers.checkin);if(def.type==='number')return v!==''&&Number(v)>0;return !!String(v||'').trim();}
+function render(){
+ var def=currentStep();if(!def){submit();return;}
+ $('fourthJourneyChoice').hidden=true;$('fourthJourneyStep').hidden=false;$('fourthStepBack').hidden=false;$('fourthStepContinue').hidden=false;
+ $('fourthStepStatus').textContent=(flow==='rent'?'Rent':'Buy')+' · Step '+(stepIndex+1);
+ var v=answers[def.key]||'',h='<div class="fourth-step-card"><h3>'+esc(def.title)+'</h3><p>'+esc(def.help||'Choose or enter your answer to continue.')+'</p>';
+ if(def.type==='duration'){h+='<div class="fourth-duration-control"><button type="button" id="fourthDurationMinus" aria-label="Reduce years">−</button><strong><span id="fourthDurationValue">'+duration+'</span> year(s)<br><span id="fourthDurationTotal">'+(182000000*duration).toLocaleString('en-US')+' đ total rent</span></strong><button type="button" id="fourthDurationPlus" aria-label="Increase years">+</button></div>';}
+ else if(def.type==='select'){h+='<label class="fourth-step-field">'+esc(def.title)+'<select id="fourthStepInput"><option value="">Choose an option</option>'+def.options.map(function(o){return '<option value="'+esc(o)+'"'+(v===o?' selected':'')+'>'+esc(o)+'</option>';}).join('')+'</select></label>';}
+ else if(def.type==='file'){h+='<label class="fourth-step-field">Choose a file<input id="fourthStepInput" type="file" accept="image/*,.pdf"></label><p class="fourth-file-note" id="fourthFileName">'+(v&&v.name?'Selected: '+esc(v.name):'No file selected')+'</p>';}
+ else if(def.type==='terms'){var amount=flow==='rent'?(182000000*duration).toLocaleString('en-US')+' đ rent + 20,000,000 đ security deposit':'No payment is collected by this enquiry. The property team will confirm documents and terms.';h+='<div class="fourth-price-item"><strong>'+amount+'</strong></div><div class="fourth-step-actions"><button type="button" class="profile-btn secondary" id="fourthTermsDisagree">Disagree</button><button type="button" class="profile-btn primary" id="fourthTermsAgree">Agree and continue</button></div>';}
+ else if(def.type==='textarea'){h+='<label class="fourth-step-field">'+esc(def.title)+'<textarea id="fourthStepInput" placeholder="Type your answer">'+esc(v)+'</textarea></label>';}
+ else{h+='<label class="fourth-step-field">'+esc(def.title)+'<input id="fourthStepInput" type="'+esc(def.type)+'" value="'+esc(v)+'" '+(def.key==='checkin'?'min="'+new Date().toISOString().slice(0,16)+'"':'')+'></label>';}
+ h+='</div>';$('fourthJourneyStep').innerHTML=h;
+ var input=$('fourthStepInput');
+ function update(){var value=def.type==='duration'?duration:(def.type==='file'?(input&&input.files&&input.files[0]||answers[def.key]||null):(input?input.value:''));if(value!==null&&value!==undefined&&value!=='')answers[def.key]=value;var ok=def.type==='duration'?duration>=1&&duration<=3:(def.type==='terms'?false:valid(def,value));$('fourthStepContinue').disabled=!ok;}
+ if(def.type==='duration'){
+  $('fourthDurationMinus').onclick=function(){if(duration>1){duration--;update();$('fourthDurationValue').textContent=duration;$('fourthDurationTotal').textContent=(182000000*duration).toLocaleString('en-US')+' đ total rent';}};
+  $('fourthDurationPlus').onclick=function(){if(duration<3){duration++;update();$('fourthDurationValue').textContent=duration;$('fourthDurationTotal').textContent=(182000000*duration).toLocaleString('en-US')+' đ total rent';}};update();
+ }else if(def.type==='terms'){
+  $('fourthStepContinue').hidden=true;
+  $('fourthTermsAgree').onclick=function(){answers[def.key]=true;stepIndex++;render();};
+  $('fourthTermsDisagree').onclick=function(){alert('You chose not to continue. No request has been sent.');resetJourney();};
+ }else if(input){
+  input.addEventListener('input',function(){if(def.type==='file'){answers[def.key]=input.files&&input.files[0]||null;$('fourthFileName').textContent=answers[def.key]?'Selected: '+answers[def.key].name:'No file selected';}update();});
+  input.addEventListener('change',function(){if(def.type==='file'){answers[def.key]=input.files&&input.files[0]||null;$('fourthFileName').textContent=answers[def.key]?'Selected: '+answers[def.key].name:'No file selected';}update();});
+  update();
+ }
+ if(def.skip){var skip=document.createElement('button');skip.type='button';skip.className='profile-btn secondary';skip.textContent='Skip this step';skip.style.marginTop='10px';skip.onclick=function(){answers[def.key]='Skipped';stepIndex++;render();};$('fourthJourneyStep').querySelector('.fourth-step-card').appendChild(skip);}
+}
+function submit(){
+ var lines=['VINHOMES GOLDEN RIVER — AQUA 1 TOWER','Apartment: 1 bedroom · 1 parlor · Floor 32','Annual rent: 182,000,000 đ','Purchase price: 7,100,000,000 đ','Enquiry type: '+(flow==='rent'?'RENT':'BUY')];
+ if(flow==='rent'){lines.push('Rental duration: '+duration+' year(s)','Total rent: '+(182000000*duration).toLocaleString('en-US')+' đ');}
+ Object.keys(answers).forEach(function(k){if(k==='currentAddress'||k==='proofUpload'||k==='idUpload'||k==='selfie')return;var v=answers[k];if(v&&typeof v==='object'&&v.name){lines.push(k+': '+v.name);return;}if(v!==undefined&&v!==null&&v!==''&&v!==true)lines.push(k+': '+v);});
+ lines.push('Identity and face files: selected in this form; please arrange secure verification with the agent.');
+ var message=lines.join('\n');
+ $('fourthJourneyStep').innerHTML='<div class="fourth-step-card"><h3>Your '+(flow==='rent'?'rental':'purchase')+' enquiry is ready</h3><p>Review the details below. Your current residential address and private image files are not included in the agent message.</p><textarea id="fourthFinalMessage" style="width:100%;min-height:220px;padding:12px;border:1px solid #ccd3da;border-radius:10px">'+esc(message)+'</textarea><div class="fourth-step-actions"><button type="button" class="profile-btn primary" id="fourthSendToAgent">Continue to website messages</button></div></div>';
+ $('fourthStepBack').hidden=true;$('fourthStepContinue').hidden=true;$('fourthStepStatus').textContent='Review enquiry';
+ $('fourthSendToAgent').onclick=function(){var finalText=$('fourthFinalMessage').value.trim();var nav=document.querySelector('.nav-button[data-section="Message"]');if(nav)nav.click();setTimeout(function(){var prop=$('messagePropertyName'),body=$('messageFirstBody');if(prop)prop.value='Vinhomes Golden River · Aqua 1 Tower · '+(flow==='rent'?'Rent enquiry':'Buy enquiry');if(body){body.value=finalText+'\n\nPlease review my enquiry and reply to me here.';body.dispatchEvent(new Event('input',{bubbles:true}));}var status=$('messageComposeStatus');if(status)status.textContent='Your enquiry is ready. Choose the Vinhomes agent and tap Send question to agent.';},250);closeModal();};
+}
+function start(type){flow=type;stepIndex=0;answers={};duration=1;$('fourthJourneyChoice').hidden=true;render();}
+$('fourthApartmentPhoto').addEventListener('click',openModal);
+$('fourthApartmentPhoto').addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();openModal();}});
+$('fourthModalClose').addEventListener('click',closeModal);
+$('fourthPhotoPrev').addEventListener('click',function(){setPhoto(photoIndex-1);});
+$('fourthPhotoNext').addEventListener('click',function(){setPhoto(photoIndex+1);});
+$('fourthRentButton').addEventListener('click',function(){openModal();start('rent');});
+$('fourthBuyButton').addEventListener('click',function(){openModal();start('buy');});
+$('fourthChoiceRent').addEventListener('click',function(){start('rent');});
+$('fourthChoiceBuy').addEventListener('click',function(){start('buy');});
+$('fourthStepBack').addEventListener('click',function(){if(stepIndex>0){stepIndex--;render();}else{resetJourney();}});
+$('fourthStepContinue').addEventListener('click',function(){
+ var def=currentStep();if(!def)return;
+ if(def.type==='duration')answers.duration=duration;
+ else if(def.type==='file'){var el=$('fourthStepInput');answers[def.key]=el&&el.files&&el.files[0]||answers[def.key]||null;}
+ else{var el=$('fourthStepInput');if(el)answers[def.key]=el.value;}
+ if(def.key==='checkin'&&answers.checkin){var d=new Date(answers.checkin);d.setFullYear(d.getFullYear()+duration);answers.checkout=new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,16);}
+ if(def.key==='checkout'&&!valid(def,answers.checkout)){alert('Please choose a check-out time after check-in.');return;}
+ stepIndex++;render();
+});
+$('fourthSeeAllAmenities').addEventListener('click',function(){var box=$('fourthAmenitiesExtra'),hidden=box.hidden;box.hidden=!hidden;this.textContent=hidden?'Show fewer facilities':'See all facilities';});
+var sx=null;$('fourthApartmentModal').addEventListener('touchstart',function(e){if(e.touches.length===1)sx=e.touches[0].clientX;},{passive:true});
+$('fourthApartmentModal').addEventListener('touchend',function(e){if(sx===null||!e.changedTouches.length)return;var dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>55&&Math.abs(dx)>Math.abs(e.changedTouches[0].clientY||0)){setPhoto(photoIndex+(dx<0?1:-1));}sx=null;},{passive:true});
+})();
+</script>
+
 </body>
 </html>
