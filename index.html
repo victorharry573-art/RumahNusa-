@@ -757,7 +757,7 @@ else if(input){var change=function(){var val=input.value;if(d.type==='phone')val
 }
 function submit(){
 var lines=['VINHOMES GOLDEN RIVER · FIFTH APARTMENT','Location: Ho Chi Minh City, Vietnam','Apartment: 1 bedroom · 1 parlor','Floor: 35','Enquiry: '+flow.toUpperCase()];
-if(flow==='rent'){lines.push('Annual rent: '+annualRent.toLocaleString('en-US')+' đ','Rental duration: '+duration+' year(s)','Total rent: '+(annualRent*duration).toLocaleString('en-US')+' đ');}
+if(flow==='rent'){var fifthTotalRent=annualRent*duration,fifthDeposit=20000000;lines.push('Annual rent: '+annualRent.toLocaleString('en-US')+' đ','Rental duration: '+duration+' year(s)','Total rent: '+fifthTotalRent.toLocaleString('en-US')+' đ','Security deposit: '+fifthDeposit.toLocaleString('en-US')+' đ','Total rent plus security deposit: '+(fifthTotalRent+fifthDeposit).toLocaleString('en-US')+' đ');}
 else if(flow==='buy'){lines.push('Purchase price: '+buyPrice.toLocaleString('en-US')+' đ');}
 Object.keys(answers).forEach(function(k){if(['currentAddress','idUpload','selfie'].includes(k))return;var v=answers[k];if(v&&typeof v==='object'&&v.name){if(k==='proofUpload')lines.push('Proof of income file selected: '+v.name);return;}if(v!==undefined&&v!==null&&v!==''&&v!==true)lines.push(k+': '+v);});
 
@@ -2571,7 +2571,7 @@ function renderStep(){
 function submitJourney(){
  var lines=['Vinhomes Grand Residence — '+(flowType==='buy'?'BUY ENQUIRY':'RENT ENQUIRY'),'Apartment: '+apartmentConfig.title,'Bedrooms: '+apartmentConfig.bedrooms,'Parlor: 1','Floor: '+apartmentConfig.floor,'Currency: '+(formData.currency||'Not selected')];
  if(flowType==='buy'&&formData.purchaseAmount){var proposedDigits=String(formData.purchaseAmount).replace(/[^0-9]/g,'');lines.push('Customer proposed purchase amount: '+(Number(proposedDigits)||proposedDigits)+' VND');}
- if(flowType==='rent'){lines.push('Annual rent: '+apartmentConfig.annualRent.toLocaleString('en-US')+' ₫','Rental duration: '+rentDuration+' annual period(s)','Total rent: '+(apartmentConfig.annualRent*rentDuration).toLocaleString('en-US')+' ₫','Payment terms: '+(formData.paymentFrequency||'To confirm with agent'),'Security deposit: 20,000,000 ₫','Total initial payment for one annual period: '+(apartmentConfig.annualRent+20000000).toLocaleString('en-US')+' ₫');}
+ if(flowType==='rent'){var selectedRentTotal=apartmentConfig.annualRent*rentDuration,securityDeposit=20000000;lines.push('Annual rent: '+apartmentConfig.annualRent.toLocaleString('en-US')+' ₫','Rental duration: '+rentDuration+' annual period(s)','Total rent: '+selectedRentTotal.toLocaleString('en-US')+' ₫','Security deposit: '+securityDeposit.toLocaleString('en-US')+' ₫','Total rent plus security deposit: '+(selectedRentTotal+securityDeposit).toLocaleString('en-US')+' ₫','Payment terms: '+(formData.paymentFrequency||'To confirm with agent'));}
  Object.keys(formData).forEach(function(k){if(k==='idUpload'||k==='selfie')return;var v=formData[k];if(v&&typeof v==='object'&&v.name)return;if(v!==undefined&&v!==null&&v!==''&&k!=='depositTerms')lines.push(k+': '+v);});
  var text=lines.join('\n');$('apartmentJourneyStep').hidden=false;$('apartmentJourneyStep').innerHTML='<div class="apartment-journey-step-card"><h3>Request prepared</h3><p>Your apartment choice and the details you entered are ready to be sent through the website message service.</p><label class="apartment-journey-field"><span>Review your message to the agent</span><textarea id="journeyFinalMessage">'+escapeHtml(text)+'</textarea></label></div>';
  $('apartmentJourneyContinue').hidden=false;$('apartmentJourneyContinue').disabled=!text.trim();$('apartmentJourneyContinue').textContent='Send request to agent';$('apartmentJourneyStatus').textContent='Review your request before sending';
@@ -2765,7 +2765,7 @@ function render(){
 }
 function submit(){
  var lines=['VINHOMES GOLDEN RIVER — AQUA 1 TOWER','Apartment: 1 bedroom · 1 parlor · Floor 32','Enquiry type: '+(flow==='rent'?'RENT':'BUY')];
- if(flow==='rent'){lines.push('Annual rent: 182,000,000 đ','Rental duration: '+duration+' year(s)','Total rent: '+(182000000*duration).toLocaleString('en-US')+' đ');}
+ if(flow==='rent'){var fourthTotalRent=182000000*duration,fourthDeposit=20000000;lines.push('Annual rent: 182,000,000 đ','Rental duration: '+duration+' year(s)','Total rent: '+fourthTotalRent.toLocaleString('en-US')+' đ','Security deposit: '+fourthDeposit.toLocaleString('en-US')+' đ','Total rent plus security deposit: '+(fourthTotalRent+fourthDeposit).toLocaleString('en-US')+' đ');}
  else if(flow==='buy'){lines.push('Purchase price: 7,100,000,000 đ');}
  Object.keys(answers).forEach(function(k){if(k==='currentAddress'||k==='proofUpload'||k==='idUpload'||k==='selfie')return;var v=answers[k];if(v&&typeof v==='object'&&v.name){lines.push(k+': '+v.name);return;}if(v!==undefined&&v!==null&&v!==''&&v!==true)lines.push(k+': '+v);});
  lines.push('Identity and face files: selected in this form; please arrange secure verification with the agent.');
