@@ -2560,6 +2560,8 @@ var rentSteps=[
  {key:'description',title:'Message for the Vinhomes agent',type:'textarea',help:'Add any questions or requests for the agent.'}
 ];
 var buySteps=[
+ {key:'fullName',title:'Confirm your full name',type:'text',help:'Enter your full legal name as shown on your identity document.'},
+ {key:'gender',title:'Confirm your gender',type:'select',options:['Male','Female']},
  {key:'employment',title:'What is your current employment status?',type:'select',options:['Employed full-time','Employed part-time','Self-employed / business owner','Freelancer / contract worker','Retired','Student','Not currently employed','Other']},
  {key:'incomeStatus',title:'Do you currently receive income?',type:'select',options:['Yes','No','Irregular income']},
  {key:'incomeFrequency',title:'How often do you receive your income?',type:'select',options:['Weekly','Every two weeks','Monthly','Quarterly','Annually','Irregularly','Not applicable'],conditional:function(){return answers.incomeStatus!=='No';}},
