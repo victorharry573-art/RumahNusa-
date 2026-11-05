@@ -2582,6 +2582,7 @@ var buySteps=[
  {key:'selfie',title:'Take or choose a face photo',type:'file',help:'Choose a clear face photo or use your camera.'},
  {key:'conditions',title:'Review the purchase enquiry conditions',type:'terms',help:'This is an enquiry, not a payment. The agent will confirm the property documents, final price and purchase process with you.'},
  {key:'currentAddress',title:'What is your current residential address?',type:'textarea',help:'This is collected privately for the property team and will not be included in the message sent to the agent inbox.'},
+ {key:'checkin',title:'Set your check-in date and time',type:'datetime-local',help:'Choose the date and time you plan to check in. Select both before continuing.'},
  {key:'towerChoice',title:'Choose your tower',type:'select',options:['AQUA 1 Tower','AQUA 2 Tower','AQUA 3 Tower','AQUA 4 Tower']},
  {key:'apartmentFloor',title:'What is your floor?',type:'number',help:'Enter the floor number for the apartment.'},
  {key:'agentWaitLocation',title:'Choose where to wait for the agent',type:'select',options:['Wait for agent inside lobby','Wait for agent outside lobby']},
@@ -2594,7 +2595,7 @@ function resetJourney(){flow='';stepIndex=0;answers={};duration=1;$('fourthJourn
 function list(){return flow==='rent'?rentSteps:buySteps;}
 function currentStep(){var a=list();while(stepIndex<a.length&&a[stepIndex].conditional&&!a[stepIndex].conditional())stepIndex++;return a[stepIndex]||null;}
 function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
-function valid(def,v){if(def.type==='file')return !!v;if(def.type==='terms')return !!v;if(def.key==='email')return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v||'');if(def.key==='dob')return !!v&&((Date.now()-new Date(v).getTime())/31557600000)>=18;if(def.key==='checkout')return !!answers.checkin&&new Date(v)>new Date(answers.checkin);if(def.type==='number')return v!==''&&Number(v)>0;return !!String(v||'').trim();}
+function valid(def,v){if(def.type==='file')return !!v;if(def.type==='terms')return !!v;if(def.key==='email')return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v||'');if(def.key==='dob')return !!v&&((Date.now()-new Date(v).getTime())/31557600000)>=18;if(def.key==='checkin')return !!v&&new Date(v).getTime()>Date.now();if(def.key==='checkout')return !!answers.checkin&&new Date(v)>new Date(answers.checkin);if(def.type==='number')return v!==''&&Number(v)>0;return !!String(v||'').trim();}
 function render(){
  var def=currentStep();if(!def){submit();return;}
  $('fourthJourneyChoice').hidden=true;$('fourthJourneyStep').hidden=false;$('fourthStepBack').hidden=false;$('fourthStepContinue').hidden=false;
