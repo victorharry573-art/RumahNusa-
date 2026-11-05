@@ -2618,5 +2618,37 @@ $('fourthApartmentModal').addEventListener('touchend',function(e){if(sx===null||
 })();
 </script>
 
+
+<script id="HOME-FIRST-PAINT-RECOVERY-20261105">
+/* Restore the homepage on a fresh page load if an earlier navigation handler left every section hidden. */
+(function(){
+  function restoreHomeAfterLoad(){
+    var header=document.querySelector('body > header');
+    var main=document.querySelector('body > main');
+    if(header){header.hidden=false;header.style.display='block';header.style.visibility='visible';header.style.opacity='1';}
+    if(main){
+      main.hidden=false;main.style.display='block';main.style.visibility='visible';main.style.opacity='1';
+      Array.prototype.forEach.call(main.querySelectorAll(':scope > section'),function(section){
+        if(section.id==='profileView'){section.classList.remove('visible');section.hidden=true;section.style.display='none';}
+        else{section.hidden=false;section.style.display='';section.style.visibility='visible';section.style.opacity='1';}
+      });
+    }
+    ['searchView','rentApartmentView','promoteView','messageView'].forEach(function(id){
+      var panel=document.getElementById(id);
+      if(panel){panel.hidden=true;panel.style.display='none';}
+    });
+    document.documentElement.style.setProperty('overflow-y','auto','important');
+    document.body.style.setProperty('overflow-y','visible','important');
+    document.body.style.removeProperty('position');
+    window.scrollTo(0,0);
+  }
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',restoreHomeAfterLoad,{once:true});
+  }else{
+    restoreHomeAfterLoad();
+  }
+})();
+</script>
+
 </body>
 </html>
