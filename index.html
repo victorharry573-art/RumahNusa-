@@ -756,8 +756,9 @@ $('fifthMinus').onclick=function(){if(duration>1){duration--;paint();}};$('fifth
 else if(input){var change=function(){var val=input.value;if(d.type==='phone')val=$('fifthCountry').value+' '+val;setValue(val);};input.addEventListener('input',change);input.addEventListener('change',change);if(v){$('fifthContinue').disabled=false;}}
 }
 function submit(){
-var lines=['VINHOMES GOLDEN RIVER · FIFTH APARTMENT','Location: Ho Chi Minh City, Vietnam','Apartment: 1 bedroom · 1 parlor','Floor: 35','Enquiry: '+flow.toUpperCase(),'Annual rent: 197,000,000 đ','Purchase price: 3,600,000,000 đ'];
-if(flow==='rent'){lines.push('Rental duration: '+duration+' year(s)','Total rent: '+(annualRent*duration).toLocaleString('en-US')+' đ');}
+var lines=['VINHOMES GOLDEN RIVER · FIFTH APARTMENT','Location: Ho Chi Minh City, Vietnam','Apartment: 1 bedroom · 1 parlor','Floor: 35','Enquiry: '+flow.toUpperCase()];
+if(flow==='rent'){lines.push('Annual rent: '+annualRent.toLocaleString('en-US')+' đ','Rental duration: '+duration+' year(s)','Total rent: '+(annualRent*duration).toLocaleString('en-US')+' đ');}
+else if(flow==='buy'){lines.push('Purchase price: '+buyPrice.toLocaleString('en-US')+' đ');}
 Object.keys(answers).forEach(function(k){if(['currentAddress','idUpload','selfie'].includes(k))return;var v=answers[k];if(v&&typeof v==='object'&&v.name){if(k==='proofUpload')lines.push('Proof of income file selected: '+v.name);return;}if(v!==undefined&&v!==null&&v!==''&&v!==true)lines.push(k+': '+v);});
 
 var msg=lines.join('\n');
@@ -2763,8 +2764,9 @@ function render(){
  if(def.skip){var skip=document.createElement('button');skip.type='button';skip.className='profile-btn secondary';skip.textContent='Skip this step';skip.style.marginTop='10px';skip.onclick=function(){answers[def.key]='Skipped';stepIndex++;render();};$('fourthJourneyStep').querySelector('.fourth-step-card').appendChild(skip);}
 }
 function submit(){
- var lines=['VINHOMES GOLDEN RIVER — AQUA 1 TOWER','Apartment: 1 bedroom · 1 parlor · Floor 32','Annual rent: 182,000,000 đ','Purchase price: 7,100,000,000 đ','Enquiry type: '+(flow==='rent'?'RENT':'BUY')];
- if(flow==='rent'){lines.push('Rental duration: '+duration+' year(s)','Total rent: '+(182000000*duration).toLocaleString('en-US')+' đ');}
+ var lines=['VINHOMES GOLDEN RIVER — AQUA 1 TOWER','Apartment: 1 bedroom · 1 parlor · Floor 32','Enquiry type: '+(flow==='rent'?'RENT':'BUY')];
+ if(flow==='rent'){lines.push('Annual rent: 182,000,000 đ','Rental duration: '+duration+' year(s)','Total rent: '+(182000000*duration).toLocaleString('en-US')+' đ');}
+ else if(flow==='buy'){lines.push('Purchase price: 7,100,000,000 đ');}
  Object.keys(answers).forEach(function(k){if(k==='currentAddress'||k==='proofUpload'||k==='idUpload'||k==='selfie')return;var v=answers[k];if(v&&typeof v==='object'&&v.name){lines.push(k+': '+v.name);return;}if(v!==undefined&&v!==null&&v!==''&&v!==true)lines.push(k+': '+v);});
  lines.push('Identity and face files: selected in this form; please arrange secure verification with the agent.');
  var message=lines.join('\n');
