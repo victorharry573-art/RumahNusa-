@@ -641,7 +641,7 @@
   <div class="fourth-choice" id="fourthJourneyChoice">
    <h3>Would you like to rent or buy this apartment?</h3>
    <p>1 bedroom · 1 parlor · Floor 32 · Aqua 1 Tower</p>
-   <div class="fourth-choice-actions"><button type="button" class="profile-btn secondary" id="fourthChoiceRent">Rent · 182,000,000 đ per year</button><button type="button" class="profile-btn primary" id="fourthChoiceBuy">Buy · 7,100,000,000 đ</button></div>
+   <div class="fourth-choice-actions"><button type="button" class="profile-btn secondary" id="fourthChoiceRent">Rent · 182,000,000 đ per year</button><button type="button" class="profile-btn primary" id="fourthChoiceBuy">Buy · 3,200,000,000 đ</button></div>
   </div>
   <div id="fourthJourneyStep" hidden></div>
   <div class="fourth-step-footer"><span class="fourth-step-status" id="fourthStepStatus">Choose Rent or Buy</span><button type="button" class="profile-btn secondary" id="fourthStepBack" hidden>Back</button><button type="button" class="profile-btn primary" id="fourthStepContinue" hidden disabled>Continue</button></div>
@@ -2766,7 +2766,7 @@ function render(){
 function submit(){
  var lines=['VINHOMES GOLDEN RIVER — AQUA 1 TOWER','Apartment: 1 bedroom · 1 parlor · Floor 32','Enquiry type: '+(flow==='rent'?'RENT':'BUY')];
  if(flow==='rent'){var fourthTotalRent=182000000*duration,fourthDeposit=20000000;lines.push('Annual rent: 182,000,000 đ','Rental duration: '+duration+' year(s)','Total rent: '+fourthTotalRent.toLocaleString('en-US')+' đ','Security deposit: '+fourthDeposit.toLocaleString('en-US')+' đ','Total rent plus security deposit: '+(fourthTotalRent+fourthDeposit).toLocaleString('en-US')+' đ');}
- else if(flow==='buy'){lines.push('Purchase price: 7,100,000,000 đ');}
+ else if(flow==='buy'){lines.push('Purchase price: 3,200,000,000 đ');}
  Object.keys(answers).forEach(function(k){if(k==='currentAddress'||k==='proofUpload'||k==='idUpload'||k==='selfie')return;var v=answers[k];if(v&&typeof v==='object'&&v.name){lines.push(k+': '+v.name);return;}if(v!==undefined&&v!==null&&v!==''&&v!==true)lines.push(k+': '+v);});
  lines.push('Identity and face files: selected in this form; please arrange secure verification with the agent.');
  var message=lines.join('\n');
