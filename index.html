@@ -2892,7 +2892,7 @@ function render(){
  html='<h3>'+esc(f[1])+'</h3>';
  if(f[2]==='duration')html+='<div class="landmark-plus-duration"><button type="button" id="lpMinus">−</button><strong>'+duration+' Annual'+(duration>1?'s':'')+'<br>'+amount().toLocaleString('en-US')+' đ</strong><button type="button" id="lpPlus">+</button></div>';
  else if(f[2]==='select')html+='<select id="lpInput"><option value="">Choose an option</option>'+f[3].map(function(x){return '<option '+(answers[f[0]]===x?'selected':'')+'>'+esc(x)+'</option>'}).join('')+'</select>';
- else html+='<input id="lpInput" type="'+f[2]+'" value="'+esc(answers[f[0]])+'">';
+ else html+='<input id="lpInput" type="'+f[2]+'" value="'+esc(answers[f[0]])+'" '+(f[0]==='checkout'?'readonly aria-readonly="true"':'')+'>';
  step.innerHTML=html;var input=$('lpInput'),next=$('landmarkPlusContinue');
  function valid(){if(f[2]==='duration')return true;if(!input||!input.value.trim())return false;if(f[0]==='email')return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value);return true}
  next.disabled=!valid();
