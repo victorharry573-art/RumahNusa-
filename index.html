@@ -2930,7 +2930,70 @@ function review(){
 $('landmarkPlusPhotoPrev').onclick=function(){photoIndex=(photoIndex+gallery.length-1)%gallery.length;showPhoto()};
 $('landmarkPlusPhotoNext').onclick=function(){photoIndex=(photoIndex+1)%gallery.length;showPhoto()};
 $('landmarkPlusRentButton').onclick=function(){i=0;duration=1;answers={};$('landmarkPlusModalTitle').textContent='Vinhomes Central Park · Landmark Plus';$('landmarkPlusContinue').hidden=false;$('landmarkPlusContinue').textContent='Continue';modal.hidden=false;document.body.style.overflow='hidden';$('landmarkPlusBack').hidden=false;render()};
-$('landmarkPlusBuyButton').onclick=function(){modal.hidden=false;document.body.style.overflow='hidden';$('landmarkPlusModalTitle').textContent='Buy Vinhomes Central Park · Landmark Plus';$('landmarkPlusBack').hidden=true;$('landmarkPlusContinue').hidden=true;step.innerHTML='<h3>Welcome to Vinhomes Central Park</h3><p>Welcome. You can begin your purchase enquiry for this apartment here. Our agent will guide you through the next steps.</p><div style="background:#fff3e8;border-radius:12px;padding:18px;margin:16px 0;text-align:center"><strong style="display:block;font-size:22px;color:#b94b08">8,800,000,000 đ</strong><span>Purchase price</span></div><button type="button" id="landmarkPlusBuyStart" class="profile-btn primary" style="width:100%;min-height:52px;background:#f4771a;color:#fff">Continue with purchase</button><p class="landmark-plus-meta">This starts a purchase enquiry only. No payment is taken on this screen.</p>';$('landmarkPlusBuyStart').onclick=function(){var nav=document.querySelector('.nav-button[data-section="Message"]');if(nav)nav.click();setTimeout(function(){var p=$('messagePropertyName'),b=$('messageFirstBody');if(p)p.value='Vinhomes Central Park · Landmark Plus · Buy enquiry';if(b){b.value='I would like to begin the purchase process for Vinhomes Central Park · Landmark Plus. Purchase price: 8,800,000,000 đ. Please contact me to continue the purchase process.';b.dispatchEvent(new Event('input',{bubbles:true}))}var st=$('messageComposeStatus');if(st)st.textContent='Your purchase enquiry is ready. Choose the agent and tap Send to deliver it.'},250);modal.hidden=true;document.body.style.overflow=''}};
+$('landmarkPlusBuyButton').onclick=function(){
+ var buyFields=[
+  {k:'fullName',t:'Full legal name',type:'text'},
+  {k:'nationality',t:'Nationality',type:'select',opts:fullCountryCodes.map(function(c){return c[0]})},
+  {k:'gender',t:'Gender',type:'select',opts:['Male','Female']},
+  {k:'dob',t:'Date of birth',type:'date'},
+  {k:'phone',t:'Phone number',type:'phone'},
+  {k:'email',t:'Email address',type:'email'},
+  {k:'building',t:'Choose your building',type:'select',opts:['Landmark 1','Landmark 2','Landmark 3','Landmark 4','Landmark 5','Landmark 6','Landmark Plus','Landmark 81']},
+  {k:'floor',t:'Choose your floor',type:'select',opts:Array.from({length:50},function(_,n){return 'Floor '+(n+1)})},
+  {k:'amount',t:'Confirm purchase amount',type:'text',fixed:'8,800,000,000 đ'},
+  {k:'checkin',t:'Choose check-in date and time',type:'datetime-local'},
+  {k:'wait',t:'Where would you like to wait for the agent?',type:'select',opts:['Wait inside lobby','Wait outside lobby']},
+  {k:'marital',t:'Marital status',type:'select',opts:['Married','Single','Divorce','Widow']},
+  {k:'occupation',t:'Occupation',type:'select',opts:occupations},
+  {k:'employment',t:'Employment status',type:'select',opts:employmentOptions},
+  {k:'income',t:'Income status',type:'select',opts:incomeOptions},
+  {k:'frequency',t:'Income frequency',type:'select',opts:frequencyOptions},
+  {k:'proof',t:'Preferred proof of income',type:'select',opts:proofOptions},
+  {k:'incomeUpload',t:'Upload proof of income',type:'upload',optional:true},
+  {k:'currency',t:'Payment currency',type:'select',opts:['VND (Vietnamese đồng)','USD (US dollars)']},
+  {k:'identity',t:'Identity document type',type:'select',opts:identityOptions},
+  {k:'idUpload',t:'Upload identity document image',type:'upload'},
+  {k:'selfie',t:'Upload a selfie',type:'upload'},
+  {k:'agreement',t:'Review and agreement',type:'agree'},
+  {k:'address',t:'Residential address',type:'textarea',private:true},
+  {k:'description',t:'Tell Vinhomes Central Park agent everything you want',type:'textarea'}
+ ];
+ var buyIndex=0,buyAnswers={},buyFiles={};
+ function buyShow(){
+  var f=buyFields[buyIndex],html='<h3>'+(f.t)+'</h3>';
+  if(f.k==='amount')html+='<div class="landmark-plus-price">8,800,000,000 đ</div>';
+  if(f.type==='select')html+='<select id="lpBuyInput"><option value="">Choose an option</option>'+f.opts.map(function(o){return '<option value="'+String(o).replace(/&/g,'&amp;').replace(/"/g,'&quot;')+'">'+o+'</option>'}).join('')+'</select>';
+  else if(f.type==='phone')html+='<select id="lpBuyCode"><option value="">Choose country calling code</option>'+fullCountryCodes.map(function(c){return '<option value="'+c[1]+'" '+(c[0]==='Vietnam'?'selected':'')+'>'+c[0]+' ('+c[1]+')</option>'}).join('')+'</select><input id="lpBuyInput" type="tel" placeholder="Phone number">';
+  else if(f.type==='upload')html+='<p class="landmark-plus-meta">Choose a photo or document from your device. You may skip proof of income if it is unavailable.</p><input id="lpBuyInput" type="file" accept="image/*,.pdf">';
+  else if(f.type==='agree')html+='<div class="landmark-plus-meta">Property: Vinhomes Central Park · Landmark Plus<br>Purchase amount: 8,800,000,000 đ<br>Building and floor: '+(buyAnswers.building||'Landmark Plus')+' · '+(buyAnswers.floor||'Floor 13')+'<br>Check-in: '+(buyAnswers.checkin||'Not selected')+'<br>Currency: '+(buyAnswers.currency||'Not selected')+'</div><p>Please confirm that the details above are correct before continuing.</p><select id="lpBuyInput"><option value="">Choose one</option><option>Yes, I agree</option><option>No, I disagree</option></select>';
+  else if(f.type==='textarea')html+='<textarea id="lpBuyInput" rows="4" placeholder="'+f.t+'"></textarea>';
+  else html+='<input id="lpBuyInput" type="'+f.type+'" '+(f.k==='dob'?'max="'+new Date().toISOString().slice(0,10)+'"':'')+' value="'+(buyAnswers[f.k]||'')+'">';
+  if(f.type==='upload')html+='<button type="button" id="lpBuySkip" class="profile-btn secondary" style="margin-top:10px">Skip</button>';
+  if(f.k==='selfie')html+='<p class="landmark-plus-meta">Keep your face clear and looking directly at the camera. Use good lighting. Do not wear sunglasses or face coverings, and do not use filters or edited images.</p>';
+  step.innerHTML=html;$('landmarkPlusModalTitle').textContent='Buy Vinhomes Central Park · Landmark Plus';
+  $('landmarkPlusBack').hidden=false;$('landmarkPlusContinue').hidden=false;$('landmarkPlusContinue').textContent=buyIndex===buyFields.length-1?'Review and send enquiry':'Continue';
+  var inp=$('lpBuyInput');$('landmarkPlusContinue').disabled=false;
+  if(f.type==='upload'){$('landmarkPlusContinue').disabled=true;inp.onchange=function(){if(inp.files&&inp.files[0]){buyFiles[f.k]=inp.files[0];$('landmarkPlusContinue').disabled=false}};$('lpBuySkip').onclick=function(){buyAnswers[f.k]='Not provided';buyIndex++;buyShow()}}
+  else if(f.type==='agree'){$('landmarkPlusContinue').disabled=true;inp.onchange=function(){$('landmarkPlusContinue').disabled=inp.value!=='Yes, I agree'}}
+  else if(f.k==='amount'){buyAnswers.amount='8,800,000,000 đ';}
+  else if(inp){$('landmarkPlusContinue').disabled=true;var check=function(){var v=inp.value.trim();if(f.type==='phone')v=($('lpBuyCode').value||'')+v;var ok=!!v;if(f.type==='email')ok=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(inp.value);if(f.k==='dob'&&v){var age=(Date.now()-new Date(v).getTime())/31557600000;ok=age>=18}if(f.k==='amount')ok=true;$('landmarkPlusContinue').disabled=!ok};inp.oninput=check;inp.onchange=check;check()}
+ }
+ $('landmarkPlusContinue').onclick=function(){
+  var f=buyFields[buyIndex],inp=$('lpBuyInput'),v='';
+  if(f.type==='upload'){if(buyFiles[f.k])buyAnswers[f.k]=buyFiles[f.k].name;else if(f.optional)buyAnswers[f.k]='Not provided';else return}
+  else if(f.type==='agree'){if(!inp||inp.value!=='Yes, I agree')return;buyAnswers.agreement='Yes, I agree'}
+  else if(f.k==='amount')buyAnswers.amount='8,800,000,000 đ';
+  else{if(!inp||!inp.value.trim())return;v=inp.value.trim();if(f.type==='phone')v=($('lpBuyCode').value||'')+' '+v;if(f.k==='dob'&&(Date.now()-new Date(v).getTime())/31557600000<18){alert('You must be at least 18 years old to continue.');return}buyAnswers[f.k]=v}
+  if(buyIndex<buyFields.length-1){buyIndex++;buyShow();return}
+  var lines=['Vinhomes Central Park · Landmark Plus','Purchase amount: 8,800,000,000 đ'];
+  buyFields.forEach(function(x){if(!x.private&&x.type!=='upload'&&buyAnswers[x.k]&&x.k!=='agreement')lines.push(x.t+': '+buyAnswers[x.k])});
+  lines.push('Agreement: '+(buyAnswers.agreement||'Yes, I agree'));
+  step.innerHTML='<h3>Purchase enquiry details completed</h3><p class="landmark-plus-meta">Your details are ready. Tap Send enquiry to open website messages and deliver the purchase information to the agent. Your residential address and uploaded identity/selfie files are not included in the message.</p><textarea id="lpBuySummary" rows="12">'+lines.join('\n').replace(/</g,'&lt;')+'</textarea><button type="button" id="lpBuySend" class="profile-btn primary" style="width:100%;margin-top:12px;background:#f4771a;color:#fff">Send enquiry to agent</button>';
+  $('landmarkPlusBack').hidden=true;$('landmarkPlusContinue').hidden=true;
+  $('lpBuySend').onclick=function(){var nav=document.querySelector('.nav-button[data-section="Message"]');if(nav)nav.click();setTimeout(function(){var p=$('messagePropertyName'),b=$('messageFirstBody');if(p)p.value='Vinhomes Central Park · Landmark Plus · Buy enquiry';if(b){b.value=$('lpBuySummary').value+'\n\nPlease review my purchase enquiry and reply here.';b.dispatchEvent(new Event('input',{bubbles:true}))}var st=$('messageComposeStatus');if(st)st.textContent='Your purchase details are ready. Tap Send question to agent to deliver them.'},250);modal.hidden=true;document.body.style.overflow=''};
+ };
+ $('landmarkPlusBuyButton').onclick=function(){buyIndex=0;buyAnswers={};buyFiles={};modal.hidden=false;document.body.style.overflow='hidden';$('landmarkPlusModalTitle').textContent='Buy Vinhomes Central Park · Landmark Plus';$('landmarkPlusBack').hidden=false;$('landmarkPlusContinue').hidden=false;buyShow()};
+
 $('landmarkPlusClose').onclick=function(){modal.hidden=true;document.body.style.overflow=''};
 $('landmarkPlusBack').onclick=function(){if(i>0){i--;render()}else{modal.hidden=true;document.body.style.overflow=''}};
 $('landmarkPlusContinue').onclick=function(){var f=showField();if(!f)return;if(f[2]!=='duration'){var x=$('lpInput');if(!x||!x.value.trim())return;answers[f[0]]=x.value;if(f[0]==='checkin'){var d=new Date(x.value);d.setFullYear(d.getFullYear()+duration);answers.checkout=new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,16)}}else answers.duration=duration;i++;render()};
