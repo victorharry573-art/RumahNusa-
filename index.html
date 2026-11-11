@@ -654,7 +654,12 @@
 </article>
 
 <article class="landmark-plus-card" id="landmarkPlusApartmentCard">
- <div class="landmark-plus-cover"><div><strong>Vinhomes Central Park · Landmark Plus</strong>Bedroom photo gallery will be connected after the correct Supabase image filename is confirmed. The last picture you excluded will not be used.</div></div>
+ <div class="landmark-plus-cover" style="position:relative;display:block;padding:0;min-height:300px;background:#17232d">
+  <img id="landmarkPlusCoverImage" src="https://vuhrkijzjmnbsaqnpdmg.supabase.co/storage/v1/object/public/property-images/IMG-20261111-WA0030.jpg" alt="Vinhomes Central Park Landmark Plus bedroom" style="width:100%;height:100%;min-height:300px;max-height:480px;object-fit:cover;display:block">
+  <button type="button" id="landmarkPlusPhotoPrev" aria-label="Previous apartment photo" style="position:absolute;left:10px;top:48%;min-width:42px">‹</button>
+  <button type="button" id="landmarkPlusPhotoNext" aria-label="Next apartment photo" style="position:absolute;right:10px;top:48%;min-width:42px">›</button>
+  <span id="landmarkPlusPhotoCount" style="position:absolute;bottom:12px;left:12px;padding:6px 10px;border-radius:18px;background:#111b;color:#fff;font-weight:800">Bedroom · 1 / 13</span>
+ </div>
  <div class="landmark-plus-info">
   <span class="pill">Vinhomes Central Park · Ho Chi Minh City</span>
   <h3>Vinhomes Central Park · Landmark Plus</h3>
@@ -2880,6 +2885,22 @@ $('fourthApartmentModal').addEventListener('touchend',function(e){if(sx===null||
 (function(){
 'use strict';
 var $=function(id){return document.getElementById(id)},modal=$('landmarkPlusModal'),step=$('landmarkPlusStep'),i=0,duration=1,answers={};
+var gallery=[
+ ['IMG-20261111-WA0030.jpg','Bedroom'],
+ ['IMG-20261111-WA0039.jpg','Parlor'],
+ ['IMG-20261111-WA0038.jpg','Living room'],
+ ['IMG-20261111-WA0037.jpg','Bathroom'],
+ ['IMG-20261111-WA0036.jpg','Parlor · second view'],
+ ['IMG-20261111-WA0035.jpg','Bathroom · second view'],
+ ['IMG-20261111-WA0034.jpg','Living room · balcony view'],
+ ['IMG-20261111-WA0033.jpg','Kitchen'],
+ ['IMG-20261111-WA0032.jpg','Kitchen · second view'],
+ ['IMG-20261111-WA0031.jpg','Bedroom · second view'],
+ ['IMG-20261111-WA0014.jpg','Playground'],
+ ['IMG-20261111-WA0011.jpg','Swimming pool'],
+ ['IMG-20261111-WA0010.jpg','Parlor · additional view']
+],photoIndex=0;
+function showPhoto(){var im=$('landmarkPlusCoverImage'),count=$('landmarkPlusPhotoCount');if(!im)return;im.src='https://vuhrkijzjmnbsaqnpdmg.supabase.co/storage/v1/object/public/property-images/'+gallery[photoIndex][0];im.alt='Vinhomes Central Park Landmark Plus '+gallery[photoIndex][1];count.textContent=gallery[photoIndex][1]+' · '+(photoIndex+1)+' / '+gallery.length}
 var fields=[
  ['duration','Choose rental duration','duration'],['checkin','Choose check-in date and time','datetime-local'],['checkout','Check-out date and time','datetime-local'],['appointment','Choose date and time to meet the agent','datetime-local'],['wait','Where would you like to wait for the agent?','select',['Wait for agent inside lobby','Wait for agent outside lobby']],['fullName','Full legal name','text'],['phone','Phone number with country calling code','tel'],['email','Email address','email'],['dob','Date of birth','date'],['gender','Gender','select',['Male','Female']],['marital','Marital status','select',['Married','Single','Relationship']],['children','Do you have children?','select',['Yes','No']],['childrenCount','How many children?','number'],['occupants','Number of people staying','number'],['purpose','Purpose of renting','select',['Family residence','Work','Study','Long-term living','Other']],['payment','Payment terms','select',['Full payment','Monthly','Quarterly']],['currency','Payment currency','select',['VND (Vietnamese đồng)','USD (US dollars)']],['description','Message for the agent','textarea']
 ];
@@ -2906,6 +2927,8 @@ function review(){
  $('landmarkPlusContinue').textContent='Continue to website messages';$('landmarkPlusContinue').disabled=false;$('landmarkPlusBack').hidden=true;
  $('landmarkPlusContinue').onclick=function(){var nav=document.querySelector('.nav-button[data-section="Message"]');if(nav)nav.click();setTimeout(function(){var p=$('messagePropertyName'),b=$('messageFirstBody');if(p)p.value='Vinhomes Central Park · Landmark Plus · Rent enquiry';if(b){b.value=$('lpReview').value+'\n\nPlease review my rental enquiry and reply here.';b.dispatchEvent(new Event('input',{bubbles:true}))}var st=$('messageComposeStatus');if(st)st.textContent='Your Landmark Plus enquiry is ready. Choose the agent and send your message.'},250);modal.hidden=true;document.body.style.overflow=''};
 }
+$('landmarkPlusPhotoPrev').onclick=function(){photoIndex=(photoIndex+gallery.length-1)%gallery.length;showPhoto()};
+$('landmarkPlusPhotoNext').onclick=function(){photoIndex=(photoIndex+1)%gallery.length;showPhoto()};
 $('landmarkPlusRentButton').onclick=function(){i=0;duration=1;answers={};modal.hidden=false;document.body.style.overflow='hidden';$('landmarkPlusContinue').textContent='Continue';$('landmarkPlusBack').hidden=false;render()};
 $('landmarkPlusClose').onclick=function(){modal.hidden=true;document.body.style.overflow=''};
 $('landmarkPlusBack').onclick=function(){if(i>0){i--;render()}else{modal.hidden=true;document.body.style.overflow=''}};
