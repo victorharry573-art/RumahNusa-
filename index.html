@@ -358,6 +358,25 @@
 .fourth-upload-actions button{flex:1 1 145px;min-height:48px}
 .fourth-file-note{margin:8px 0 0;color:#68737d;font-size:14px;overflow-wrap:anywhere}
 
+
+/* Section 6: separate Vinhomes Central Park — Landmark Plus apartment */
+.landmark-plus-card{display:grid;grid-template-columns:1fr 1fr;margin:24px 0;border:1px solid #dfe5ea;border-radius:18px;overflow:hidden;background:#fff;box-shadow:0 7px 24px #19283712}
+.landmark-plus-cover{min-height:270px;display:grid;place-items:center;text-align:center;padding:24px;background:linear-gradient(135deg,#e8eef2,#f8fafb);color:#52616c}
+.landmark-plus-cover strong{display:block;font-size:22px;color:#243746;margin-bottom:8px}
+.landmark-plus-info{padding:20px;min-width:0}.landmark-plus-info h3{margin:8px 0;color:#243746;font-size:23px}
+.landmark-plus-meta{font-size:14px;color:#5f6b75;line-height:1.6}.landmark-plus-price{font-size:25px;font-weight:900;color:#b94b08;margin:14px 0}
+.landmark-plus-features{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:14px 0}
+.landmark-plus-features span{padding:10px;border-radius:10px;background:#f5f7f9;font-size:13px;font-weight:750;color:#34414b}
+.landmark-plus-map{margin-top:14px;padding:12px;border:1px solid #dce3e9;border-radius:13px;background:#f8fafc}
+.landmark-plus-map iframe{width:100%;height:220px;border:0;border-radius:9px}.landmark-plus-map a{display:block;margin-top:9px;padding:11px;border-radius:9px;background:#243746;color:#fff;text-align:center;text-decoration:none;font-weight:800}
+.landmark-plus-modal[hidden]{display:none!important}.landmark-plus-modal{position:fixed;inset:0;z-index:2147483002;background:#101820d9;display:flex;align-items:center;justify-content:center;padding:10px}
+.landmark-plus-panel{width:min(720px,100%);max-height:94dvh;overflow:auto;background:#fff;border-radius:16px;padding:18px}
+.landmark-plus-panel input,.landmark-plus-panel select,.landmark-plus-panel textarea{box-sizing:border-box;width:100%;min-height:45px;margin:6px 0 12px;padding:10px;border:1px solid #cbd3da;border-radius:9px;font:inherit}
+.landmark-plus-panel button{min-height:44px;padding:10px 14px;border:0;border-radius:9px;background:#f47719;color:#fff;font-weight:800}
+.landmark-plus-panel button:disabled{opacity:.45}.landmark-plus-duration{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;background:#fff4e8;border-radius:10px}
+.landmark-plus-actions{display:flex;justify-content:space-between;gap:10px;margin-top:14px;position:sticky;bottom:0;background:#fff;padding:10px 0}
+@media(max-width:700px){.landmark-plus-card{grid-template-columns:1fr}.landmark-plus-cover{min-height:220px}.landmark-plus-info{padding:15px}.landmark-plus-modal{padding:0;align-items:stretch}.landmark-plus-panel{height:100dvh;max-height:100dvh;border-radius:0}}
+
 </style>
 </head>
 <body id="top">
@@ -633,6 +652,30 @@
   <p class="apartment-note">Tap the bedroom photo to browse all 33 photographs. Choose Rent or Buy to continue inside this apartment box.</p>
  </div>
 </article>
+
+<article class="landmark-plus-card" id="landmarkPlusApartmentCard">
+ <div class="landmark-plus-cover"><div><strong>Vinhomes Central Park · Landmark Plus</strong>Bedroom photo gallery will be connected after the correct Supabase image filename is confirmed. The last picture you excluded will not be used.</div></div>
+ <div class="landmark-plus-info">
+  <span class="pill">Vinhomes Central Park · Ho Chi Minh City</span>
+  <h3>Vinhomes Central Park · Landmark Plus</h3>
+  <p class="landmark-plus-meta">Landmark Plus · Floor 13 · 1 bedroom · 1 parlor</p>
+  <p class="landmark-plus-meta">208 Nguyễn Hữu Cảnh, Phường 22, Quận Bình Thạnh, Thành phố Hồ Chí Minh, Vietnam</p>
+  <div class="landmark-plus-price">220,000,000 đ <small style="font-size:13px;color:#68737d">/ Annual</small></div>
+  <div class="landmark-plus-features"><span>❄️ AC</span><span>🏋️ Gym</span><span>🏊 Swimming pool</span><span>🛗 Elevator</span><span>🍽️ Kitchen</span><span>🔥 Gas stove</span><span>👔 Wardrobe</span><span>📺 Smart TV</span></div>
+  <details><summary style="cursor:pointer;font-weight:800;color:#a84405">See All facilities</summary><p class="landmark-plus-meta">Playground · Tennis court · Kitchen utensils · Spring bed · Water heater · Sofa bed · Basketball court · Balcony · Refrigerator · Rice cooker · Cooker hood · Electric kettle · Jet shower · Mirror · Exhaust fan · Ceiling-mounted lighting · Chairs</p></details>
+  <section class="landmark-plus-map"><strong>Apartment location · Google Maps</strong><p class="landmark-plus-meta">208 Nguyễn Hữu Cảnh, Phường 22, Quận Bình Thạnh, Thành phố Hồ Chí Minh, Vietnam</p>
+   <iframe title="Map for Vinhomes Central Park Landmark Plus" loading="lazy" src="https://www.google.com/maps?q=208%20Nguy%E1%BB%85n%20H%E1%BB%AFu%20C%E1%BA%A3nh%2C%20Ph%C6%B0%E1%BB%9Dng%2022%2C%20Qu%E1%BA%ADn%20B%C3%ACnh%20Th%E1%BA%A1nh%2C%20Th%C3%A0nh%20ph%E1%BB%91%20H%E1%BB%93%20Ch%C3%AD%20Minh%2C%20Vietnam&amp;output=embed"></iframe>
+   <a href="https://www.google.com/maps/search/?api=1&amp;query=208%20Nguy%E1%BB%85n%20H%E1%BB%AFu%20C%E1%BA%A3nh%2C%20Ph%C6%B0%E1%BB%9Dng%2022%2C%20Qu%E1%BA%ADn%20B%C3%ACnh%20Th%E1%BA%A1nh%2C%20Th%C3%A0nh%20ph%E1%BB%91%20H%E1%BB%93%20Ch%C3%AD%20Minh%2C%20Vietnam" target="_blank" rel="noopener noreferrer">Open location in Google Maps ↗</a>
+  </section>
+  <button type="button" id="landmarkPlusRentButton" style="width:100%;margin-top:14px">Rent this apartment</button>
+ </div>
+</article>
+<div class="landmark-plus-modal" id="landmarkPlusModal" hidden role="dialog" aria-modal="true" aria-labelledby="landmarkPlusModalTitle"><div class="landmark-plus-panel">
+ <header style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2 id="landmarkPlusModalTitle">Vinhomes Central Park · Landmark Plus</h2><button type="button" id="landmarkPlusClose" aria-label="Close">×</button></header>
+ <p class="landmark-plus-meta">Floor 13 · 1 bedroom · 1 parlor</p><div id="landmarkPlusStep"></div>
+ <div class="landmark-plus-actions"><button type="button" id="landmarkPlusBack" style="background:#e9eef2;color:#243746">Back</button><button type="button" id="landmarkPlusContinue">Continue</button></div>
+</div></div>
+
 <div class="fourth-modal" id="fourthApartmentModal" hidden role="dialog" aria-modal="true" aria-labelledby="fourthModalTitle">
  <div class="fourth-modal-panel">
   <div class="fourth-modal-head"><h2 id="fourthModalTitle">Vinhomes Golden River · Aqua 1 Tower</h2><button type="button" class="fourth-modal-close" id="fourthModalClose" aria-label="Close">×</button></div>
@@ -2829,6 +2872,46 @@ $('fourthApartmentModal').addEventListener('touchend',function(e){if(sx===null||
   }else{
     restoreHomeAfterLoad();
   }
+})();
+</script>
+
+
+<script id="LANDMARK-PLUS-SECTION6-20261112">
+(function(){
+'use strict';
+var $=function(id){return document.getElementById(id)},modal=$('landmarkPlusModal'),step=$('landmarkPlusStep'),i=0,duration=1,answers={};
+var fields=[
+ ['duration','Choose rental duration','duration'],['checkin','Choose check-in date and time','datetime-local'],['checkout','Check-out date and time','datetime-local'],['appointment','Choose date and time to meet the agent','datetime-local'],['wait','Where would you like to wait for the agent?','select',['Wait for agent inside lobby','Wait for agent outside lobby']],['fullName','Full legal name','text'],['phone','Phone number with country calling code','tel'],['email','Email address','email'],['dob','Date of birth','date'],['gender','Gender','select',['Male','Female']],['marital','Marital status','select',['Married','Single','Relationship']],['children','Do you have children?','select',['Yes','No']],['childrenCount','How many children?','number'],['occupants','Number of people staying','number'],['purpose','Purpose of renting','select',['Family residence','Work','Study','Long-term living','Other']],['payment','Payment terms','select',['Full payment','Monthly','Quarterly']],['currency','Payment currency','select',['VND (Vietnamese đồng)','USD (US dollars)']],['description','Message for the agent','textarea']
+];
+function amount(){return duration*220000000}
+function showField(){while(i<fields.length&&((fields[i][0]==='children'&&answers.marital!=='Married')||(fields[i][0]==='childrenCount'&&!(answers.marital==='Married'&&answers.children==='Yes'))))i++;return fields[i]}
+function esc(v){return String(v||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function render(){
+ var f=showField(),html='';
+ if(!f){review();return}
+ html='<h3>'+esc(f[1])+'</h3>';
+ if(f[2]==='duration')html+='<div class="landmark-plus-duration"><button type="button" id="lpMinus">−</button><strong>'+duration+' Annual'+(duration>1?'s':'')+'<br>'+amount().toLocaleString('en-US')+' đ</strong><button type="button" id="lpPlus">+</button></div>';
+ else if(f[2]==='select')html+='<select id="lpInput"><option value="">Choose an option</option>'+f[3].map(function(x){return '<option '+(answers[f[0]]===x?'selected':'')+'>'+esc(x)+'</option>'}).join('')+'</select>';
+ else html+='<input id="lpInput" type="'+f[2]+'" value="'+esc(answers[f[0]])+'">';
+ step.innerHTML=html;var input=$('lpInput'),next=$('landmarkPlusContinue');
+ function valid(){if(f[2]==='duration')return true;if(!input||!input.value.trim())return false;if(f[0]==='email')return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value);return true}
+ next.disabled=!valid();
+ if(input){input.addEventListener('input',function(){next.disabled=!valid()});input.addEventListener('change',function(){next.disabled=!valid()})}
+ if(f[2]==='duration'){$('lpMinus').onclick=function(){duration=Math.max(1,duration-1);render()};$('lpPlus').onclick=function(){duration=Math.min(3,duration+1);render()}}
+}
+function review(){
+ var rent=amount(),deposit=20000000,lines=['Vinhomes Central Park · Landmark Plus','Floor 13 · 1 bedroom · 1 parlor','Rental duration: '+duration+' Annual(s)','Total rent: '+rent.toLocaleString('en-US')+' đ','Security deposit: '+deposit.toLocaleString('en-US')+' đ','Rent plus deposit: '+(rent+deposit).toLocaleString('en-US')+' đ'];
+ Object.keys(answers).forEach(function(k){if(k!=='duration')lines.push(k+': '+answers[k])});
+ step.innerHTML='<h3>Review your rental enquiry</h3><p class="landmark-plus-meta">This is an enquiry, not a payment or confirmed booking. The agent will confirm the agreement and payment instructions. The deposit is separate from rent; refund and deductions are subject to the signed agreement and inspection.</p><textarea id="lpReview" rows="12">'+esc(lines.join('\n'))+'</textarea>';
+ $('landmarkPlusContinue').textContent='Continue to website messages';$('landmarkPlusContinue').disabled=false;$('landmarkPlusBack').hidden=true;
+ $('landmarkPlusContinue').onclick=function(){var nav=document.querySelector('.nav-button[data-section="Message"]');if(nav)nav.click();setTimeout(function(){var p=$('messagePropertyName'),b=$('messageFirstBody');if(p)p.value='Vinhomes Central Park · Landmark Plus · Rent enquiry';if(b){b.value=$('lpReview').value+'\n\nPlease review my rental enquiry and reply here.';b.dispatchEvent(new Event('input',{bubbles:true}))}var st=$('messageComposeStatus');if(st)st.textContent='Your Landmark Plus enquiry is ready. Choose the agent and send your message.'},250);modal.hidden=true;document.body.style.overflow=''};
+}
+$('landmarkPlusRentButton').onclick=function(){i=0;duration=1;answers={};modal.hidden=false;document.body.style.overflow='hidden';$('landmarkPlusContinue').textContent='Continue';$('landmarkPlusBack').hidden=false;render()};
+$('landmarkPlusClose').onclick=function(){modal.hidden=true;document.body.style.overflow=''};
+$('landmarkPlusBack').onclick=function(){if(i>0){i--;render()}else{modal.hidden=true;document.body.style.overflow=''}};
+$('landmarkPlusContinue').onclick=function(){var f=showField();if(!f)return;if(f[2]!=='duration'){var x=$('lpInput');if(!x||!x.value.trim())return;answers[f[0]]=x.value;if(f[0]==='checkin'){var d=new Date(x.value);d.setFullYear(d.getFullYear()+duration);answers.checkout=new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,16)}}else answers.duration=duration;i++;render()};
+var form=$('propertySearchForm'),results=$('propertySearchResults');
+if(form&&results)form.addEventListener('submit',function(){setTimeout(function(){var loc=(form.elements.location.value||'').toLowerCase(),type=(form.elements.type.value||'').toLowerCase(),goal=form.elements.goal.value;if((!loc||loc.includes('ho chi minh')||loc.includes('binh thanh'))&&(!type||type==='apartment')&&(!goal||goal==='rent')&&!$('landmarkPlusSearchResult')){results.insertAdjacentHTML('beforeend','<article class="search-result-card" id="landmarkPlusSearchResult"><div style="padding:18px;background:#eef3f6;display:grid;place-items:center;min-height:160px">Vinhomes Central Park · Landmark Plus</div><div><h3>Vinhomes Central Park · Landmark Plus</h3><p>Apartment · For rent · Ho Chi Minh City, Vietnam</p><p>1 bedroom · 1 parlor · Floor 13</p><p class="search-result-price">220,000,000 đ / Annual</p><button type="button" class="profile-btn primary" id="landmarkPlusSearchOpen">View apartment and booking</button></div></article>');$('landmarkPlusSearchOpen').onclick=function(){var nav=document.querySelector('.nav-button[data-section="Rentapartment"]');if(nav)nav.click();setTimeout(function(){$('landmarkPlusApartmentCard').scrollIntoView({behavior:'smooth',block:'start'})},250)}}},600)});
 })();
 </script>
 
