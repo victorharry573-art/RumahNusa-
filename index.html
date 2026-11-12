@@ -672,7 +672,7 @@
    <iframe title="Map for Vinhomes Central Park Landmark Plus" loading="lazy" src="https://www.google.com/maps?q=208%20Nguy%E1%BB%85n%20H%E1%BB%AFu%20C%E1%BA%A3nh%2C%20Ph%C6%B0%E1%BB%9Dng%2022%2C%20Qu%E1%BA%ADn%20B%C3%ACnh%20Th%E1%BA%A1nh%2C%20Th%C3%A0nh%20ph%E1%BB%91%20H%E1%BB%93%20Ch%C3%AD%20Minh%2C%20Vietnam&amp;output=embed"></iframe>
    <a href="https://www.google.com/maps/search/?api=1&amp;query=208%20Nguy%E1%BB%85n%20H%E1%BB%AFu%20C%E1%BA%A3nh%2C%20Ph%C6%B0%E1%BB%9Dng%2022%2C%20Qu%E1%BA%ADn%20B%C3%ACnh%20Th%E1%BA%A1nh%2C%20Th%C3%A0nh%20ph%E1%BB%91%20H%E1%BB%93%20Ch%C3%AD%20Minh%2C%20Vietnam" target="_blank" rel="noopener noreferrer">Open location in Google Maps ↗</a>
   </section>
-  <div class="landmark-plus-choice-buttons" style="display:flex;gap:10px;margin-top:14px"><button type="button" id="landmarkPlusBuyButton" onclick="window.__centralParkBuy()" class="profile-btn primary" style="flex:1;min-height:52px;background:#f4771a;color:#fff;border:0;border-radius:10px;font-weight:800;font-size:17px">Buy</button><button type="button" id="landmarkPlusRentButton" onclick="window.__centralParkRent()" class="profile-btn primary" style="flex:1;min-height:52px;background:#f4771a;color:#fff;border:0;border-radius:10px;font-weight:800;font-size:17px">Rent</button></div>
+  <div class="landmark-plus-choice-buttons" style="display:flex;margin-top:14px"><button type="button" id="landmarkPlusStartButton" onclick="window.__centralParkStart()" style="width:100%;min-height:56px;background:#f47719;color:#fff;border:0;border-radius:12px;font-weight:800;font-size:19px;box-shadow:0 3px 0 #cf5e0d">Continue</button></div>
  </div>
 </article>
 <div class="landmark-plus-modal" id="landmarkPlusModal" hidden role="dialog" aria-modal="true" aria-labelledby="landmarkPlusModalTitle"><div class="landmark-plus-panel">
@@ -3044,11 +3044,28 @@ $('landmarkPlusContinue').onclick=function(ev){
  i++;render();
 };
 
-})();
+window.__centralParkStart=function(){
+ i=0;duration=1;answers={};buyIndex=0;buyAnswers={};buyFiles={};
+ $('landmarkPlusModalTitle').textContent='Continue · Vinhomes Central Park';
+ $('landmarkPlusBack').hidden=true;$('landmarkPlusContinue').hidden=false;
+ $('landmarkPlusContinue').textContent='Continue';$('landmarkPlusContinue').disabled=true;
+ step.innerHTML='<h3>Choose your process</h3><label for="lpJourneyChoice" style="display:block;font-weight:700;margin:12px 0 6px">Would you like to buy or rent this apartment?</label><select id="lpJourneyChoice" style="width:100%;min-height:48px;padding:10px;border:1px solid #cbd3da;border-radius:9px;font:inherit"><option value="">Choose Buy or Rent</option><option value="buy">Buy this apartment</option><option value="rent">Rent this apartment</option></select>';
+ $('lpJourneyChoice').onchange=function(){$('landmarkPlusContinue').disabled=!this.value};
+ $('landmarkPlusContinue').onclick=function(){
+  var choice=$('lpJourneyChoice').value;if(!choice)return;
+  if(choice==='buy'){
+   $('landmarkPlusModalTitle').textContent='Buy Vinhomes Central Park · Landmark Plus';
+   $('landmarkPlusBack').hidden=true;buyRender();
+  }else{
+   $('landmarkPlusModalTitle').textContent='Vinhomes Central Park · Landmark Plus';
+   $('landmarkPlusBack').hidden=false;render();
+  }
+  $('landmarkPlusContinue').disabled=false;
+ };
+ modal.hidden=false;document.body.style.overflow='hidden';
+};
 
-window.__centralParkBuy=function(){buyIndex=0;buyAnswers={};buyFiles={};$('landmarkPlusModalTitle').textContent='Buy Vinhomes Central Park · Landmark Plus';$('landmarkPlusBack').hidden=true;$('landmarkPlusContinue').hidden=false;$('landmarkPlusContinue').textContent='Continue';modal.hidden=false;document.body.style.overflow='hidden';buyRender()};
-window.__centralParkRent=function(){i=0;duration=1;answers={};$('landmarkPlusModalTitle').textContent='Vinhomes Central Park · Landmark Plus';$('landmarkPlusBack').hidden=false;$('landmarkPlusContinue').hidden=false;$('landmarkPlusContinue').textContent='Continue';$('landmarkPlusContinue').disabled=false;modal.hidden=false;document.body.style.overflow='hidden';render()};
-window.__centralParkContinue=function(){if(modal.hidden)return;if($('landmarkPlusModalTitle').textContent.indexOf('Buy')===0){buyNext();return;}var f=showField();if(!f)return;if(f[2]!=='duration'){var x=$('lpInput');if(!x||!x.value.trim())return;answers[f[0]]=x.value;if(f[0]==='checkin'){var d=new Date(x.value);d.setFullYear(d.getFullYear()+duration);answers.checkout=new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,16)}}i++;render()};
+})();
 </script>
 
 
