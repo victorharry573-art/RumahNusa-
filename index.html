@@ -3005,5 +3005,30 @@ if(form&&results)form.addEventListener('submit',function(){setTimeout(function()
 })();
 </script>
 
+
+<script id="LANDMARK-PLUS-CLICK-REPAIR">
+(function(){
+ function bind(){
+  var buy=document.getElementById('landmarkPlusBuyButton');
+  var rent=document.getElementById('landmarkPlusRentButton');
+  var next=document.getElementById('landmarkPlusContinue');
+  var back=document.getElementById('landmarkPlusBack');
+  var close=document.getElementById('landmarkPlusClose');
+  var modal=document.getElementById('landmarkPlusModal');
+  [buy,rent,next,back,close].forEach(function(b){if(b){b.style.pointerEvents='auto';b.style.position='relative';b.style.zIndex='2';}});
+  if(!document.documentElement.dataset.lpClickRepair){
+   document.documentElement.dataset.lpClickRepair='1';
+   document.addEventListener('click',function(ev){
+    var b=ev.target.closest('#landmarkPlusBuyButton,#landmarkPlusRentButton,#landmarkPlusContinue,#landmarkPlusBack,#landmarkPlusClose');
+    if(!b)return;
+    ev.preventDefault();ev.stopPropagation();ev.stopImmediatePropagation();
+    if(typeof b.onclick==='function'){b.onclick.call(b,ev);return;}
+    if(b.id==='landmarkPlusClose'&&modal){modal.hidden=true;document.body.style.overflow='';}
+   },true);
+  }
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
+})();
+</script>
 </body>
 </html>
