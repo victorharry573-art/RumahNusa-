@@ -2969,7 +2969,7 @@ var buyFields=[
  {k:'description',t:'Tell Vinhomes Central Park agent everything you want',type:'textarea'}
 ],buyIndex=0,buyAnswers={},buyFiles={};
 function buyRender(){
- var f=buyFields[buyIndex],html='<h3>'+f.t+'</h3>';
+ var f=buyFields[buyIndex],html='<div style="background:#fff3e7;border:1px solid #f4c89f;border-radius:12px;padding:14px 16px;margin:0 0 18px;text-align:center"><div style="font-size:13px;font-weight:700;color:#8f4a16;margin-bottom:4px">Purchase price</div><strong style="display:block;font-size:25px;color:#a94d0b">8,800,000,000 đ</strong></div><h3>'+f.t+'</h3>';
  if(f.type==='select')html+='<select id="lpBuyInput"><option value="">Choose an option</option>'+f.opts.map(function(o){return '<option value="'+String(o).replace(/&/g,'&amp;').replace(/"/g,'&quot;')+'">'+o+'</option>'}).join('')+'</select>';
  else if(f.type==='phone')html+='<select id="lpBuyCode"><option value="">Choose country code</option>'+fullCountryCodes.map(function(c){return '<option value="'+c[1]+'" '+(c[0]==='Vietnam'?'selected':'')+'>'+c[0]+' ('+c[1]+')</option>'}).join('')+'</select><input id="lpBuyInput" type="tel" placeholder="Phone number">';
  else if(f.type==='upload')html+='<p>Select a document or image from your device.</p><input id="lpBuyInput" type="file" accept="image/*,.pdf">';
