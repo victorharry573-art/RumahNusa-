@@ -3002,26 +3002,44 @@ $('landmarkPlusClose').onclick=function(){modal.hidden=true;document.body.style.
 $('landmarkPlusBack').onclick=function(){if(i>0){i--;render()}else{modal.hidden=true;document.body.style.overflow=''}};
 var form=$('propertySearchForm'),results=$('propertySearchResults');
 if(form&&results)form.addEventListener('submit',function(){setTimeout(function(){var loc=(form.elements.location.value||'').toLowerCase(),type=(form.elements.type.value||'').toLowerCase(),goal=form.elements.goal.value;if((!loc||loc.includes('ho chi minh')||loc.includes('binh thanh'))&&(!type||type==='apartment')&&(!goal||goal==='rent')&&!$('landmarkPlusSearchResult')){results.insertAdjacentHTML('beforeend','<article class="search-result-card" id="landmarkPlusSearchResult"><div style="padding:18px;background:#eef3f6;display:grid;place-items:center;min-height:160px">Vinhomes Central Park · Landmark Plus</div><div><h3>Vinhomes Central Park · Landmark Plus</h3><p>Apartment · For rent · Ho Chi Minh City, Vietnam</p><p>1 bedroom · 1 parlor · Floor 13</p><p class="search-result-price">220,000,000 đ / Annual</p><button type="button" class="profile-btn primary" id="landmarkPlusSearchOpen">View apartment and booking</button></div></article>');$('landmarkPlusSearchOpen').onclick=function(){var nav=document.querySelector('.nav-button[data-section="Rentapartment"]');if(nav)nav.click();setTimeout(function(){$('landmarkPlusApartmentCard').scrollIntoView({behavior:'smooth',block:'start'})},250)}}},600)});
-})();
-</script>
-
-
-<script id="LANDMARK-PLUS-CLICK-REPAIR">
-(function(){
- function bind(){
-  ['landmarkPlusBuyButton','landmarkPlusRentButton','landmarkPlusContinue','landmarkPlusBack','landmarkPlusClose'].forEach(function(id){
-   var b=document.getElementById(id);if(!b||b.dataset.lpDirectClick==='1')return;
-   b.dataset.lpDirectClick='1';
-   b.style.pointerEvents='auto';b.style.touchAction='manipulation';
-   b.addEventListener('click',function(ev){
-    ev.preventDefault();ev.stopPropagation();ev.stopImmediatePropagation();
-    if(typeof b.onclick==='function')b.onclick.call(b,ev);
-    else if(id==='landmarkPlusClose'){var m=document.getElementById('landmarkPlusModal');if(m)m.hidden=true;document.body.style.overflow='';}
-   },true);
-  });
+/* Central Park only: assign the three journey controls directly. */
+$('landmarkPlusBuyButton').onclick=function(ev){
+ if(ev){ev.preventDefault();ev.stopPropagation();}
+ buyIndex=0;buyAnswers={};buyFiles={};
+ $('landmarkPlusModalTitle').textContent='Buy Vinhomes Central Park · Landmark Plus';
+ $('landmarkPlusBack').hidden=false;$('landmarkPlusContinue').hidden=false;
+ modal.hidden=false;document.body.style.overflow='hidden';
+ buyRender();
+};
+$('landmarkPlusRentButton').onclick=function(ev){
+ if(ev){ev.preventDefault();ev.stopPropagation();}
+ i=0;duration=1;answers={};
+ $('landmarkPlusModalTitle').textContent='Vinhomes Central Park · Landmark Plus';
+ $('landmarkPlusContinue').hidden=false;$('landmarkPlusContinue').disabled=false;
+ $('landmarkPlusContinue').textContent='Continue';
+ $('landmarkPlusBack').hidden=false;modal.hidden=false;document.body.style.overflow='hidden';
+ render();
+};
+$('landmarkPlusContinue').onclick=function(ev){
+ if(ev){ev.preventDefault();ev.stopPropagation();}
+ if(modal.hidden)return;
+ if($('landmarkPlusModalTitle').textContent.indexOf('Buy')===0){buyNext();return;}
+ var f=showField();if(!f)return;
+ if(f[2]!=='duration'){
+  var x=$('lpInput');if(!x||!x.value.trim())return;
+  answers[f[0]]=x.value;
+  if(f[0]==='checkin'){
+   var d=new Date(x.value);d.setFullYear(d.getFullYear()+duration);
+   answers.checkout=new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,16);
+  }
  }
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
+ i++;render();
+};
+
 })();
 </script>
+
+
+
 </body>
 </html>
