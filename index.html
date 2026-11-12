@@ -2678,7 +2678,7 @@ window.addEventListener('popstate',function(){if(!$('apartmentJourneyModal').hid
       if(input.dataset.globalPhoneEnhanced==='1')return;
       var holder=input.parentElement;
       if(!holder)return;
-      var existing=holder.querySelector('select[aria-label*="country" i],select[id*="PhoneCountry"]');
+      var existing=holder.querySelector('select[aria-label*="country" i],select[id*="PhoneCountry"],select[id="lpBuyCode"]');
       var select=existing;
       if(!select){
         select=document.createElement('select');
