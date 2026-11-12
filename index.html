@@ -2989,8 +2989,8 @@ function buyRender(){
   input.onchange=function(){if(input.files&&input.files[0]){buyFiles[f.k]=input.files[0];$('landmarkPlusContinue').disabled=false}};
   $('lpBuySkip').onclick=function(){buyAnswers[f.k]='Not provided';buyIndex++;buyRender()};
  }else if(input){
-  var check=function(){var v=input.value.trim(),ok=!!v;if(f.type==='email')ok=/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(v);if(f.k==='dob'&&v)ok=(Date.now()-new Date(v).getTime())/31557600000>=18;if(f.type==='agree')ok=v==='Yes, I agree';$('landmarkPlusContinue').disabled=!ok};
-  input.oninput=check;input.onchange=check;
+  var check=function(){var v=input.value.trim(),ok=!!v;if(f.type==='email')ok=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);if(f.k==='dob'&&v)ok=(Date.now()-new Date(v).getTime())/31557600000>=18;if(f.type==='agree')ok=v==='Yes, I agree';$('landmarkPlusContinue').disabled=!ok};
+  input.oninput=check;input.onchange=check;check();
  }
 }
 function buyNext(){
